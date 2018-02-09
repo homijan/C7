@@ -14,11 +14,11 @@
 // software, applications, hardware, advanced system engineering and early
 // testbed platforms, in support of the nation's exascale computing imperative.
 
-#ifndef MFEM_NTH_M1SOLVER
-#define MFEM_NTH_M1SOLVER
+#ifndef MFEM_NTH_C7_SOLVER
+#define MFEM_NTH_C7_SOLVER
 
 #include "mfem.hpp"
-#include "m1_assembly.hpp"
+#include "c7_assembly.hpp"
 #include "AWBSphysics.hpp"
 
 #ifdef MFEM_USE_MPI
@@ -61,7 +61,7 @@ struct TimingData
 
 // Given a solutions state (f0, f1), this class performs all necessary
 // computations to evaluate the new slopes (df0_dt, df1_dt).
-class M1Operator : public TimeDependentOperator
+class C7Operator : public TimeDependentOperator
 {
 protected:
    ParFiniteElementSpace &H1FESpace;
@@ -93,16 +93,6 @@ protected:
    // right-hand sides for momentum and specific internal energy.
    mutable MixedBilinearForm Divf0, Efieldf0, Divf1, AEfieldf1, AIEfieldf1;
 
-/* PAFUTURE
-   // Same as above, but done through partial assembly.
-   ForcePAOperator ForcePA;
-
-   // Mass matrices done through partial assembly:
-   // velocity (coupled H1 assembly) and energy (local L2 assemblies).
-   mutable MassPAOperator VMassPA;
-   mutable LocalMassPAOperator locEMassPA;
-*/
-
    // Linear solver for energy.
    CGSolver locCG;
 
@@ -110,16 +100,16 @@ protected:
 
    void UpdateQuadratureData(double velocity, const Vector &S) const;
 
-   // TODO M1_dvmin does not work, because of its local nature. 
-   // M1_dvmax does not seem to have an important effect.
-   double M1_dvmin, M1_dvmax;
+   // TODO C7_dvmin does not work, because of its local nature. 
+   // C7_dvmax does not seem to have an important effect.
+   double C7_dvmin, C7_dvmax;
    // The grid function is necessary for velocity step estimation. 
    ParGridFunction &x_gf;
    // Velocity dependent coefficients providing physics via AWBSMaster.
    AWBSMasterOfPhysics *AWBSPhysics;
 
 public:
-   M1Operator(int size, ParFiniteElementSpace &h1_fes,
+   C7Operator(int size, ParFiniteElementSpace &h1_fes,
               ParFiniteElementSpace &l2_fes, Array<int> &essential_tdofs,
               ParGridFunction &rho0, double cfl_, 
 			  AWBSMasterOfPhysics *AWBSPhysics_,
@@ -140,7 +130,7 @@ public:
 
    void PrintTimingData(bool IamRoot, int steps);
 
-   ~M1Operator() {}
+   ~C7Operator() {}
 };
 
 } // namespace nth
@@ -149,4 +139,4 @@ public:
 
 #endif // MFEM_USE_MPI
 
-#endif // MFEM_NTH_M1SOLVER
+#endif // MFEM_NTH_C7_SOLVER

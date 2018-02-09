@@ -14,8 +14,8 @@
 // software, applications, hardware, advanced system engineering and early
 // testbed platforms, in support of the nation's exascale computing imperative.
 
-#ifndef MFEM_NTH_PHYSICS
-#define MFEM_NTH_PHYSICS
+#ifndef MFEM_NTH_AWBSPHYSICS
+#define MFEM_NTH_AWBSPHYSICS
 
 #include "mfem.hpp"
 #include "eos.hpp"
@@ -201,4 +201,4 @@ extern double a0;
 
 #endif // MFEM_USE_MPI
 
-#endif // MFEM_NTH_PHYSICS
+#endif // MFEM_NTH_AWBSPHYSICS

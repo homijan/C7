@@ -11,6 +11,9 @@ mpirun -np 8 C7 -p 5 -m data/segment01.mesh -rs 6 -tf 0.0 -ok 4 -ot 3 -vis -fa -
 # Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 mpirun -np 8 C7 -p 5 -m data/segment01.mesh -rs 6 -tf 0.0 -ok 4 -ot 3 -vis -fa -print -Tmax 1000 -Tmin 100 -a0 3e30 -Tgrad 18 -Z 2 -ne 5e19
  
+# Diffusive asymptotic test. The SH, AWBS (original and corrected), 
+# and C7 (proper and mimic Efield) calculations are compared. 
+# In reality, the resulting Knudsen number is just on the diffusive limit.
 mpirun -np 8 C7 -p 8 -m data/segment01.mesh -rs 6 -tf 0.0 -ok 2 -ot 1 -no-vis -fa -print -Tmax 800.5 -Tmin 799.5 -Tgrad 2.3 -S0 1.0 -E0 1.0 -a0 1e31 -Z 4 -ne 5e20
 cp fe.txt fe_data/fe_Ecorrect.txt
 

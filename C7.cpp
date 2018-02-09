@@ -52,7 +52,7 @@
 
 
 #include "laghos_solver.hpp"
-#include "m1_solver.hpp"
+#include "c7_solver.hpp"
 #include "eos.hpp"
 #include "ic.hpp"
 #include <memory>
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
    int vis_steps = 10;
    bool visit = false;
    bool gfprint = false;
-   const char *basename = "results/M1hos";
+   const char *basename = "results/C7";
    int nth_problem = 5;
    double T_max = 1000.0, T_min = 100.0, rho_max = 10.0, rho_min = 1.0;
    double T_gradscale = 50.0, rho_gradscale = 50.0;
@@ -381,22 +381,22 @@ int main(int argc, char *argv[])
                                 visc, p_assembly, cg_tol, cg_max_iter);
 
 ///////////////////////////////////////////////////////////////
-///// M1 nonlocal solver //////////////////////////////////////
+///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
    // The monolithic BlockVector stores unknown fields as:
    // - 0 -> isotropic I0 (energy density)
    // - 1 -> anisotropic I1 (flux density)
-   Array<int> m1true_offset(3);
-   m1true_offset[0] = 0;
-   m1true_offset[1] = m1true_offset[0] + Vsize_l2;
-   m1true_offset[2] = m1true_offset[1] + Vsize_h1;
-   BlockVector m1S(m1true_offset);
+   Array<int> c7true_offset(3);
+   c7true_offset[0] = 0;
+   c7true_offset[1] = c7true_offset[0] + Vsize_l2;
+   c7true_offset[2] = c7true_offset[1] + Vsize_h1;
+   BlockVector c7S(c7true_offset);
 
    // Define GridFunction objects for the zero and first moments of
    // the~electron distribution function.
    ParGridFunction I0_gf, I1_gf;
-   I0_gf.MakeRef(&L2FESpace, m1S, m1true_offset[0]);
-   I1_gf.MakeRef(&H1FESpace, m1S, m1true_offset[1]);
+   I0_gf.MakeRef(&L2FESpace, c7S, c7true_offset[0]);
+   I1_gf.MakeRef(&H1FESpace, c7S, c7true_offset[1]);
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
@@ -437,8 +437,8 @@ int main(int argc, char *argv[])
    // Set input scales of the electron source and the Efield.
    sourceI0_cf.SetScale0(I0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
-   // Static coefficient defined in m1_solver.hpp.
-   double m1cfl = 0.25;
+   // Static coefficient defined in c7_solver.hpp.
+   double c7cfl = 0.25;
    vis_steps = 1000000000;
    // ALWAYS calculate on v in (0, 1)
    double vmax = 1.0;
@@ -459,19 +459,19 @@ int main(int argc, char *argv[])
       { 
          nth::a0 = 2e3;
          vis_steps = 10000;
-         m1cfl = 0.5;
+         c7cfl = 0.5;
       }
       else if (pmesh->Dimension() == 2)
       { 
 	     nth::a0 = 1e5; //2e1;
          vis_steps = 10000;
-         m1cfl = 1.0;
+         c7cfl = 1.0;
       }
       else if (pmesh->Dimension() == 3)
       {
          nth::a0 = 5e7;
          vis_steps = 10000;
-         m1cfl = 0.5;
+         c7cfl = 0.5;
       }
    }
 
@@ -484,29 +484,29 @@ int main(int argc, char *argv[])
    AWBSPhysics.SetTmax(glob_Tmax);
    mfp_cf.SetTmax(glob_Tmax);
 
-   // Initialize the M1-AWBS operator
-   nth::M1Operator m1oper(m1S.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
-                          m1cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
+   // Initialize the C7-AWBS operator
+   nth::C7Operator c7oper(c7S.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
+                          c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
    // Prepare grid functions integrating the moments of I0 and I1.
    ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace), 
                    Efield_gf(&H1FESpace);
    ParGridFunction j_gf(&H1FESpace), hflux_gf(&H1FESpace);
 
-   ODESolver *m1ode_solver = NULL;
-   //m1ode_solver = new ForwardEulerSolver;
-   //m1ode_solver = new RK2Solver(0.5);
-   m1ode_solver = new RK4Solver;
-   //m1ode_solver = new RK6Solver;
-   m1ode_solver->Init(m1oper);
+   ODESolver *c7ode_solver = NULL;
+   //c7ode_solver = new ForwardEulerSolver;
+   //c7ode_solver = new RK2Solver(0.5);
+   c7ode_solver = new RK4Solver;
+   //c7ode_solver = new RK6Solver;
+   c7ode_solver->Init(c7oper);
 
    double alphavT = mspei_cf.GetVelocityScale();
-   m1oper.ResetVelocityStepEstimate();
-   m1oper.ResetQuadratureData();
-   m1oper.SetTime(vmax);
+   c7oper.ResetVelocityStepEstimate();
+   c7oper.ResetQuadratureData();
+   c7oper.SetTime(vmax);
    //double dvmax = vmax*0.1;
-   double dvmin = min(dvmax, m1oper.GetVelocityStepEstimate(m1S));
+   double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
    I0_gf = 0.0; I1_gf = 0.0;
-   int m1ti = 0;
+   int c7ti = 0;
    double v = vmax;
    double dv = -dvmin;
    intf0_gf = 0.0;
@@ -517,8 +517,8 @@ int main(int argc, char *argv[])
 /*
    while (abs(dv) >= abs(dvmin))
    {
-      m1ti++;
-      m1ode_solver->Step(m1S, v, dv);
+      c7ti++;
+      c7ode_solver->Step(c7S, v, dv);
 
       // Perform the integration over velocity space.
       intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), I0_gf);
@@ -538,16 +538,16 @@ int main(int argc, char *argv[])
       MPI_Allreduce(&loc_maxI1, &glob_maxI1, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
 
-      m1oper.ResetVelocityStepEstimate();
-      m1oper.ResetQuadratureData();
-      m1oper.SetTime(v);
-      dv = - min(dvmax, m1oper.GetVelocityStepEstimate(m1S));
+      c7oper.ResetVelocityStepEstimate();
+      c7oper.ResetQuadratureData();
+      c7oper.SetTime(v);
+      dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
       if (v + dv < vmin) { dv = vmin - v; }
 
       if (mpi.Root())
       {
          cout << fixed;
-         cout << "group " << setw(5) << m1ti
+         cout << "group " << setw(5) << c7ti
                  << ",\tv = " << setw(5) << setprecision(4) << v
                  << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
                  << "[min(f0), max(f0)] = [" << setprecision(17)
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
    }
 */
 ///////////////////////////////////////////////////////////////
-///// M1 nonlocal solver //////////////////////////////////////
+///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
    socketstream vis_rho, vis_v, vis_e, vis_f0, vis_j, vis_Efield, vis_Kn, 
@@ -695,7 +695,7 @@ int main(int argc, char *argv[])
          MPI_Barrier(pmesh->GetComm());
 
 ///////////////////////////////////////////////////////////////
-///// M1 nonlocal solver //////////////////////////////////////
+///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
          oper.ComputeDensity(rho_gf);
          AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
@@ -706,13 +706,13 @@ int main(int argc, char *argv[])
          AWBSPhysics.SetTmax(glob_Tmax);
 		 mfp_cf.SetTmax(glob_Tmax);
          alphavT = mspei_cf.GetVelocityScale();
-         m1oper.ResetVelocityStepEstimate();
-         m1oper.ResetQuadratureData();
-         m1oper.SetTime(vmax);
-         double dvmin = min(dvmax, m1oper.GetVelocityStepEstimate(m1S));
+         c7oper.ResetVelocityStepEstimate();
+         c7oper.ResetQuadratureData();
+         c7oper.SetTime(vmax);
+         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
          I0_gf = 0.0; //1e-2; 
 		 I1_gf = 0.0;
-         int m1ti = 0;
+         int c7ti = 0;
          double v = vmax;
          double dv = -dvmin;
          intf0_gf = 0.0;
@@ -765,11 +765,11 @@ int main(int argc, char *argv[])
             //     << x_max << endl << flush;	
 			elNo++;
          }
-		 // Actual integration of M1Operator.
+		 // Actual integration of C7Operator.
 		 while (abs(dv) >= abs(dvmin))
          {
-            m1ti++;
-            m1ode_solver->Step(m1S, v, dv);
+            c7ti++;
+            c7ode_solver->Step(c7S, v, dv);
             
             // Store the distribution function at a given point.
             if (right_proc_point)
@@ -806,16 +806,16 @@ int main(int argc, char *argv[])
             MPI_Allreduce(&loc_maxI1, &glob_maxI1, 1, MPI_DOUBLE, MPI_MAX,
                           pmesh->GetComm());
 
-            m1oper.ResetVelocityStepEstimate();
-            m1oper.ResetQuadratureData();
-            m1oper.SetTime(v);
-            dv = - min(dvmax, m1oper.GetVelocityStepEstimate(m1S));
+            c7oper.ResetVelocityStepEstimate();
+            c7oper.ResetQuadratureData();
+            c7oper.SetTime(v);
+            dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
             if (v + dv < vmin) { dv = vmin - v; }
 
             if (mpi.Root())
             {
                cout << fixed;
-               cout << "group " << setw(5) << m1ti
+               cout << "group " << setw(5) << c7ti
                << ",\tv = " << setw(5) << setprecision(4) << v
                << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
                << "[min(f0), max(f0)] = [" << setprecision(17)
@@ -841,7 +841,7 @@ int main(int argc, char *argv[])
 			fe_file.close();         
 		 }
 ///////////////////////////////////////////////////////////////
-///// M1 nonlocal solver //////////////////////////////////////
+///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
          if (visualization || visit || gfprint) { oper.ComputeDensity(rho_gf); }
@@ -958,8 +958,8 @@ int main(int argc, char *argv[])
    }
    if (mpi.Root()) { cout << "Hydrodynamics kernel timer:" << endl << flush; }
    oper.PrintTimingData(mpi.Root(), steps);
-   if (mpi.Root()) { cout << "M1 kernel timer:" << endl << flush; }
-   m1oper.PrintTimingData(mpi.Root(), steps);
+   if (mpi.Root()) { cout << "C7 kernel timer:" << endl << flush; }
+   c7oper.PrintTimingData(mpi.Root(), steps);
 
    if (visualization)
    {
@@ -971,7 +971,7 @@ int main(int argc, char *argv[])
    delete ode_solver;
    delete pmesh;
    delete tensors1D; 
-   delete m1ode_solver;
+   delete c7ode_solver;
 
    return 0;
 }

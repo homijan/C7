@@ -112,11 +112,11 @@ SHj = np.zeros(Nimpl)
 SHq = np.zeros(Nimpl)
 SHJ = 0.0
 SHQ = 0.0
-M1f1_impl = np.zeros(Nimpl)
-M1j_impl = np.zeros(Nimpl)
-M1q_impl = np.zeros(Nimpl)
-M1J_impl = 0.0
-M1Q_impl = 0.0
+AWBSf1_impl = np.zeros(Nimpl)
+AWBSj_impl = np.zeros(Nimpl)
+AWBSq_impl = np.zeros(Nimpl)
+AWBSJ_impl = 0.0
+AWBSQ_impl = 0.0
 for i in range(Nimpl):
     vp = vimpl[i]
     # The mean free path has standard v^4 dependence, sigma is cross section
@@ -129,25 +129,25 @@ for i in range(Nimpl):
     SHq[i] = mfp_ei*me/2.0*vp*vp*vp*SHf1[i]
     SHJ = SHJ + 4.0*pi/3.0*SHj[i]*dv
     SHQ = SHQ + 4.0*pi/3.0*SHq[i]*dv
-    M1f1_impl[i] = sol_impl[i]*vp*vp
-    M1j_impl[i] = mfp_ei*vp*M1f1_impl[i]
-    M1q_impl[i] = mfp_ei*vp*vp*vp*me/2.0*M1f1_impl[i]
-    M1J_impl = M1J_impl + 4.0*pi/3.0*M1j_impl[i]*dv
-    M1Q_impl = M1Q_impl + 4.0*pi/3.0*M1q_impl[i]*dv
-M1f1_expl = np.zeros(Nexpl)
-M1j_expl = np.zeros(Nexpl)
-M1q_expl = np.zeros(Nexpl)
-M1J_expl = 0.0
-M1Q_expl = 0.0
+    AWBSf1_impl[i] = sol_impl[i]*vp*vp
+    AWBSj_impl[i] = mfp_ei*vp*AWBSf1_impl[i]
+    AWBSq_impl[i] = mfp_ei*vp*vp*vp*me/2.0*AWBSf1_impl[i]
+    AWBSJ_impl = AWBSJ_impl + 4.0*pi/3.0*AWBSj_impl[i]*dv
+    AWBSQ_impl = AWBSQ_impl + 4.0*pi/3.0*AWBSq_impl[i]*dv
+AWBSf1_expl = np.zeros(Nexpl)
+AWBSj_expl = np.zeros(Nexpl)
+AWBSq_expl = np.zeros(Nexpl)
+AWBSJ_expl = 0.0
+AWBSQ_expl = 0.0
 for i in range(Nexpl):
     vp = vexpl[i]
     mfp_ei = vp**4.0/sigma/Zbar
     dv = dvexpl
-    M1f1_expl[i] = sol_expl[i]*vp*vp
-    M1j_expl[i] = mfp_ei*vp*M1f1_expl[i]
-    M1q_expl[i] = mfp_ei*vp*vp*vp*me/2.0*M1f1_expl[i]
-    M1J_expl = M1J_expl + 4.0*pi/3.0*M1j_expl[i]*dv
-    M1Q_expl = M1Q_expl + 4.0*pi/3.0*M1q_expl[i]*dv
+    AWBSf1_expl[i] = sol_expl[i]*vp*vp
+    AWBSj_expl[i] = mfp_ei*vp*AWBSf1_expl[i]
+    AWBSq_expl[i] = mfp_ei*vp*vp*vp*me/2.0*AWBSf1_expl[i]
+    AWBSJ_expl = AWBSJ_expl + 4.0*pi/3.0*AWBSj_expl[i]*dv
+    AWBSQ_expl = AWBSQ_expl + 4.0*pi/3.0*AWBSq_expl[i]*dv
 
 # Compare with C7 results stored in fe_data
 # No explicit treatment of Efield, we use mimicing by reducing ne in source.
@@ -165,7 +165,7 @@ for i in range(NC7E):
     dC7Ev = C7Ev[i] - C7Ev[i+1]
     C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
-# Analytical formula from M1hos.pdf, providing the Lorentz gas approximation
+# Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 # further multiplied by SH low Z factor.
 mfp_ei = (vTh(Te))**4.0/sigma/Zbar
 L = Te / abs(gradTe)
@@ -180,11 +180,11 @@ print "SHQ:          ", SHQ
 print "SHQ_analytic: ", SHQ_analytic
 print "C7EQ:         ", C7EQ
 print "C7Q:          ", C7Q
-print "M1Q_impl:     ", M1Q_impl
-print "M1Q_expl:     ", M1Q_expl
-print "SHJ:      ", SHJ
-print "M1J_impl: ", M1J_impl
-print "M1J_expl: ", M1J_expl
+print "AWBSQ_impl:   ", AWBSQ_impl
+print "AWBSQ_expl:   ", AWBSQ_expl
+print "SHJ:        ", SHJ
+print "AWBSJ_impl: ", AWBSJ_impl
+print "AWBSJ_expl: ", AWBSJ_expl
 
 
 # Physical fix by a magic constant.
@@ -241,8 +241,8 @@ matplotlib.rc('font', **font)
 #plt.title('Rational function fit')
 
 plt.plot(vimpl/vTh(Te), SHq, 'b', label='qSH')
-plt.plot(vexpl/vTh(Te), M1q_expl, 'g-.', label='qAWBS')
-plt.plot(vimpl/vTh(Te), M1q_impl, 'r--', label='qAWBS/corr')
+plt.plot(vexpl/vTh(Te), AWBSq_expl, 'g-.', label='qAWBS')
+plt.plot(vimpl/vTh(Te), AWBSq_impl, 'r--', label='qAWBS/corr')
 plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'k', label='qC7E')
 plt.plot(C7v/vTh(Te), C7mehalff1v5 / (4.0*pi/3.0), 'k--', label='qC7')
 

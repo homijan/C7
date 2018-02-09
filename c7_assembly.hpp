@@ -14,8 +14,8 @@
 // software, applications, hardware, advanced system engineering and early
 // testbed platforms, in support of the nation's exascale computing imperative.
 
-#ifndef MFEM_M1_ASSEMBLY
-#define MFEM_M1_ASSEMBLY
+#ifndef MFEM_NTH_C7_ASSEMBLY
+#define MFEM_NTH_C7_ASSEMBLY
 
 #include "mfem.hpp"
 
@@ -83,35 +83,6 @@ struct QuadratureData
         Binvrho(nzones * quads_per_zone, dim),
         Ef1invvf0rho(nzones * quads_per_zone) { }
 };
-
-/* PAFUTURE
-// Stores values of the one-dimensional shape functions and gradients at all 1D
-// quadrature points. All sizes are (dofs1D_cnt x quads1D_cnt).
-struct Tensors1D
-{
-   // H1 shape functions and gradients, L2 shape functions.
-   DenseMatrix HQshape1D, HQgrad1D, LQshape1D;
-
-   Tensors1D(int H1order, int L2order, int nqp1D);
-};
-extern const Tensors1D *tensors1D;
-
-class FastEvaluator
-{
-   const int dim;
-   ParFiniteElementSpace &H1FESpace;
-
-public:
-   FastEvaluator(ParFiniteElementSpace &h1fes)
-      : dim(h1fes.GetMesh()->Dimension()), H1FESpace(h1fes) { }
-
-   void GetL2Values(const Vector &vecL2, Vector &vecQP) const;
-   // The input vec is an H1 function with dim components, over a zone.
-   // The output is J_ij = d(vec_i) / d(x_j) with ij = 1 .. dim.
-   void GetVectorGrad(const DenseMatrix &vec, DenseTensor &J) const;
-};
-extern const FastEvaluator *evaluator;
-*/
 
 // This class is used only for visualization. It assembles (rho, phi) in each
 // zone, which is used by LagrangianHydroOperator::ComputeDensity to do an L2
@@ -389,106 +360,10 @@ public:
    double GetIntegrator(int q, int vd);
 };
 
-/* PAFUTURE
-// Performs partial assembly, which corresponds to (and replaces) the use of the
-// LagrangianHydroOperator::Force global matrix.
-class ForcePAOperator : public Operator
-{
-private:
-   const int dim, nzones;
-
-   QuadratureData *quad_data;
-   ParFiniteElementSpace &H1FESpace, &L2FESpace;
-
-   // Force matrix action on quadrilateral elements in 2D
-   void MultQuad(const Vector &vecL2, Vector &vecH1) const;
-   // Force matrix action on hexahedral elements in 3D
-   void MultHex(const Vector &vecL2, Vector &vecH1) const;
-
-   // Transpose force matrix action on quadrilateral elements in 2D
-   void MultTransposeQuad(const Vector &vecH1, Vector &vecL2) const;
-   // Transpose force matrix action on hexahedral elements in 3D
-   void MultTransposeHex(const Vector &vecH1, Vector &vecL2) const;
-
-public:
-   ForcePAOperator(QuadratureData *quad_data_,
-                   ParFiniteElementSpace &h1fes, ParFiniteElementSpace &l2fes)
-      : dim(h1fes.GetMesh()->Dimension()), nzones(h1fes.GetMesh()->GetNE()),
-        quad_data(quad_data_), H1FESpace(h1fes), L2FESpace(l2fes) { }
-
-   virtual void Mult(const Vector &vecL2, Vector &vecH1) const;
-   virtual void MultTranspose(const Vector &vecH1, Vector &vecL2) const;
-
-   ~ForcePAOperator() { }
-};
-
-// Performs partial assembly for the velocity mass matrix.
-class MassPAOperator : public Operator
-{
-private:
-   const int dim, nzones;
-
-   QuadratureData *quad_data;
-   ParFiniteElementSpace &FESpace;
-
-   Array<int> *ess_tdofs;
-
-   mutable ParGridFunction x_gf, y_gf;
-
-   // Mass matrix action on quadrilateral elements in 2D.
-   void MultQuad(const Vector &x, Vector &y) const;
-   // Mass matrix action on hexahedral elements in 3D.
-   void MultHex(const Vector &x, Vector &y) const;
-
-public:
-   MassPAOperator(QuadratureData *quad_data_, ParFiniteElementSpace &fes)
-      : Operator(fes.TrueVSize()),
-        dim(fes.GetMesh()->Dimension()), nzones(fes.GetMesh()->GetNE()),
-        quad_data(quad_data_), FESpace(fes), ess_tdofs(NULL),
-        x_gf(&fes), y_gf(&fes)
-   { }
-
-   // Mass matrix action. We work with one velocity component at a time.
-   virtual void Mult(const Vector &x, Vector &y) const;
-
-   void EliminateRHS(Array<int> &dofs, Vector &b)
-   {
-      ess_tdofs = &dofs;
-      for (int i = 0; i < dofs.Size(); i++) { b(dofs[i]) = 0.0; }
-   }
-};
-
-// Performs partial assembly for the energy mass matrix on a single zone.
-// Used to perform local CG solves, thus avoiding unnecessary communication.
-class LocalMassPAOperator : public Operator
-{
-private:
-   const int dim;
-   int zone_id;
-
-   QuadratureData *quad_data;
-
-   // Mass matrix action on a quadrilateral element in 2D.
-   void MultQuad(const Vector &x, Vector &y) const;
-   // Mass matrix action on a hexahedral element in 3D.
-   void MultHex(const Vector &x, Vector &y) const;
-
-public:
-   LocalMassPAOperator(QuadratureData *quad_data_, ParFiniteElementSpace &fes)
-      : Operator(fes.GetFE(0)->GetDof()),
-        dim(fes.GetMesh()->Dimension()), zone_id(0),
-        quad_data(quad_data_)
-   { }
-   void SetZoneId(int zid) { zone_id = zid; }
-
-   virtual void Mult(const Vector &x, Vector &y) const;
-};
-*/
-
 } // namespace nth
 
 } // namespace mfem
 
 #endif // MFEM_USE_MPI
 
-#endif // MFEM_M1_ASSEMBLY
+#endif // MFEM_NTH_C7_ASSEMBLY

@@ -14,7 +14,7 @@
 // software, applications, hardware, advanced system engineering and early
 // testbed platforms, in support of the nation's exascale computing imperative.
 
-#include "m1_solver.hpp"
+#include "c7_solver.hpp"
 
 #ifdef MFEM_USE_MPI
 
@@ -75,7 +75,7 @@ void VisualizeField(socketstream &sock, const char *vishost, int visport,
    while (connection_failed);
 }
 
-M1Operator::M1Operator(int size, 
+C7Operator::C7Operator(int size, 
                        ParFiniteElementSpace &h1_fes,
                        ParFiniteElementSpace &l2_fes, 
                        Array<int> &essential_tdofs,
@@ -104,10 +104,6 @@ M1Operator::M1Operator(int size,
      Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes),
      Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes),
      AIEfieldf1(&l2_fes, &h1_fes),
-/* PAFUTURE
-     ForcePA(&quad_data, h1_fes, l2_fes),
-     VMassPA(&quad_data, H1compFESpace), locEMassPA(&quad_data, l2_fes),
-*/
      locCG(), timer(), AWBSPhysics(AWBSPhysics_), x_gf(x_gf_)
 {
    GridFunctionCoefficient rho_coeff(&rho0);
@@ -221,18 +217,9 @@ M1Operator::M1Operator(int size,
    // Make a dummy assembly to figure out the sparsity.
    AIEfieldf1.Assemble(0);
    AIEfieldf1.Finalize(0);
-
-/* PAFUTURE
-   locCG.SetOperator(locEMassPA);
-   locCG.iterative_mode = false;
-   locCG.SetRelTol(1e-8);
-   locCG.SetAbsTol(1e-8 * numeric_limits<double>::epsilon());
-   locCG.SetMaxIter(200);
-   locCG.SetPrintLevel(0);
-*/
 }
 
-void M1Operator::Mult(const Vector &S, Vector &dS_dt) const
+void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
 {
    dS_dt = 0.0;
 
@@ -368,7 +355,7 @@ void M1Operator::Mult(const Vector &S, Vector &dS_dt) const
    quad_data_is_current = false;
 }
 
-double M1Operator::GetVelocityStepEstimate(const Vector &S) const
+double C7Operator::GetVelocityStepEstimate(const Vector &S) const
 {
    const double velocity = GetTime();
    UpdateQuadratureData(velocity, S);
@@ -379,12 +366,12 @@ double M1Operator::GetVelocityStepEstimate(const Vector &S) const
    return glob_dt_est;
 }
 
-void M1Operator::ResetVelocityStepEstimate() const
+void C7Operator::ResetVelocityStepEstimate() const
 {
    quad_data.dt_est = numeric_limits<double>::infinity();
 }
 
-void M1Operator::ComputeDensity(ParGridFunction &rho)
+void C7Operator::ComputeDensity(ParGridFunction &rho)
 {
    rho.SetSpace(&L2FESpace);
 
@@ -408,7 +395,7 @@ void M1Operator::ComputeDensity(ParGridFunction &rho)
    }
 }
 
-void M1Operator::PrintTimingData(bool IamRoot, int steps)
+void C7Operator::PrintTimingData(bool IamRoot, int steps)
 {
    double my_rt[5], rt_max[5];
    my_rt[0] = timer.sw_cgH1.RealTime();
@@ -449,7 +436,7 @@ void M1Operator::PrintTimingData(bool IamRoot, int steps)
    }
 }
 
-void M1Operator::UpdateQuadratureData(double velocity, const Vector &S) const
+void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 {
    if (quad_data_is_current) { return; }
    timer.sw_qdata.Start();
