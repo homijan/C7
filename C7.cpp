@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
    int vis_steps = 10;
    bool visit = false;
    bool gfprint = false;
-   const char *basename = "results/C7";
+   const char *basename = "results/tmp/C7";
    int nth_problem = 5;
    double T_max = 1000.0, T_min = 100.0, rho_max = 10.0, rho_min = 1.0;
    double T_gradscale = 50.0, rho_gradscale = 50.0;
@@ -826,20 +826,60 @@ int main(int argc, char *argv[])
             }
          }
 
-         // Save (fe.txt) the distribution function at a given point.
+         // Save the distribution function at a given point.
          if (right_proc_point)
          {
-            ofstream fe_file; 
-            fe_file.open ("fe.txt");
-            fe_file << "# v  f0  f1x  f0*v^2  0.5*me*f1x*v^5\n";
-	        for (int i = 0; i < v_point.size(); i++)
-            { 
-               fe_file << v_point[i] << " " << f0_v_point[i] << " " 
-                       << f1x_v_point[i] << " " << f0v2_v_point[i] << " " 
-                       << mehalff1xv5_v_point[i] << endl;
-            } 
-			fe_file.close();         
-		 }
+            ostringstream fe_file_name;
+            fe_file_name << basename << "_" << ti
+                      << "_fe_point.txt";
+            ofstream fe_ofs(fe_file_name.str().c_str());
+            fe_ofs.precision(8);
+
+            fe_ofs << "# v  f0  f1x  f0*v^2  0.5*me*f1x*v^5\n";
+            for (int i = 0; i < v_point.size(); i++)
+            {
+               fe_ofs << v_point[i] << " " << f0_v_point[i] << " "
+                      << f1x_v_point[i] << " " << f0v2_v_point[i] << " "
+                      << mehalff1xv5_v_point[i] << endl;
+            }
+            fe_ofs.close();
+         }
+
+         // Save spatial profiles of plasma and transport quantities.
+         int NpointsPerElement = 3;
+         int Nelements = x_gf.FESpace()->GetNE();
+         int Npoints = NpointsPerElement * Nelements;
+         double x[Npoints], rho[Npoints], Te[Npoints], intf0[Npoints],
+                j[Npoints], q[Npoints];
+         IntegrationPoint ip;
+         double dip = 1. / NpointsPerElement;
+         int p = 0;
+         for (int elNo = 0; elNo < Nelements; elNo++)
+         {
+            for (int elpoint = 0; elpoint < NpointsPerElement; elpoint++)
+            {
+               ip.Set3((elpoint + 0.5)*dip, 0.0, 0.0);
+               x[p] = x_gf.GetValue(elNo, ip);
+               rho[p] = rho_gf.GetValue(elNo, ip);
+               Te[p] = e_gf.GetValue(elNo, ip);
+               intf0[p] = intf0_gf.GetValue(elNo, ip);
+               j[p] = j_gf.GetValue(elNo, ip);
+               q[p] = hflux_gf.GetValue(elNo, ip);
+               p++;
+            }
+         }
+         ostringstream profiles_file_name;
+         profiles_file_name << basename << "_" << ti << "_profiles." 
+                            << setfill('0') << setw(6) << myid;
+         ofstream profiles_ofs(profiles_file_name.str().c_str());
+         profiles_ofs.precision(8);
+         profiles_ofs << "# x  rho Te intf0  j q\n";
+         for (int i = 0; i < Npoints; i++)
+         {
+            profiles_ofs << x[i] << " " << rho[i] << " " << Te[i] << " "
+                         << intf0[i] << " " << j[i] << " " << q[i] << endl;
+         }
+         profiles_ofs.close();
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
