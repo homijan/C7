@@ -127,9 +127,7 @@ double LorentzEfield::Eval(ElementTransformation &T,
 {
    // Return the Lorentz quasi-neutral (zero current) Efield.
    Vector V;
-   Eval(V, T, ip);
-
-   cout << "V.Norml2(): " << V.Norml2() << endl << flush;
+   Eval(V, T, ip); 
 
    return V.Norml2();
 }
