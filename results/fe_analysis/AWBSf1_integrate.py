@@ -35,6 +35,9 @@ if args.sigma:
 if args.Zbar:
     Zbar = args.Zbar
 
+# We use ion density as reference.
+ni = ne / Zbar
+
 def vTh(T): 
     return (kB*T/me)**0.5
 
@@ -88,7 +91,7 @@ ml_max = 10.0
 ml_min = 0.05
 # The heat flux after integration takes the form
 # qH = me/Zbar/sigma*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-# where mfp_ei = v**4/sigma/Zbar, i.e. sigma corresponds to ee collisions.
+# where mfp_ei = v**4/sigma/ni/Zbar, i.e. sigma corresponds to ei collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 print "Zbar, corr:", Zbar, corr
 cmag = 1./corr
@@ -122,7 +125,7 @@ for i in range(Nimpl):
     # The mean free path has standard v^4 dependence, sigma is cross section
     # given by model and Zbar increases the effect of Coulomb potential in
     # ei collisions
-    mfp_ei = vp**4.0/sigma/Zbar
+    mfp_ei = vp**4.0/sigma/ni/Zbar
     dv = dvimpl
     SHf1[i] = - (Zbar + 0.24)/(Zbar + 4.2)*((vp**2.0/2.0/vTh(Te)**2.0 - 1.5)*gradTe/Te - Efield/vTh(Te)**2.0)*fM(vp, Te)*vp*vp
     SHj[i] = mfp_ei*vp*SHf1[i]
@@ -141,7 +144,7 @@ AWBSJ_expl = 0.0
 AWBSQ_expl = 0.0
 for i in range(Nexpl):
     vp = vexpl[i]
-    mfp_ei = vp**4.0/sigma/Zbar
+    mfp_ei = vp**4.0/sigma/ni/Zbar
     dv = dvexpl
     AWBSf1_expl[i] = sol_expl[i]*vp*vp
     AWBSj_expl[i] = mfp_ei*vp*AWBSf1_expl[i]
@@ -167,7 +170,7 @@ for i in range(NC7E):
 
 # Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 # further multiplied by SH low Z factor.
-mfp_ei = (vTh(Te))**4.0/sigma/Zbar
+mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar
 L = Te / abs(gradTe)
 SHQ_analytic = - (Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 Kn = mfp_ei/L

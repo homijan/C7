@@ -193,7 +193,7 @@ public:
    void SetScale0(double S0_) { S0 = S0_; }
 };
 
-extern double a0;
+extern double sigma;
 
 } // namespace nth
 

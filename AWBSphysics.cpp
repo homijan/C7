@@ -26,7 +26,7 @@ namespace mfem
 namespace nth
 {
 
-double a0 = 5e3;
+double sigma = 5e3;
 
 double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
                                         const IntegrationPoint &ip, double rho)
@@ -35,10 +35,11 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
    double velocity_real = alphavT * velocity;
    double index = material_pcf->Eval(T, ip);
    double Zbar = eos->GetZbar(index, rho, Te);
+   double ni = eos->GetIonDensity(index, rho);
    // The ei collision frequency has standard 1/v^3 dependence, 
-   // sigma is cross section given by the model and Zbar increases the effect 
-   // of Coulomb potential in electron-ion collisions.
-   double nu = Zbar * a0 * rho / pow(velocity_real, 3.0);
+   // the sigma cross section given by the model sigma * ni 
+   // and Zbar increases the effect of Coulomb potential in "on ion collisions".
+   double nu = Zbar * sigma * ni / pow(velocity_real, 3.0);
 
    return nu;
 }

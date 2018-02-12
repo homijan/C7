@@ -49,7 +49,9 @@ public:
    // Thermal velocity.
    double GetvTe(double Te) { return sqrt(kB * Te / me); }
    // Get Thermodynamic values.
-   virtual double GetElectronDensity(double index, double rho, double Te) = 0;
+   virtual double GetIonDensity(double index, double rho) = 0;
+   virtual double GetElectronDensity(double index, double rho, double Te)
+           { return GetZbar(index, rho, Te) * GetIonDensity(index, rho); }
    virtual double GetZbar(double index, double rho, double Te) = 0;
    virtual double GetPe(double index, double rho, double Te) = 0;
    virtual double GetPi(double index, double rho, double Te) = 0;
@@ -77,8 +79,7 @@ public:
    IGEOS(double me_, double kB_) : EOS(me_, kB_, 1.0, 1.0, 1.0) 
    { Zbar = 1.0; mi = 1.0; }
    // Get Thermodynamic values.
-   virtual double GetElectronDensity(double index, double rho, double Te) 
-   { return rho / mi * Zbar; }
+   virtual double GetIonDensity(double index, double rho) { return rho / mi; }
    virtual double GetZbar(double index, double rho, double Te) { return Zbar; }
    virtual double GetPe(double index, double rho, double Te) {}
    virtual double GetPi(double index, double rho, double Te) {}

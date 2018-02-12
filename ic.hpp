@@ -30,7 +30,7 @@ namespace nth
 extern int nth_problem;
 extern double T_max, T_min;
 extern double rho_max, rho_min;
-extern double T_gradscale, rho_gradscale;
+extern double L, T_gradscale, rho_gradscale;
 
 double rho0(const Vector &x);
 double gamma(const Vector &x);

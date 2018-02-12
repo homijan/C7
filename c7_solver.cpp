@@ -93,7 +93,7 @@ C7Operator::C7Operator(int size,
      nzones(h1_fes.GetMesh()->GetNE()),
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
-     cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter),
+     cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
      Mf1(&h1_fes), Mscattf1(&h1_fes), Bfieldf1(&h1_fes),
      MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
      Mf0_inv(l2dofs_cnt, l2dofs_cnt, nzones),
@@ -458,6 +458,13 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                vecvalMat(vector_vals.GetData(), h1dofs_cnt, dim);
    Array<int> L2dofs, H1dofs;
 
+   // Isotropic unit matrix.
+   DenseMatrix I; 
+   I.Diag(1.0, dim);
+   // Isotropic P1 matrix.
+   DenseMatrix P1;
+   P1.Diag(1.0 / 3.0, dim);
+
    // Batched computations are needed, because hydrodynamic codes usually
    // involve expensive computations of material properties. Although this
    // miniapp uses simple EOS equations, we still want to represent the batched
@@ -508,58 +515,57 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                          detJ / ip.weight;
             mspei_b[idx] = AWBSPhysics->mspei_pcf->Eval(*T, ip, rho_b[idx]);
             mspee_b[idx] = AWBSPhysics->mspee_pcf->Eval(*T, ip, rho_b[idx]);
-			// M1 closure.
+
+            // M1 closure.
             // Matric closure maximizing angular entropy
             // A = 1/3*I + M^2/2*(1 + M^2)*((f1xf1^T)/f1^2 - 1/3*I),
             // where M = |f1|/|f0| must be in (0, 1), "isotropic-freestreaming".
-            // Isotropic matrix.
-            DenseMatrix Iso;
-            Iso.Diag(1.0 / 3.0, dim);
-            AM1_b[z](q) = Iso;
-/*
-            double normlim = 1e-32;
-            double anisolim = 1e-1;
-            //double f0norm = I0.GetValue((*T).ElementNo, ip);
-            double f0norm = abs(I0.GetValue((*T).ElementNo, ip));
-            //double f0norm = max(normlim, I0.GetValue((*T).ElementNo, ip));
-            Vector f1;
-            I1.GetVectorValue((*T).ElementNo, ip, f1);
-            double f1norm = f1.Norml2();
-            if (f0norm < normlim || f1norm < normlim)
+            if (M1_closure)
             {
-               AM1_b[z](q) = Iso;
-            }
-            else if (f1norm / f0norm < anisolim)
-            {
-               AM1_b[z](q) = Iso;
-            }
-            else
-            {
-               double M = min(f1norm / f0norm, 1.0);
-               double Msquare = M * M;
-               double c = Msquare / 2.0 * (1.0 + Msquare);
-               DenseMatrix normf1xf1T(dim);
-               normf1xf1T.Diag(1.0, dim);
-               //f1 *= 1.0 / f1norm;
-			   // f1 directional matrix.
-               //MultVVt(f1, normf1xf1T);
-               //normf1xf1T = 0.0;
-			   //for (int vd = 0; vd < dim; vd++)
+               double normlim = 1e-32;
+               double anisolim = 1e-1;
+               //double f0norm = I0.GetValue((*T).ElementNo, ip);
+               double f0norm = abs(I0.GetValue((*T).ElementNo, ip));
+               //double f0norm = max(normlim, I0.GetValue((*T).ElementNo, ip));
+               Vector f1;
+               I1.GetVectorValue((*T).ElementNo, ip, f1);
+               double f1norm = f1.Norml2();
+
+               if (f0norm < normlim || f1norm < normlim)
+               {
+                  AM1_b[z](q) = P1;
+               }
+               //else if (f1norm / f0norm < anisolim)
                //{
-               //   normf1xf1T(vd, vd) = f1(vd) * f1(vd);
+               //   AM1_b[z](q) = P1;
                //}
-               // Construct the closure matrix.
-			   AM1_b[z](q) = 0.0;
-               AM1_b[z](q).Add(1.0 - c, Iso);
-               AM1_b[z](q).Add(c, normf1xf1T);
-               //cout << "f0norm, f1norm, c:" << f0norm << ", " << f1norm
-			   //     << ", " << c << endl << flush;
-               //cout << "normf1xf1T:" << endl << flush;
-               //normf1xf1T.Print();
-               //cout << "AM1:" << endl << flush;
-               //AM1_b[z](q).Print();
+               else
+               {
+                  double M = min(f1norm / f0norm, 1.0);
+                  double Msquare = M * M;
+                  double c = Msquare / 2.0 * (1.0 + Msquare);
+                  DenseMatrix normf1xf1T(dim);
+                  normf1xf1T.Diag(1.0, dim);
+                  //f1 *= 1.0 / f1norm;
+			      // f1 directional matrix.
+                  //MultVVt(f1, normf1xf1T);
+                  //normf1xf1T = 0.0;
+			      //for (int vd = 0; vd < dim; vd++)
+                  //{
+                  //   normf1xf1T(vd, vd) = f1(vd) * f1(vd);
+                  //}
+                  // Construct the closure matrix.
+			      AM1_b[z](q) = 0.0;
+                  AM1_b[z](q).Add(1.0 - c, P1);
+                  AM1_b[z](q).Add(c, normf1xf1T);
+                  //cout << "f0norm, f1norm, c:" << f0norm << ", " << f1norm
+			      //     << ", " << c << endl << flush;
+                  //cout << "normf1xf1T:" << endl << flush;
+                  //normf1xf1T.Print();
+                  //cout << "AM1:" << endl << flush;
+                  //AM1_b[z](q).Print();
+               }
             }
-*/
          }
          ++z_id;
       }
@@ -581,12 +587,13 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             // not to store the Jacobians for all batched quadrature points.
             const DenseMatrix &Jpr = Jpr_b[z](q);
             CalcInverse(Jpr, Jinv);
-            const double detJ = Jpr.Det();
-            const DenseMatrix &AM1 = AM1_b[z](q);
-            DenseMatrix I; I.Diag(1.0, dim);
+            const double detJ = Jpr.Det(); 
             const double mspei = mspei_b[z*nqp + q];
             const double mspee = mspee_b[z*nqp + q];
 			double rho = rho_b[z*nqp + q];
+            // VEF transport closure matrix is either P1 or M1.
+			DenseMatrix A1 = P1;
+			if (M1_closure) { A1 = AM1_b[z](q); }
 
             Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim);
             // TODO Here the vector E and B evaluation.
@@ -596,9 +603,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
 			//Efield = 0.0;
             //Bfield = 0.0; 
-            AM1.Mult(Efield, AEfield);
+            A1.Mult(Efield, AEfield); 
             AIEfield = 0.0;
-            AM1.AddMult_a(3.0, Efield, AIEfield);
+            A1.AddMult_a(3.0, Efield, AIEfield);
             I.AddMult_a(-1.0, Efield, AIEfield);
             // Time step estimate at the point. Here the more relevant length
             // scale is related to the actual mesh deformation; we use the min
@@ -610,15 +617,11 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             // The scaled cfl condition on velocity step.
             double dv = h_min * min(mspee, mspei) / alphavT; // / rho;
             quad_data.dt_est = min(quad_data.dt_est, cfl * dv);
-            I0stress = 0.0;
-            I1stress = 0.0;
-			for (int d = 0; d < dim; d++)
-            {
-               I0stress(d, d) = 1.0;
-               I1stress(d, d) = 1.0 / 3.0; // P1 closure.
-            }
-            // M1 closure. See the construction above.
-            //I1stress = AM1;
+
+            // Stress matrices for f0 and f1 equations.
+			I0stress = I;
+			// P1 or M1 closure. See the construction above.
+            I1stress = A1;
 
             // Quadrature data for partial assembly of the force operator.
             MultABt(I0stress, Jinv, I0stressJiT);

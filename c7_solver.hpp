@@ -75,6 +75,9 @@ protected:
    const double cg_rel_tol;
    const int cg_max_iter;
 
+   // Switch for M1 VEF closure. 
+   bool M1_closure;
+
    // Velocity mass matrix and local inverses of the energy mass matrices. These
    // are constant in time, due to the pointwise mass conservation property.
    mutable ParBilinearForm Mf1, Mscattf1, Bfieldf1;
@@ -123,6 +126,8 @@ public:
    double GetVelocityStepEstimate(const Vector &S) const;
    void ResetVelocityStepEstimate() const;
    void ResetQuadratureData() const { quad_data_is_current = false; }
+   void SetM1closure() { M1_closure = true; }
+   void SetP1closure() { M1_closure = false; }
 
    // The density values, which are stored only at some quadrature points, are
    // projected as a ParGridFunction.

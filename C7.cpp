@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
    const char *basename = "results/tmp/C7";
    int nth_problem = 5;
    double T_max = 1000.0, T_min = 100.0, rho_max = 10.0, rho_min = 1.0;
-   double T_gradscale = 50.0, rho_gradscale = 50.0;
-   double a0 = 1e20;
+   double L = 1.0, T_gradscale = 50.0, rho_gradscale = 50.0;
+   double sigma = 1e20;
    double Zbar = 4.0;
    // Correct input for a Lorentz force calculation with SH Efield.
    //double EfieldS0 = 1.0;
@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
    double EfieldS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
    double ne = 5e19;
+   bool M1closure = false;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -147,8 +148,8 @@ int main(int argc, char *argv[])
                   "Enable or disable result output (files in mfem format).");
    args.AddOption(&basename, "-k", "--outputfilename",
                   "Name of the visit dump files");
-   args.AddOption(&a0, "-a0", "--a0",
-                  "Mean-free-path scaling, i.e. lambda = v^4/rho/a0.");
+   args.AddOption(&sigma, "-sigma", "--sigma",
+                  "Mean-free-path scaling, i.e. lambda = v^4/sigma/ni/Zbar.");
    args.AddOption(&Zbar, "-Z", "--Zbar",
                   "Constant ionization used for nu_ee. Used along IGEOS only.");
    args.AddOption(&T_max, "-Tmax", "--Tmax",
@@ -159,6 +160,8 @@ int main(int argc, char *argv[])
                   "Maximum density in the step function tanh(x).");
    args.AddOption(&rho_min, "-rmin", "--rhomin",
                   "Minimum density in the step function tanh(x).");
+   args.AddOption(&L, "-L", "--Length",
+                  "Unit interval scale in the function tanh(a*x).");
    args.AddOption(&T_gradscale, "-Tgrad", "--Tgrad",
                   "Temperature gradient scale in the function tanh(a*x).");
    args.AddOption(&rho_gradscale, "-rgrad", "--rhograd",
@@ -168,7 +171,10 @@ int main(int argc, char *argv[])
    args.AddOption(&I0SourceS0, "-S0", "--S0",
                   "Electron source scaling (via electron density), i.e. ne = S0*ne.");
    args.AddOption(&ne, "-ne", "--ne",
-                  "Electron density (conversion as ne*rho).");
+                  "Electron density (conversion as ne = rho/mi*Zbar).");
+   args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
+                  "--no-M1closure->P1closure",
+                  "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
 
    args.Parse();
    if (!args.Good())
@@ -183,9 +189,10 @@ int main(int argc, char *argv[])
    nth::T_min = T_min;
    nth::rho_max = rho_max;
    nth::rho_min = rho_min;
+   nth::L = L;
    nth::T_gradscale = T_gradscale;
    nth::rho_gradscale = rho_gradscale;
-   nth::a0 = a0;
+   nth::sigma = sigma;
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.
@@ -236,6 +243,10 @@ int main(int argc, char *argv[])
    }
    delete [] nxyz;
    delete mesh;
+
+   // Apply the mesh scaling. 
+   // In ic.hpp/cpp the original mesh is considered to be a unit (0, 1).
+   *(pmesh->GetNodes()) *= L;
 
    // Refine the mesh further in parallel to increase the resolution.
    for (int lev = 0; lev < rp_levels; lev++) { pmesh->UniformRefinement(); }
@@ -457,19 +468,19 @@ int main(int argc, char *argv[])
       dvmax = vmax*0.1;
       if (pmesh->Dimension() == 1)
       { 
-         nth::a0 = 2e3;
+         nth::sigma = 2e3;
          vis_steps = 10000;
          c7cfl = 0.5;
       }
       else if (pmesh->Dimension() == 2)
       { 
-	     nth::a0 = 1e5; //2e1;
+	     nth::sigma = 1e5; //2e1;
          vis_steps = 10000;
          c7cfl = 1.0;
       }
       else if (pmesh->Dimension() == 3)
       {
-         nth::a0 = 5e7;
+         nth::sigma = 5e7;
          vis_steps = 10000;
          c7cfl = 0.5;
       }
@@ -487,6 +498,8 @@ int main(int argc, char *argv[])
    // Initialize the C7-AWBS operator
    nth::C7Operator c7oper(c7S.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
                           c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
+   // Turn on M1closure.
+   if (M1closure) { c7oper.SetM1closure(); }
    // Prepare grid functions integrating the moments of I0 and I1.
    ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace), 
                    Efield_gf(&H1FESpace);

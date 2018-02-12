@@ -27,10 +27,9 @@ namespace nth
 {
 
 int nth_problem = 1;
-double L = 1.0;
 double T_max = 1000.0, T_min = 100.0;
 double rho_max = 10.0, rho_min = 1.0;
-double T_gradscale = 50.0, rho_gradscale = 50.0;
+double L = 1.0, T_gradscale = 50.0, rho_gradscale = 50.0;
 
 double rho0(const Vector &x)
 {
