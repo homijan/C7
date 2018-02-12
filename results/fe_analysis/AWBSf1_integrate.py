@@ -246,7 +246,7 @@ matplotlib.rc('font', **font)
 plt.plot(vimpl/vTh(Te), SHq, 'b', label='qSH')
 plt.plot(vexpl/vTh(Te), AWBSq_expl, 'g-.', label='qAWBS')
 plt.plot(vimpl/vTh(Te), AWBSq_impl, 'r--', label='qAWBS/corr')
-plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'k', label='qC7E')
+plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'kx', label='qC7E')
 plt.plot(C7v/vTh(Te), C7mehalff1v5 / (4.0*pi/3.0), 'k--', label='qC7')
 
 plt.legend(loc='best')
