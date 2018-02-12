@@ -109,6 +109,8 @@ int main(int argc, char *argv[])
    // We expect rho = 1, and so, the ion mass follows.
    double ne = 5e19;
    bool M1closure = false;
+   // Minimum number of velocity groups.
+   double MinimumGroups = 10.0;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -175,6 +177,8 @@ int main(int argc, char *argv[])
    args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
                   "--no-M1closure->P1closure",
                   "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
+   args.AddOption(&MinimumGroups, "-minG", "--minimumGroups",
+                  "The minimum number of velocity groups.");
 
    args.Parse();
    if (!args.Good())
@@ -458,7 +462,8 @@ int main(int argc, char *argv[])
    double vmin = 0.001 * vmax;
    //double vmin = 0.07 * vmax;
    // and provide some maximum dv step.
-   double dvmax = vmax*0.0005;
+   double dvmax = vmax / MinimumGroups;
+   //double dvmax = vmax*0.0005;
    bool nonlocal_test = false;
    if (nonlocal_test)
    {
