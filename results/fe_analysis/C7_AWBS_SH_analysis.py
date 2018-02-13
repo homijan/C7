@@ -2,15 +2,20 @@ import numpy as np
 from math import pi
 from math import exp
 
-## 
+## Fundamental physical constants in cgs. 
 kB = 1.3807e-16
 me = 9.1094e-28
+
+## Number of processors used to run C7.
+Nproc = 8
+maxProcOrder = 6 # Corresponds to maximum of million processors.
 
 ne = 5.0e19
 Te = 10000.0
 gradTe = -1.0
 Zbar = 4.0
 sigma = 1e15
+xpoint = 0.5
 
 import argparse
 ## Create parser object.
@@ -21,6 +26,8 @@ parser.add_argument("-T", "--Te", help="Temperature at the point.", type=float)
 parser.add_argument("-g", "--gradTe", help="Temperature gradient at the point.", type=float)
 parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
 parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
+parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
+parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 
 ## Parse arguments.
 args = parser.parse_args()
@@ -34,6 +41,41 @@ if args.sigma:
     sigma = args.sigma
 if args.Zbar:
     Zbar = args.Zbar
+if args.xpoint:
+    xpoint = args.xpoint
+if args.Nproc:
+    Nproc = args.Nproc
+
+## Load the profiles provided by C7.
+## Global lists.
+C7x_raw = []
+C7rho_raw = []
+C7Te_raw = []
+C7intf0_raw = []
+C7j_raw = []
+C7q_raw = []
+## Gather together the lists from each processors output.
+print "Loading data from files:"
+for proc in range(Nproc):
+    file = '../tmp/C7_1_profiles.'+str(proc).zfill(maxProcOrder)
+    C7x_proc, C7rho_proc, C7Te_proc, C7intf0_proc, C7j_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
+    C7x_raw.extend(C7x_proc)
+    C7rho_raw.extend(C7rho_proc)
+    C7Te_raw.extend(C7Te_proc)
+    C7intf0_raw.extend(C7intf0_proc)
+    C7j_raw.extend(C7j_proc)
+    C7q_raw.extend(C7q_proc)
+    print file
+
+## Sort the lists with respect to the position x.
+sorted_indices = np.array(C7x_raw).argsort()
+C7x = np.array([C7x_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+C7rho = np.array([C7rho_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+C7Te = np.array([C7Te_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+C7intf0 = np.array([C7intf0_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+C7j = np.array([C7j_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+
 
 ## We use ion density as reference.
 ni = ne / Zbar
@@ -255,4 +297,40 @@ else:
 plt.plot(C7v/vTh(Te), C7mehalff1v5 / (4.0*pi/3.0), 'k--', label=r'C7$^{*}$('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 plt.legend(loc='best')
 #plt.grid()
+plt.show()
+
+#C7x, C7rho, C7Te, C7intf0, C7j, C7q = np.loadtxt('C71Dprofiles.txt',  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
+#C7x, C7rho, C7Te, C7intf0, C7j, C7q = np.loadtxt('C71Dprofiles.txt')
+
+# It is useful to plot the profiles with respect to microns.
+C7x_microns = np.array(C7x) * 1e4
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'$\rho$ [g/cm$^3$]')
+plt.title(r'Density')
+plt.plot(C7x_microns, C7rho)
+plt.show()
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'$T_e$ [eV]')
+plt.title(r'Electron temperature')
+plt.plot(C7x_microns, C7Te)
+plt.show()
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'$\int f_0 dv$ [1/cm$^3$]')
+plt.title(r'Isotropic part of f')
+plt.plot(C7x_microns, C7intf0)
+plt.show()
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'$j$ [1/s/cm$^2$]')
+plt.title(r'Flux/current')
+plt.plot(C7x_microns, C7j)
+plt.show()
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'$q$ [W/cm$^2$]')
+plt.title(r'Heat flux')
+plt.plot(C7x_microns, C7q)
 plt.show()

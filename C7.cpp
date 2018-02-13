@@ -111,6 +111,8 @@ int main(int argc, char *argv[])
    bool M1closure = false;
    // Minimum number of velocity groups.
    double MinimumGroups = 10.0;
+   // The point where the detailed kinetic output will be stored at.
+   double x_point = 0.5;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -179,6 +181,8 @@ int main(int argc, char *argv[])
                   "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
    args.AddOption(&MinimumGroups, "-minG", "--minimumGroups",
                   "The minimum number of velocity groups.");
+   args.AddOption(&x_point, "-xp", "--xpoint",
+                  "An x point within the mesh, where a detailed kinetic profiles as stored.");
 
    args.Parse();
    if (!args.Good())
@@ -740,8 +744,6 @@ int main(int argc, char *argv[])
          Kn_gf.ProjectCoefficient(Kn_cf);
          Efield_gf.ProjectCoefficient(Efield_cf);
 		 // Point value structures for storing the distribution function.
-         // TODO this point wants to be loaded as an input argument. 
-		 double x_point = 0.5;
          int cell_point = 0;
          IntegrationPoint ip_point;
          ip_point.Set3(0.5, 0.5, 0.5);
@@ -793,7 +795,7 @@ int main(int argc, char *argv[])
             // Store the distribution function at a given point.
             if (right_proc_point)
             {
-               cout << "cell_point: " << cell_point << endl << flush;
+               //cout << "cell_point: " << cell_point << endl << flush;
 			   f0_point = I0_gf.GetValue(cell_point, ip_point);
                I1_gf.GetVectorValue(cell_point, ip_point, f1_point);
                v_point.push_back(alphavT * v);
