@@ -865,7 +865,7 @@ int main(int argc, char *argv[])
          }
 
          // Save spatial profiles of plasma and transport quantities.
-         int NpointsPerElement = 3;
+         int NpointsPerElement = 5;
          int Nelements = x_gf.FESpace()->GetNE();
          int Npoints = NpointsPerElement * Nelements;
          double x[Npoints], rho[Npoints], Te[Npoints], intf0[Npoints],

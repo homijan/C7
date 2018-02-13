@@ -1,8 +1,8 @@
 import numpy as np
-from scipy.integrate import odeint
 from math import pi
 from math import exp
 
+## 
 kB = 1.3807e-16
 me = 9.1094e-28
 
@@ -13,17 +13,17 @@ Zbar = 4.0
 sigma = 1e15
 
 import argparse
-# Create AWBSf1_parser object.
-AWBSf1_parser = argparse.ArgumentParser(description='Analyze diffusive asymptotic of AWBS + compare to C7.')
-# Define input arguments.
-AWBSf1_parser.add_argument("-n", "--ne", help="Electron density at the point.", type=float)
-AWBSf1_parser.add_argument("-T", "--Te", help="Temperature at the point.", type=float)
-AWBSf1_parser.add_argument("-g", "--gradTe", help="Temperature gradient at the point.", type=float)
-AWBSf1_parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
-AWBSf1_parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
+## Create parser object.
+parser = argparse.ArgumentParser(description='Analyze diffusive asymptotic of AWBS + compare to C7.')
+## Define input arguments.
+parser.add_argument("-n", "--ne", help="Electron density at the point.", type=float)
+parser.add_argument("-T", "--Te", help="Temperature at the point.", type=float)
+parser.add_argument("-g", "--gradTe", help="Temperature gradient at the point.", type=float)
+parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
+parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 
-# Parse arguments.
-args = AWBSf1_parser.parse_args()
+## Parse arguments.
+args = parser.parse_args()
 if args.ne:
     ne = args.ne
 if args.Te:
@@ -35,7 +35,7 @@ if args.sigma:
 if args.Zbar:
     Zbar = args.Zbar
 
-# We use ion density as reference.
+## We use ion density as reference.
 ni = ne / Zbar
 
 def vTh(T): 
@@ -73,43 +73,29 @@ def solve_bweuler(v, f0, T, gradT, Z, E):
         f1[i+1] = (f1[i] + dv*rhs(vp, T, gradT, Z, E))/(1.0 + dv*(4.0 - Z)/vp)
     return f1
 
-#v0 = 6.4
-#T0 = 92.0
-#gT0 = 18.0
-#dT = 1e-5
-#print((v0**2.0/2.0/vTh(T0)**2.0-1.5)*fM(v0, T0)/T0)
-#print((fM(v0, T0+dT)-fM(v0, T0))/dT)
-
-# Optimal implicit solve
-#N = 150
-#ml = 7.0
-#Te = 1000.0
-#gradTe = -1.0
-#Zbar = 1000.0
-
 ml_max = 10.0
 ml_min = 0.05
-# The heat flux after integration takes the form
-# qH = me/Zbar/sigma*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-# where mfp_ei = v**4/sigma/ni/Zbar, i.e. sigma corresponds to ei collisions.
+## The heat flux after integration takes the form
+## qH = me/Zbar/sigma*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
+## where mfp_ei = v**4/sigma/ni/Zbar, i.e. sigma corresponds to ei collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 print "Zbar, corr:", Zbar, corr
 cmag = 1./corr
-#Efield = 0.0
+## Classical Lorentz approximation electric field.
 Efield = vTh(Te)**2.0*2.5*gradTe/Te
 
+## Solve the AWBS ODE problem.
 Nexpl = 5000
 vexpl = np.linspace(ml_max*vTh(Te), ml_min*vTh(Te), Nexpl)
 dvexpl = (ml_max - ml_min)*vTh(Te)/(Nexpl-1)
-
 Nimpl = 5000
 vimpl = np.linspace(ml_max*vTh(Te), ml_min*vTh(Te), Nimpl)
 dvimpl = (ml_max - ml_min)*vTh(Te)/(Nimpl-1)
-
+## Use both explicit and implicit method of ODE solve.
 sol_expl = solve_fweuler(vexpl, 0.0, Te, gradTe, Zbar, Efield)
 sol_impl = solve_bweuler(vimpl, 0.0, Te, gradTe, cmag*Zbar, Efield)
 
-# Post-process transport values
+## Post-process transport values
 SHf1 = np.zeros(Nimpl)
 SHj = np.zeros(Nimpl)
 SHq = np.zeros(Nimpl)
@@ -122,9 +108,9 @@ AWBSJ_impl = 0.0
 AWBSQ_impl = 0.0
 for i in range(Nimpl):
     vp = vimpl[i]
-    # The mean free path has standard v^4 dependence, sigma is cross section
-    # given by model and Zbar increases the effect of Coulomb potential in
-    # ei collisions
+    ## The mean free path has standard v^4 dependence, sigma is cross section
+    ## given by model and Zbar increases the effect of Coulomb potential in
+    ## ei collisions.
     mfp_ei = vp**4.0/sigma/ni/Zbar
     dv = dvimpl
     SHf1[i] = - (Zbar + 0.24)/(Zbar + 4.2)*((vp**2.0/2.0/vTh(Te)**2.0 - 1.5)*gradTe/Te - Efield/vTh(Te)**2.0)*fM(vp, Te)*vp*vp
@@ -152,15 +138,15 @@ for i in range(Nexpl):
     AWBSJ_expl = AWBSJ_expl + 4.0*pi/3.0*AWBSj_expl[i]*dv
     AWBSQ_expl = AWBSQ_expl + 4.0*pi/3.0*AWBSq_expl[i]*dv
 
-# Compare with C7 results
-# No explicit treatment of Efield, we use mimicing by reducing ne in source.
+## Compare with C7 results
+## No explicit treatment of Efield, we use mimicing by reducing ne in source.
 C7v, C7mehalff1v5 = np.loadtxt('fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
 C7Q = 0.0
 NC7 = C7v.size - 1
 for i in range(NC7):
     dC7v = C7v[i] - C7v[i+1]
     C7Q = C7Q + C7mehalff1v5[i]*dC7v
-# Explicit treatment of Efield.
+## Explicit treatment of Efield.
 C7Ev, C7Emehalff1v5 = np.loadtxt('fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
 C7EQ = 0.0
 NC7E = C7Ev.size - 1
@@ -168,20 +154,20 @@ for i in range(NC7E):
     dC7Ev = C7Ev[i] - C7Ev[i+1]
     C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
-# Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
-# further multiplied by SH low Z factor.
+## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
+## further multiplied by SH low Z factor.
 mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar
 L = Te / abs(gradTe)
 SHQ_analytic = - (Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 Kn = mfp_ei/L
 Kn_flux = SHQ_analytic / ((Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
-# Show the Knudsen number
+## Show the Knudsen number
 print 'Kn: ', Kn, 'Kn from flux: ', Kn_flux 
-# Express flux proportionality with respect to SHQ_analytic
+## Express flux proportionality with respect to SHQ_analytic
 proporC7EQ = C7EQ / SHQ_analytic
 proporC7Q = C7Q / SHQ_analytic
 
-# Print integrated values
+## Print integrated values
 print "SHQ:          ", SHQ
 print "SHQ_analytic: ", SHQ_analytic
 print "C7EQ:         ", C7EQ
@@ -191,7 +177,6 @@ print "AWBSQ_expl:   ", AWBSQ_expl
 print "SHJ:        ", SHJ
 print "AWBSJ_impl: ", AWBSJ_impl
 print "AWBSJ_expl: ", AWBSJ_expl
-
 
 # Physical fix by a magic constant.
 # Z = 1
