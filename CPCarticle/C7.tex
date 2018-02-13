@@ -82,12 +82,14 @@
 \newcommand{\christ}[3]{\genfrac{\{}{\}}{0pt}{}{#1}{#2 #3}}
 %\newcommand{\christ}[3]{\Gamma^{#1}_{#2 #3}}
 %\newcommand{\ddv}[2]{\frac{\Delta #1}{\Delta #2}}
+\newcommand{\collpdv}[2]{\pdv{#1}{#2}\Big|_{coll}}
 \newcommand{\mfp}{\lambda}
 \newcommand{\tmfp}{\tilde{\lambda}}
 \newcommand{\mfpe}{\lambda_e}
 \newcommand{\mfpei}{\lambda_{ei}}
 \newcommand{\Zbar}{\bar{Z}}
 \newcommand{\nue}{\nu_{e}}
+\newcommand{\nuei}{\nu_{ei}}
 \newcommand{\nutot}{\nu_{t}}
 \newcommand{\vmag}{v}
 \newcommand{\vth}{v_{th}}
@@ -118,6 +120,7 @@
 
 \newcommand{\figref}[1]{FIG.~\ref{#1}}
 \newcommand{\refeq}[1]{(\ref{#1})}
+\newcommand{\secref}[1]{Sec.~\ref{#1}}
 
 
 %% This list environment is used for the references in the
@@ -1122,7 +1125,7 @@ where $\vth = \sqrt{\kB T/\me}$.
   \nonumber
 \end{eqnarray}
 
-\subsection{Lorentz approximation}
+\subsection{Lorentz approximation}\label{sec:Lorentz_cop}
 \begin{equation}
   \vect{v}\cdot\nabla_{\vect{x}} f 
   + \frac{\qe}{\me}\left(\E + \frac{1}{c}\vect{v}\times\B\right)\cdot
@@ -1298,7 +1301,7 @@ is defined in order to make the~algebraic operations easier to follow.
   \label{eq:Lorentz_spherical}
 \end{multline}
 
-\subsubsection{BGK collision operator}
+\subsubsection{BGK collision operator}\label{sec:BGK_cop}
 The~BGK electron transport equation in 6D reads
 \begin{multline}
   \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
@@ -1562,7 +1565,7 @@ Finally, one can find the~approximate solution
 \end{equation}
 
 
-\subsubsection{AWBS collision operator}
+\subsubsection{AWBS collision operator}\label{sec:AWBS_cop}
 The~AWBS electron transport equation in 6D reads
 \begin{multline}
   \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
@@ -2019,8 +2022,101 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
   \label{fig:AWBScorrection_f1}
 \end{figure}
 
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/diff_f1_C7AWBScorrection_Z4.png} 
+    \end{tabular}
+  \caption{
+  Efficiency of C7 (18 groups). Definition of Efield free C7$^*$ calculation 
+  based on reduction of the density of fast electrons.
+  }
+  \end{center}
+  \label{fig:C7AWBScorrection}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/f1_comparison_Kn1e-6_Z4.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/f1_comparison_Kn1e-5_Z4.png} \\
+       \includegraphics[width=0.5\textwidth]{../results/fe_analysis/f1_comparison_Kn16e-6_Z4.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/f1_comparison_Kn1e-4_Z4.png}     
+    \end{tabular}
+  \caption{
+  The~effect of the~diffusive electric field in AWBS model.
+  }
+  \end{center}
+  \label{fig:EfieldAWBS}
+\end{figure}
+
 \clearpage
 
+\section{Hydrodynamic diffusive electron collision operator HDECO}
+\label{sec:diffusivecollisionoperator}
+In order to improve the~electron collision operator AWBS analyzed 
+in \secref{sec:AWBS_cop}, one can add the effect of diffusion in velocity space
+as 
+\begin{equation}
+  \collpdv{f}{t} = \nue\vmag\pdv{}{\vmag}\left( f + 
+  \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) .
+  \label{eq:DECO}
+\end{equation}
+Nevertheless, the~\textit{diffusive electron collision operator} \eqref{eq:DECO}
+does not provide a~good bridge to hydrodynamics because of
+\begin{equation}
+  \collpdv{\fM - f}{t} = \collpdv{f}{t} ,
+  \label{eq:DECOnobridge}
+\end{equation}
+i.e. there is no relation to hydrodynamics via temperature.
+The~reason for \eqref{eq:DECOnobridge} is actually perfectly correct since
+\begin{equation}
+  \collpdv{\fM}{t} = 0 ,
+  \qquad \implies\qquad \collpdv{f}{t} 
+ \stackrel{ f\rightarrow\fM }{{\scalebox{3}[1]{=}}} 0,
+  \label{eq:DECOfM}
+\end{equation}
+which directly demonstrates that \eqref{eq:DECOnobridge} obeys the~Boltzmann's
+H-theorem. The~left side of (\ref{eq:DECOfM}) holds due to the~form of
+Maxwell-Boltzmann distribution \eqref{eq:MBdistribution}.
+
+A~non-trivial remedy of the~absence of bridge of the~electron distribution
+function $f$ and the~background fluid modeled by hydrodynamics can be
+found by introducing a~source of electrons, i.e. we propose 
+the~"collision operator"
+\begin{multline}
+  \collpdv{f}{t} = n_i \ddv{\Zbar}{t}\frac{\fM(T)}{n_e} +
+  \nue \vmag \pdv{}{\vmag}\left( f + 
+  \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) + \\
+  \frac{\nuei}{2} 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right) ,
+  \label{eq:HDECO}
+\end{multline}
+where $\mu = \cos(\phi)$ and $n_i \ddv{\Zbar}{t}\frac{\fM(T)}{n_e}$ is a~source
+of electrons, where the~distribution of ionized electrons is $\fM(T)$ 
+(T corresponding to bounded "hydrodynamic" electrons).
+
+Consequently, one can write the~simplified (linear) Boltzmann transport 
+equation of electrons as
+\begin{multline}
+  \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
+  {\vmag\sin(\phi)}\pdv{f}{\theta} \right] 
+  =\\
+  \frac{n_i}{\vmag}\ddv{\Zbar}{t}\frac{\fM(T)}{n_e} +
+  \frac{\vmag}{\lambda^e}\pdv{}{\vmag}\left( f + 
+  \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) 
+  + \frac{\fzero - f}{\lambda^{ei}} ,
+  \label{eq:DECO_spherical}
+\end{multline}
+where $\mfpe$ is the~electron-electron mean free path, and
+$\mfpei$ is the~electron-ion mean free path. We also approximate
+$\mfpe = \Zbar \mfpei$. The~form of the~electron-ion scattering operator
+arises form a~low anisotropy approximation 
+($f\approx\fzero + \vn\cdot\fone$).
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
