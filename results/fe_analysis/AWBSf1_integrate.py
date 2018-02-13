@@ -177,6 +177,9 @@ Kn = mfp_ei/L
 Kn_flux = SHQ_analytic / ((Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 # Show the Knudsen number
 print 'Kn: ', Kn, 'Kn from flux: ', Kn_flux 
+# Express flux proportionality with respect to SHQ_analytic
+proporC7EQ = C7EQ / SHQ_analytic
+proporC7Q = C7Q / SHQ_analytic
 
 # Print integrated values
 print "SHQ:          ", SHQ
@@ -243,14 +246,28 @@ matplotlib.rc('font', **font)
 #plt.xlabel('Z')
 #plt.title('Rational function fit')
 
-plt.plot(vimpl/vTh(Te), SHq, 'b', label='qSH')
-plt.plot(vexpl/vTh(Te), AWBSq_expl, 'g-.', label='qAWBS')
-plt.plot(vimpl/vTh(Te), AWBSq_impl, 'r--', label='qAWBS/corr')
-plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'kx', label='qC7E')
-plt.plot(C7v/vTh(Te), C7mehalff1v5 / (4.0*pi/3.0), 'k--', label='qC7')
+## Shrink the x axis appropriately.
+mult = 8
+p_vimpl = vimpl[vimpl < mult*vTh(Te)]
+p_SHq = SHq[vimpl < mult*vTh(Te)]
+p_AWBSq_impl = AWBSq_impl[vimpl < mult*vTh(Te)]
+p_vexpl = vexpl[vexpl < mult*vTh(Te)]
+p_AWBSq_expl = AWBSq_expl[vexpl < mult*vTh(Te)]
 
-plt.legend(loc='best')
+## Set labels.
+plt.ylabel(r'$q_1 = m_e/2 v^2 f_1 v^2$ [a.u.]')
 plt.xlabel('v/vT')
-plt.title('Z = '+str(Zbar))
+plt.title('Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn))
+## Plot kinetic analysis.
+plt.plot(p_vimpl/vTh(Te), p_SHq, 'b', label='SH')
+#plt.plot(p_vexpl/vTh(Te), p_AWBSq_expl, 'g-.', label='AWBS')
+plt.plot(p_vimpl/vTh(Te), p_AWBSq_impl, 'r--', label=r'AWBS$^{*}$')
+if (len(C7Ev)<30):
+   plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'kx', label='C7E('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+else:
+   plt.plot(C7Ev/vTh(Te), C7Emehalff1v5 / (4.0*pi/3.0), 'k', label='C7E('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+#plt.plot(C7v/vTh(Te), 1.5 * C7mehalff1v5 / (4.0*pi/3.0), 'k:', label=r'C7')
+plt.plot(C7v/vTh(Te), C7mehalff1v5 / (4.0*pi/3.0), 'k--', label=r'C7$^{*}$('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+plt.legend(loc='best')
 #plt.grid()
 plt.show()
