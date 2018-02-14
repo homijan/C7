@@ -3,7 +3,7 @@
 ## Avoid vim .swp
 *.swp
 ## Avoid temporary C7 results directed by default to ./results/tmp
-results/tmp/*.*
+results/tmp/*.* results/fe_analysis/Ecorrect_data/*.* results/fe_analysis/Emimic_data/*.*
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

@@ -164,7 +164,7 @@ clean: clean-build clean-exec
 clean-build:
 	rm -rf C7 *.o *~ *.dSYM
 clean-exec:
-	rm -rf ./results/tmp/*.*
+	rm -rf ./results/tmp/*.* ./results/fe_analysis/Ecorrect_data/*.* ./results/fe_analysis/Emimic_data/*.*
 
 distclean: clean
 	rm -rf bin/

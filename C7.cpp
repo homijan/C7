@@ -265,8 +265,10 @@ int main(int argc, char *argv[])
    // Fundamental! BasisType::Positive destroys C7 calculation with Efield! 
    L2_FECollection L2FEC(order_e, dim);
    //L2_FECollection L2FEC(order_e, dim, BasisType::Positive);
+   //L2_FECollection L2FECf0(order_e, dim, BasisType::Positive);
    H1_FECollection H1FEC(order_v, dim);
    ParFiniteElementSpace L2FESpace(pmesh, &L2FEC);
+   //ParFiniteElementSpace L2FESpacef0(pmesh, &L2FECf0);
    ParFiniteElementSpace H1FESpace(pmesh, &H1FEC, pmesh->Dimension());
 
    // Boundary conditions: all tests use v.n = 0 on the boundary, and we assume

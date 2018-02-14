@@ -38,44 +38,49 @@ PROBLEM=5
 ## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
 ## C7E
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 $E0
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/fe_point_Ecorrect.txt
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 ## C7*
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/fe_point_Emimic.txt
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NE -xp $XPOINT --Emimic --Ecorresults
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NE -xp $XPOINT --Emimic --Ecorrect
 cd ../..
-"""
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 $E0
-cd results/fe_analysis
-cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorresults
-cd ../..
-"""
+
+
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 $E0
+#cd results/fe_analysis
+#cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
+#python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorrect
+#cd ../..
+
+
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE
-cd results/fe_analysis
-cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic
-cd ../..
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
 ## M1 closure.
 ## C7*
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -M1
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
+#cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 cd results/fe_analysis
-cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic --Ecorrect
 cd ../..
-"""
-## M1 closure.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -M1
-cd results/fe_analysis
-cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic
-cd ../..
-"""
- 
+
+
+### M1 closure.
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -M1
+#cd results/fe_analysis
+#cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
+#python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic
+#cd ../..
+
 ## Diffusive asymptotic test. The SH, AWBS (original and corrected), 
 ## and C7 (proper and mimic Efield) calculations are compared. 
 ## In reality, the resulting Knudsen number is just on the diffusive limit 
@@ -102,10 +107,12 @@ XPOINT=0.05
 PROBLEM=8
 
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ne $NE -L $L -M1 -xp $XPOINT -minG $MING
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/fe_point_Ecorrect.txt
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MING
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/fe_point_Emimic.txt
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorresults --Emimic
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorrect --Emimic

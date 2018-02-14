@@ -17,7 +17,7 @@ gradTe = -1.0
 Zbar = 4.0
 sigma = 1e15
 xpoint = 0.5
-Ecorresults=False
+Ecorrect=False
 Emimic=False
 
 import argparse
@@ -30,7 +30,7 @@ parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
-parser.add_argument("-Er", "--Ecorresults", action='store_true', help="Display the Ecorrect computation results.")
+parser.add_argument("-Er", "--Ecorrect", action='store_true', help="Display the Ecorrect computation results.")
 parser.add_argument("-Em", "--Emimic", action='store_true', help="Display the Emimic computation results.")
 
 ## Parse arguments.
@@ -45,8 +45,8 @@ if args.xpoint:
     xpoint = args.xpoint
 if args.Nproc:
     Nproc = args.Nproc
-if args.Ecorresults:
-    Ecorresults = args.Ecorresults
+if args.Ecorrect:
+    Ecorrect = args.Ecorrect
 if args.Emimic:
     Emimic = args.Emimic
 ###############################################################################
@@ -54,35 +54,38 @@ if args.Emimic:
 ###############################################################################
 ###############################################################################
 ## Load the profiles provided by C7.
-## Global lists.
-C7x_raw = []
-C7rho_raw = []
-C7Te_raw = []
-C7intf0_raw = []
-C7j_raw = []
-C7q_raw = []
-## Gather together the lists from each processors output.
-print "Loading data from files:"
-for proc in range(Nproc):
-    file = '../tmp/C7_1_profiles.'+str(proc).zfill(maxProcOrder)
-    C7x_proc, C7rho_proc, C7Te_proc, C7intf0_proc, C7j_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
-    C7x_raw.extend(C7x_proc)
-    C7rho_raw.extend(C7rho_proc)
-    C7Te_raw.extend(C7Te_proc)
-    C7intf0_raw.extend(C7intf0_proc)
-    C7j_raw.extend(C7j_proc)
-    C7q_raw.extend(C7q_proc)
-    print file
+def loadC7data(Nproc, file_base):
+   ## Global lists.
+   C7x_raw = []
+   C7rho_raw = []
+   C7Te_raw = []
+   C7intf0_raw = []
+   C7j_raw = []
+   C7q_raw = []
+   ## Gather together the lists from each processors output.
+   print "Loading data from files:"
+   for proc in range(Nproc):
+      file = file_base+str(proc).zfill(maxProcOrder)
+      C7x_proc, C7rho_proc, C7Te_proc, C7intf0_proc, C7j_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
+      C7x_raw.extend(C7x_proc)
+      C7rho_raw.extend(C7rho_proc)
+      C7Te_raw.extend(C7Te_proc)
+      C7intf0_raw.extend(C7intf0_proc)
+      C7j_raw.extend(C7j_proc)
+      C7q_raw.extend(C7q_proc)
+      print file
+   ## Sort the lists with respect to the position x.
+   sorted_indices = np.array(C7x_raw).argsort()
+   C7x = np.array([C7x_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7rho = np.array([C7rho_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7Te = np.array([C7Te_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7intf0 = np.array([C7intf0_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7j = np.array([C7j_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   return C7x, C7rho, C7Te, C7intf0, C7j, C7q
 
-## Sort the lists with respect to the position x.
-sorted_indices = np.array(C7x_raw).argsort()
-C7x = np.array([C7x_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-C7rho = np.array([C7rho_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-C7Te = np.array([C7Te_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-C7intf0 = np.array([C7intf0_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-C7j = np.array([C7j_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-
+C7x, C7rho, C7Te, C7intf0_Ec, C7j_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
+C7x, C7rho, C7Te, C7intf0_Em, C7j_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################
@@ -187,14 +190,14 @@ for i in range(N):
 ## Load C7 kinetic results ############
 #######################################
 ## No explicit treatment of Efield, we use mimicing by reducing ne in source.
-C7v, C7mehalff1v5 = np.loadtxt('fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
+C7v, C7mehalff1v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
 C7Q = 0.0
 NC7 = C7v.size - 1
 for i in range(NC7):
     dC7v = C7v[i] - C7v[i+1]
     C7Q = C7Q + C7mehalff1v5[i]*dC7v
 ## Explicit treatment of Efield.
-C7Ev, C7Emehalff1v5 = np.loadtxt('fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
+C7Ev, C7Emehalff1v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
 C7EQ = 0.0
 NC7E = C7Ev.size - 1
 for i in range(NC7E):
@@ -253,9 +256,13 @@ matplotlib.rc('figure', **figure)
 
 ## Given line styles.
 lsC7 = 'k--'
-lsC7E = 'b--'
+lsC7E = 'b-.'
 lsAWBS = 'r--'
 lsSH = 'g:'
+lblC7 = r'C7$^*$'
+lblC7E = r'C7E'
+lblAWBS = r'AWBS$^*$'
+lblSH = r'SH'
 
 ###############################################################################
 ########### C7 plasma profiles ################################################
@@ -278,23 +285,30 @@ plt.show()
 #plt.xlabel(r'z [$\mu$m]')
 #plt.ylabel(r'$\int f_0 dv$ [1/cm$^3$]')
 #plt.title(r'Isotropic part of f')
-#plt.plot(C7x_microns, C7intf0)
+#if (Ecorrect):
+#   plt.plot(C7x_microns, C7intf0_Ec, lsC7E, label=lblC7E)
+#if (Emimic):
+#   plt.plot(C7x_microns, C7intf0_Em, lsC7, label=lblC7)
 #plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
 plt.ylabel(r'$j$ [1/s/cm$^2$]')
 plt.title(r'Flux/current')
-plt.plot(C7x_microns, C7j)
+if (Ecorrect):
+   plt.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
+if (Emimic):
+   plt.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
+plt.legend()
 plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
 plt.ylabel(r'q [W/cm$^2$]')
 plt.title(r'Heat flux (Kn='+"{:.1e}".format(Kn)+')')
-plt.plot(C7x_microns, C7SHQ_analytic, lsSH, label=r'SH')
-if (Ecorresults):
-   plt.plot(C7x_microns, C7q, lsC7E, label=r'C7E')
+plt.plot(C7x_microns, C7SHQ_analytic, lsSH, label=lblSH)
+if (Ecorrect):
+   plt.plot(C7x_microns, C7q_Ec, lsC7E, label=lblC7E)
 if (Emimic):
-   plt.plot(C7x_microns, C7q, lsC7, label=r'C7$^*$')
+   plt.plot(C7x_microns, C7q_Em, lsC7, label=lblC7)
 plt.legend()
 plt.show()
 
@@ -318,17 +332,17 @@ plt.ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 plt.xlabel('v/vT')
 plt.title('Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn))
 ## Plot kinetic analysis.
-plt.plot(p_v/vTh(Te), p_SHq, lsSH, label='SH')
+plt.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
 #plt.plot(p_v/vTh(Te), p_AWBSq, 'g-.', label='AWBS')
-plt.plot(p_v/vTh(Te), p_AWBSq_corr, 'r--', label=r'AWBS$^{*}$')
-if (Ecorresults):
+plt.plot(p_v/vTh(Te), p_AWBSq_corr, 'r--', label=lblAWBS)
+if (Ecorrect):
    if (len(C7Ev)<30):
-      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label='C7E('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
-      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label='C7E('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
 #plt.plot(C7v/vTh(Te), 1.5 * C7mehalff1v5 / (4.0*pi/3.0), 'k:', label=r'C7')
 if (Emimic):
-   plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=r'C7$^{*}$('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+   plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 plt.legend(loc='best')
 plt.show()
 
