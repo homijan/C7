@@ -2100,16 +2100,17 @@ of electrons, where the~distribution of ionized electrons is $\fM(T)$
 Consequently, one can write the~simplified (linear) Boltzmann transport 
 equation of electrons as
 \begin{multline}
-  \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
+  \pdv{f}{t} +
+  \vmag\vn\cdot\nabla f + \tE\cdot\vn \pdv{f}{\vmag} 
   + \frac{\tE\cdot\vect{e}_\phi 
   - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
   + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
-  {\vmag\sin(\phi)}\pdv{f}{\theta} \right] 
+  {\vmag\sin(\phi)}\pdv{f}{\theta}
   =\\
-  \frac{n_i}{\vmag}\ddv{\Zbar}{t}\frac{\fM(T)}{n_e} +
-  \frac{\vmag}{\lambda^e}\pdv{}{\vmag}\left( f + 
+  n_i \pdv{\Zbar}{t}\frac{\fM(T)}{n_e} +
+  \nue\vmag\pdv{}{\vmag}\left( f + 
   \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) 
-  + \frac{\fzero - f}{\lambda^{ei}} ,
+  + \nuei\left(\fzero - f\right) ,
   \label{eq:DECO_spherical}
 \end{multline}
 where $\mfpe$ is the~electron-electron mean free path, and
@@ -2117,6 +2118,23 @@ $\mfpei$ is the~electron-ion mean free path. We also approximate
 $\mfpe = \Zbar \mfpei$. The~form of the~electron-ion scattering operator
 arises form a~low anisotropy approximation 
 ($f\approx\fzero + \vn\cdot\fone$).
+
+We can match the time derivatives together
+$\left(n_i \pdv{\Zbar}{t}\frac{\fM(T)}{n_e} - \pdv{f}{t}\right)$, 
+and consequently, provide a steady model
+\begin{multline}
+  \vmag\vn\cdot\nabla f + \tE\cdot\vn \pdv{f}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
+  {\vmag\sin(\phi)}\pdv{f}{\theta}
+  =\\
+  \frac{\fM(T) - f}{\Delta t_{hydro}} +
+  \nue\vmag\pdv{}{\vmag}\left( f + 
+  \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) 
+  + \nuei\left(\fzero - f\right) .
+  \label{eq:DECO_spherical}
+\end{multline}
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections

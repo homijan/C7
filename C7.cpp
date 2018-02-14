@@ -262,7 +262,9 @@ int main(int argc, char *argv[])
    // Define the parallel finite element spaces. We use:
    // - H1 (Gauss-Lobatto, continuous) for position and velocity.
    // - L2 (Bernstein, discontinuous) for specific internal energy.
-   L2_FECollection L2FEC(order_e, dim, BasisType::Positive);
+   // Fundamental! BasisType::Positive destroys C7 calculation with Efield! 
+   L2_FECollection L2FEC(order_e, dim);
+   //L2_FECollection L2FEC(order_e, dim, BasisType::Positive);
    H1_FECollection H1FEC(order_v, dim);
    ParFiniteElementSpace L2FESpace(pmesh, &L2FEC);
    ParFiniteElementSpace H1FESpace(pmesh, &H1FEC, pmesh->Dimension());
@@ -867,7 +869,7 @@ int main(int argc, char *argv[])
          }
 
          // Save spatial profiles of plasma and transport quantities.
-         int NpointsPerElement = 5;
+         int NpointsPerElement = 20;
          int Nelements = x_gf.FESpace()->GetNE();
          int Npoints = NpointsPerElement * Nelements;
          double x[Npoints], rho[Npoints], Te[Npoints], intf0[Npoints],
