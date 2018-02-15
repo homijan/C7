@@ -104,8 +104,10 @@ int main(int argc, char *argv[])
    //double EfieldS0 = 1.0;
    //double I0SourceS0 = 1.0;
    // Appropriate value to mimic exactly the SH Efield effect on qH.
-   double I0SourceS0 = 0.2857142857142857;
+   //double I0SourceS0 = 0.2857142857142857;
    double EfieldS0 = 0.0;
+   // Value equal to zero to be later used as switch.
+   double I0SourceS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
    double ne = 5e19;
    bool M1closure = false;
@@ -201,6 +203,9 @@ int main(int argc, char *argv[])
    nth::T_gradscale = T_gradscale;
    nth::rho_gradscale = rho_gradscale;
    nth::sigma = sigma;
+   // NEW scaling taking into account SH Efield.
+   // Appropriate value to mimic exactly the SH Efield effect on qH.
+   if (EfieldS0==0.0) { I0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.
@@ -263,12 +268,11 @@ int main(int argc, char *argv[])
    // - H1 (Gauss-Lobatto, continuous) for position and velocity.
    // - L2 (Bernstein, discontinuous) for specific internal energy.
    // Fundamental! BasisType::Positive destroys C7 calculation with Efield! 
-   L2_FECollection L2FEC(order_e, dim);
-   //L2_FECollection L2FEC(order_e, dim, BasisType::Positive);
-   //L2_FECollection L2FECf0(order_e, dim, BasisType::Positive);
+   L2_FECollection L2FEC(order_e, dim, BasisType::GaussLegendre);
+   //L2_FECollection L2FEC(order_e, dim, BasisType::GaussLobatto);  
+   //L2_FECollection L2FEC(order_e, dim, BasisType::Positive); 
    H1_FECollection H1FEC(order_v, dim);
    ParFiniteElementSpace L2FESpace(pmesh, &L2FEC);
-   //ParFiniteElementSpace L2FESpacef0(pmesh, &L2FECf0);
    ParFiniteElementSpace H1FESpace(pmesh, &H1FEC, pmesh->Dimension());
 
    // Boundary conditions: all tests use v.n = 0 on the boundary, and we assume

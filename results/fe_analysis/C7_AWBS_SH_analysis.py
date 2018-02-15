@@ -17,6 +17,7 @@ gradTe = -1.0
 Zbar = 4.0
 sigma = 1e15
 xpoint = 0.5
+AWBSoriginal=False
 Ecorrect=False
 Emimic=False
 
@@ -30,8 +31,12 @@ parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
-parser.add_argument("-Er", "--Ecorrect", action='store_true', help="Display the Ecorrect computation results.")
-parser.add_argument("-Em", "--Emimic", action='store_true', help="Display the Emimic computation results.")
+parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
+parser.add_argument("-Ec", "--Ecorrect", action='store_true', help="Display the Ecorrect computation results by adding -Ec/--Ecorrect argument.")
+parser.add_argument("-Em", "--Emimic", action='store_true', help="Display the Emimic computation results by adding -Em/--Emimic argument.")
+## Faking arguments providing different labels than C7E and C7*.
+parser.add_argument("-lEc", "--labelEcorrect", help="Force to use -lEc/--labelEcorrect label for Ecorrect_data.")
+parser.add_argument("-lEm", "--labelEmimic", help="Force to use -lEm/--labelEmimic label for Emimc_data.")
 
 ## Parse arguments.
 args = parser.parse_args()
@@ -45,6 +50,8 @@ if args.xpoint:
     xpoint = args.xpoint
 if args.Nproc:
     Nproc = args.Nproc
+if args.AWBSoriginal:
+    AWBSoriginal = args.AWBSoriginal
 if args.Ecorrect:
     Ecorrect = args.Ecorrect
 if args.Emimic:
@@ -131,12 +138,15 @@ ml_max = 10.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
 ## qH = me/Zbar/sigma*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-## where mfp_ei = v**4/sigma/ni/Zbar, i.e. sigma corresponds to ee collisions.
+## where mfp_ei = v**4/sigma/ni/Zbar/Zbar, i.e. sigma corresponds to unit charges collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 #print "Zbar, corr:", Zbar, corr
 cmag = 1./corr
 ## Classical Lorentz approximation electric field.
-Efield = vTh(Te)**2.0*2.5*gradTe/Te
+#xi = 2.5
+## SH correction.
+xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15)
+Efield = vTh(Te)**2.0*xi*gradTe/Te
 
 ## Solve the AWBS ODE problem.
 N = 5000
@@ -169,7 +179,7 @@ for i in range(N):
     ## The mean free path has standard v^4 dependence, sigma is cross section
     ## given by model and Zbar increases the effect of Coulomb potential in
     ## ei collisions.
-    mfp_ei = vp**4.0/sigma/ni/Zbar
+    mfp_ei = vp**4.0/sigma/ni/Zbar/Zbar
     SHf1[i] = - (Zbar + 0.24)/(Zbar + 4.2)*((vp**2.0/2.0/vTh(Te)**2.0 - 1.5)*gradTe/Te - Efield/vTh(Te)**2.0)*fM(vp, Te)*vp*vp
     SHj[i] = mfp_ei*vp*SHf1[i]
     SHq[i] = mfp_ei*me/2.0*vp*vp*vp*SHf1[i]
@@ -209,11 +219,16 @@ for i in range(NC7E):
 #######################################
 ## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 ## further multiplied by SH low Z factor.
-mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar
+mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar/Zbar
 L = Te / abs(gradTe)
-SHQ_analytic = - (Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
+## SH nu correction.
+SHcorr = (Zbar + 0.24)/(Zbar + 4.2)
+## SH Efield correction.
+SHcorr = SHcorr * (3.5 - xi)
+## SH analytic formula of heat flux.
+SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 Kn = mfp_ei/L
-Kn_flux = SHQ_analytic / ((Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
+Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
 proporC7EQ = C7EQ / SHQ_analytic
 proporC7Q = C7Q / SHQ_analytic
@@ -222,7 +237,7 @@ proporC7Q = C7Q / SHQ_analytic
 ## C7 SH flux profile #################
 #######################################
 ## Calculate the whole profile of SH flux according to Te from C7.
-C7SHQ_analytic = - (Zbar + 0.24)/(Zbar + 4.2) * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/ni/Zbar*C7gradTe/C7Te
+C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar*C7gradTe/C7Te
 
 #######################################
 ## Print comparison results ###########
@@ -257,12 +272,19 @@ matplotlib.rc('figure', **figure)
 ## Given line styles.
 lsC7 = 'k--'
 lsC7E = 'b-.'
-lsAWBS = 'r--'
+lsAWBSc = 'r--'
+lsAWBSo = 'r:'
 lsSH = 'g:'
-lblC7 = r'C7$^*$'
+lblC7 = r'C7*'
 lblC7E = r'C7E'
-lblAWBS = r'AWBS$^*$'
+lblAWBSc = r'AWBS*'
+lblAWBSo = r'AWBS'
 lblSH = r'SH'
+## Force to use an explicit labels, if passed.
+if args.labelEcorrect:
+    lblC7E = args.labelEcorrect
+if args.labelEmimic:
+    lblC7 = args.labelEmimic
 
 ###############################################################################
 ########### C7 plasma profiles ################################################
@@ -292,8 +314,8 @@ plt.show()
 #plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'$j$ [1/s/cm$^2$]')
-plt.title(r'Flux/current')
+plt.ylabel(r'$q$ [electron/s/cm$^2$]')
+plt.title(r'Flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 if (Ecorrect):
    plt.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
 if (Emimic):
@@ -302,8 +324,8 @@ plt.legend()
 plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'q [W/cm$^2$]')
-plt.title(r'Heat flux (Kn='+"{:.1e}".format(Kn)+')')
+plt.ylabel(r'q$_H$ [W/cm$^2$]')
+plt.title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 plt.plot(C7x_microns, C7SHQ_analytic, lsSH, label=lblSH)
 if (Ecorrect):
    plt.plot(C7x_microns, C7q_Ec, lsC7E, label=lblC7E)
@@ -316,7 +338,7 @@ plt.show()
 ########### Kinetic SH, Diffusive AWBS and C7 comparison ######################
 ###############################################################################
 ## Shrink the x axis appropriately.
-mult = 8
+mult = 9
 p_v = v[v < mult*vTh(Te)]
 p_SHq = SHq[v < mult*vTh(Te)]
 p_AWBSq_corr = AWBSq_corr[v < mult*vTh(Te)]
@@ -330,11 +352,12 @@ p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
 ## Set labels.
 plt.ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 plt.xlabel('v/vT')
-plt.title('Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn))
+plt.title('Kinetics (Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn)+')')
 ## Plot kinetic analysis.
 plt.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
-#plt.plot(p_v/vTh(Te), p_AWBSq, 'g-.', label='AWBS')
-plt.plot(p_v/vTh(Te), p_AWBSq_corr, 'r--', label=lblAWBS)
+if (AWBSoriginal):
+   plt.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
+plt.plot(p_v/vTh(Te), p_AWBSq_corr, lsAWBSc, label=lblAWBSc)
 if (Ecorrect):
    if (len(C7Ev)<30):
       plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')

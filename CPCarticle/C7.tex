@@ -45,6 +45,7 @@
 %% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
 %% for the whole article with \linenumbers after \end{frontmatter}.
 %% \usepackage{lineno}
+\usepackage{hyperref}
 
 %% natbib.sty is loaded by default. However, natbib options can be
 %% provided with \biboptions{...} command. Following options are
@@ -1996,13 +1997,13 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/diff_f1_comparison_Z1.png} \\
-      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/diff_f1_comparison_Z10.png} \\
-      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/diff_f1_comparison_Z50.png} 
+      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z50_Kn1e-8.png} \\ 
+      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z10_Kn1e-8.png} \\ 
+      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z1_Kn1e-8.png}
     \end{tabular}
   \caption{
-  The~diffusion asymptotic of AWBS with respect to SH using Z-correction 
-  formula.
+  The~diffusion asymptotic of C7 and analytic AWBS with respect to SH using 
+  Z-correction formula of mean free path and Spitzer electric field.
   }
   \end{center}
   \label{fig:AWBSvsSH_f1}
@@ -2011,7 +2012,7 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/figs/diff_AWBScorrection_fit.png} 
+      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/figs/AWBScorrection_fit.png} 
     \end{tabular}
   \caption{
   Analytic fit to the~Z correction 
@@ -2025,10 +2026,10 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/figs/diff_f1_C7AWBScorrection_Z4.png} 
+      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/figs/efficient_P8_kinetics_Z1_Kn1e-10.png} 
     \end{tabular}
   \caption{
-  Efficiency of C7 (18 groups). Definition of Efield free C7$^*$ calculation 
+  Efficiency of C7 (24 groups). Definition of Efield free C7* calculation 
   based on reduction of the density of fast electrons.
   }
   \end{center}
@@ -2038,10 +2039,10 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{cc}
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/f1_comparison_Kn1e-6_Z4.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/f1_comparison_Kn1e-5_Z4.png} \\
-       \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/f1_comparison_Kn16e-6_Z4.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/f1_comparison_Kn1e-4_Z4.png}     
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/Efield_P8_Kn1e-6_Z4.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/Efield_P8_Kn1e-5_Z4.png} \\
+       \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/Efield_P8_Kn16e-6_Z4.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/Efield_P8_Kn1e-4_Z4.png}     
     \end{tabular}
   \caption{
   The~effect of the~diffusive electric field in AWBS model.
@@ -2049,6 +2050,24 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
   \end{center}
   \label{fig:EfieldAWBS}
 \end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z1_Kn1e-2.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z1_Kn1e-2.png} \\ 
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z10_Kn1e-2.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z10_Kn1e-2.png} \\
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z20_Kn1e-2.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z20_Kn1e-2.png}
+    \end{tabular}
+  \caption{
+  The~nonlocal heat flux calculations. Kn$\approx \mfpei/L$ has been kept fixed.
+  }
+  \end{center}
+  \label{fig:AWBSvsSH_f1}
+\end{figure}
+
 
 \clearpage
 
@@ -2123,16 +2142,16 @@ We can match the time derivatives together
 $\left(n_i \pdv{\Zbar}{t}\frac{\fM(T)}{n_e} - \pdv{f}{t}\right)$, 
 and consequently, provide a steady model
 \begin{multline}
-  \vmag\vn\cdot\nabla f + \tE\cdot\vn \pdv{f}{\vmag} 
+  \vn\cdot\nabla f + \frac{1}{\vmag}\left[\tE\cdot\vn \pdv{f}{\vmag} 
   + \frac{\tE\cdot\vect{e}_\phi 
   - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
   + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
-  {\vmag\sin(\phi)}\pdv{f}{\theta}
+  {\vmag\sin(\phi)}\pdv{f}{\theta}\right]
   =\\
-  \frac{\fM(T) - f}{\Delta t_{hydro}} +
-  \nue\vmag\pdv{}{\vmag}\left( f + 
+  \frac{1}{\vmag}\frac{\Delta\left(\fM(T) - f\right)}{\Delta t_{hydro}} +
+  \frac{\vmag}{\mfpe}\pdv{}{\vmag}\left( f + 
   \frac{\vth^2}{\vmag} \pdv{f}{\vmag}\right) 
-  + \nuei\left(\fzero - f\right) .
+  + \frac{\fzero - f}{\mfpei} .
   \label{eq:DECO_spherical}
 \end{multline}
 

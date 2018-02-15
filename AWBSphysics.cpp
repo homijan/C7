@@ -39,7 +39,7 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
    // The ei collision frequency has standard 1/v^3 dependence, 
    // the sigma cross section given by the model sigma * ni 
    // and Zbar increases the effect of Coulomb potential in "on ion collisions".
-   double nu = Zbar * sigma * ni / pow(velocity_real, 3.0);
+   double nu = Zbar * Zbar * sigma * ni / pow(velocity_real, 3.0);
 
    return nu;
 }
@@ -100,6 +100,8 @@ void LorentzEfield::Eval(Vector &V, ElementTransformation &T,
 {
    double rho = rho_gf.GetValue(T.ElementNo, ip);
    double Te = Te_gf.GetValue(T.ElementNo, ip);
+   double index = material_pcf->Eval(T, ip);
+   double Zbar = eos->GetZbar(index, rho, Te);
    //double Te = max(1e-10, Te_gf.GetValue(T.ElementNo, ip));
    // Set the scaled velocity to correspond to the local thermal velocity.
    double vTe = eos->GetvTe(Te);
@@ -111,7 +113,11 @@ void LorentzEfield::Eval(Vector &V, ElementTransformation &T,
    // Return the Lorentz quasi-neutral (zero current) Efield.
    V = grad_Te;
    // Efield is scaled as Escaled = q/me*E, which is also used in Lorentz force.
-   V *= S0 * pow(vTe, 2.0) * 2.5 / Te;
+   // Original Lorentz zero-current condition.
+   //double xi = 2.5;
+   // SH E field correction.
+   double xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15); 
+   V *= S0 * pow(vTe, 2.0) * xi / Te;
 /*
    V = grad_Te;
    V *= 2.5 / Te;
