@@ -2026,22 +2026,23 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{cc}
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z1_Kn5e-2.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z1_Kn5e-2.png} \\ 
-      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z5_Kn1e-2.png} &
-      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z5_Kn1e-2.png} \\
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z10_Kn5e-3.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z10_Kn5e-3.png} \\
-      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z20_Kn25e-4.png} &
-      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z20_Kn25e-4.png} \\
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z50_Kn1e-3.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z50_Kn1e-3.png} \\
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_Z100_Kn5e-4.png} &
-      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_Z100_Kn5e-4.png}
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ1_Kn5e-2.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ1_Kn5e-2.png} \\ 
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ2_Kn13e-3.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ2_Kn13e-3.png} \\
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ5_Kn2e-3.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ5_Kn2e-3.png} \\
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ10_Kn5e-4.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ10_Kn5e-4.png} \\
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ20_Kn13e-5.png} &
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ20_Kn13e-5.png} \\
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ50_Kn2e-5.png} &
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ50_Kn2e-5.png} \\
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ100_Kn5e-6.png} &
+      %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ100_Kn5e-6.png}
     \end{tabular}
   \caption{
   The~nonlocal heat flux calculations with varying ionization. 
-  The electron density has been kept fixed. 
   Kn$\approx \frac{\mfpei}{L} = \frac{\vth^4}{\sigma \Zbar n_e} 
   \frac{|\nabla T|}{T}.$
   }
@@ -2071,7 +2072,9 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
       \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/Efield_P8_Kn1e-4_Z4.png}     
     \end{tabular}
   \caption{
-  The~effect of the~diffusive electric field in AWBS model.
+  The~effect of the~diffusive electric field $\E = \vth^2\left(1 + 
+  \frac{3}{2}\frac{\Zbar + 0.477}{\Zbar + 2.15}\right)\frac{\nabla T}{T}$ 
+  in AWBS model.
   }
   \end{center}
   \label{fig:EfieldAWBS}

@@ -11,8 +11,8 @@ Nproc = 8
 maxProcOrder = 6 # Corresponds to maximum of million processors.
 
 ## Some default values.
-ne = 5.0e19
-Te = 10000.0
+ni = 1.0e20
+Te = 1000.0
 gradTe = -1.0
 Zbar = 4.0
 sigma = 1e15
@@ -25,7 +25,7 @@ import argparse
 ## Create parser object.
 parser = argparse.ArgumentParser(description='Analyze the diffusive asymptotic of AWBS and compare to C7 computation.')
 ## Define input arguments.
-parser.add_argument("-n", "--ne", help="Electron density at the point.", type=float)
+parser.add_argument("-n", "--ni", help="Ion density at the point.", type=float)
 parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
 parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
@@ -40,8 +40,8 @@ parser.add_argument("-lEm", "--labelEmimic", help="Force to use -lEm/--labelEmim
 
 ## Parse arguments.
 args = parser.parse_args()
-if args.ne:
-    ne = args.ne
+if args.ni:
+    ni = args.ni
 if args.sigma:
     sigma = args.sigma
 if args.Zbar:
@@ -107,12 +107,12 @@ xp = np.array(xpoint)
 ## Assign temperature profile values for further analysis.
 Te = splev(xp, tck, der=0)
 gradTe = splev(xp, tck, der=1)
-print "xpoint, ne, sigma, Zbar, Te, gradTe: ", xpoint, ne, sigma, Zbar, Te, gradTe
+print "xpoint, ni, sigma, Zbar, Te, gradTe: ", xpoint, ni, sigma, Zbar, Te, gradTe
 ## Assign a whole profile of SH flux.
 C7gradTe = splev(C7x, tck, der=1)
 
-## Ion density is used as reference.
-ni = ne / Zbar
+## Electron density.
+ne = ni * Zbar
 
 ###############################################################################
 ########### AWBS diffusive asymptotic ######################################### 

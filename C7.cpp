@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
    // Value equal to zero to be later used as switch.
    double I0SourceS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
-   double ne = 5e19;
+   double ni = 5e19;
    bool M1closure = false;
    // Minimum number of velocity groups.
    double MinimumGroups = 10.0;
@@ -176,8 +176,8 @@ int main(int argc, char *argv[])
                   "Electric field scaling, i.e. E = S0*E.");
    args.AddOption(&I0SourceS0, "-S0", "--S0",
                   "Electron source scaling (via electron density), i.e. ne = S0*ne.");
-   args.AddOption(&ne, "-ne", "--ne",
-                  "Electron density (conversion as ne = rho/mi*Zbar).");
+   args.AddOption(&ni, "-ni", "--ni",
+                  "Ion density (conversion as ni = rho/mi).");
    args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
                   "--no-M1closure->P1closure",
                   "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
@@ -428,7 +428,8 @@ int main(int argc, char *argv[])
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
    const double kB = 1.3807e-16, me = 9.1094e-28, pi = 3.14159265359; 
-   const double mi = Zbar / ne;
+   const double mi = 1.0 / ni; // Expecting rho = 1.0.
+   //const double mi = Zbar / ne;
    // Define an equation of state.
    nth::IGEOS eos(me, kB);
    // Use a constant ionization provided by IG eos.

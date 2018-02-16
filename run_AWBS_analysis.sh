@@ -14,7 +14,7 @@ MINGSAFE=2000
 F1ORDER=3
 F0ORDER=2
 
-NE=1e20
+NI=1e20
 TMAX=1000
 TMIN=100
 TGRAD=180
@@ -23,51 +23,52 @@ XPOINT=0.046775 # in cm
 SIGMA=0.212e12 # Zbar = 1 -> Kn 5e-2
 SIGMASAFE=1.06e18 # Zbar = 1 -> Kn 1e-8
 #ZBAR=1
-#ZBAR=5
+#ZBAR=2
+ZBAR=5
 #ZBAR=10
 #ZBAR=20
 #ZBAR=50
-ZBAR=100
+#ZBAR=100
 
 L=0.1
 PROBLEM=5
 ### Pascal's setting for nonlocal test
 ## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
 ## C7E
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NE -xp $XPOINT --Emimic --Ecorrect --AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --AWBSoriginal
 cd ../..
 
 
-#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
 #cd results/fe_analysis
 #cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-#python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorrect
+#python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect
 #cd ../..
 
 #if [false] ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 ## M1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MINGSAFE -M1
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -M1
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 #cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7P1 --labelEcorrect C7M1
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7P1 --labelEcorrect C7M1
 cd ../..
 #fi
 
@@ -81,7 +82,7 @@ cd ../..
 RS=6
 F1ORDER=2
 F0ORDER=1
-NE=5e20
+NI=5e20
 #ZBAR=4
 MING=25
 if [ $ZBAR -gt 10 ] ; then 
@@ -102,13 +103,13 @@ L=0.1
 XPOINT=0.05
 PROBLEM=8
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ne $NE -L $L -M1 -xp $XPOINT -minG $MING
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ne $NE -L $L -xp $XPOINT -minG $MING
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MING
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NE -xp $XPOINT --Ecorrect --Emimic --AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect --Emimic --AWBSoriginal
