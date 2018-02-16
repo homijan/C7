@@ -1990,14 +1990,22 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 
+\section{Magnetic field implementation}\label{sec:Bfield}
+The presence of a magnetic field profile (even constant) leads to at least 2D 
+problem because of the~cross product action.
 
+\section{Temperature}\label{sec:Temperature}
+Good news! Equation \eqref{eq:M1hosf0_variational} already consists 
+a~flux divergence operator, fortunately operating on discrete finite element 
+spaces of $\fone$ and temperature. 
 
+\pagebreak
 
-\section{Results}\label{sec:results}
+\section{Simulation results}\label{sec:results}
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=0.8\textwidth]{../results/fe_analysis/figs/AWBScorrection_fit.png} 
+      \includegraphics[width=0.55\textwidth]{../results/fe_analysis/figs/AWBScorrection_fit.png} 
     \end{tabular}
   \caption{
   Analytic fit to the~Z correction 
@@ -2006,6 +2014,19 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
   }
   \end{center}
   \label{fig:AWBScorrection_f1}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=0.6\textwidth]{../results/fe_analysis/figs/P5_temperature.png} 
+    \end{tabular}
+  \caption{
+  Temperature used in simulations. 
+  Ion density constant $n_i = 10^{20}$ [1/cm$^3$].
+  }
+  \end{center}
+  \label{fig:P5_temperarute}
 \end{figure}
 
 \begin{figure}[tbh]
@@ -2042,7 +2063,8 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
       %\includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ100_Kn5e-6.png}
     \end{tabular}
   \caption{
-  The~nonlocal heat flux calculations with varying ionization. 
+  The~nonlocal transport computations of electron heat flux with 
+  varying ionization. 
   Kn$\approx \frac{\mfpei}{L} = \frac{\vth^4}{\sigma \Zbar n_e} 
   \frac{|\nabla T|}{T}.$
   }
