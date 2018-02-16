@@ -102,12 +102,6 @@ from scipy.interpolate import splev, splrep
 smooth = 0 # lower less smoothing
 ## Find a spline for the temperature data.
 tck = splrep(C7x, C7Te, s=smooth)
-## Evaluate at the given point xpoint.
-xp = np.array(xpoint)
-## Assign temperature profile values for further analysis.
-Te = splev(xp, tck, der=0)
-gradTe = splev(xp, tck, der=1)
-print "xpoint, ni, sigma, Zbar, Te, gradTe: ", xpoint, ni, sigma, Zbar, Te, gradTe
 ## Assign a whole profile of SH flux.
 C7gradTe = splev(C7x, tck, der=1)
 
@@ -132,6 +126,22 @@ def solve_bweuler(v, f0, T, gradT, Z, E):
         rhs = rhs * fM(vp, T)
         f1[i+1] = (f1[i] + dv*rhs)/(1.0 + dv*(4.0 - Z)/vp)
     return f1
+
+## Evaluate at the given point xpoint.
+xp = np.array(xpoint)
+## Assign temperature profile values for further analysis.
+Te = splev(xp, tck, der=0)
+gradTe = splev(xp, tck, der=1)
+## For more accurate Kn evaluate the "differential" of temperature.
+mfp_ei = vTh(Te)**4.0/sigma/ni/Zbar/Zbar
+#xp = np.array(xpoint-mfp_ei)
+#Te0 = splev(xp, tck, der=0)
+#xp = np.array(xpoint+mfp_ei)
+#Te1 = splev(xp, tck, der=0)
+Te1 = C7Te.max()
+Te0 = C7Te.min()
+dTe = abs(Te1 - Te0)
+print "xpoint, ni, sigma, Zbar, Te, gradTe, dTe: ", xpoint, ni, sigma, Zbar, Te, gradTe, dTe
 
 ## Multiples of thermal velocity setting the velocity space range.
 ml_max = 10.0
@@ -220,7 +230,10 @@ for i in range(NC7E):
 ## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 ## further multiplied by SH low Z factor.
 mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar/Zbar
-L = Te / abs(gradTe)
+## Classical length scale definition.
+##L = Te / abs(gradTe)
+## More accurate length scale definition.
+L = dTe / abs(gradTe)
 ## SH nu correction.
 SHcorr = (Zbar + 0.24)/(Zbar + 4.2)
 ## SH Efield correction.
@@ -243,7 +256,7 @@ C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))
 ## Print comparison results ###########
 #######################################
 ## Show the Knudsen number
-print 'Kn: ', Kn, 'Kn from flux: ', Kn_flux 
+print 'Kn: ', Kn, 'mfp_ei[microns]: ', mfp_ei*1e4
 ## Print integrated values
 print "SHQ:              ", SHQ
 print "SHQ_analytic:     ", SHQ_analytic
