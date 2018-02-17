@@ -32,7 +32,7 @@ ZBAR=1
 
 L=0.1
 PROBLEM=5
-if false ; then
+#if false ; then
 ### Pascal's setting for nonlocal test
 ## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
 ## C7E
@@ -46,7 +46,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --AWBSoriginal
 cd ../..
-fi
+#fi
 
 
 #mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
@@ -55,7 +55,7 @@ fi
 #python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect
 #cd ../..
 
-if false ; then
+#if false ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
@@ -72,7 +72,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecor
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7P1 --labelEcorrect C7M1
 cd ../..
-fi
+#fi
 
 ## Diffusive asymptotic test. The SH, AWBS (original and corrected), 
 ## and C7 (proper and mimic Efield) calculations are compared. 

@@ -417,13 +417,13 @@ int main(int argc, char *argv[])
    c7true_offset[0] = 0;
    c7true_offset[1] = c7true_offset[0] + Vsize_l2;
    c7true_offset[2] = c7true_offset[1] + Vsize_h1;
-   BlockVector c7S(c7true_offset);
+   BlockVector c7F(c7true_offset);
 
    // Define GridFunction objects for the zero and first moments of
    // the~electron distribution function.
    ParGridFunction F0_gf, F1_gf;
-   F0_gf.MakeRef(&L2FESpace, c7S, c7true_offset[0]);
-   F1_gf.MakeRef(&H1FESpace, c7S, c7true_offset[1]);
+   F0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[0]);
+   F1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[1]);
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
@@ -515,7 +515,7 @@ int main(int argc, char *argv[])
    mfp_cf.SetTmax(glob_Tmax);
 
    // Initialize the C7-AWBS operator
-   nth::C7Operator c7oper(c7S.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
+   nth::C7Operator c7oper(c7F.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
                           c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
@@ -536,7 +536,7 @@ int main(int argc, char *argv[])
    c7oper.ResetQuadratureData();
    c7oper.SetTime(vmax);
    //double dvmax = vmax*0.1;
-   double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
+   double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
    F0_gf = 0.0; F1_gf = 0.0;
    int c7ti = 0;
    double v = vmax;
@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
    while (abs(dv) >= abs(dvmin))
    {
       c7ti++;
-      c7ode_solver->Step(c7S, v, dv);
+      c7ode_solver->Step(c7F, v, dv);
 
       // Perform the integration over velocity space.
       intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), F0_gf);
@@ -573,7 +573,7 @@ int main(int argc, char *argv[])
       c7oper.ResetVelocityStepEstimate();
       c7oper.ResetQuadratureData();
       c7oper.SetTime(v);
-      dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
+      dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
       if (v + dv < vmin) { dv = vmin - v; }
 
       if (mpi.Root())
@@ -741,7 +741,7 @@ int main(int argc, char *argv[])
          c7oper.ResetVelocityStepEstimate();
          c7oper.ResetQuadratureData();
          c7oper.SetTime(vmax);
-         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
+         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
          F0_gf = 0.0; //1e-2; 
 		 F1_gf = 0.0;
          int c7ti = 0;
@@ -799,7 +799,7 @@ int main(int argc, char *argv[])
 		 while (abs(dv) >= abs(dvmin))
          {
             c7ti++;
-            c7ode_solver->Step(c7S, v, dv);
+            c7ode_solver->Step(c7F, v, dv);
             
             // Store the distribution function at a given point.
             if (right_proc_point)
@@ -839,7 +839,7 @@ int main(int argc, char *argv[])
             c7oper.ResetVelocityStepEstimate();
             c7oper.ResetQuadratureData();
             c7oper.SetTime(v);
-            dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
+            dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
             if (v + dv < vmin) { dv = vmin - v; }
 
             if (mpi.Root())

@@ -219,13 +219,13 @@ C7Operator::C7Operator(int size,
    AIEfieldf1.Finalize(0);
 }
 
-void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
+void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 {
-   dS_dt = 0.0;
+   dFdv = 0.0;
 
    const double velocity = GetTime(); 
 
-   UpdateQuadratureData(velocity, S);
+   UpdateQuadratureData(velocity, F);
    const double alphavT = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_scaled = velocity * alphavT;
 
@@ -241,13 +241,13 @@ void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
    const int VsizeH1 = H1FESpace.GetVSize();
 
    ParGridFunction F0, F1;
-   Vector* sptr = (Vector*) &S;
+   Vector* sptr = (Vector*) &F;
    F0.MakeRef(&L2FESpace, *sptr, 0);
    F1.MakeRef(&H1FESpace, *sptr, VsizeL2);
 
    ParGridFunction dF0, dF1;
-   dF0.MakeRef(&L2FESpace, dS_dt, 0);
-   dF1.MakeRef(&H1FESpace, dS_dt, VsizeL2);
+   dF0.MakeRef(&L2FESpace, dFdv, 0);
+   dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
 
    // Standard local assembly and inversion for energy mass matrices.
    DenseMatrix Mf0_(l2dofs_cnt);
@@ -353,6 +353,10 @@ void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
    Mf1.RecoverFEMSolution(X, rhs, dF1);
 
    quad_data_is_current = false;
+}
+
+void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
+{
 }
 
 double C7Operator::GetVelocityStepEstimate(const Vector &S) const

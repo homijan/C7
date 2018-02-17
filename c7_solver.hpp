@@ -120,7 +120,11 @@ public:
               double cgt, int cgiter);
 
    // Solve for df0_dv  and df1_dv.
-   virtual void Mult(const Vector &S, Vector &dS_dt) const;
+   virtual void Mult(const Vector &F, Vector &dFdv) const;
+   /** Solve the Backward-Euler equation: dF = f(F + dv*dF, v), 
+   for the unknown dF. This is the only requirement for high-order 
+   SDIRK implicit integration.*/
+   virtual void ImplicitSolve(const double dv, const Vector &F, Vector &dFdv);
 
    // Calls UpdateQuadratureData to compute the new quad_data.dt_est.
    double GetVelocityStepEstimate(const Vector &S) const;
