@@ -139,7 +139,7 @@ double LorentzEfield::Eval(ElementTransformation &T,
    return V.Norml2();
 }
 
-double AWBSI0Source::Eval(ElementTransformation &T,
+double AWBSF0Source::Eval(ElementTransformation &T,
                           const IntegrationPoint &ip, double rho)
 {
    double pi = 3.14159265359;
@@ -160,7 +160,7 @@ double AWBSI0Source::Eval(ElementTransformation &T,
    return S0 * dfMdv;
 }
 
-double AWBSI0Source::Eval(ElementTransformation &T, const IntegrationPoint &ip)
+double AWBSF0Source::Eval(ElementTransformation &T, const IntegrationPoint &ip)
 {
    double rho = rho_gf.GetValue(T.ElementNo, ip);
 

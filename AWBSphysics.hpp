@@ -69,7 +69,7 @@ class AWBSMasterOfPhysics
 protected:
 public:
    // members
-   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceI0_pcf;
+   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
    VectorCoefficient *Efield_pcf, *Bfield_pcf;
    // methods
    AWBSMasterOfPhysics(NTHvHydroCoefficient *mspei_, 
@@ -77,20 +77,20 @@ public:
                        NTHvHydroCoefficient *source_, 
                        VectorCoefficient *Efield_,
                        VectorCoefficient *Bfield_)
-      : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceI0_pcf(source_),
+      : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_),
         Efield_pcf(Efield_), Bfield_pcf(Bfield_) { }
 
    void SetThermalVelocityMultiple(double vTmultiple)
    { 
       mspei_pcf->SetThermalVelocityMultiple(vTmultiple);
       mspee_pcf->SetThermalVelocityMultiple(vTmultiple);
-      sourceI0_pcf->SetThermalVelocityMultiple(vTmultiple);
+      sourceF0_pcf->SetThermalVelocityMultiple(vTmultiple);
    }
    void SetTmax(double glob_Tmax)
    { 
       mspei_pcf->SetTmax(glob_Tmax); 
       mspee_pcf->SetTmax(glob_Tmax);
-      sourceI0_pcf->SetTmax(glob_Tmax);
+      sourceF0_pcf->SetTmax(glob_Tmax);
    }
 
    ~AWBSMasterOfPhysics() { }
@@ -179,12 +179,12 @@ public:
 };
 
 // AWBS source coefficient.
-class AWBSI0Source : public NTHvHydroCoefficient
+class AWBSF0Source : public NTHvHydroCoefficient
 {
 protected:
    double S0;
 public:
-   AWBSI0Source(ParGridFunction &rho_, ParGridFunction &Te_,
+   AWBSF0Source(ParGridFunction &rho_, ParGridFunction &Te_,
                 ParGridFunction &v_, Coefficient *material_, EOS *eos_)
       : NTHvHydroCoefficient(rho_, Te_, v_, material_, eos_) { S0 = 1.0; }
    double Eval(ElementTransformation &T, const IntegrationPoint &ip);

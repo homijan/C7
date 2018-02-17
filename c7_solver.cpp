@@ -229,25 +229,25 @@ void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
    const double alphavT = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_scaled = velocity * alphavT;
 
-   AWBSPhysics->sourceI0_pcf->SetVelocity(velocity);
-   ParGridFunction I0source(&L2FESpace);
-   I0source.ProjectCoefficient(*(AWBSPhysics->sourceI0_pcf));
+   AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
+   ParGridFunction F0source(&L2FESpace);
+   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
 
    // The monolithic BlockVector stores the unknown fields as follows:
-   // - isotropic I0 (energy density)
-   // - anisotropic I1 (flux density)
+   // - isotropic F0 (energy density)
+   // - anisotropic F1 (flux density)
 
    const int VsizeL2 = L2FESpace.GetVSize();
    const int VsizeH1 = H1FESpace.GetVSize();
 
-   ParGridFunction I0, I1;
+   ParGridFunction F0, F1;
    Vector* sptr = (Vector*) &S;
-   I0.MakeRef(&L2FESpace, *sptr, 0);
-   I1.MakeRef(&H1FESpace, *sptr, VsizeL2);
+   F0.MakeRef(&L2FESpace, *sptr, 0);
+   F1.MakeRef(&H1FESpace, *sptr, VsizeL2);
 
-   ParGridFunction dI0, dI1;
-   dI0.MakeRef(&L2FESpace, dS_dt, 0);
-   dI1.MakeRef(&H1FESpace, dS_dt, VsizeL2);
+   ParGridFunction dF0, dF1;
+   dF0.MakeRef(&L2FESpace, dS_dt, 0);
+   dF1.MakeRef(&H1FESpace, dS_dt, VsizeL2);
 
    // Standard local assembly and inversion for energy mass matrices.
    DenseMatrix Mf0_(l2dofs_cnt);
@@ -291,56 +291,56 @@ void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
 
    // Solve for df0dv.
    Array<int> l2dofs;
-   Vector I0_rhs(VsizeL2), loc_rhs(l2dofs_cnt), loc_I0source(l2dofs_cnt),
-          loc_MSf0MultI0source(l2dofs_cnt), loc_dI0(l2dofs_cnt);
+   Vector F0_rhs(VsizeL2), loc_rhs(l2dofs_cnt), loc_F0source(l2dofs_cnt),
+          loc_MSf0MultF0source(l2dofs_cnt), loc_dF0(l2dofs_cnt);
 
    timer.sw_force.Start();
-   Divf0.MultTranspose(I1, I0_rhs);
-   //Efieldf0.AddMultTranspose(I1, I0_rhs, 
+   Divf0.MultTranspose(F1, F0_rhs);
+   //Efieldf0.AddMultTranspose(F1, F0_rhs, 
    //                          2.0 / velocity_scaled / velocity_scaled);
    timer.sw_force.Stop();
    timer.dof_tstep += L2FESpace.GlobalTrueVSize();
    for (int z = 0; z < nzones; z++)
    {
       L2FESpace.GetElementDofs(z, l2dofs);
-      I0_rhs.GetSubVector(l2dofs, loc_rhs);
+      F0_rhs.GetSubVector(l2dofs, loc_rhs);
       //
-      I0source.GetSubVector(l2dofs, loc_I0source);
-      MSf0(z).Mult(loc_I0source, loc_MSf0MultI0source);
-      loc_rhs += loc_MSf0MultI0source;
+      F0source.GetSubVector(l2dofs, loc_F0source);
+      MSf0(z).Mult(loc_F0source, loc_MSf0MultF0source);
+      loc_rhs += loc_MSf0MultF0source;
       //
       timer.sw_cgL2.Start();
       // Scale rhs because of the normalized velocity, i.e. 
       // Mf0*df0dv = 1/alphavT*Mf0*df0dvnorm = loc_rhs.
       loc_rhs *= alphavT;
-      Mf0_inv(z).Mult(loc_rhs, loc_dI0);
+      Mf0_inv(z).Mult(loc_rhs, loc_dF0);
       timer.sw_cgL2.Stop();
       timer.L2dof_iter += l2dofs_cnt;
-      dI0.SetSubVector(l2dofs, loc_dI0);
-      //loc_dI0.Print();
+      dF0.SetSubVector(l2dofs, loc_dF0);
+      //loc_dF0.Print();
    }
 
    // Solve for df1dv.
    Vector rhs(VsizeH1), B, X;
    timer.sw_force.Start();
-   Divf1.Mult(I0, rhs);
+   Divf1.Mult(F0, rhs);
    rhs.Neg();
-   // dI0 negative (dfMdv) in diffusive regime. 
-   // Watch out! dI0 has been multiplied by alphavT because of it is 
+   // dF0 negative (dfMdv) in diffusive regime. 
+   // Watch out! dF0 has been multiplied by alphavT because of it is 
    // integrated along the normalized velocity dimension.
-   AEfieldf1.AddMult(dI0, rhs, 1.0 / velocity_scaled / alphavT);
-   //AEfieldf1.AddMult(I0source, rhs, 1.0 / velocity_scaled);
-   //AIEfieldf1.AddMult(I0, rhs, 1.0 / velocity_scaled / velocity_scaled);
-   Bfieldf1.AddMult(I1, rhs, 1.0 / velocity_scaled);
-   Mscattf1.AddMult(I1, rhs, 1.0 / velocity_scaled);
+   AEfieldf1.AddMult(dF0, rhs, 1.0 / velocity_scaled / alphavT);
+   //AEfieldf1.AddMult(F0source, rhs, 1.0 / velocity_scaled);
+   //AIEfieldf1.AddMult(F0, rhs, 1.0 / velocity_scaled / velocity_scaled);
+   Bfieldf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
+   Mscattf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
    // Scale rhs because of the normalized velocity, i.e. 
    // Mf1*df1dv = 1/alphavT*Mf1*df1dvnorm = rhs.
    rhs *= alphavT;
    HypreParMatrix A;
-   dI1 = 0.0;
-   Mf1.FormLinearSystem(ess_tdofs, dI1, rhs, A, X, B);
+   dF1 = 0.0;
+   Mf1.FormLinearSystem(ess_tdofs, dF1, rhs, A, X, B);
    CGSolver cg(H1FESpace.GetParMesh()->GetComm());
    cg.SetOperator(A);
    cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
@@ -350,7 +350,7 @@ void C7Operator::Mult(const Vector &S, Vector &dS_dt) const
    cg.Mult(B, X);
    timer.sw_cgH1.Stop();
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
-   Mf1.RecoverFEMSolution(X, rhs, dI1);
+   Mf1.RecoverFEMSolution(X, rhs, dF1);
 
    quad_data_is_current = false;
 }
@@ -447,14 +447,14 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    const double velocity_scaled = velocity * alphavT;
    const int nqp = integ_rule.GetNPoints();
 
-   ParGridFunction I0, I1;
+   ParGridFunction F0, F1;
    Vector* sptr = (Vector*) &S;
-   I0.MakeRef(&L2FESpace, *sptr, 0);
-   I1.MakeRef(&H1FESpace, *sptr, L2FESpace.GetVSize());
+   F0.MakeRef(&L2FESpace, *sptr, 0);
+   F1.MakeRef(&H1FESpace, *sptr, L2FESpace.GetVSize());
 
    Vector vector_vals(h1dofs_cnt * dim);
-   DenseMatrix Jpi(dim), Jinv(dim), I0stress(dim), I0stressJiT(dim),
-               I1stress(dim), I1stressJiT(dim),
+   DenseMatrix Jpi(dim), Jinv(dim), F0stress(dim), F0stressJiT(dim),
+               F1stress(dim), F1stressJiT(dim),
                vecvalMat(vector_vals.GetData(), h1dofs_cnt, dim);
    Array<int> L2dofs, H1dofs;
 
@@ -524,11 +524,11 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             {
                double normlim = 1e-32;
                double anisolim = 1e-1;
-               //double f0norm = I0.GetValue((*T).ElementNo, ip);
-               double f0norm = abs(I0.GetValue((*T).ElementNo, ip));
-               //double f0norm = max(normlim, I0.GetValue((*T).ElementNo, ip));
+               //double f0norm = F0.GetValue((*T).ElementNo, ip);
+               double f0norm = abs(F0.GetValue((*T).ElementNo, ip));
+               //double f0norm = max(normlim, F0.GetValue((*T).ElementNo, ip));
                Vector f1;
-               I1.GetVectorValue((*T).ElementNo, ip, f1);
+               F1.GetVectorValue((*T).ElementNo, ip, f1);
                double f1norm = f1.Norml2();
 
                if (f0norm < normlim || f1norm < normlim)
@@ -579,9 +579,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const IntegrationPoint &ip = integ_rule.IntPoint(q);
             T->SetIntPoint(&ip);
             double f0min = 1e-32;
-            double f0 = max(f0min, I0.GetValue((*T).ElementNo, ip));
+            double f0 = max(f0min, F0.GetValue((*T).ElementNo, ip));
             Vector f1;
-            I1.GetVectorValue((*T).ElementNo, ip, f1);
+            F1.GetVectorValue((*T).ElementNo, ip, f1);
 
             // Note that the Jacobian was already computed above. We've chosen
             // not to store the Jacobians for all batched quadrature points.
@@ -619,23 +619,23 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             quad_data.dt_est = min(quad_data.dt_est, cfl * dv);
 
             // Stress matrices for f0 and f1 equations.
-			I0stress = I;
+			F0stress = I;
 			// P1 or M1 closure. See the construction above.
-            I1stress = A1;
+            F1stress = A1;
 
             // Quadrature data for partial assembly of the force operator.
-            MultABt(I0stress, Jinv, I0stressJiT);
-            I0stressJiT *= integ_rule.IntPoint(q).weight * detJ;
-            MultABt(I1stress, Jinv, I1stressJiT);
-            I1stressJiT *= integ_rule.IntPoint(q).weight * detJ;
+            MultABt(F0stress, Jinv, F0stressJiT);
+            F0stressJiT *= integ_rule.IntPoint(q).weight * detJ;
+            MultABt(F1stress, Jinv, F1stressJiT);
+            F1stressJiT *= integ_rule.IntPoint(q).weight * detJ;
             for (int vd = 0 ; vd < dim; vd++)
             {
                for (int gd = 0; gd < dim; gd++)
                {
                   quad_data.stress1JinvT(vd)(z_id*nqp + q, gd) =
-                     I1stressJiT(vd, gd);
+                     F1stressJiT(vd, gd);
                   quad_data.stress0JinvT(vd)(z_id*nqp + q, gd) =
-                     I0stressJiT(vd, gd);
+                     F0stressJiT(vd, gd);
                }
                // Extensive vector quadrature data.
                quad_data.Einvrho(z_id*nqp + q, vd) = Efield(vd) / rho;

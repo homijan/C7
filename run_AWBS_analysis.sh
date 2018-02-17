@@ -1,5 +1,5 @@
 #! /bin/bash
-NPROC=8
+NPROC=2
 ## Working Efield general diffusive regime.
 #RS=7 # Increasing spatial resolution improves the stability the best!
 #MINGSAFE=2000
@@ -20,8 +20,8 @@ TMIN=100
 TGRAD=180
 XPOINT=0.046775 # in cm
 
-SIGMA=9.26e11 # Zbar = 1 -> Kn 1e-2
-SIGMASAFE=9.26e17 # Zbar = 1 -> Kn 1e-8
+SIGMA=1.2e12 # Zbar = 1 -> Kn 1e-2
+SIGMASAFE=1.2e18 # Zbar = 1 -> Kn 1e-8
 ZBAR=1
 #ZBAR=2
 #ZBAR=5
@@ -95,7 +95,9 @@ TMIN=799.5
 #TGRAD=2.3
 #TGRAD=80
 TGRAD=300
-SIGMA=4.4e9 ## Kn 1.0e-4 nonlocality limit.
+SIGMA=8.77e9 ## Kn=1.0e-4 nonlocality limit.
+#SIGMA=8.77e8 ## Kn=1.0e-3 q=0.8*qSH E0=0.91
+#SIGMA=1.75e8 ## Kn=5.0e-3 q=0.4*qSH E0=0.66
 
 #SIGMA=8.45e15    ## Kn 1.0e-10
 #SIGMA=8.45e11    ## Kn 1.0e-6
@@ -109,13 +111,13 @@ L=0.1
 XPOINT=0.05
 PROBLEM=5
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
-
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MING
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect --Emimic --AWBSoriginal

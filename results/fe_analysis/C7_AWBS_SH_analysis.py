@@ -138,9 +138,9 @@ mfp_ei = vTh(Te)**4.0/sigma/ni/Zbar/Zbar
 #Te0 = splev(xp, tck, der=0)
 #xp = np.array(xpoint+mfp_ei)
 #Te1 = splev(xp, tck, der=0)
-Te1 = C7Te.max()
+#Te1 = C7Te.max()
 Te0 = C7Te.min()
-dTe = abs(Te1 - Te0)
+dTe = abs(Te - Te0)
 print "xpoint, ni, sigma, Zbar, Te, gradTe, dTe: ", xpoint, ni, sigma, Zbar, Te, gradTe, dTe
 
 ## Multiples of thermal velocity setting the velocity space range.
@@ -250,7 +250,11 @@ proporC7Q = C7Q / SHQ_analytic
 ## C7 SH flux profile #################
 #######################################
 ## Calculate the whole profile of SH flux according to Te from C7.
+C7mfp_ei = (vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar
+Temin_reference = 0.9*C7Te.min()
+C7Kn = C7mfp_ei * abs(C7gradTe) / (C7Te - Temin_reference)
 C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar*C7gradTe/C7Te
+
 
 #######################################
 ## Print comparison results ###########
@@ -325,6 +329,12 @@ plt.show()
 #if (Emimic):
 #   plt.plot(C7x_microns, C7intf0_Em, lsC7, label=lblC7)
 #plt.show()
+## Set labels.
+plt.xlabel(r'z [$\mu$m]')
+plt.ylabel(r'Kn')
+plt.title(r'Kn')
+plt.plot(C7x_microns, C7Kn)
+plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
 plt.ylabel(r'$q$ [electron/s/cm$^2$]')

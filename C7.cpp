@@ -102,12 +102,12 @@ int main(int argc, char *argv[])
    double Zbar = 4.0;
    // Correct input for a Lorentz force calculation with SH Efield.
    //double EfieldS0 = 1.0;
-   //double I0SourceS0 = 1.0;
+   //double F0SourceS0 = 1.0;
    // Appropriate value to mimic exactly the SH Efield effect on qH.
-   //double I0SourceS0 = 0.2857142857142857;
+   //double F0SourceS0 = 0.2857142857142857;
    double EfieldS0 = 0.0;
    // Value equal to zero to be later used as switch.
-   double I0SourceS0 = 0.0;
+   double F0SourceS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
    double ni = 5e19;
    bool M1closure = false;
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
                   "Density gradient scale in the function tanh(a*x).");
    args.AddOption(&EfieldS0, "-E0", "--ES0",
                   "Electric field scaling, i.e. E = S0*E.");
-   args.AddOption(&I0SourceS0, "-S0", "--S0",
+   args.AddOption(&F0SourceS0, "-S0", "--S0",
                   "Electron source scaling (via electron density), i.e. ne = S0*ne.");
    args.AddOption(&ni, "-ni", "--ni",
                   "Ion density (conversion as ni = rho/mi).");
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
    nth::sigma = sigma;
    // NEW scaling taking into account SH Efield.
    // Appropriate value to mimic exactly the SH Efield effect on qH.
-   if (EfieldS0==0.0) { I0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
+   if (EfieldS0==0.0) { F0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.
@@ -411,8 +411,8 @@ int main(int argc, char *argv[])
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
    // The monolithic BlockVector stores unknown fields as:
-   // - 0 -> isotropic I0 (energy density)
-   // - 1 -> anisotropic I1 (flux density)
+   // - 0 -> isotropic F0 (energy density)
+   // - 1 -> anisotropic F1 (flux density)
    Array<int> c7true_offset(3);
    c7true_offset[0] = 0;
    c7true_offset[1] = c7true_offset[0] + Vsize_l2;
@@ -421,9 +421,9 @@ int main(int argc, char *argv[])
 
    // Define GridFunction objects for the zero and first moments of
    // the~electron distribution function.
-   ParGridFunction I0_gf, I1_gf;
-   I0_gf.MakeRef(&L2FESpace, c7S, c7true_offset[0]);
-   I1_gf.MakeRef(&H1FESpace, c7S, c7true_offset[1]);
+   ParGridFunction F0_gf, F1_gf;
+   F0_gf.MakeRef(&L2FESpace, c7S, c7true_offset[0]);
+   F1_gf.MakeRef(&H1FESpace, c7S, c7true_offset[1]);
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
@@ -445,8 +445,8 @@ int main(int argc, char *argv[])
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;
    nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
    nth::MeanFreePath *mfp_pcf = &mfp_cf;
-   nth::AWBSI0Source sourceI0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
-   nth::NTHvHydroCoefficient *sourceI0_pcf = &sourceI0_cf;
+   nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
+   nth::NTHvHydroCoefficient *sourceF0_pcf = &sourceF0_cf;
    nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
    Coefficient *Kn_pcf = &Kn_cf;
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
@@ -459,11 +459,11 @@ int main(int argc, char *argv[])
    VectorConstantCoefficient ZeroBfield_cf(vZero);
    VectorCoefficient *Bfield_pcf = &ZeroBfield_cf;
 
-   nth::AWBSMasterOfPhysics AWBSPhysics(mspei_pcf, mspee_pcf, sourceI0_pcf,
+   nth::AWBSMasterOfPhysics AWBSPhysics(mspei_pcf, mspee_pcf, sourceF0_pcf,
                                         Efield_pcf, Bfield_pcf);
 
    // Set input scales of the electron source and the Efield.
-   sourceI0_cf.SetScale0(I0SourceS0);
+   sourceF0_cf.SetScale0(F0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
    // Static coefficient defined in c7_solver.hpp.
    double c7cfl = 0.25;
@@ -519,7 +519,7 @@ int main(int argc, char *argv[])
                           c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
-   // Prepare grid functions integrating the moments of I0 and I1.
+   // Prepare grid functions integrating the moments of F0 and F1.
    ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace), 
                    Efield_gf(&H1FESpace);
    ParGridFunction j_gf(&H1FESpace), hflux_gf(&H1FESpace);
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
    c7oper.SetTime(vmax);
    //double dvmax = vmax*0.1;
    double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
-   I0_gf = 0.0; I1_gf = 0.0;
+   F0_gf = 0.0; F1_gf = 0.0;
    int c7ti = 0;
    double v = vmax;
    double dv = -dvmin;
@@ -553,21 +553,21 @@ int main(int argc, char *argv[])
       c7ode_solver->Step(c7S, v, dv);
 
       // Perform the integration over velocity space.
-      intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), I0_gf);
-      j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), I1_gf);
-      hflux_gf.Add(me / 2.0 * pow(alphavT*v, 5.0) * alphavT*abs(dv), I1_gf);
+      intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), F0_gf);
+      j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), F1_gf);
+      hflux_gf.Add(me / 2.0 * pow(alphavT*v, 5.0) * alphavT*abs(dv), F1_gf);
 
-      double loc_minI0 = I0_gf.Min(), glob_minI0;
-      MPI_Allreduce(&loc_minI0, &glob_minI0, 1, MPI_DOUBLE, MPI_MIN,
+      double loc_minF0 = F0_gf.Min(), glob_minF0;
+      MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
                        pmesh->GetComm());
-      double loc_maxI0 = I0_gf.Max(), glob_maxI0;
-      MPI_Allreduce(&loc_maxI0, &glob_maxI0, 1, MPI_DOUBLE, MPI_MAX,
+      double loc_maxF0 = F0_gf.Max(), glob_maxF0;
+      MPI_Allreduce(&loc_maxF0, &glob_maxF0, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
-      double loc_minI1 = I1_gf.Min(), glob_minI1;
-      MPI_Allreduce(&loc_minI1, &glob_minI1, 1, MPI_DOUBLE, MPI_MIN,
+      double loc_minF1 = F1_gf.Min(), glob_minF1;
+      MPI_Allreduce(&loc_minF1, &glob_minF1, 1, MPI_DOUBLE, MPI_MIN,
                        pmesh->GetComm());
-      double loc_maxI1 = I1_gf.Max(), glob_maxI1;
-      MPI_Allreduce(&loc_maxI1, &glob_maxI1, 1, MPI_DOUBLE, MPI_MAX,
+      double loc_maxF1 = F1_gf.Max(), glob_maxF1;
+      MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
 
       c7oper.ResetVelocityStepEstimate();
@@ -583,9 +583,9 @@ int main(int argc, char *argv[])
                  << ",\tv = " << setw(5) << setprecision(4) << v
                  << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
                  << "[min(f0), max(f0)] = [" << setprecision(17)
-                 << glob_minI0 << ",\t" << glob_maxI0 << "]" << endl
+                 << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
                  << "[min(f1), max(f1)] = [" << setprecision(17)
-                 << glob_minI1 << ",\t" << glob_maxI1 << "]"
+                 << glob_minF1 << ",\t" << glob_maxF1 << "]"
                  << endl;
       }
    }
@@ -742,8 +742,8 @@ int main(int argc, char *argv[])
          c7oper.ResetQuadratureData();
          c7oper.SetTime(vmax);
          double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7S));
-         I0_gf = 0.0; //1e-2; 
-		 I1_gf = 0.0;
+         F0_gf = 0.0; //1e-2; 
+		 F1_gf = 0.0;
          int c7ti = 0;
          double v = vmax;
          double dv = -dvmin;
@@ -805,8 +805,8 @@ int main(int argc, char *argv[])
             if (right_proc_point)
             {
                //cout << "cell_point: " << cell_point << endl << flush;
-			   f0_point = I0_gf.GetValue(cell_point, ip_point);
-               I1_gf.GetVectorValue(cell_point, ip_point, f1_point);
+			   f0_point = F0_gf.GetValue(cell_point, ip_point);
+               F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
                v_point.push_back(alphavT * v);
 			   f0_v_point.push_back(f0_point);
 			   // TODO extend to more dimensions.
@@ -818,22 +818,22 @@ int main(int argc, char *argv[])
             }
 
             // Perform the integration over velocity space.
-            intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), I0_gf);
-            j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), I1_gf);
+            intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), F0_gf);
+            j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), F1_gf);
             hflux_gf.Add(me / 2.0 * pow(alphavT*v, 5.0) * alphavT*abs(dv), 
-                         I1_gf);
+                         F1_gf);
 
-			double loc_minI0 = I0_gf.Min(), glob_minI0;
-            MPI_Allreduce(&loc_minI0, &glob_minI0, 1, MPI_DOUBLE, MPI_MIN,
+			double loc_minF0 = F0_gf.Min(), glob_minF0;
+            MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
                           pmesh->GetComm());
-            double loc_maxI0 = I0_gf.Max(), glob_maxI0;
-            MPI_Allreduce(&loc_maxI0, &glob_maxI0, 1, MPI_DOUBLE, MPI_MAX,
+            double loc_maxF0 = F0_gf.Max(), glob_maxF0;
+            MPI_Allreduce(&loc_maxF0, &glob_maxF0, 1, MPI_DOUBLE, MPI_MAX,
                           pmesh->GetComm());
-            double loc_minI1 = I1_gf.Min(), glob_minI1;
-            MPI_Allreduce(&loc_minI1, &glob_minI1, 1, MPI_DOUBLE, MPI_MIN,
+            double loc_minF1 = F1_gf.Min(), glob_minF1;
+            MPI_Allreduce(&loc_minF1, &glob_minF1, 1, MPI_DOUBLE, MPI_MIN,
                           pmesh->GetComm());
-            double loc_maxI1 = I1_gf.Max(), glob_maxI1;
-            MPI_Allreduce(&loc_maxI1, &glob_maxI1, 1, MPI_DOUBLE, MPI_MAX,
+            double loc_maxF1 = F1_gf.Max(), glob_maxF1;
+            MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
                           pmesh->GetComm());
 
             c7oper.ResetVelocityStepEstimate();
@@ -849,9 +849,9 @@ int main(int argc, char *argv[])
                << ",\tv = " << setw(5) << setprecision(4) << v
                << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
                << "[min(f0), max(f0)] = [" << setprecision(17)
-               << glob_minI0 << ",\t" << glob_maxI0 << "]" << endl
+               << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
                << "[min(f1), max(f1)] = [" << setprecision(17)
-               << glob_minI1 << ",\t" << glob_maxI1 << "]"
+               << glob_minF1 << ",\t" << glob_maxF1 << "]"
                << endl;
             }
          }
