@@ -357,6 +357,139 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 
 void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 {
+// TMP solution
+   dFdv = 0.0;
+
+   const double velocity = GetTime(); 
+
+   UpdateQuadratureData(velocity, F);
+   const double alphavT = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   const double velocity_scaled = velocity * alphavT;
+
+   AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
+   ParGridFunction F0source(&L2FESpace);
+   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
+
+   // The monolithic BlockVector stores the unknown fields as follows:
+   // - isotropic F0 (energy density)
+   // - anisotropic F1 (flux density)
+
+   const int VsizeL2 = L2FESpace.GetVSize();
+   const int VsizeH1 = H1FESpace.GetVSize();
+
+   ParGridFunction F0, F1;
+   Vector* sptr = (Vector*) &F;
+   F0.MakeRef(&L2FESpace, *sptr, 0);
+   F1.MakeRef(&H1FESpace, *sptr, VsizeL2);
+
+   ParGridFunction dF0, dF1;
+   dF0.MakeRef(&L2FESpace, dFdv, 0);
+   dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
+
+   // Standard local assembly and inversion for energy mass matrices.
+   DenseMatrix Mf0_(l2dofs_cnt);
+   DenseMatrix explMf0_(l2dofs_cnt);
+   DenseMatrixInverse inv(&explMf0_);
+   ExplMass0Integrator explmi(quad_data);
+   explmi.SetIntRule(&integ_rule);
+   Mass0NuIntegrator mnui(quad_data);
+   mnui.SetIntRule(&integ_rule);
+   for (int i = 0; i < nzones; i++)
+   {
+      explmi.AssembleElementMatrix(*L2FESpace.GetFE(i),
+                                   *L2FESpace.GetElementTransformation(i),
+                                   explMf0_);
+      inv.Factor();
+      inv.GetInverseMatrix(Mf0_inv(i));
+      mnui.AssembleElementMatrix(*L2FESpace.GetFE(i),
+                                 *L2FESpace.GetElementTransformation(i),
+                                 Mf0_);
+      MSf0(i) = Mf0_;
+   }
+
+   Divf1 = 0.0;
+   Divf0 = 0.0;
+   AEfieldf1 = 0.0;
+   AIEfieldf1 = 0.0;
+   Efieldf0 = 0.0;
+   Mf1.Update();
+   Bfieldf1.Update();
+   Mscattf1.Update();
+   timer.sw_force.Start();
+   Mf1.Assemble(); 
+   Divf1.Assemble();
+   Divf0.Assemble();
+   AEfieldf1.Assemble(0); 
+   AIEfieldf1.Assemble(0);
+   Efieldf0.Assemble(0);
+   Bfieldf1.Assemble();
+   Mscattf1.Assemble();
+   timer.sw_force.Stop();
+
+   // Solve for df0dv.
+   Array<int> l2dofs;
+   Vector F0_rhs(VsizeL2), loc_rhs(l2dofs_cnt), loc_F0source(l2dofs_cnt),
+          loc_MSf0MultF0source(l2dofs_cnt), loc_dF0(l2dofs_cnt);
+
+   timer.sw_force.Start();
+   Divf0.MultTranspose(F1, F0_rhs);
+   //Efieldf0.AddMultTranspose(F1, F0_rhs, 
+   //                          2.0 / velocity_scaled / velocity_scaled);
+   timer.sw_force.Stop();
+   timer.dof_tstep += L2FESpace.GlobalTrueVSize();
+   for (int z = 0; z < nzones; z++)
+   {
+      L2FESpace.GetElementDofs(z, l2dofs);
+      F0_rhs.GetSubVector(l2dofs, loc_rhs);
+      //
+      F0source.GetSubVector(l2dofs, loc_F0source);
+      MSf0(z).Mult(loc_F0source, loc_MSf0MultF0source);
+      loc_rhs += loc_MSf0MultF0source;
+      //
+      timer.sw_cgL2.Start();
+      // Scale rhs because of the normalized velocity, i.e. 
+      // Mf0*df0dv = 1/alphavT*Mf0*df0dvnorm = loc_rhs.
+      loc_rhs *= alphavT;
+      Mf0_inv(z).Mult(loc_rhs, loc_dF0);
+      timer.sw_cgL2.Stop();
+      timer.L2dof_iter += l2dofs_cnt;
+      dF0.SetSubVector(l2dofs, loc_dF0);
+      //loc_dF0.Print();
+   }
+
+   // Solve for df1dv.
+   Vector rhs(VsizeH1), B, X;
+   timer.sw_force.Start();
+   Divf1.Mult(F0, rhs);
+   rhs.Neg();
+   // dF0 negative (dfMdv) in diffusive regime. 
+   // Watch out! dF0 has been multiplied by alphavT because of it is 
+   // integrated along the normalized velocity dimension.
+   AEfieldf1.AddMult(dF0, rhs, 1.0 / velocity_scaled / alphavT);
+   //AEfieldf1.AddMult(F0source, rhs, 1.0 / velocity_scaled);
+   //AIEfieldf1.AddMult(F0, rhs, 1.0 / velocity_scaled / velocity_scaled);
+   Bfieldf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
+   Mscattf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
+   timer.sw_force.Stop();
+   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+   // Scale rhs because of the normalized velocity, i.e. 
+   // Mf1*df1dv = 1/alphavT*Mf1*df1dvnorm = rhs.
+   rhs *= alphavT;
+   HypreParMatrix A;
+   dF1 = 0.0;
+   Mf1.FormLinearSystem(ess_tdofs, dF1, rhs, A, X, B);
+   CGSolver cg(H1FESpace.GetParMesh()->GetComm());
+   cg.SetOperator(A);
+   cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
+   cg.SetMaxIter(200);
+   cg.SetPrintLevel(0);
+   timer.sw_cgH1.Start();
+   cg.Mult(B, X);
+   timer.sw_cgH1.Stop();
+   timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
+   Mf1.RecoverFEMSolution(X, rhs, dF1);
+
+   quad_data_is_current = false;
 }
 
 double C7Operator::GetVelocityStepEstimate(const Vector &S) const
@@ -611,16 +744,6 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             AIEfield = 0.0;
             A1.AddMult_a(3.0, Efield, AIEfield);
             I.AddMult_a(-1.0, Efield, AIEfield);
-            // Time step estimate at the point. Here the more relevant length
-            // scale is related to the actual mesh deformation; we use the min
-            // singular value of the ref->physical Jacobian. In addition, the
-            // time step estimate should be aware of the presence of shocks.
-            const double h_min =
-               Jpr.CalcSingularvalue(dim-1) / (double) H1FESpace.GetOrder(0);
-
-            // The scaled cfl condition on velocity step.
-            double dv = h_min * min(mspee, mspei) / alphavT; // / rho;
-            quad_data.dt_est = min(quad_data.dt_est, cfl * dv);
 
             // Stress matrices for f0 and f1 equations.
 			F0stress = I;
@@ -659,6 +782,22 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //cout << "Ef1/v/f0/rho: " <<  quad_data.Ef1invvf0rho(z_id*nqp + q) 
             //     << endl << flush;
             quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
+
+            // Time step estimate at the point. Here the more relevant length
+            // scale is related to the actual mesh deformation; we use the min
+            // singular value of the ref->physical Jacobian. In addition, the
+            // time step estimate should be aware of the presence of shocks.
+            const double h_min =
+               Jpr.CalcSingularvalue(dim-1) / (double) H1FESpace.GetOrder(0);
+
+            double f0dvdx = mspee - abs(Efield * f1 / velocity_scaled / f0);
+            double f1dvdx = mspei - abs(AEfield * f1 / velocity_scaled / f0);
+            //double f0dvdx = mspee;
+            //double f1dvdx = mspei;
+            // The scaled cfl condition on velocity step.
+            double dv = h_min * min(abs(f0dvdx), abs(f1dvdx)) / alphavT;
+			//double dv = h_min * min(mspee, mspei) / alphavT; // / rho;
+            quad_data.dt_est = min(quad_data.dt_est, cfl * dv);		
          }
          ++z_id;
       }

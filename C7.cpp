@@ -473,7 +473,8 @@ int main(int argc, char *argv[])
    double vTmultiple = 7.0;
    // well, not really, since the lowest v = 0 is singular, so
    //double vmin = 0.001 * vmax;
-   double vmin = 0.1 * vmax;
+   double vmin_multiple = 0.1;
+   double vmin = vmin_multiple * vmax;
    //double vmin = 0.07 * vmax;
    // and provide some maximum dv step.
    double dvmax = (vmax - vmin) / MinimumGroups;
@@ -527,8 +528,17 @@ int main(int argc, char *argv[])
    ODESolver *c7ode_solver = NULL;
    //c7ode_solver = new ForwardEulerSolver;
    //c7ode_solver = new RK2Solver(0.5);
-   c7ode_solver = new RK4Solver;
+   //c7ode_solver = new RK4Solver;
    //c7ode_solver = new RK6Solver;
+   // L-stable
+   //c7ode_solver = new BackwardEulerSolver;
+   //c7ode_solver = new SDIRK23Solver(2);
+   c7ode_solver = new SDIRK33Solver;
+   // A-stable
+   //c7ode_solver = new ImplicitMidpointSolver;
+   //c7ode_solver = new SDIRK23Solver;
+   //c7ode_solver = new SDIRK34Solver;
+   
    c7ode_solver->Init(c7oper);
 
    double alphavT = mspei_cf.GetVelocityScale();
@@ -796,8 +806,9 @@ int main(int argc, char *argv[])
 			elNo++;
          }
 		 // Actual integration of C7Operator.
-		 while (abs(dv) >= abs(dvmin))
-         {
+		 //while (abs(dv) >= abs(dvmin))
+         while (v > vmin)
+		 {
             c7ti++;
             c7ode_solver->Step(c7F, v, dv);
             

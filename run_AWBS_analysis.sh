@@ -30,6 +30,8 @@ ZBAR=1
 #ZBAR=50
 #ZBAR=100
 
+SIGMASAFE=1.2e15 # Zbar = 1 -> Kn 1e-5
+
 L=0.1
 PROBLEM=5
 #if false ; then
@@ -55,7 +57,7 @@ cd ../..
 #python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect
 #cd ../..
 
-#if false ; then
+if false ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
@@ -72,7 +74,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecor
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7P1 --labelEcorrect C7M1
 cd ../..
-#fi
+fi
 
 ## Diffusive asymptotic test. The SH, AWBS (original and corrected), 
 ## and C7 (proper and mimic Efield) calculations are compared. 
@@ -82,8 +84,8 @@ cd ../..
 ## A pure diffusion case. 
 ## Converged numerical flux from -minG 200. Err 1e-5 -minG 50.
 RS=7
-F1ORDER=4
-F0ORDER=3
+F1ORDER=3
+F0ORDER=2
 NI=5e20
 ZBAR=100
 MING=25
@@ -95,9 +97,9 @@ TMIN=799.5
 #TGRAD=2.3
 #TGRAD=80
 TGRAD=300
-SIGMA=8.77e9 ## Kn=1.0e-4 nonlocality limit.
+#SIGMA=8.77e9 ## Kn=1.0e-4 nonlocality limit.
 #SIGMA=8.77e8 ## Kn=1.0e-3 q=0.8*qSH E0=0.91
-#SIGMA=1.75e8 ## Kn=5.0e-3 q=0.4*qSH E0=0.66
+SIGMA=1.75e8 ## Kn=5.0e-3 q=0.4*qSH E0=0.66
 
 #SIGMA=8.45e15    ## Kn 1.0e-10
 #SIGMA=8.45e11    ## Kn 1.0e-6
@@ -111,13 +113,15 @@ L=0.1
 XPOINT=0.05
 PROBLEM=5
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MING
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+if false ; then
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MING
+#cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+#cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 1.0 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 0.66 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect --Emimic --AWBSoriginal
+fi
