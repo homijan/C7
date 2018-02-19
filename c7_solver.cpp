@@ -94,16 +94,16 @@ C7Operator::C7Operator(int size,
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
      cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
-     Mf1(&h1_fes), Mscattf1(&h1_fes), Bfieldf1(&h1_fes),
+     Mf0nu(&l2_fes), invMf0nu(&l2_fes), invMf0nuE(&l2_fes), Mf1nu(&h1_fes), 
+     Mf1nut(&h1_fes), Bfieldf1(&h1_fes), Divf0(&l2_fes, &h1_fes), 
+     Efieldf0(&l2_fes, &h1_fes), Divf1(&l2_fes, &h1_fes), 
+     AEfieldf1(&l2_fes, &h1_fes), AIEfieldf1(&l2_fes, &h1_fes),
      MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
      Mf0_inv(l2dofs_cnt, l2dofs_cnt, nzones),
      integ_rule(IntRules.Get(h1_fes.GetMesh()->GetElementBaseGeometry(),
                              3*h1_fes.GetOrder(0) + l2_fes.GetOrder(0) - 1)),
      quad_data(dim, nzones, integ_rule.GetNPoints()),
      quad_data_is_current(false),
-     Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes),
-     Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes),
-     AIEfieldf1(&l2_fes, &h1_fes),
      locCG(), timer(), AWBSPhysics(AWBSPhysics_), x_gf(x_gf_)
 {
    GridFunctionCoefficient rho_coeff(&rho0);
@@ -153,6 +153,7 @@ C7Operator::C7Operator(int size,
    quad_data.h0 /= (double) H1FESpace.GetOrder(0);
  
 
+/*
    // Standard local assembly and inversion for energy mass matrices.
    DenseMatrix Mf0_(l2dofs_cnt);
    DenseMatrixInverse inv(&Mf0_);
@@ -166,17 +167,32 @@ C7Operator::C7Operator(int size,
       inv.Factor();
       inv.GetInverseMatrix(Mf0_inv(i));
    }
+*/
+
+   // Standard assembly for the f0 mass matrix.
+   Mass0NuIntegrator *mf0nui = new Mass0NuIntegrator(quad_data);
+   mf0nui->SetIntRule(&integ_rule);
+   Mf0nu.AddDomainIntegrator(mf0nui);
+
+   // Inverted Mf0 intergrators.
+   invMass0NuIntegrator *invmf0nui = new invMass0NuIntegrator(quad_data);
+   invmf0nui->SetIntRule(&integ_rule);
+   invMf0nu.AddDomainIntegrator(invmf0nui);
+   // Special form for explicit calculation.
+   invMass0NuEIntegrator *invmf0nuEi = new invMass0NuEIntegrator(quad_data);
+   invmf0nuEi->SetIntRule(&integ_rule);
+   invMf0nuE.AddDomainIntegrator(invmf0nuEi);
 
    // Standard assembly for the velocity mass matrix.
-   Mass1NuIntegrator *f1mi = new Mass1NuIntegrator(quad_data);
-   f1mi->SetIntRule(&integ_rule);
-   Mf1.AddDomainIntegrator(f1mi);
-   Mf1.Assemble();
+   Mass1NuIntegrator *mf1nui = new Mass1NuIntegrator(quad_data);
+   mf1nui->SetIntRule(&integ_rule);
+   Mf1nu.AddDomainIntegrator(mf1nui);
+   Mf1nu.Assemble();
 
-   Mass1NutIntegrator *f1scati = new Mass1NutIntegrator(quad_data);
-   f1scati->SetIntRule(&integ_rule);
-   Mscattf1.AddDomainIntegrator(f1scati);
-   Mscattf1.Assemble();
+   Mass1NutIntegrator *mf1nuti = new Mass1NutIntegrator(quad_data);
+   mf1nuti->SetIntRule(&integ_rule);
+   Mf1nut.AddDomainIntegrator(mf1nuti);
+   Mf1nut.Assemble();
 
    BfieldIntegrator *f1bfi = new BfieldIntegrator(quad_data);
    f1bfi->SetIntRule(&integ_rule);
@@ -249,98 +265,60 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    dF0.MakeRef(&L2FESpace, dFdv, 0);
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
 
-   // Standard local assembly and inversion for energy mass matrices.
-   DenseMatrix Mf0_(l2dofs_cnt);
-   DenseMatrix explMf0_(l2dofs_cnt);
-   DenseMatrixInverse inv(&explMf0_);
-   ExplMass0Integrator explmi(quad_data);
-   explmi.SetIntRule(&integ_rule);
-   Mass0NuIntegrator mnui(quad_data);
-   mnui.SetIntRule(&integ_rule);
-   for (int i = 0; i < nzones; i++)
-   {
-      explmi.AssembleElementMatrix(*L2FESpace.GetFE(i),
-                                   *L2FESpace.GetElementTransformation(i),
-                                   explMf0_);
-      inv.Factor();
-      inv.GetInverseMatrix(Mf0_inv(i));
-      mnui.AssembleElementMatrix(*L2FESpace.GetFE(i),
-                                 *L2FESpace.GetElementTransformation(i),
-                                 Mf0_);
-      MSf0(i) = Mf0_;
-   }
-
-   Divf1 = 0.0;
-   Divf0 = 0.0;
-   AEfieldf1 = 0.0;
-   AIEfieldf1 = 0.0;
-   Efieldf0 = 0.0;
-   Mf1.Update();
+   Mf0nu.Update();
+   invMf0nuE.Update();
+   Mf1nu.Update(); 
+   Mf1nut.Update();
    Bfieldf1.Update();
-   Mscattf1.Update();
-   timer.sw_force.Start();
-   Mf1.Assemble(); 
-   Divf1.Assemble();
-   Divf0.Assemble();
-   AEfieldf1.Assemble(0); 
-   AIEfieldf1.Assemble(0);
-   Efieldf0.Assemble(0);
+   Divf0 = 0.0;
+   Efieldf0 = 0.0;
+   Divf1 = 0.0; 
+   AEfieldf1 = 0.0;
+   AIEfieldf1 = 0.0; 
+
+   timer.sw_force.Start(); 
+   Mf0nu.Assemble();
+   invMf0nuE.Assemble();
+   Mf1nu.Assemble(); 
+   Mf1nut.Assemble();
    Bfieldf1.Assemble();
-   Mscattf1.Assemble();
+   Divf0.Assemble();
+   Efieldf0.Assemble(0);   
+   Divf1.Assemble();  
+   AEfieldf1.Assemble(0); 
+   AIEfieldf1.Assemble(0); 
    timer.sw_force.Stop();
 
-   // Solve for df0dv.
-   Array<int> l2dofs;
-   Vector F0_rhs(VsizeL2), loc_rhs(l2dofs_cnt), loc_F0source(l2dofs_cnt),
-          loc_MSf0MultF0source(l2dofs_cnt), loc_dF0(l2dofs_cnt);
-
+   // Solve for df0dv. 
+   Vector F0_rhs(VsizeL2);
    timer.sw_force.Start();
    Divf0.MultTranspose(F1, F0_rhs);
-   //Efieldf0.AddMultTranspose(F1, F0_rhs, 
-   //                          2.0 / velocity_scaled / velocity_scaled);
-   timer.sw_force.Stop();
-   timer.dof_tstep += L2FESpace.GlobalTrueVSize();
-   for (int z = 0; z < nzones; z++)
-   {
-      L2FESpace.GetElementDofs(z, l2dofs);
-      F0_rhs.GetSubVector(l2dofs, loc_rhs);
-      //
-      F0source.GetSubVector(l2dofs, loc_F0source);
-      MSf0(z).Mult(loc_F0source, loc_MSf0MultF0source);
-      loc_rhs += loc_MSf0MultF0source;
-      //
-      timer.sw_cgL2.Start();
-      // Scale rhs because of the normalized velocity, i.e. 
-      // Mf0*df0dv = 1/alphavT*Mf0*df0dvnorm = loc_rhs.
-      loc_rhs *= alphavT;
-      Mf0_inv(z).Mult(loc_rhs, loc_dF0);
-      timer.sw_cgL2.Stop();
-      timer.L2dof_iter += l2dofs_cnt;
-      dF0.SetSubVector(l2dofs, loc_dF0);
-      //loc_dF0.Print();
-   }
+   Mf0nu.AddMult(F0source, F0_rhs); 
+   // Scale F0_rhs  because of the normalized velocity integration, i.e. 
+   // the increment dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs.
+   F0_rhs *= alphavT;
+   // Calculate dF0.
+   invMf0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
-   Vector rhs(VsizeH1), B, X;
+   Vector F1_rhs(VsizeH1), B, X;
    timer.sw_force.Start();
-   Divf1.Mult(F0, rhs);
-   rhs.Neg();
-   // dF0 negative (dfMdv) in diffusive regime. 
-   // Watch out! dF0 has been multiplied by alphavT because of it is 
-   // integrated along the normalized velocity dimension.
-   AEfieldf1.AddMult(dF0, rhs, 1.0 / velocity_scaled / alphavT);
-   //AEfieldf1.AddMult(F0source, rhs, 1.0 / velocity_scaled);
-   //AIEfieldf1.AddMult(F0, rhs, 1.0 / velocity_scaled / velocity_scaled);
-   Bfieldf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
-   Mscattf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
+   Divf1.Mult(F0, F1_rhs);
+   F1_rhs.Neg(); 
+   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   // Scale F1_rhs  because of the normalized velocity integration, i.e. 
+   // the increment dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
+   F1_rhs *= alphavT;
+   // dF0dv contribution already contains the increment multiplier alphavT.
+   AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
+
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
-   // Scale rhs because of the normalized velocity, i.e. 
-   // Mf1*df1dv = 1/alphavT*Mf1*df1dvnorm = rhs.
-   rhs *= alphavT;
    HypreParMatrix A;
    dF1 = 0.0;
-   Mf1.FormLinearSystem(ess_tdofs, dF1, rhs, A, X, B);
+   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
    CGSolver cg(H1FESpace.GetParMesh()->GetComm());
    cg.SetOperator(A);
    cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
@@ -350,14 +328,13 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    cg.Mult(B, X);
    timer.sw_cgH1.Stop();
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
-   Mf1.RecoverFEMSolution(X, rhs, dF1);
+   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
 
    quad_data_is_current = false;
 }
 
 void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 {
-// TMP solution
    dFdv = 0.0;
 
    const double velocity = GetTime(); 
@@ -386,98 +363,69 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    dF0.MakeRef(&L2FESpace, dFdv, 0);
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
 
-   // Standard local assembly and inversion for energy mass matrices.
-   DenseMatrix Mf0_(l2dofs_cnt);
-   DenseMatrix explMf0_(l2dofs_cnt);
-   DenseMatrixInverse inv(&explMf0_);
-   ExplMass0Integrator explmi(quad_data);
-   explmi.SetIntRule(&integ_rule);
-   Mass0NuIntegrator mnui(quad_data);
-   mnui.SetIntRule(&integ_rule);
-   for (int i = 0; i < nzones; i++)
-   {
-      explmi.AssembleElementMatrix(*L2FESpace.GetFE(i),
-                                   *L2FESpace.GetElementTransformation(i),
-                                   explMf0_);
-      inv.Factor();
-      inv.GetInverseMatrix(Mf0_inv(i));
-      mnui.AssembleElementMatrix(*L2FESpace.GetFE(i),
-                                 *L2FESpace.GetElementTransformation(i),
-                                 Mf0_);
-      MSf0(i) = Mf0_;
-   }
-
-   Divf1 = 0.0;
-   Divf0 = 0.0;
-   AEfieldf1 = 0.0;
-   AIEfieldf1 = 0.0;
-   Efieldf0 = 0.0;
-   Mf1.Update();
+   Mf0nu.Update();
+   invMf0nuE.Update();
+   Mf1nu.Update(); 
+   Mf1nut.Update();
    Bfieldf1.Update();
-   Mscattf1.Update();
-   timer.sw_force.Start();
-   Mf1.Assemble(); 
-   Divf1.Assemble();
-   Divf0.Assemble();
-   AEfieldf1.Assemble(0); 
-   AIEfieldf1.Assemble(0);
-   Efieldf0.Assemble(0);
+   Divf0 = 0.0;
+   Efieldf0 = 0.0;
+   Divf1 = 0.0; 
+   AEfieldf1 = 0.0;
+   AIEfieldf1 = 0.0; 
+
+   timer.sw_force.Start(); 
+   Mf0nu.Assemble();
+   invMf0nuE.Assemble();
+   Mf1nu.Assemble(); 
+   Mf1nut.Assemble();
    Bfieldf1.Assemble();
-   Mscattf1.Assemble();
+   Divf0.Assemble();
+   Efieldf0.Assemble(0);   
+   Divf1.Assemble();  
+   AEfieldf1.Assemble(0); 
+   AIEfieldf1.Assemble(0); 
    timer.sw_force.Stop();
 
-   // Solve for df0dv.
-   Array<int> l2dofs;
-   Vector F0_rhs(VsizeL2), loc_rhs(l2dofs_cnt), loc_F0source(l2dofs_cnt),
-          loc_MSf0MultF0source(l2dofs_cnt), loc_dF0(l2dofs_cnt);
-
+   // Solve for df0dv. 
+   Vector F0_rhs(VsizeL2);
    timer.sw_force.Start();
    Divf0.MultTranspose(F1, F0_rhs);
-   //Efieldf0.AddMultTranspose(F1, F0_rhs, 
-   //                          2.0 / velocity_scaled / velocity_scaled);
-   timer.sw_force.Stop();
-   timer.dof_tstep += L2FESpace.GlobalTrueVSize();
-   for (int z = 0; z < nzones; z++)
-   {
-      L2FESpace.GetElementDofs(z, l2dofs);
-      F0_rhs.GetSubVector(l2dofs, loc_rhs);
-      //
-      F0source.GetSubVector(l2dofs, loc_F0source);
-      MSf0(z).Mult(loc_F0source, loc_MSf0MultF0source);
-      loc_rhs += loc_MSf0MultF0source;
-      //
-      timer.sw_cgL2.Start();
-      // Scale rhs because of the normalized velocity, i.e. 
-      // Mf0*df0dv = 1/alphavT*Mf0*df0dvnorm = loc_rhs.
-      loc_rhs *= alphavT;
-      Mf0_inv(z).Mult(loc_rhs, loc_dF0);
-      timer.sw_cgL2.Stop();
-      timer.L2dof_iter += l2dofs_cnt;
-      dF0.SetSubVector(l2dofs, loc_dF0);
-      //loc_dF0.Print();
-   }
+   Mf0nu.AddMult(F0source, F0_rhs); 
+   // Scale F0_rhs  because of the normalized velocity integration, i.e. 
+   // the increment dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs.
+   F0_rhs *= alphavT;
+   // Calculate dF0.
+   invMf0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
-   Vector rhs(VsizeH1), B, X;
+   Vector F1_rhs(VsizeH1), B, X;
    timer.sw_force.Start();
-   Divf1.Mult(F0, rhs);
-   rhs.Neg();
-   // dF0 negative (dfMdv) in diffusive regime. 
-   // Watch out! dF0 has been multiplied by alphavT because of it is 
-   // integrated along the normalized velocity dimension.
-   AEfieldf1.AddMult(dF0, rhs, 1.0 / velocity_scaled / alphavT);
-   //AEfieldf1.AddMult(F0source, rhs, 1.0 / velocity_scaled);
-   //AIEfieldf1.AddMult(F0, rhs, 1.0 / velocity_scaled / velocity_scaled);
-   Bfieldf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
-   Mscattf1.AddMult(F1, rhs, 1.0 / velocity_scaled);
+   Divf1.Mult(F0, F1_rhs);
+   F1_rhs.Neg(); 
+   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   // Scale F1_rhs  because of the normalized velocity integration, i.e. 
+   // the increment dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
+   F1_rhs *= alphavT;
+   // dF0dv contribution already contains the increment multiplier alphavT.
+   AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
+   // Semi-implicit update.
+   // Mf1nu*df1dv = 1/v*Mf1nut*f1 => 
+   // Mf1nu*df1dv = 1/v*Mf1nut*(f1^n + dv*df1dv)
+   // (Mf1nu - dv*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n
+   double minus_dv_over_v = -1.0 * dv / velocity_scaled; 
+   // The real step acts in the scaled velocity, 
+   // i.e. the increment multiplier alphavT needs to be applied.
+   minus_dv_over_v *= alphavT;
+   // Set semi-implicit system matrix.
+   Mf1nu.SpMat().Add(minus_dv_over_v, Mf1nut.SpMat());
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
-   // Scale rhs because of the normalized velocity, i.e. 
-   // Mf1*df1dv = 1/alphavT*Mf1*df1dvnorm = rhs.
-   rhs *= alphavT;
    HypreParMatrix A;
    dF1 = 0.0;
-   Mf1.FormLinearSystem(ess_tdofs, dF1, rhs, A, X, B);
+   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
    CGSolver cg(H1FESpace.GetParMesh()->GetComm());
    cg.SetOperator(A);
    cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
@@ -487,7 +435,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    cg.Mult(B, X);
    timer.sw_cgH1.Stop();
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
-   Mf1.RecoverFEMSolution(X, rhs, dF1);
+   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
 
    quad_data_is_current = false;
 }
@@ -790,10 +738,10 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const double h_min =
                Jpr.CalcSingularvalue(dim-1) / (double) H1FESpace.GetOrder(0);
 
-            double f0dvdx = mspee - abs(Efield * f1 / velocity_scaled / f0);
-            double f1dvdx = mspei - abs(AEfield * f1 / velocity_scaled / f0);
-            //double f0dvdx = mspee;
-            //double f1dvdx = mspei;
+            //double f0dvdx = mspee - abs(Efield * f1 / velocity_scaled / f0);
+            //double f1dvdx = mspei - abs(AEfield * f1 / velocity_scaled / f0);
+            double f0dvdx = mspee;
+            double f1dvdx = mspei;
             // The scaled cfl condition on velocity step.
             double dv = h_min * min(abs(f0dvdx), abs(f1dvdx)) / alphavT;
 			//double dv = h_min * min(mspee, mspei) / alphavT; // / rho;

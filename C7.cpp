@@ -532,8 +532,8 @@ int main(int argc, char *argv[])
    //c7ode_solver = new RK6Solver;
    // L-stable
    //c7ode_solver = new BackwardEulerSolver;
-   //c7ode_solver = new SDIRK23Solver(2);
-   c7ode_solver = new SDIRK33Solver;
+   c7ode_solver = new SDIRK23Solver(2);
+   //c7ode_solver = new SDIRK33Solver;
    // A-stable
    //c7ode_solver = new ImplicitMidpointSolver;
    //c7ode_solver = new SDIRK23Solver;

@@ -125,6 +125,27 @@ public:
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
+class invMass0Integrator : public Mass0Integrator
+{
+public:
+   invMass0Integrator(QuadratureData &quad_data_) 
+      : Mass0Integrator(quad_data_)  { }
+
+   virtual void AssembleElementMatrix2(const FiniteElement &trial_fe,
+                                       const FiniteElement &test_fe,
+                                       ElementTransformation &Trans,
+                                       DenseMatrix &elmat)
+   {  
+      // Compute the element Mass0 matrix.
+      Mass0Integrator::AssembleElementMatrix2(trial_fe, test_fe, Trans, elmat);
+      // Invert the element matrix.
+      elmat.Invert();   
+   } 
+};
+
+// Assembles element contributions to the global velocity force matrix.
+// This class is used for the full assembly case; it's not used with partial
+// assembly.
 class Mass1Integrator : public BilinearFormIntegrator
 {
 protected:
@@ -202,6 +223,7 @@ public:
    virtual double GetIntegrator(int q, int vd) = 0;
 };
 
+/*
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
@@ -214,6 +236,7 @@ public:
 
    double GetIntegrator(int i);
 };
+*/
 
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
@@ -244,6 +267,33 @@ public:
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
+class invMass0NuIntegrator : public invMass0Integrator
+{
+private:
+public:
+   invMass0NuIntegrator(QuadratureData &quad_data_) :
+      invMass0Integrator(quad_data_) { }
+
+   double GetIntegrator(int i);
+};
+
+// Assembles element contributions to the global velocity force matrix.
+// This class is used for the full assembly case; it's not used with partial
+// assembly.
+class invMass0NuEIntegrator : public invMass0Integrator
+{
+private:
+public:
+   invMass0NuEIntegrator(QuadratureData &quad_data_) :
+      invMass0Integrator(quad_data_) { }
+
+   double GetIntegrator(int i);
+};
+
+/*
+// Assembles element contributions to the global velocity force matrix.
+// This class is used for the full assembly case; it's not used with partial
+// assembly.
 class Mass1cIntegrator : public Mass1Integrator
 {
 private:
@@ -253,6 +303,7 @@ public:
 
    double GetIntegrator(int i);
 };
+*/
 
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial

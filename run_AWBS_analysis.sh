@@ -22,14 +22,17 @@ XPOINT=0.046775 # in cm
 
 SIGMA=1.2e12 # Zbar = 1 -> Kn 1e-2
 SIGMASAFE=1.2e18 # Zbar = 1 -> Kn 1e-8
-ZBAR=1
+#MINGSAFE=13 # Zbar = 1 minimum groups for precise diffusion results
+#ZBAR=1
 #ZBAR=2
 #ZBAR=5
 #ZBAR=10
 #ZBAR=20
 #ZBAR=50
-#ZBAR=100
+ZBAR=100
 
+MINGSAFE=50
+#SIGMASAFE=1.2e15 # Zbar = 1 -> Kn 1e-5
 SIGMASAFE=1.2e15 # Zbar = 1 -> Kn 1e-5
 
 L=0.1
@@ -38,7 +41,7 @@ PROBLEM=5
 ### Pascal's setting for nonlocal test
 ## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
 ## C7E
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 0.9
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 ## C7*
