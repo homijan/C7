@@ -35,12 +35,26 @@ MINGSAFE=100
 #SIGMASAFE=1.2e15 # Zbar = 1 -> Kn 1e-5
 #SIGMA=3.6e9 # Zbar = 1 -> Kn 1e-5
 #SIGMA=2.448e9 # Zbar = 100 -> Kn 5e-4
-SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-3
+#SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-3
+SIGMA=6e8 # Zbar = 100 -> Kn 2e-3
 
 L=0.1
 PROBLEM=5
 
 #if false ; then
+## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
+## P1 closure.
+## C7*
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -cfl 1e2
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7P1
+cd ../..
+#fi
+
+if false ; then
 ### Pascal's setting for nonlocal test
 ## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
 ## C7E
@@ -54,9 +68,9 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --AWBSoriginal
 cd ../..
-#fi
+fi
 
-#if false ; then
+if false ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
@@ -67,7 +81,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7P1
 cd ../..
-#fi
+fi
 
 
 #mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0

@@ -471,40 +471,78 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // In the case of source, the integration scaling is applied directly.
    F0source *= alphavT; //Mf0nu.SpMat()      *= alphavT;
 
+/*
+   // Solve for df0dv. 
+   ////// f0 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M0(nu)*df0dv - 1/v*M0(E*f1/f0)*df0dv = DT(I)*f1 + 2/v^2*VT(E)*f1        //
+   //                                        + M0(nu)*dfMdv                   //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
+   Vector F0_rhs(VsizeL2);
+   timer.sw_force.Start();
+   Divf0.MultTranspose(F1, F0_rhs);
+   //Efieldf0.AddMultTranspose(F1, F0_rhs, 
+   //                          2.0 / velocity_scaled / velocity_scaled);
+   Mf0nu.AddMult(F0source, F0_rhs); 
+   // Compute dF0.
+   invMf0nuE.Mult(F0_rhs, dF0);
 
-/* BUP
-   // Steps towards the implicit scheme.
-   // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
-   SparseMatrix *Df0T = Transpose(Divf0.SpMat());
-   SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
-   SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
-   // Fill the rhs vector.
-   Vector implF1_rhs(VsizeH1), implB, implX;
-   Divf1.Mult(F0, implF1_rhs);
-   Divf1.AddMult(F0source, implF1_rhs, dv_scaled);
-   Df1invMf0nuDf0T->AddMult(F1, implF1_rhs, dv_scaled);
-   implF1_rhs.Neg();
-   Mf1nut.AddMult(F1, implF1_rhs, 1.0 / velocity_scaled);
-   cout << "|implF1_rhs|: " << implF1_rhs.Norml2() << endl << flush; 
-   // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0 * dv_scaled / velocity_scaled, Mf1nut.SpMat());
-   implMf1nu.SpMat().Add(dv_scaled * dv_scaled, *Df1invMf0nuDf0T);
-   // Run the HYPRE solver.
-   HypreParMatrix implA;
+   // Solve for df1dv.
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
+   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
+   Vector F1_rhs(VsizeH1), B, X;
+   timer.sw_force.Start();
+   Divf1.Mult(F0, F1_rhs);
+   F1_rhs.Neg(); 
+   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   //Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   //AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
+   // Semi-implicit update.
+   // Mf1nu*df1dv = 1/v*Mf1nut*f1 => 
+   // Mf1nu*df1dv = 1/v*Mf1nut*(f1^n + dv*df1dv)
+   // (Mf1nu - dv/v*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n 
+   // Set semi-implicit system matrix.
+   Mf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat()); 
+   // Compute dF1.
+   timer.sw_force.Stop();
+   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+   HypreParMatrix A;
    dF1 = 0.0;
-   implMf1nu.FormLinearSystem(ess_tdofs, dF1, implF1_rhs, implA, implX, implB);
-   CGSolver impl_cg(H1FESpace.GetParMesh()->GetComm());
-   impl_cg.SetOperator(implA);
-   impl_cg.SetRelTol(1e-8); impl_cg.SetAbsTol(0.0);
-   impl_cg.SetMaxIter(200);
-   impl_cg.SetPrintLevel(0);
-   impl_cg.Mult(implB, implX);
-   implMf1nu.RecoverFEMSolution(implX, implF1_rhs, dF1);
-   cout << "|dF1|: " << dF1.Norml2() << endl << flush;
+   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
+   CGSolver cg(H1FESpace.GetParMesh()->GetComm());
+   cg.SetOperator(A);
+   cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
+   cg.SetMaxIter(200);
+   cg.SetPrintLevel(0);
+   timer.sw_cgH1.Start();
+   cg.Mult(B, X);
+   timer.sw_cgH1.Stop();
+   timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
+   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
+
+   // Some output.
+   int count = 1, output_rank = 0;
+   double loc_dF1Norml2 = dF1.Norml2();
+   double glob_dF1Norml2; 
+   MPI_Reduce(&loc_dF1Norml2, &glob_dF1Norml2, count, MPI_DOUBLE, 
+              MPI_SUM, output_rank, H1FESpace.GetParMesh()->GetComm()); 
+   double loc_dF0Norml2 = dF0.Norml2();
+   double glob_dF0Norml2;
+   MPI_Reduce(&loc_dF0Norml2, &glob_dF0Norml2, count, MPI_DOUBLE, 
+              MPI_SUM, output_rank, H1FESpace.GetParMesh()->GetComm());
+   if (H1FESpace.GetParMesh()->GetMyRank() == output_rank)
+   {
+	  cout << "|dF1|: " << glob_dF1Norml2 << endl << flush;
+	  cout << "|dF0|: " << glob_dF0Norml2 << endl << flush;
+   }
 */
 
-
-/*
    /////////////////////////////////////////////////////////////////////////////
    ////// Fully implicit scheme. ///////////////////////////////////////////////
    /////////////////////////////////////////////////////////////////////////////
@@ -531,7 +569,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    CGSolver impl_cg(H1FESpace.GetParMesh()->GetComm());
    impl_cg.SetOperator(implA);
    impl_cg.SetRelTol(1e-8); impl_cg.SetAbsTol(0.0);
-   impl_cg.SetMaxIter(200);
+   impl_cg.SetMaxIter(400);
    impl_cg.SetPrintLevel(0);
    impl_cg.Mult(implB, implX);
    implMf1nu.RecoverFEMSolution(implX, implF1_rhs, dF1);
@@ -541,82 +579,28 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invMf0nuDf0T->AddMult(F1, dF0);
    invMf0nuDf0T->AddMult(dF1, dF0, dv);
 
+   /*
    // Some output.
-   int count = 1, output_rank = 0;
-   double loc_dF1Norml2 = dF1.Norml2();
-   double glob_dF1Norml2; 
-   MPI_Reduce(&loc_dF1Norml2, &glob_dF1Norml2, count, MPI_DOUBLE, MPI_SUM, 
-              output_rank, H1FESpace.GetParMesh()->GetComm()); 
-   double loc_dF0Norml2 = dF0.Norml2();
-   double glob_dF0Norml2;
-   MPI_Reduce(&loc_dF0Norml2, &glob_dF0Norml2, count, MPI_DOUBLE, MPI_SUM,
-              output_rank, H1FESpace.GetParMesh()->GetComm());
-   if (H1FESpace.GetParMesh()->GetMyRank() == output_rank)
+   int impl_count = 1, impl_output_rank = 0;
+   double loc_impldF1Norml2 = dF1.Norml2();
+   double glob_impldF1Norml2; 
+   MPI_Reduce(&loc_impldF1Norml2, &glob_impldF1Norml2, impl_count, MPI_DOUBLE, 
+              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm()); 
+   double loc_impldF0Norml2 = dF0.Norml2();
+   double glob_impldF0Norml2;
+   MPI_Reduce(&loc_impldF0Norml2, &glob_impldF0Norml2, impl_count, MPI_DOUBLE, 
+              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm());
+   if (H1FESpace.GetParMesh()->GetMyRank() == impl_output_rank)
    {
       //cout << "GetNRanks(): " << H1FESpace.GetParMesh()->GetNRanks() << endl 
 	  //     << flush;
-	  cout << "|dF1|: " << glob_dF1Norml2 << endl << flush;
-	  cout << "|dF0|: " << glob_dF0Norml2 << endl << flush;
+	  cout << "|impldF1|: " << glob_impldF1Norml2 << endl << flush;
+	  cout << "|impldF0|: " << glob_impldF0Norml2 << endl << flush;
    }
+   */
    /////////////////////////////////////////////////////////////////////////////
    /////////////////////////////////////////////////////////////////////////////
    /////////////////////////////////////////////////////////////////////////////
-*/
-
-   // Solve for df0dv. 
-   ////// f0 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // M0(nu)*df0dv - 1/v*M0(E*f1/f0)*df0dv = DT(I)*f1 + 2/v^2*VT(E)*f1        //
-   //                                        + M0(nu)*dfMdv                   //
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-   Vector F0_rhs(VsizeL2);
-   timer.sw_force.Start();
-   Divf0.MultTranspose(F1, F0_rhs);
-   Efieldf0.AddMultTranspose(F1, F0_rhs, 
-                             2.0 / velocity_scaled / velocity_scaled);
-   Mf0nu.AddMult(F0source, F0_rhs); 
-   // Compute dF0.
-   invMf0nuE.Mult(F0_rhs, dF0);
-
-   // Solve for df1dv.
-   ////// f1 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
-   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-   Vector F1_rhs(VsizeH1), B, X;
-   timer.sw_force.Start();
-   Divf1.Mult(F0, F1_rhs);
-   F1_rhs.Neg(); 
-   AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
-   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
-   AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
-   // Semi-implicit update.
-   // Mf1nu*df1dv = 1/v*Mf1nut*f1 => 
-   // Mf1nu*df1dv = 1/v*Mf1nut*(f1^n + dv*df1dv)
-   // (Mf1nu - dv/v*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n 
-   // Set semi-implicit system matrix.
-   Mf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat()); 
-   // Compute dF1.
-   timer.sw_force.Stop();
-   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
-   HypreParMatrix A;
-   dF1 = 0.0;
-   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
-   CGSolver cg(H1FESpace.GetParMesh()->GetComm());
-   cg.SetOperator(A);
-   cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
-   cg.SetMaxIter(200);
-   cg.SetPrintLevel(0);
-   timer.sw_cgH1.Start();
-   cg.Mult(B, X);
-   timer.sw_cgH1.Stop();
-   timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
-   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
-
 
 /* First version, working for diffusion
    Vector F0_rhs(VsizeL2);
@@ -666,6 +650,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
    Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
 */
+
+
    quad_data_is_current = false;
 }
 
