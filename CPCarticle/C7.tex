@@ -1925,68 +1925,101 @@ In order to formulate a~fully-discrete scheme leaning on an~implicit
 discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and 
 \eqref{eq:semiM1hosf1} can be expressed with matrices as
 \begin{eqnarray}
-  \matr{M}_0 \cdot \pdv{\vfzero}{\vmag}  
+  \IM^0_{(\nue)} \cdot \pdv{\vfzero}{\vmag}  
   &=& 
-  \matr{D}_0 \cdot \fone
-  + \matr{E}_0^1 \cdot \pdv{\fone}{\vmag} + \matr{E}_0^2 \cdot \fone
-  + \matr{M}_0 \cdot \pdv{\vect{\fM}}{\vmag} ,  
+  \ID^T_{\left(\MI\right)} \cdot 
+  \left(\fone^n + \Delta \vmag \pdv{\fone}{\vmag}\right)
+  + \IM^0_{(\nue)} \cdot \pdv{\vect{\fM}}{\vmag}
+  %+ \frac{1}{\vmag}\IV^T_{\left(\tE\right)} \cdot 
+  %\pdv{\fone}{\vmag} 
+  %+ \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)} \cdot \fone ,  
   \nonumber\\
-  \matr{M}_1 \cdot \pdv{\fone}{\vmag}  
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
   &=& 
-  - \matr{D}_1 \cdot \vfzero 
-  + \matr{E}_1^1 \cdot \pdv{\vfzero}{\vmag}
-  + \matr{E}_1^2 \cdot \vfzero
-  + \matr{B} \cdot \fone
-  + \matr{M}^t_1 \cdot \fone ,
+  \frac{1}{\vmag}\IM^1_{\left( \nutot \right)} 
+  \cdot \left(\fone^n + \Delta \vmag \pdv{\fone}{\vmag}\right)
+  - \ID_{\left(\MA\right)}\cdot 
+  \left(\fzero^n + \Delta \vmag \pdv{\fzero}{\vmag}\right) 
+  %\\ 
+  %+ \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  %\pdv{\vfzero}{\vmag}
+  %+ \frac{1}{\vmag^2}\IV_{\left(\left( 3\MA - \MI \right) \cdot \tE \right)} 
+  %\cdot \vfzero
+  %+ \frac{1}{\vmag}\IB_{\left( \tB \right)} \cdot \fone ,
   \nonumber
-\end{eqnarray}
-
-\begin{eqnarray}
-  \ddv{\vfzero}{\vmag}  
-  &=& 
-  \matr{M}_0^{-1} \cdot \left(\matr{D}_0 + \matr{E}_0^2 \right) 
-  \cdot \left(\fone^n + \Delta \vmag \ddv{\fone}{\vmag} \right)
-  + \matr{M}_0^{-1} \cdot \matr{E}_0^1 \cdot \ddv{\fone}{\vmag} \nonumber\\
-  && + \pdv{\vect{\fM}}{\vmag} ,  
-  \nonumber\\
-  \matr{M}_1 \cdot \ddv{\fone}{\vmag}  
-  &=& 
-  \left( \matr{E}_1^2 - \matr{D}_1 \right) 
-  \cdot \left(\vfzero^n + \Delta\vmag \ddv{\vfzero}{\vmag} \right) 
-  + \matr{E}_1^1 \cdot \ddv{\vfzero}{\vmag} \nonumber\\
-  && + \left( \matr{B} + \matr{M}^t_1 \right)  
-  \cdot \left(\fone^n + \Delta \vmag \ddv{\fone}{\vmag} \right) ,
-  \nonumber
-\end{eqnarray}
-
-\begin{eqnarray}
-  \ddv{\vfzero}{\vmag}  
-  &=& 
-  \matr{\tilde{A}}_0 \cdot \ddv{\fone}{\vmag}
-  + \vect{b}_0\left(\fone^n, \pdv{\vect{\fM}}{\vmag}\right) ,  
-  \label{eq:df0dv} \\
-  \left( \matr{M}_1 
-  - \Delta \vmag \left( \matr{B} + \matr{M}^t_1 \right) \right) 
-  \cdot \ddv{\fone}{\vmag}  
-  &=& 
-  \matr{\tilde{A}}_1 \cdot \ddv{\vfzero}{\vmag}  
-  + \vect{b}_1 \left( \fone^n, \vfzero^n \right) , 
-  \label{eq:df1dvdf0dv}
 \end{eqnarray}
 
 \begin{equation}
-  \left( \matr{M}_1 
-  - \Delta \vmag \left( \matr{B} + \matr{M}^t_1 \right) 
-  - \matr{\tilde{A}}_1 \cdot \matr{\tilde{A}}_0 \right) 
-  \cdot \ddv{\fone}{\vmag}  
+  \pdv{\vfzero}{\vmag}  
   = 
-  \matr{\tilde{A}}_1 
-  \cdot \vect{b}_0 + \vect{b}_1 , 
-  %\matr{\tilde{A}}_1 
-  %\cdot \vect{b}_0\left(\fone^n, \pdv{\vect{\fM}}{\vmag}\right)
-  %+ \vect{b}_1 \left( \fone^n, \vfzero^n \right)~, 
-  \label{eq:df1dv}
+  \Delta \vmag \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)} \cdot 
+  \pdv{\fone}{\vmag}
+  + \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)} \cdot \fone^n
+  + \pdv{\vect{\fM}}{\vmag}
+  \label{eq:implicitdf0dv}
 \end{equation}
+\begin{equation}
+  \left[\IM^1_{(\nue)} 
+  - \frac{\Delta \vmag}{\vmag}\IM^1_{\left( \nutot \right)} \right]
+  \cdot \pdv{\fone}{\vmag}  
+  = 
+  \frac{1}{\vmag}\IM^1_{\left( \nutot \right)} 
+  \cdot \fone^n
+  - \ID_{\left(\MA\right)}\cdot \fzero^n
+  - \Delta \vmag \ID_{\left(\MA\right)}\cdot \pdv{\fzero}{\vmag}
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \left[\IM^1_{(\nue)} 
+  - \frac{\Delta \vmag}{\vmag}\IM^1_{\left( \nutot \right)} \right]
+  \cdot \pdv{\fone}{\vmag}  
+  =\\ 
+  - \Delta \vmag \ID_{\left(\MA\right)}\cdot
+  \left[ 
+  \Delta \vmag \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)} \cdot 
+  \pdv{\fone}{\vmag}
+  + \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)} \cdot \fone^n
+  + \pdv{\vect{\fM}}{\vmag}
+  \right]\\
+  + \frac{1}{\vmag}\IM^1_{\left( \nutot \right)} 
+  \cdot \fone^n
+  - \ID_{\left(\MA\right)}\cdot \fzero^n 
+  \nonumber
+\end{multline}
+
+%\begin{multline}
+%  \left[\IM^1_{(\nue)} 
+%  - \frac{\Delta \vmag}{\vmag}\IM^1_{\left( \nutot \right)} \right]
+%  \cdot \pdv{\fone}{\vmag}  
+%  = - \Delta \vmag^2 \ID_{\left(\MA\right)}\cdot
+%  \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)} \cdot 
+%  \pdv{\fone}{\vmag}\\ 
+%  - \Delta \vmag \ID_{\left(\MA\right)}\cdot\pdv{\vect{\fM}}{\vmag}
+%  - \Delta \vmag \ID_{\left(\MA\right)}\cdot \IM^{0^{-1}}_{(\nue)}\cdot
+%  \ID^T_{\left(\MI\right)} \cdot \fone^n
+%  \\
+%  + \frac{1}{\vmag}\IM^1_{\left( \nutot \right)} 
+%  \cdot \fone^n
+%  - \ID_{\left(\MA\right)}\cdot \fzero^n 
+%  \nonumber
+%\end{multline}
+
+\begin{multline}
+  \left[\IM^1_{(\nue)} 
+  - \frac{\Delta \vmag}{\vmag}\IM^1_{\left( \nutot \right)} 
+  + \Delta \vmag^2 \ID_{\left(\MA\right)}\cdot
+  \IM^{0^{-1}}_{(\nue)}\cdot\ID^T_{\left(\MI\right)}
+  \right]
+  \cdot \pdv{\fone}{\vmag}  
+  = \\ 
+  \left[ \frac{1}{\vmag}\IM^1_{\left( \nutot \right)}
+  - \Delta \vmag \ID_{\left(\MA\right)}\cdot \IM^{0^{-1}}_{(\nue)}\cdot
+  \ID^T_{\left(\MI\right)} \right] \cdot \fone^n
+  - \ID_{\left(\MA\right)}\cdot \fzero^n 
+  - \Delta \vmag \ID_{\left(\MA\right)}\cdot\pdv{\vect{\fM}}{\vmag} 
+  \label{eq:implicitdf1dv}
+\end{multline}
 
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 

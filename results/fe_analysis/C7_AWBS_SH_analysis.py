@@ -91,8 +91,10 @@ def loadC7data(Nproc, file_base):
    C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    return C7x, C7rho, C7Te, C7intf0, C7j, C7q
 
-C7x, C7rho, C7Te, C7intf0_Ec, C7j_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
-C7x, C7rho, C7Te, C7intf0_Em, C7j_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
+if (Ecorrect):
+   C7x, C7rho, C7Te, C7intf0_Ec, C7j_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
+if (Emimic):
+   C7x, C7rho, C7Te, C7intf0_Em, C7j_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################
@@ -210,19 +212,21 @@ for i in range(N):
 ## Load C7 kinetic results ############
 #######################################
 ## No explicit treatment of Efield, we use mimicing by reducing ne in source.
-C7v, C7mehalff1v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
-C7Q = 0.0
-NC7 = C7v.size - 1
-for i in range(NC7):
-    dC7v = C7v[i] - C7v[i+1]
-    C7Q = C7Q + C7mehalff1v5[i]*dC7v
+if (Emimic):
+   C7v, C7mehalff1v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
+   C7Q = 0.0
+   NC7 = C7v.size - 1
+   for i in range(NC7): 
+      dC7v = C7v[i] - C7v[i+1]
+      C7Q = C7Q + C7mehalff1v5[i]*dC7v
 ## Explicit treatment of Efield.
-C7Ev, C7Emehalff1v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
-C7EQ = 0.0
-NC7E = C7Ev.size - 1
-for i in range(NC7E):
-    dC7Ev = C7Ev[i] - C7Ev[i+1]
-    C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
+if (Ecorrect):
+   C7Ev, C7Emehalff1v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
+   C7EQ = 0.0
+   NC7E = C7Ev.size - 1
+   for i in range(NC7E):
+      dC7Ev = C7Ev[i] - C7Ev[i+1]
+      C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
 #######################################
 ## Analytic SH formula ################
@@ -243,8 +247,10 @@ SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 Kn = mfp_ei/L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
-proporC7EQ = C7EQ / SHQ_analytic
-proporC7Q = C7Q / SHQ_analytic
+if (Ecorrect):
+   proporC7EQ = C7EQ / SHQ_analytic
+if (Emimic):
+   proporC7Q = C7Q / SHQ_analytic
 
 #######################################
 ## C7 SH flux profile #################
@@ -264,8 +270,10 @@ print 'Kn: ', Kn, 'mfp_ei[microns]: ', mfp_ei*1e4
 ## Print integrated values
 print "SHQ:              ", SHQ
 print "SHQ_analytic:     ", SHQ_analytic
-print "C7EQ:             ", C7EQ
-print "C7Q:              ", C7Q
+if (Ecorrect):
+   print "C7EQ:             ", C7EQ
+if (Emimic):
+   print "C7Q:              ", C7Q
 print "diffAWBSQ_corr:   ", AWBSQ_corr
 print "diffAWBSQ:        ", AWBSQ
 #print "SHJ:        ", SHJ
@@ -366,10 +374,12 @@ p_v = v[v < mult*vTh(Te)]
 p_SHq = SHq[v < mult*vTh(Te)]
 p_AWBSq_corr = AWBSq_corr[v < mult*vTh(Te)]
 p_AWBSq = AWBSq[v < mult*vTh(Te)]
-p_C7v = C7v[C7v < mult*vTh(Te)]
-p_C7mehalff1v5 = C7mehalff1v5[C7v < mult*vTh(Te)]
-p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
-p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
+if (Ecorrect):
+   p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
+   p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
+if (Emimic):
+   p_C7v = C7v[C7v < mult*vTh(Te)]
+   p_C7mehalff1v5 = C7mehalff1v5[C7v < mult*vTh(Te)]
 
 
 ## Set labels.

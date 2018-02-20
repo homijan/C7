@@ -94,10 +94,11 @@ C7Operator::C7Operator(int size,
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
      cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
-     Mf0nu(&l2_fes), invMf0nu(&l2_fes), invMf0nuE(&l2_fes), Mf1nu(&h1_fes), 
-     Mf1nut(&h1_fes), Bfieldf1(&h1_fes), Divf0(&l2_fes, &h1_fes), 
-     Efieldf0(&l2_fes, &h1_fes), Divf1(&l2_fes, &h1_fes), 
-     AEfieldf1(&l2_fes, &h1_fes), AIEfieldf1(&l2_fes, &h1_fes),
+     Mf0nu(&l2_fes), invMf0nu(&l2_fes), invMf0nuE(&l2_fes), 
+     implMf1nu(&h1_fes), Mf1nu(&h1_fes), Mf1nut(&h1_fes), Bfieldf1(&h1_fes), 
+     Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes), 
+     Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes), 
+     AIEfieldf1(&l2_fes, &h1_fes),
      MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
      Mf0_inv(l2dofs_cnt, l2dofs_cnt, nzones),
      integ_rule(IntRules.Get(h1_fes.GetMesh()->GetElementBaseGeometry(),
@@ -188,6 +189,10 @@ C7Operator::C7Operator(int size,
    mf1nui->SetIntRule(&integ_rule);
    Mf1nu.AddDomainIntegrator(mf1nui);
    Mf1nu.Assemble();
+   Mass1NuIntegrator *implmf1nui = new Mass1NuIntegrator(quad_data);
+   implmf1nui->SetIntRule(&integ_rule);
+   implMf1nu.AddDomainIntegrator(implmf1nui);
+   implMf1nu.Assemble();
 
    Mass1NutIntegrator *mf1nuti = new Mass1NutIntegrator(quad_data);
    mf1nuti->SetIntRule(&integ_rule);
@@ -237,6 +242,21 @@ C7Operator::C7Operator(int size,
 
 void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 {
+   /////////////////////////////////////////////////////////////////////////////
+   // We solve the first moment model of AWBS steady state electron transport.//
+   /////////////////////////////////////////////////////////////////////////////
+   ////// f0 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M0(nu)*df0dv - 1/v*M0(E*f1/f0)*df0dv = DT(I)*f1 + 2/v^2*VT(E)*f1        //
+   //                                        + M0(nu)*dfMdv                   //
+   //                                                                         //
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
+   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
+
    dFdv = 0.0;
 
    const double velocity = GetTime(); 
@@ -289,31 +309,52 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    AIEfieldf1.Assemble(0); 
    timer.sw_force.Stop();
 
+   // Apply integration dv scaling.
+   // Scale F0_rhs/F1_rhs  because of the normalized velocity integration, i.e. 
+   // the increments 
+   // dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs,
+   // dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
+   // This strategy acts by multiplying all operators used on the rhs.
+   Divf0.SpMat()      *= alphavT;  
+   Efieldf0.SpMat()   *= alphavT;
+   Mf0nu.SpMat()      *= alphavT;
+   Divf1.SpMat()      *= alphavT;
+   AIEfieldf1.SpMat() *= alphavT;
+   Bfieldf1.SpMat()   *= alphavT;
+   Mf1nut.SpMat()     *= alphavT;
+
    // Solve for df0dv. 
+   ////// f0 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M0(nu)*df0dv - 1/v*M0(E*f1/f0)*df0dv = DT(I)*f1 + 2/v^2*VT(E)*f1        //
+   //                                        + M0(nu)*dfMdv                   //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
    Vector F0_rhs(VsizeL2);
    timer.sw_force.Start();
    Divf0.MultTranspose(F1, F0_rhs);
+   Efieldf0.AddMultTranspose(F1, F0_rhs, 
+                             2.0 / velocity_scaled / velocity_scaled);
    Mf0nu.AddMult(F0source, F0_rhs); 
-   // Scale F0_rhs  because of the normalized velocity integration, i.e. 
-   // the increment dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs.
-   F0_rhs *= alphavT;
-   // Calculate dF0.
+   // Compute dF0.
    invMf0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
+   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
    Vector F1_rhs(VsizeH1), B, X;
    timer.sw_force.Start();
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg(); 
-   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
    Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
-   // Scale F1_rhs  because of the normalized velocity integration, i.e. 
-   // the increment dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
-   F1_rhs *= alphavT;
-   // dF0dv contribution already contains the increment multiplier alphavT.
    AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
-
+   // Compute dF1.
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
    HypreParMatrix A;
@@ -335,17 +376,35 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 
 void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 {
+   /////////////////////////////////////////////////////////////////////////////
+   // We solve the first moment model of AWBS steady state electron transport.//
+   /////////////////////////////////////////////////////////////////////////////
+   ////// f0 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M0(nu)*df0dv - 1/v*VT(E)*df1dv = DT(I)*f1 + 2/v^2*VT(E)*f1              //
+   //                                  + M0(nu)*dfMdv                         //
+   //                                                                         //
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
+   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
+
    dFdv = 0.0;
 
    const double velocity = GetTime(); 
 
    UpdateQuadratureData(velocity, F);
    const double alphavT = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   // Get the real velocity.
    const double velocity_scaled = velocity * alphavT;
-
+   // The real step acts in the scaled velocity, 
+   // i.e. the increment multiplier alphavT needs to be applied.
+   //const double dv_scaled = dv * alphavT;
    AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
    ParGridFunction F0source(&L2FESpace);
-   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
+   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf)); 
 
    // The monolithic BlockVector stores the unknown fields as follows:
    // - isotropic F0 (energy density)
@@ -364,7 +423,9 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
 
    Mf0nu.Update();
+   invMf0nu.Update();
    invMf0nuE.Update();
+   implMf1nu.Update();
    Mf1nu.Update(); 
    Mf1nut.Update();
    Bfieldf1.Update();
@@ -376,51 +437,170 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    timer.sw_force.Start(); 
    Mf0nu.Assemble();
+   invMf0nu.Assemble();
+   invMf0nu.Finalize();
+   implMf1nu.Assemble();
+   implMf1nu.Finalize();
    invMf0nuE.Assemble();
    Mf1nu.Assemble(); 
+   Mf1nu.Finalize();
    Mf1nut.Assemble();
+   Mf1nut.Finalize();
    Bfieldf1.Assemble();
    Divf0.Assemble();
+   Divf0.Finalize();
    Efieldf0.Assemble(0);   
    Divf1.Assemble();  
+   Divf1.Finalize();
    AEfieldf1.Assemble(0); 
    AIEfieldf1.Assemble(0); 
    timer.sw_force.Stop();
 
+   // Apply integration dv scaling.
+   // Scale F0_rhs/F1_rhs  because of the normalized velocity integration, i.e. 
+   // the increments 
+   // dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs,
+   // dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
+   // This strategy acts by multiplying all operators used on the rhs.
+   Divf0.SpMat()      *= alphavT;  
+   Efieldf0.SpMat()   *= alphavT; 
+   Divf1.SpMat()      *= alphavT;
+   AIEfieldf1.SpMat() *= alphavT;
+   Bfieldf1.SpMat()   *= alphavT;
+   Mf1nut.SpMat()     *= alphavT;
+   // In the case of source, the integration scaling is applied directly.
+   F0source *= alphavT; //Mf0nu.SpMat()      *= alphavT;
+
+
+/* BUP
+   // Steps towards the implicit scheme.
+   // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
+   SparseMatrix *Df0T = Transpose(Divf0.SpMat());
+   SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
+   SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
+   // Fill the rhs vector.
+   Vector implF1_rhs(VsizeH1), implB, implX;
+   Divf1.Mult(F0, implF1_rhs);
+   Divf1.AddMult(F0source, implF1_rhs, dv_scaled);
+   Df1invMf0nuDf0T->AddMult(F1, implF1_rhs, dv_scaled);
+   implF1_rhs.Neg();
+   Mf1nut.AddMult(F1, implF1_rhs, 1.0 / velocity_scaled);
+   cout << "|implF1_rhs|: " << implF1_rhs.Norml2() << endl << flush; 
+   // Complete the system matrix.
+   implMf1nu.SpMat().Add(-1.0 * dv_scaled / velocity_scaled, Mf1nut.SpMat());
+   implMf1nu.SpMat().Add(dv_scaled * dv_scaled, *Df1invMf0nuDf0T);
+   // Run the HYPRE solver.
+   HypreParMatrix implA;
+   dF1 = 0.0;
+   implMf1nu.FormLinearSystem(ess_tdofs, dF1, implF1_rhs, implA, implX, implB);
+   CGSolver impl_cg(H1FESpace.GetParMesh()->GetComm());
+   impl_cg.SetOperator(implA);
+   impl_cg.SetRelTol(1e-8); impl_cg.SetAbsTol(0.0);
+   impl_cg.SetMaxIter(200);
+   impl_cg.SetPrintLevel(0);
+   impl_cg.Mult(implB, implX);
+   implMf1nu.RecoverFEMSolution(implX, implF1_rhs, dF1);
+   cout << "|dF1|: " << dF1.Norml2() << endl << flush;
+*/
+
+
+/*
+   /////////////////////////////////////////////////////////////////////////////
+   ////// Fully implicit scheme. ///////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////
+   // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
+   SparseMatrix *Df0T = Transpose(Divf0.SpMat());
+   SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
+   SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
+   // Solve for df1dv.
+   // Fill the rhs vector.
+   Vector implF1_rhs(VsizeH1), implB, implX;
+   Divf1.Mult(F0, implF1_rhs);
+   Divf1.AddMult(F0source, implF1_rhs, dv);
+   Df1invMf0nuDf0T->AddMult(F1, implF1_rhs, dv);
+   implF1_rhs.Neg();
+   Mf1nut.AddMult(F1, implF1_rhs, 1.0 / velocity_scaled);
+   //cout << "|implF1_rhs|: " << implF1_rhs.Norml2() << endl << flush; 
+   // Complete the system matrix.
+   implMf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat());
+   implMf1nu.SpMat().Add(dv * dv, *Df1invMf0nuDf0T);
+   // Run the HYPRE solver.
+   HypreParMatrix implA;
+   dF1 = 0.0;
+   implMf1nu.FormLinearSystem(ess_tdofs, dF1, implF1_rhs, implA, implX, implB);
+   CGSolver impl_cg(H1FESpace.GetParMesh()->GetComm());
+   impl_cg.SetOperator(implA);
+   impl_cg.SetRelTol(1e-8); impl_cg.SetAbsTol(0.0);
+   impl_cg.SetMaxIter(200);
+   impl_cg.SetPrintLevel(0);
+   impl_cg.Mult(implB, implX);
+   implMf1nu.RecoverFEMSolution(implX, implF1_rhs, dF1);
+ 
+   // Solve for df0dv.
+   dF0 = F0source;
+   invMf0nuDf0T->AddMult(F1, dF0);
+   invMf0nuDf0T->AddMult(dF1, dF0, dv);
+
+   // Some output.
+   int count = 1, output_rank = 0;
+   double loc_dF1Norml2 = dF1.Norml2();
+   double glob_dF1Norml2; 
+   MPI_Reduce(&loc_dF1Norml2, &glob_dF1Norml2, count, MPI_DOUBLE, MPI_SUM, 
+              output_rank, H1FESpace.GetParMesh()->GetComm()); 
+   double loc_dF0Norml2 = dF0.Norml2();
+   double glob_dF0Norml2;
+   MPI_Reduce(&loc_dF0Norml2, &glob_dF0Norml2, count, MPI_DOUBLE, MPI_SUM,
+              output_rank, H1FESpace.GetParMesh()->GetComm());
+   if (H1FESpace.GetParMesh()->GetMyRank() == output_rank)
+   {
+      //cout << "GetNRanks(): " << H1FESpace.GetParMesh()->GetNRanks() << endl 
+	  //     << flush;
+	  cout << "|dF1|: " << glob_dF1Norml2 << endl << flush;
+	  cout << "|dF0|: " << glob_dF0Norml2 << endl << flush;
+   }
+   /////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////
+*/
+
    // Solve for df0dv. 
+   ////// f0 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M0(nu)*df0dv - 1/v*M0(E*f1/f0)*df0dv = DT(I)*f1 + 2/v^2*VT(E)*f1        //
+   //                                        + M0(nu)*dfMdv                   //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
    Vector F0_rhs(VsizeL2);
    timer.sw_force.Start();
    Divf0.MultTranspose(F1, F0_rhs);
+   Efieldf0.AddMultTranspose(F1, F0_rhs, 
+                             2.0 / velocity_scaled / velocity_scaled);
    Mf0nu.AddMult(F0source, F0_rhs); 
-   // Scale F0_rhs  because of the normalized velocity integration, i.e. 
-   // the increment dF0 = dF0dv*dvnorm*alphavT = dvnorm*alphavT*F0_rhs.
-   F0_rhs *= alphavT;
-   // Calculate dF0.
+   // Compute dF0.
    invMf0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // M1(nu)*df1dv - 1/v*V(AE)*df0dv = -D(I)*f0 + 1/v^2*V((3A-I)E)*f0         //
+   //                                  + 1/v*B(B)*f1 + 1/v*M1(nut)*f1         //
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
    Vector F1_rhs(VsizeH1), B, X;
    timer.sw_force.Start();
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg(); 
-   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
    Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
-   // Scale F1_rhs  because of the normalized velocity integration, i.e. 
-   // the increment dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
-   F1_rhs *= alphavT;
-   // dF0dv contribution already contains the increment multiplier alphavT.
    AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
    // Semi-implicit update.
    // Mf1nu*df1dv = 1/v*Mf1nut*f1 => 
    // Mf1nu*df1dv = 1/v*Mf1nut*(f1^n + dv*df1dv)
-   // (Mf1nu - dv*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n
-   double minus_dv_over_v = -1.0 * dv / velocity_scaled; 
-   // The real step acts in the scaled velocity, 
-   // i.e. the increment multiplier alphavT needs to be applied.
-   minus_dv_over_v *= alphavT;
+   // (Mf1nu - dv/v*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n 
    // Set semi-implicit system matrix.
-   Mf1nu.SpMat().Add(minus_dv_over_v, Mf1nut.SpMat());
+   Mf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat()); 
+   // Compute dF1.
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
    HypreParMatrix A;
@@ -437,6 +617,55 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
    Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
 
+
+/* First version, working for diffusion
+   Vector F0_rhs(VsizeL2);
+   timer.sw_force.Start();
+   Divf0.MultTranspose(F1, F0_rhs);
+   Efieldf0.AddMultTranspose(F1, F0_rhs, 
+                             2.0 / velocity_scaled / velocity_scaled);
+   Mf0nu.AddMult(F0source, F0_rhs); 
+   F0_rhs *= alphavT;
+   // Compute dF0.
+   invMf0nuE.Mult(F0_rhs, dF0);
+
+   // Solve for df1dv.
+   Vector F1_rhs(VsizeH1), B, X;
+   timer.sw_force.Start();
+   Divf1.Mult(F0, F1_rhs);
+   F1_rhs.Neg(); 
+   //AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_scaled / velocity_scaled);
+   //Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   // Scale F1_rhs  because of the normalized velocity integration, i.e. 
+   // the increment dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
+   F1_rhs *= alphavT;
+   // dF0dv contribution already contains the increment multiplier alphavT.
+   AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_scaled);
+   // Semi-implicit update.
+   // Mf1nu*df1dv = 1/v*Mf1nut*f1 => 
+   // Mf1nu*df1dv = 1/v*Mf1nut*(f1^n + dv*df1dv)
+   // (Mf1nu - dv*Mf1nut)*df1dv = 1/v*Mf1nut*f1^n
+   //double minus_dv_over_v = -1.0 * dv_scaled / velocity_scaled; 
+   // Set semi-implicit system matrix.
+   Mf1nu.SpMat().Add(-1.0 * dv_scaled / velocity_scaled, Mf1nut.SpMat()); 
+   //Mf1nu.SpMat().Add(minus_dv_over_v, Mf1nut.SpMat());
+   timer.sw_force.Stop();
+   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+   HypreParMatrix A;
+   dF1 = 0.0;
+   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
+   CGSolver cg(H1FESpace.GetParMesh()->GetComm());
+   cg.SetOperator(A);
+   cg.SetRelTol(1e-8); cg.SetAbsTol(0.0);
+   cg.SetMaxIter(200);
+   cg.SetPrintLevel(0);
+   timer.sw_cgH1.Start();
+   cg.Mult(B, X);
+   timer.sw_cgH1.Stop();
+   timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
+   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
+*/
    quad_data_is_current = false;
 }
 

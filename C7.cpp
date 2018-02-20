@@ -115,6 +115,7 @@ int main(int argc, char *argv[])
    double MinimumGroups = 10.0;
    // The point where the detailed kinetic output will be stored at.
    double x_point = 0.5;
+   double c7cfl = 0.25;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
                   "            2 - RK2 SSP, 3 - RK3 SSP, 4 - RK4, 6 - RK6.");
    args.AddOption(&t_final, "-tf", "--t-final",
                   "Final time; start time is 0.");
-   args.AddOption(&cfl, "-cfl", "--cfl", "CFL-condition number.");
+   args.AddOption(&c7cfl, "-cfl", "--cfl", "CFL-condition number.");
    args.AddOption(&cg_tol, "-cgt", "--cg-tol",
                   "Relative CG tolerance (velocity linear solve).");
    args.AddOption(&cg_max_iter, "-cgm", "--cg-max-steps",
@@ -466,11 +467,12 @@ int main(int argc, char *argv[])
    sourceF0_cf.SetScale0(F0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
    // Static coefficient defined in c7_solver.hpp.
-   double c7cfl = 0.25;
+   //double c7cfl = 0.25;
+   //double c7cfl = 0.005;
    vis_steps = 1000000000;
    // ALWAYS calculate on v in (0, 1)
    double vmax = 1.0;
-   double vTmultiple = 7.0;
+   double vTmultiple = 6.0; //7.0;
    // well, not really, since the lowest v = 0 is singular, so
    //double vmin = 0.001 * vmax;
    double vmin_multiple = 0.1;
@@ -531,8 +533,8 @@ int main(int argc, char *argv[])
    //c7ode_solver = new RK4Solver;
    //c7ode_solver = new RK6Solver;
    // L-stable
-   //c7ode_solver = new BackwardEulerSolver;
-   c7ode_solver = new SDIRK23Solver(2);
+   c7ode_solver = new BackwardEulerSolver;
+   //c7ode_solver = new SDIRK23Solver(2);
    //c7ode_solver = new SDIRK33Solver;
    // A-stable
    //c7ode_solver = new ImplicitMidpointSolver;
