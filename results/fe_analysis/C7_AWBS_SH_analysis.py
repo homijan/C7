@@ -382,6 +382,7 @@ if (Emimic):
    p_C7mehalff1v5 = C7mehalff1v5[C7v < mult*vTh(Te)]
 
 
+pointlimit = 40
 ## Set labels.
 plt.ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 plt.xlabel('v/vT')
@@ -392,13 +393,16 @@ if (AWBSoriginal):
    plt.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
 plt.plot(p_v/vTh(Te), p_AWBSq_corr, lsAWBSc, label=lblAWBSc)
 if (Ecorrect):
-   if (len(C7Ev)<30):
+   if (len(C7Ev)<=pointlimit):
       plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
       plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
 #plt.plot(C7v/vTh(Te), 1.5 * C7mehalff1v5 / (4.0*pi/3.0), 'k:', label=r'C7')
 if (Emimic):
-   plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+   if (len(C7v)<=pointlimit):
+      plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+   else:
+      plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 plt.legend(loc='best')
 plt.show()
 

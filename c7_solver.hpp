@@ -96,9 +96,6 @@ protected:
    // right-hand sides for momentum and specific internal energy.
    mutable MixedBilinearForm Divf0, Efieldf0, Divf1, AEfieldf1, AIEfieldf1;
 
-   // Linear solver for energy.
-   CGSolver locCG;
-
    mutable TimingData timer;
 
    void UpdateQuadratureData(double velocity, const Vector &S) const;

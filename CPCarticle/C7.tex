@@ -2023,6 +2023,33 @@ discretization of velocity, the~equations \eqref{eq:semiM1hosf0} and
 
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_temperature.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_niZ100_Kn1e-3_implexpl.png} \\
+       \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_fluxes_niZ100_Kn1e-3_implexpl.png} &
+      \includegraphics[width=0.5\textwidth]{../results/fe_analysis/figs/P5_heatfluxes_niZ100_Kn1e-3_implexpl.png}     
+    \end{tabular}
+  \caption{
+  C7 explicit vs implicit for Kn = 0.001 nonlocality. $t_{expl} \approx 2000\times t_{impl}$.
+  }
+  \end{center}
+  \label{fig:C7explimpl}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=0.7\textwidth]{../results/fe_analysis/figs/P5_kinetics_niZ100_Kn1e-3_implexpl.png} 
+    \end{tabular}
+  \caption{
+  C7 explicit (63109 groups) vs implicit (25 groups) for Kn = 0.001 nonlocality.
+  }
+  \end{center}
+  \label{fig:C7explimpl}
+\end{figure}
+
 \section{Electric field implementation}\label{sec:Efield}
 1) Do the consistent approximation (ok, first do the BGK approximation).
 2) If this does not work, go IMPLICIT!

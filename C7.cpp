@@ -130,8 +130,9 @@ int main(int argc, char *argv[])
    args.AddOption(&order_e, "-ot", "--order-thermo",
                   "Order (degree) of the thermodynamic finite element space.");
    args.AddOption(&ode_solver_type, "-s", "--ode-solver",
-                  "ODE solver: 1 - Forward Euler,\n\t"
-                  "            2 - RK2 SSP, 3 - RK3 SSP, 4 - RK4, 6 - RK6.");
+                  "ODE solver: 1 - Forward Euler,  2 - RK4,\n\t"
+                  "            3 - Backward Euler, 4 - SDIRK23 SSP,\n\t" 
+				  "            5 - SDIRK 33,       6 - SDIRK 43.");
    args.AddOption(&t_final, "-tf", "--t-final",
                   "Final time; start time is 0.");
    args.AddOption(&c7cfl, "-cfl", "--cfl", "CFL-condition number.");
@@ -296,9 +297,10 @@ int main(int argc, char *argv[])
    switch (ode_solver_type)
    {
       case 1: ode_solver = new ForwardEulerSolver; break;
-      case 2: ode_solver = new RK2Solver(0.5); break;
+      case 2: ode_solver = new RK2Solver; break; 
       case 3: ode_solver = new RK3SSPSolver; break;
       case 4: ode_solver = new RK4Solver; break;
+      case 5: ode_solver = new RK2Solver(0.5); break;
       case 6: ode_solver = new RK6Solver; break;
       default:
          if (myid == 0)
@@ -527,19 +529,32 @@ int main(int argc, char *argv[])
                    Efield_gf(&H1FESpace);
    ParGridFunction j_gf(&H1FESpace), hflux_gf(&H1FESpace);
 
-   ODESolver *c7ode_solver = NULL;
-   //c7ode_solver = new ForwardEulerSolver;
-   //c7ode_solver = new RK2Solver(0.5);
-   //c7ode_solver = new RK4Solver;
-   //c7ode_solver = new RK6Solver;
-   // L-stable
-   //c7ode_solver = new BackwardEulerSolver;
-   c7ode_solver = new SDIRK23Solver(2);
-   //c7ode_solver = new SDIRK33Solver;
-   // A-stable
-   //c7ode_solver = new ImplicitMidpointSolver;
-   //c7ode_solver = new SDIRK23Solver;
-   //c7ode_solver = new SDIRK34Solver;
+   // Define the explicit/implicit ODE solver used for velocity integration.
+   ODESolver *c7ode_solver = NULL; 
+
+   switch (ode_solver_type)
+   {
+      case 1: c7ode_solver = new ForwardEulerSolver;
+      //c7ode_solver = new RK2Solver(0.5);
+      case 2: c7ode_solver = new RK4Solver; break;
+      //c7ode_solver = new RK6Solver;
+      // L-stable
+      case 3: c7ode_solver = new BackwardEulerSolver; break;
+      case 4: c7ode_solver = new SDIRK23Solver(2); break;
+      case 5: c7ode_solver = new SDIRK33Solver; break;
+      // A-stable
+      //c7ode_solver = new ImplicitMidpointSolver;
+      //c7ode_solver = new SDIRK23Solver;
+      case 6: c7ode_solver = new SDIRK34Solver; break;
+      default:
+         if (myid == 0)
+         {
+            cout << "Unknown ODE solver type: " << ode_solver_type << '\n';
+         }
+         delete pmesh;
+         MPI_Finalize();
+         return 3;
+   }
    
    c7ode_solver->Init(c7oper);
 
