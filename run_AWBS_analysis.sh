@@ -1,13 +1,5 @@
 #! /bin/bash
 NPROC=8
-## Working Efield general diffusive regime.
-#RS=7 # Increasing spatial resolution improves the stability the best!
-#MINGSAFE=2000
-#F1ORDER=3
-#F0ORDER=2
-#SIGMA=1e15 # Kn 1e-5, safe for Z=2
-##SIGMA=1e16 # Kn 1e-6, safe for Z=4
-#SIGMASAFE=1e18 # Kn 1e-8, safe for any Z
 
 RS=8
 MINGSAFE=2000
@@ -20,98 +12,127 @@ TMIN=100
 TGRAD=180
 XPOINT=0.046775 # in cm
 
-SIGMA=1.2e12 # Zbar = 1 -> Kn 1e-2
-SIGMASAFE=1.2e18 # Zbar = 1 -> Kn 1e-8
-#MINGSAFE=13 # Zbar = 1 minimum groups for precise diffusion results
 #ZBAR=1
 #ZBAR=2
 #ZBAR=5
 #ZBAR=10
 #ZBAR=20
 #ZBAR=50
-ZBAR=100
 
-MINGSAFE=25
-#SIGMASAFE=1.2e15 # Zbar = 1 -> Kn 1e-5
-#SIGMA=3.6e9 # Zbar = 1 -> Kn 1e-5
-#SIGMA=2.448e9 # Zbar = 100 -> Kn 5e-4
-SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-4
-#SIGMA=6e8 # Zbar = 100 -> Kn 2e-3
+MINGSAFE=1000
+MINGIMPL=35
+MINGIMPLSAFE=1000
 
 L=0.1
 PROBLEM=5
 
+# The highest Z.
+ZBAR=100
+
+SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-4
+## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
+## P1 closure.
+## C7*
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 0.0
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
+cd ../..
+
+
+SIGMASAFE=1.2e15 # Zbar = 100 -> Kn 1e-9
+if false ; then
+## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
+## P1 closure.
+## C7*
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -s 2 -cfl 0.25 -S0 1.0 -E0 1.0
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7implicit --labelEcorrect C7explicit
+cd ../..
+
+SIGMA=1.2e10 # Zbar = 100 -> Kn 1e-4
+## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
+## P1 closure.
+## C7*
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
+cd ../..
+
+SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-3
 #if false ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -s 4 -cfl 1e5
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 0.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -s 2 -cfl 0.25
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
-
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7implicit --labelEcorrect C7explicit
-cd ../..
-#fi
-
-if false ; then
-### Pascal's setting for nonlocal test
-## First, diffusive, case sets sigma 1e5x higher, which assures SH solution.
-## C7E
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
-## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
-cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
 cd ../..
 fi
 
+
+# The lowest Z.
+ZBAR=1
+
+SIGMASAFE=6.1e18 # Zbar = 1 -> Kn 1e-9
 if false ; then
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -cfl 0.0025
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMASAFE -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -s 2 -cfl 0.25 -S0 1.0 -E0 1.0
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
+
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7P1
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMASAFE -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7implicit --labelEcorrect C7explicit
 cd ../..
-fi
 
-
-#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -S0 1.0 -E0 1.0
-#cd results/fe_analysis
-#cp ../tmp/C7_1_fe_point.txt fe_point_Emimic.txt
-#python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect
-#cd ../..
-
-if false ; then
+SIGMA=6.1e13 # Zbar = 1 -> Kn 1e-4
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.47
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
-## M1 closure.
-## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGSAFE -M1
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
-#cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7P1 --labelEcorrect C7M1
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
+cd ../..
+
+SIGMA=6.1e12 # Zbar = 1 -> Kn 1e-3
+#if false ; then
+## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
+## P1 closure.
+## C7*
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.45
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
 cd ../..
 fi
+
+
 
 ## Diffusive asymptotic test. The SH, AWBS (original and corrected), 
 ## and C7 (proper and mimic Efield) calculations are compared. 
@@ -136,7 +157,7 @@ TMIN=799.5
 TGRAD=300
 #SIGMA=8.77e9 ## Kn=1.0e-4 nonlocality limit.
 #SIGMA=8.77e8 ## Kn=1.0e-3 q=0.8*qSH E0=0.91
-SIGMA=1.75e8 ## Kn=5.0e-3 q=0.4*qSH E0=0.66
+SIGMA=1.75e8 ## Zbar = 100, Kn=5.0e-3 q=0.01*qSH
 
 #SIGMA=8.45e15    ## Kn 1.0e-10
 #SIGMA=8.45e11    ## Kn 1.0e-6
@@ -151,11 +172,11 @@ XPOINT=0.05
 PROBLEM=5
 
 if false ; then
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MING
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -S0 1.0 -E0 0.665 -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -M1 -xp $XPOINT -minG $MING -s 2 -cfl 0.25 -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 

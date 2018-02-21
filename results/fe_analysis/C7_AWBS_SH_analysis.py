@@ -171,6 +171,7 @@ sol_corr = solve_bweuler(v, 0.0, Te, gradTe, cmag*Zbar, Efield)
 ###############################################################################
 ########### Kinetic integration of AWBS and C7 ################################ 
 ###############################################################################
+fM_analytic = np.zeros(N)
 SHf1 = np.zeros(N)
 SHj = np.zeros(N)
 SHq = np.zeros(N)
@@ -193,6 +194,7 @@ for i in range(N):
     ## ei collisions.
     mfp_ei = vp**4.0/sigma/ni/Zbar/Zbar
     SHf1[i] = - (Zbar + 0.24)/(Zbar + 4.2)*((vp**2.0/2.0/vTh(Te)**2.0 - 1.5)*gradTe/Te - Efield/vTh(Te)**2.0)*fM(vp, Te)*vp*vp
+    fM_analytic[i] = fM(vp, Te)*vp*vp
     SHj[i] = mfp_ei*vp*SHf1[i]
     SHq[i] = mfp_ei*me/2.0*vp*vp*vp*SHf1[i]
     SHJ = SHJ + 4.0*pi/3.0*SHj[i]*dv
@@ -234,6 +236,8 @@ if (Ecorrect):
 ## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 ## further multiplied by SH low Z factor.
 mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar/Zbar
+## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
+mfp_tot = (vTh(Te))**4.0/sigma/ni/Zbar/(Zbar+1.)
 ## Classical length scale definition.
 ##L = Te / abs(gradTe)
 ## More accurate length scale definition.
@@ -244,7 +248,7 @@ SHcorr = (Zbar + 0.24)/(Zbar + 4.2)
 SHcorr = SHcorr * (3.5 - xi)
 ## SH analytic formula of heat flux.
 SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
-Kn = mfp_ei/L
+Kn =  mfp_tot / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
 if (Ecorrect):
@@ -256,17 +260,17 @@ if (Emimic):
 ## C7 SH flux profile #################
 #######################################
 ## Calculate the whole profile of SH flux according to Te from C7.
-C7mfp_ei = (vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar
+## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
+C7mfp_ei = (vTh(C7Te))**4.0/sigma/ni/Zbar/(Zbar+1.)
 Temin_reference = 0.9*C7Te.min()
 C7Kn = C7mfp_ei * abs(C7gradTe) / (C7Te - Temin_reference)
 C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar*C7gradTe/C7Te
-
 
 #######################################
 ## Print comparison results ###########
 #######################################
 ## Show the Knudsen number
-print 'Kn: ', Kn, 'mfp_ei[microns]: ', mfp_ei*1e4
+print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
 ## Print integrated values
 print "SHQ:              ", SHQ
 print "SHQ_analytic:     ", SHQ_analytic
@@ -323,10 +327,15 @@ C7x_microns = np.array(C7x) * 1e4
 #plt.plot(C7x_microns, C7rho)
 #plt.show()
 ## Set labels.
-plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'$T_e$ [eV]')
-plt.title(r'Electron temperature')
-plt.plot(C7x_microns, C7Te)
+fig, ax1 = plt.subplots()
+ax1.set_xlabel(r'z [$\mu$m]')
+ax1.set_ylabel(r'$T_e$ [eV]')
+ax1.set_title(r'Electron temperature')
+ax1.plot(C7x_microns, C7Te, 'r')
+ax2 = ax1.twinx()
+ax2.plot(C7x_microns, C7Kn, 'g')
+ax2.set_ylabel(r'Kn')
+fig.tight_layout()
 plt.show()
 ## Set labels.
 #plt.xlabel(r'z [$\mu$m]')
@@ -337,12 +346,6 @@ plt.show()
 #if (Emimic):
 #   plt.plot(C7x_microns, C7intf0_Em, lsC7, label=lblC7)
 #plt.show()
-## Set labels.
-plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'Kn')
-plt.title(r'Kn')
-plt.plot(C7x_microns, C7Kn)
-plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
 plt.ylabel(r'$q$ [electron/s/cm$^2$]')
@@ -371,6 +374,7 @@ plt.show()
 ## Shrink the x axis appropriately.
 mult = 9
 p_v = v[v < mult*vTh(Te)]
+p_fM_analytic = fM_analytic[v < mult*vTh(Te)]
 p_SHq = SHq[v < mult*vTh(Te)]
 p_AWBSq_corr = AWBSq_corr[v < mult*vTh(Te)]
 p_AWBSq = AWBSq[v < mult*vTh(Te)]
@@ -384,26 +388,30 @@ if (Emimic):
 
 pointlimit = 40
 ## Set labels.
-plt.ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
-plt.xlabel('v/vT')
-plt.title('Kinetics (Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn)+')')
+fig, ax1 = plt.subplots()
+ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
+ax1.set_xlabel('v/vT')
+ax1.set_title('Kinetics (Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn)+')')
 ## Plot kinetic analysis.
-plt.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
+ax1.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
 if (AWBSoriginal):
-   plt.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
-plt.plot(p_v/vTh(Te), p_AWBSq_corr, lsAWBSc, label=lblAWBSc)
+   ax1.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
+ax1.plot(p_v/vTh(Te), p_AWBSq_corr, lsAWBSc, label=lblAWBSc)
 if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
-      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
-      plt.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
 #plt.plot(C7v/vTh(Te), 1.5 * C7mehalff1v5 / (4.0*pi/3.0), 'k:', label=r'C7')
 if (Emimic):
    if (len(C7v)<=pointlimit):
-      plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+      ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
    else:
-      plt.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
-plt.legend(loc='best')
+      ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+ax2 = ax1.twinx()
+ax2.plot(p_v/vTh(Te), p_fM_analytic, 'k:')
+ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
+ax1.legend(loc='best')
 plt.show()
 
 """

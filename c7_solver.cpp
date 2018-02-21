@@ -420,9 +420,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    dF0.MakeRef(&L2FESpace, dFdv, 0);
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
 
-   Mf0nu.Update();
    invMf0nu.Update();
-   invMf0nuE.Update();
    implMf1nu.Update();
    Mf1nu.Update(); 
    Mf1nut.Update();
@@ -434,20 +432,20 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    AIEfieldf1 = 0.0; 
 
    timer.sw_force.Start(); 
-   Mf0nu.Assemble();
    invMf0nu.Assemble();
    invMf0nu.Finalize();
    implMf1nu.Assemble();
    implMf1nu.Finalize();
-   invMf0nuE.Assemble();
    Mf1nu.Assemble(); 
    Mf1nu.Finalize();
    Mf1nut.Assemble();
    Mf1nut.Finalize();
    Bfieldf1.Assemble();
+   Bfieldf1.Finalize();
    Divf0.Assemble();
    Divf0.Finalize();
    Efieldf0.Assemble(0);   
+   Efieldf0.Finalize();
    Divf1.Assemble();  
    Divf1.Finalize();
    AEfieldf1.Assemble(0); 
@@ -463,11 +461,10 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // dF1 = dF1dv*dvnorm*alphavT = dvnorm*alphavT*F1_rhs.
    // This strategy acts by multiplying all operators used on the rhs.
    Divf0.SpMat()      *= alphavT;  
-   Efieldf0.SpMat()   *= alphavT; 
+   //Efieldf0.SpMat()   *= alphavT; 
    Divf1.SpMat()      *= alphavT;
-   AEfieldf1.SpMat()  *= alphavT;
-   AIEfieldf1.SpMat() *= alphavT;
-   Bfieldf1.SpMat()   *= alphavT;
+   AIEfieldf1.SpMat() *= 0.0; //alphavT;
+   Bfieldf1.SpMat()   *= 0.0; //alphavT;
    Mf1nut.SpMat()     *= alphavT;
    // In the case of source, the integration scaling is applied directly.
    F0source *= alphavT; //Mf0nu.SpMat()      *= alphavT;
@@ -484,27 +481,106 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /////////////////////////////////////////////////////////////////////////////
    ////// f1 equation //////////////////////////////////////////////////////////
    //                                                                         //
-   // df0dv = M0(nu)^{-1}*(D(I)^T + 2/v^2VT(E))*(f1^n + dv*df1dv) + dfMdv     //
+   // df0dv = M0(nu)^{-1}*(D(I)^T + 2/v^2*VT(E))*(f1^n + dv*df1dv)            //
+   //         M0(nu)^{-1}*1/v*VT(E)*df1dv + dfMdv                             //
    //                                                                         //
    // [M1(nu) - dv*1/v*(M1(nut) + B(B))]*df1dv =                              //
    // [1/v*V(AE) + dv*(1/v^2*V((3A-I)E) - D(A))]*df0dv                        //
    // 1/v*(M1(nut) + B(B))*f1^n + (1/v^2*V((3A-I)E) - D(A))*f0^n              //
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
+   ////// f1 equation //////////////////////////////////////////////////////////
+   //                                                                         //
+   // df0dv = (invMf0nuVTE + dv*invMf0nuA0)*df1dv + invMf0nuA0*f1^n + dfMdv   //
+   //                                                                         //
+   // [M1(nu) - dv*A3]*df1dv = A2*df0dv + A3*f1^n + A1*f0^n                   //
+   //                                                                         //
+   // [M1(nu) - dv*A3 - A2*invMf0nuVTE - dv*A2*invMf0nuA0)]*df1dv =           //
+   // (A2*invMf0nuA0 + A3)*f1^n + A1*f0^n + A2*dfMdv                          //
+   //
+   // A0 = D(I)^T + 2/v^2*VT(E)
+   // VTE = VT(E)
+   // A1 = 1/v^2*V((3A-I)E) - D(A)
+   // A2 = 
+   //                                                                         //
+   /////////////////////////////////////////////////////////////////////////////
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
    SparseMatrix *Df0T = Transpose(Divf0.SpMat());
-   SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
-   SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
+   // Hyperbolic system only.
+   //SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
+   //SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);  
+   // Efield and Bfield extension.
+   SparseMatrix *Ef0T = Transpose(Efieldf0.SpMat());
+/*
+   // Here we apply the intergation dv scaling on the rhs (VET*f1).
+   SparseMatrix *A0 = Add(1.0, *Df0T, 
+                          alphavT * 2.0 / velocity_scaled / velocity_scaled, 
+                          *Ef0T);
+   SparseMatrix *invMf0nuA0 = mfem::Mult(invMf0nu.SpMat(), *A0);
+   SparseMatrix *invMf0nuVTE = mfem::Mult(invMf0nu.SpMat(), *Ef0T);
+   *invMf0nuVTE *= 1.0 / velocity_scaled;
+   SparseMatrix *A1 = Add(1.0 / velocity_scaled / velocity_scaled, 
+                          AIEfieldf1.SpMat(), -1.0, Divf1.SpMat());
+   SparseMatrix *A2 = Add(1.0 / velocity_scaled, AEfieldf1.SpMat(), 
+                          dv, *A1);
+   SparseMatrix *A2invMf0nuA0 = mfem::Mult(*A2, *invMf0nuA0);
+   SparseMatrix *A2invMf0nuVTE = mfem::Mult(*A2, *invMf0nuVTE);
+   SparseMatrix *A3 = Add(1.0 / velocity_scaled, Mf1nut.SpMat(), 
+                          1.0 / velocity_scaled, Bfieldf1.SpMat());
+*/
+
+   // Prepare A0* matrices.
+   SparseMatrix *A00 = mfem::Mult(invMf0nu.SpMat(), *Ef0T);
+   SparseMatrix *VED = Add(2.0 * alphavT / velocity_scaled / velocity_scaled, 
+                          *Ef0T, 1.0, *Df0T);
+   SparseMatrix *A01 = mfem::Mult(invMf0nu.SpMat(), *VED);
+   // Prepare A1* matrices.
+   SparseMatrix *A10 = &(AEfieldf1.SpMat());
+   *A10 *= 1.0 / velocity_scaled;
+   SparseMatrix *A11 = Add(1.0 / velocity_scaled / velocity_scaled, 
+                          AIEfieldf1.SpMat(), -1.0, Divf1.SpMat());
+   SparseMatrix *A12 = Add(1.0 / velocity_scaled, Bfieldf1.SpMat(), 
+                           1.0 / velocity_scaled, Mf1nut.SpMat());
+   // Auxiliary matrices.
+   SparseMatrix *AA0 = Add(1.0, *A00, dv, *A01);
+   SparseMatrix *AA1 = Add(1.0, *A10, dv, *A11);
+   SparseMatrix *AAAA = mfem::Mult(*AA1, *AA0);
+   AAAA->Add(dv, *A12);
+   SparseMatrix *AAA = mfem::Mult(*AA1, *A01);
+   AAA->Add(1.0, *A12);
+   // Fill the rhs vector.
+   //Vector F1_rhs(VsizeH1), B, X;
+   //A11->Mult(F0, F1_rhs);
+   //AA1->AddMult(F0source, F1_rhs);
+   //AAA->AddMult(F1, F1_rhs);
+   // Complete the system matrix.
+   //implMf1nu.SpMat().Add(-1.0, *AAAA);
+
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1), B, X;
-   Divf1.Mult(F0, F1_rhs);
-   Divf1.AddMult(F0source, F1_rhs, dv);
-   Df1invMf0nuDf0T->AddMult(F1, F1_rhs, dv);
-   F1_rhs.Neg();
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled); 
+   //Divf1.Mult(F0, F1_rhs);
+   //Divf1.AddMult(F0source, F1_rhs, dv); 
+   //Df1invMf0nuDf0T->AddMult(F1, F1_rhs, dv);
+   //F1_rhs.Neg();   
+   //Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_scaled);
+   A11->Mult(F0, F1_rhs); // Correct.
+   AA1->AddMult(F0source, F1_rhs);
+   AAA->AddMult(F1, F1_rhs);
    // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat());
-   implMf1nu.SpMat().Add(dv * dv, *Df1invMf0nuDf0T);
+   //implMf1nu.SpMat().Add(-1.0 * dv / velocity_scaled, Mf1nut.SpMat());
+   //implMf1nu.SpMat().Add(dv * dv, *Df1invMf0nuDf0T);
+   implMf1nu.SpMat().Add(-1.0, *AAAA);
+
+   // Fill the rhs vector.
+   //A1->Mult(F0, F1_rhs);
+   //A2->AddMult(F0source, F1_rhs);
+   //A2invMf0nuA0->AddMult(F1, F1_rhs);
+   //A3->AddMult(F1, F1_rhs); 
+   // Complete the system matrix.
+   //implMf1nu.SpMat().Add(-1.0 * dv, *A3);
+   //implMf1nu.SpMat().Add(-1.0, *A2invMf0nuVTE);
+   //implMf1nu.SpMat().Add(-1.0 * dv, *A2invMf0nuA0);
+
    // Run the HYPRE solver.
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
@@ -538,8 +614,14 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
    dF0 = F0source;
-   invMf0nuDf0T->AddMult(F1, dF0);
-   invMf0nuDf0T->AddMult(dF1, dF0, dv);
+   //invMf0nuDf0T->AddMult(F1, dF0);
+   //invMf0nuDf0T->AddMult(dF1, dF0, dv);
+   
+   //invMf0nuA0->AddMult(F1, dF0);
+   //invMf0nuA0->AddMult(dF1, dF0, dv);
+
+   AA0->AddMult(dF1, dF0);
+   A01->AddMult(F1, dF0);
 
    /*
    // Some output.
