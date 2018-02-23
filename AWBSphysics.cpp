@@ -32,7 +32,7 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
                                         const IntegrationPoint &ip, double rho)
 {
    double Te = Te_gf.GetValue(T.ElementNo, ip);
-   double velocity_real = alphavT * velocity;
+   double velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double Zbar = eos->GetZbar(index, rho, Te);
    double ni = eos->GetIonDensity(index, rho);
@@ -68,8 +68,8 @@ double ClassicalMeanFreePath::EvalThermalMFP(ElementTransformation &T,
    //double rho = rho_gf.GetValue(T.ElementNo, ip);
    double Te = Te_gf.GetValue(T.ElementNo, ip);
    // Set the scaled velocity to correspond to the local thermal velocity.
-   velocity = eos->GetvTe(Te) / alphavT;
-   double velocity_real = alphavT * velocity;
+   velocity = eos->GetvTe(Te) / N_x_vTmax;
+   double velocity_real = N_x_vTmax * velocity;
    // Compute the mean free path.
    double nu = ClassicalMeanStoppingPower::Eval(T, ip, rho);
    double mfp = velocity_real / nu;
@@ -145,7 +145,7 @@ double AWBSF0Source::Eval(ElementTransformation &T,
    double pi = 3.14159265359;
    double Te = max(1e-10, Te_gf.GetValue(T.ElementNo, ip));
    double vTe = eos->GetvTe(Te);
-   double velocity_real = alphavT * velocity;
+   double velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double ne = eos->GetElectronDensity(index, rho, Te);
 

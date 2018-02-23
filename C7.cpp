@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
    
    c7ode_solver->Init(c7oper);
 
-   double alphavT = mspei_cf.GetVelocityScale();
+   double N_x_vTmax = mspei_cf.GetVelocityScale();
    c7oper.ResetVelocityStepEstimate();
    c7oper.ResetQuadratureData();
    c7oper.SetTime(vmax);
@@ -580,9 +580,9 @@ int main(int argc, char *argv[])
       c7ode_solver->Step(c7F, v, dv);
 
       // Perform the integration over velocity space.
-      intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), F0_gf);
-      j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), F1_gf);
-      hflux_gf.Add(me / 2.0 * pow(alphavT*v, 5.0) * alphavT*abs(dv), F1_gf);
+      intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
+      j_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
+      hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), F1_gf);
 
       double loc_minF0 = F0_gf.Min(), glob_minF0;
       MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
@@ -764,7 +764,7 @@ int main(int argc, char *argv[])
                        pmesh->GetComm());
          AWBSPhysics.SetTmax(glob_Tmax);
 		 mfp_cf.SetTmax(glob_Tmax);
-         alphavT = mspei_cf.GetVelocityScale();
+         N_x_vTmax = mspei_cf.GetVelocityScale();
          c7oper.ResetVelocityStepEstimate();
          c7oper.ResetQuadratureData();
          c7oper.SetTime(vmax);
@@ -835,20 +835,20 @@ int main(int argc, char *argv[])
                //cout << "cell_point: " << cell_point << endl << flush;
 			   f0_point = F0_gf.GetValue(cell_point, ip_point);
                F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
-               v_point.push_back(alphavT * v);
+               v_point.push_back(N_x_vTmax * v);
 			   f0_v_point.push_back(f0_point);
 			   // TODO extend to more dimensions.
 			   f1x_v_point.push_back(f1_point(0));
-			   f0v2_v_point.push_back(f0_point * pow(alphavT*v, 2.0));
+			   f0v2_v_point.push_back(f0_point * pow(N_x_vTmax*v, 2.0));
 			   // TODO extend to more dimensions.
 			   mehalff1xv5_v_point.push_back(0.5 * me * f1_point(0) * 
-                                             pow(alphavT*v, 5.0));
+                                             pow(N_x_vTmax*v, 5.0));
             }
 
             // Perform the integration over velocity space.
-            intf0_gf.Add(pow(alphavT*v, 2.0) * alphavT*abs(dv), F0_gf);
-            j_gf.Add(pow(alphavT*v, 3.0) * alphavT*abs(dv), F1_gf);
-            hflux_gf.Add(me / 2.0 * pow(alphavT*v, 5.0) * alphavT*abs(dv), 
+            intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
+            j_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
+            hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), 
                          F1_gf);
 
 			double loc_minF0 = F0_gf.Min(), glob_minF0;

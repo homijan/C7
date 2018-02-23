@@ -35,30 +35,30 @@ namespace nth
 // NTH hydro coefficient including velocity dependence.
 class NTHvHydroCoefficient : public HydroCoefficient
 {
-   void SetVelocityScale(double alpha_, double Tmax)
-      { alphavT = alpha * eos->GetvTe(Tmax); }
+   void SetVelocityScale(double N_x_, double Tmax)
+      { N_x_vTmax = N_x * eos->GetvTe(Tmax); }
 protected:
    // Velocity is always scaled wit respect to maximum thermal velocity
    // (its multiple) so it is in (0, 1)
-   double alpha, Tmax, alphavT;
+   double N_x, Tmax, N_x_vTmax;
    // Current particle velocity from the velocity spectra.
    double velocity;
 public:
    NTHvHydroCoefficient(ParGridFunction &rho_, ParGridFunction &T_,
                         ParGridFunction &v_, Coefficient *material_, EOS *eos_)
       : HydroCoefficient(rho_, T_, v_, material_, eos_)
-	  { alpha = 1.0; Tmax = 1.0; SetVelocityScale(alpha, Tmax); }
+	  { N_x = 1.0; Tmax = 1.0; SetVelocityScale(N_x, Tmax); }
    virtual double Eval(ElementTransformation &T,
       const IntegrationPoint &ip)
       { double rho = rho_gf.GetValue(T.ElementNo, ip); Eval(T, ip, rho); }
    virtual double Eval(ElementTransformation &T,
       const IntegrationPoint &ip, double rho) = 0; 
    void SetVelocity(double v_) { velocity = v_; }
-   void SetThermalVelocityMultiple(double alpha_)
-      { alpha = alpha_; SetVelocityScale(alpha, Tmax); }
+   void SetThermalVelocityMultiple(double N_x_)
+      { N_x = N_x_; SetVelocityScale(N_x, Tmax); }
    void SetTmax(double Tmax_)
-      { Tmax = Tmax_; SetVelocityScale(alpha, Tmax); }
-   double GetVelocityScale() { return alphavT; }
+      { Tmax = Tmax_; SetVelocityScale(N_x, Tmax); }
+   double GetVelocityScale() { return N_x_vTmax; }
    double GetRho(ElementTransformation &T, const IntegrationPoint &ip)
       { return rho_gf.GetValue(T.ElementNo, ip); }
 };

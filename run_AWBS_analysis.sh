@@ -29,18 +29,19 @@ PROBLEM=5
 # The highest Z.
 ZBAR=100
 
-SIGMA=1.2e9 # Zbar = 100 -> Kn 1e-4
+if false; then
+SIGMA=1.2e10 # Zbar = 100 -> Kn 1e-4
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 0.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -sigma $SIGMA -Tgrad $TGRAD -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Emimic --labelEmimic C7implicit
 cd ../..
-
+fi
 
 SIGMASAFE=1.2e15 # Zbar = 100 -> Kn 1e-9
 if false ; then
@@ -155,9 +156,10 @@ TMIN=799.5
 #TGRAD=2.3
 #TGRAD=80
 TGRAD=300
-#SIGMA=8.77e9 ## Kn=1.0e-4 nonlocality limit.
-#SIGMA=8.77e8 ## Kn=1.0e-3 q=0.8*qSH E0=0.91
-SIGMA=1.75e8 ## Zbar = 100, Kn=5.0e-3 q=0.01*qSH
+SIGMA=8.7e18 ## Kn=1.0e-4 nonlocality limit.
+#SIGMA=8.7e9 ## Kn=1.0e-4 nonlocality limit.
+#SIGMA=8.7e8 ## Kn=1.0e-3 q=0.8*qSH E0=0.91
+#SIGMA=1.75e8 ## Zbar = 100, Kn=5.0e-3 q=0.01*qSH
 
 #SIGMA=8.45e15    ## Kn 1.0e-10
 #SIGMA=8.45e11    ## Kn 1.0e-6
@@ -171,8 +173,8 @@ L=0.1
 XPOINT=0.05
 PROBLEM=5
 
-if false ; then
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 1.0
+#if false ; then
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -sigma $SIGMA -Z $ZBAR -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e5 -S0 1.0 -E0 0.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
@@ -182,4 +184,4 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecor
 
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -s $SIGMA -n $NI -xp $XPOINT --Ecorrect --Emimic --AWBSoriginal
-fi
+#fi

@@ -248,8 +248,12 @@ SHcorr = (Zbar + 0.24)/(Zbar + 4.2)
 SHcorr = SHcorr * (3.5 - xi)
 ## SH analytic formula of heat flux.
 SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
+## Standar formulation used in hydrocodes.
+CL = 10
+SHQ_pete = - SHcorr * 1.31e10 / CL / Zbar * Te**2.5 * gradTe
 Kn =  mfp_tot / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
+Kn_pete = SHQ_pete / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
 if (Ecorrect):
    proporC7EQ = C7EQ / SHQ_analytic
@@ -271,9 +275,11 @@ C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))
 #######################################
 ## Show the Knudsen number
 print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
+print 'Kn_pete: ', Kn_pete
 ## Print integrated values
 print "SHQ:              ", SHQ
 print "SHQ_analytic:     ", SHQ_analytic
+print "SHQ_pete:         ", SHQ_pete
 if (Ecorrect):
    print "C7EQ:             ", C7EQ
 if (Emimic):
