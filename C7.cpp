@@ -104,10 +104,8 @@ int main(int argc, char *argv[])
    //double EfieldS0 = 1.0;
    //double F0SourceS0 = 1.0;
    // Appropriate value to mimic exactly the SH Efield effect on qH.
-   //double F0SourceS0 = 0.2857142857142857;
+   double F0SourceS0 = 0.2857142857142857;
    double EfieldS0 = 0.0;
-   // Value equal to zero to be later used as switch.
-   double F0SourceS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
    double ni = 5e19;
    bool M1closure = false;
@@ -207,7 +205,7 @@ int main(int argc, char *argv[])
    nth::sigma = sigma;
    // NEW scaling taking into account SH Efield.
    // Appropriate value to mimic exactly the SH Efield effect on qH.
-   if (EfieldS0==0.0) { F0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
+   //if (EfieldS0==0.0) { F0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.
@@ -430,7 +428,7 @@ int main(int argc, char *argv[])
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
-   const double kB = 1.3807e-16, me = 9.1094e-28, pi = 3.14159265359; 
+   const double kB = 1.6022e-12, me = 9.1094e-28, pi = 3.14159265359; 
    const double mi = 1.0 / ni; // Expecting rho = 1.0.
    //const double mi = Zbar / ne;
    // Define an equation of state.

@@ -531,7 +531,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    A3->AddMult(F1, F1_rhs); 
    // Complete the system matrix.
    implMf1nu.SpMat().Add(-1.0 * dv_real, *A3);
-   //implMf1nu.SpMat().Add(-1.0, *A2invMf0nuVTE);
+   implMf1nu.SpMat().Add(-1.0, *A2invMf0nuVTE);
    implMf1nu.SpMat().Add(-1.0 * dv_real, *A2invMf0nuA0);
  
    /*
@@ -605,7 +605,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Partial but working variant.
    dF0 = F0source; 
    invMf0nuA0->AddMult(F1, dF0);
-   //invMf0nuVTE->AddMult(dF1, dF0);
+   invMf0nuVTE->AddMult(dF1, dF0);
    invMf0nuA0->AddMult(dF1, dF0, dv_real);
 
    /*

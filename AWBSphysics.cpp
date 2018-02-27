@@ -114,9 +114,9 @@ void LorentzEfield::Eval(Vector &V, ElementTransformation &T,
    V = grad_Te;
    // Efield is scaled as Escaled = q/me*E, which is also used in Lorentz force.
    // Original Lorentz zero-current condition.
-   //double xi = 2.5;
+   double xi = 2.5;
    // SH E field correction.
-   double xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15); 
+   //double xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15); 
    V *= S0 * pow(vTe, 2.0) * xi / Te;
 /*
    V = grad_Te;

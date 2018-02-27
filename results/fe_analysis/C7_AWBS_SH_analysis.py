@@ -3,7 +3,7 @@ from math import pi
 from math import exp
 
 ## Fundamental physical constants in cgs. 
-kB = 1.3807e-16
+kB = 1.6022e-12
 me = 9.1094e-28
 
 ## Number of processors used to run C7.
@@ -143,7 +143,7 @@ mfp_ei = vTh(Te)**4.0/sigma/ni/Zbar/Zbar
 #Te1 = C7Te.max()
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
-print "xpoint, ni, sigma, Zbar, Te, gradTe, dTe: ", xpoint, ni, sigma, Zbar, Te, gradTe, dTe
+print "xpoint, ni, ne, sigma, Zbar, Te, gradTe, dTe: ", xpoint, ni, ne, sigma, Zbar, Te, gradTe, dTe
 
 ## Multiples of thermal velocity setting the velocity space range.
 ml_max = 10.0
@@ -155,9 +155,9 @@ corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 #print "Zbar, corr:", Zbar, corr
 cmag = 1./corr
 ## Classical Lorentz approximation electric field.
-#xi = 2.5
+xi = 2.5
 ## SH correction.
-xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15)
+#xi = 1.0 + 1.5 * (Zbar + 0.477) / (Zbar + 2.15)
 Efield = vTh(Te)**2.0*xi*gradTe/Te
 
 ## Solve the AWBS ODE problem.
@@ -275,7 +275,7 @@ C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))
 #######################################
 ## Show the Knudsen number
 print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
-print 'Kn_pete: ', Kn_pete
+print 'Kn_flux, Kn_pete: ', Kn_flux, Kn_pete
 ## Print integrated values
 print "SHQ:              ", SHQ
 print "SHQ_analytic:     ", SHQ_analytic
