@@ -10,12 +10,15 @@ me = 9.1094e-28
 Nproc = 8
 maxProcOrder = 6 # Corresponds to maximum of million processors.
 
+## Coulomb logarithm.
+coulLog = 10
+
 ## Some default values.
 ni = 1.0e20
 Te = 1000.0
 gradTe = -1.0
 Zbar = 4.0
-sigma = 1e15
+sigma = 8.1027575e17 ## Matching the SH diffusive flux.
 xpoint = 0.5
 AWBSoriginal=False
 Ecorrect=False
@@ -27,6 +30,7 @@ parser = argparse.ArgumentParser(description='Analyze the diffusive asymptotic o
 ## Define input arguments.
 parser.add_argument("-n", "--ni", help="Ion density at the point.", type=float)
 parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
+parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion cross-section.", type=float)
 parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
@@ -44,6 +48,8 @@ if args.ni:
     ni = args.ni
 if args.sigma:
     sigma = args.sigma
+if args.coulLog:
+    coulLog = args.coulLog
 if args.Zbar:
     Zbar = args.Zbar
 if args.xpoint:
@@ -135,7 +141,7 @@ xp = np.array(xpoint)
 Te = splev(xp, tck, der=0)
 gradTe = splev(xp, tck, der=1)
 ## For more accurate Kn evaluate the "differential" of temperature.
-mfp_ei = vTh(Te)**4.0/sigma/ni/Zbar/Zbar
+mfp_ei = vTh(Te)**4.0/sigma/coulLog/ni/Zbar/Zbar
 #xp = np.array(xpoint-mfp_ei)
 #Te0 = splev(xp, tck, der=0)
 #xp = np.array(xpoint+mfp_ei)
@@ -143,14 +149,15 @@ mfp_ei = vTh(Te)**4.0/sigma/ni/Zbar/Zbar
 #Te1 = C7Te.max()
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
-print "xpoint, ni, ne, sigma, Zbar, Te, gradTe, dTe: ", xpoint, ni, ne, sigma, Zbar, Te, gradTe, dTe
+print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe
 
 ## Multiples of thermal velocity setting the velocity space range.
 ml_max = 10.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
-## qH = me/Zbar/sigma*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-## where mfp_ei = v**4/sigma/ni/Zbar/Zbar, i.e. sigma corresponds to unit charges collisions.
+## qH = me/Zbar/sigma/coulLog*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
+## where mfp_ei = v**4/sigma/coulLog/ni/Zbar/Zbar, 
+## i.e. sigma corresponds to unit charges collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 #print "Zbar, corr:", Zbar, corr
 cmag = 1./corr
@@ -192,7 +199,7 @@ for i in range(N):
     ## The mean free path has standard v^4 dependence, sigma is cross section
     ## given by model and Zbar increases the effect of Coulomb potential in
     ## ei collisions.
-    mfp_ei = vp**4.0/sigma/ni/Zbar/Zbar
+    mfp_ei = vp**4.0/sigma/coulLog/ni/Zbar/Zbar
     SHf1[i] = - (Zbar + 0.24)/(Zbar + 4.2)*((vp**2.0/2.0/vTh(Te)**2.0 - 1.5)*gradTe/Te - Efield/vTh(Te)**2.0)*fM(vp, Te)*vp*vp
     fM_analytic[i] = fM(vp, Te)*vp*vp
     SHj[i] = mfp_ei*vp*SHf1[i]
@@ -235,9 +242,9 @@ if (Ecorrect):
 #######################################
 ## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 ## further multiplied by SH low Z factor.
-mfp_ei = (vTh(Te))**4.0/sigma/ni/Zbar/Zbar
+mfp_ei = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/Zbar
 ## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
-mfp_tot = (vTh(Te))**4.0/sigma/ni/Zbar/(Zbar+1.)
+mfp_tot = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)
 ## Classical length scale definition.
 ##L = Te / abs(gradTe)
 ## More accurate length scale definition.
@@ -249,8 +256,7 @@ SHcorr = SHcorr * (3.5 - xi)
 ## SH analytic formula of heat flux.
 SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 ## Standar formulation used in hydrocodes.
-CL = 10
-SHQ_pete = - SHcorr * 1.31e10 / CL / Zbar * Te**2.5 * gradTe
+SHQ_pete = - SHcorr * 1.31e10 / coulLog / Zbar * Te**2.5 * gradTe
 Kn =  mfp_tot / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 Kn_pete = SHQ_pete / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
@@ -265,10 +271,10 @@ if (Emimic):
 #######################################
 ## Calculate the whole profile of SH flux according to Te from C7.
 ## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
-C7mfp_ei = (vTh(C7Te))**4.0/sigma/ni/Zbar/(Zbar+1.)
+C7mfp_ei = (vTh(C7Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)
 Temin_reference = 0.9*C7Te.min()
 C7Kn = C7mfp_ei * abs(C7gradTe) / (C7Te - Temin_reference)
-C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/ni/Zbar/Zbar*C7gradTe/C7Te
+C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/coulLog/ni/Zbar/Zbar*C7gradTe/C7Te
 
 #######################################
 ## Print comparison results ###########
@@ -277,15 +283,15 @@ C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))
 print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
 print 'Kn_flux, Kn_pete: ', Kn_flux, Kn_pete
 ## Print integrated values
-print "SHQ:              ", SHQ
-print "SHQ_analytic:     ", SHQ_analytic
-print "SHQ_pete:         ", SHQ_pete
+print "SHQ[erg/s/cm2]:              ", SHQ
+print "SHQ_analytic[erg/s/cm2]:     ", SHQ_analytic
+print "SHQ_pete[erg/s/cm2]:         ", SHQ_pete
 if (Ecorrect):
-   print "C7EQ:             ", C7EQ
+   print "C7EQ[erg/s/cm2]:             ", C7EQ
 if (Emimic):
-   print "C7Q:              ", C7Q
-print "diffAWBSQ_corr:   ", AWBSQ_corr
-print "diffAWBSQ:        ", AWBSQ
+   print "C7Q[erg/s/cm2]:              ", C7Q
+print "diffAWBSQ_corr[erg/s/cm2]:   ", AWBSQ_corr
+print "diffAWBSQ[erg/s/cm2]:        ", AWBSQ
 #print "SHJ:        ", SHJ
 #print "AWBSJ_corr: ", AWBSJ_corr
 #print "AWBSJ:      ", AWBSJ
@@ -366,11 +372,12 @@ plt.show()
 plt.xlabel(r'z [$\mu$m]')
 plt.ylabel(r'q$_H$ [W/cm$^2$]')
 plt.title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
-plt.plot(C7x_microns, C7SHQ_analytic, lsSH, label=lblSH)
+## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+plt.plot(C7x_microns, C7SHQ_analytic * 1e-7, lsSH, label=lblSH)
 if (Ecorrect):
-   plt.plot(C7x_microns, C7q_Ec, lsC7E, label=lblC7E)
+   plt.plot(C7x_microns, C7q_Ec * 1e-7, lsC7E, label=lblC7E)
 if (Emimic):
-   plt.plot(C7x_microns, C7q_Em, lsC7, label=lblC7)
+   plt.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
 plt.legend()
 plt.show()
 
@@ -397,7 +404,7 @@ pointlimit = 40
 fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 ax1.set_xlabel('v/vT')
-ax1.set_title('Kinetics (Z = '+str(Zbar)+', Kn = '+"{:.1e}".format(Kn)+')')
+ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Plot kinetic analysis.
 ax1.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
 if (AWBSoriginal):
@@ -415,8 +422,9 @@ if (Emimic):
    else:
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 ax2 = ax1.twinx()
-ax2.plot(p_v/vTh(Te), p_fM_analytic, 'k:')
-ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
+ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, 'k:')
+ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_M v^2$ [a.u.]')
+#ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
 ax1.legend(loc='best')
 plt.show()
 

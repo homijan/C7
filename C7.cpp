@@ -98,7 +98,8 @@ int main(int argc, char *argv[])
    int nth_problem = 5;
    double T_max = 1000.0, T_min = 100.0, rho_max = 10.0, rho_min = 1.0;
    double L = 1.0, T_gradscale = 50.0, rho_gradscale = 50.0;
-   double sigma = 1e20;
+   double sigma = 8.1027575e17;
+   double coulLog = 10.0;
    double Zbar = 4.0;
    // Correct input for a Lorentz force calculation with SH Efield.
    //double EfieldS0 = 1.0;
@@ -155,7 +156,9 @@ int main(int argc, char *argv[])
    args.AddOption(&basename, "-k", "--outputfilename",
                   "Name of the visit dump files");
    args.AddOption(&sigma, "-sigma", "--sigma",
-                  "Mean-free-path scaling, i.e. lambda = v^4/sigma/ni/Zbar.");
+                  "Mean-free-path scaling, i.e. lambda = v^4/sigma/coulLog/ni/Zbar/Zbar.");
+   args.AddOption(&coulLog, "-cl", "--coulLog",
+                  "Coulomb logarithm used in mean-free-path, i.e. lambda = v^4/sigma/coulLog/ni/Zbar/Zbar.");
    args.AddOption(&Zbar, "-Z", "--Zbar",
                   "Constant ionization used for nu_ee. Used along IGEOS only.");
    args.AddOption(&T_max, "-Tmax", "--Tmax",
@@ -203,9 +206,7 @@ int main(int argc, char *argv[])
    nth::T_gradscale = T_gradscale;
    nth::rho_gradscale = rho_gradscale;
    nth::sigma = sigma;
-   // NEW scaling taking into account SH Efield.
-   // Appropriate value to mimic exactly the SH Efield effect on qH.
-   //if (EfieldS0==0.0) { F0SourceS0 = (Zbar + 4.46) / (Zbar + 2.05) / 3.5; }
+   nth::coulLog = coulLog; // TMP, will be moved to the eos.
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.

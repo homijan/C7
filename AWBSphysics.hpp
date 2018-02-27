@@ -194,6 +194,7 @@ public:
 };
 
 extern double sigma;
+extern double coulLog; // TMP will be moved to the eos.
 
 } // namespace nth
 

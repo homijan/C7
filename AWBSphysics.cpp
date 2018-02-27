@@ -26,7 +26,8 @@ namespace mfem
 namespace nth
 {
 
-double sigma = 5e3;
+double sigma = 8.1027575e17; // Matching the SH diffusive flux.
+double coulLog = 10.0; // TMP will be moved to the eos.
 
 double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
                                         const IntegrationPoint &ip, double rho)
@@ -39,7 +40,7 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
    // The ei collision frequency has standard 1/v^3 dependence, 
    // the sigma cross section given by the model sigma * ni 
    // and Zbar increases the effect of Coulomb potential in "on ion collisions".
-   double nu = Zbar * Zbar * sigma * ni / pow(velocity_real, 3.0);
+   double nu = Zbar * Zbar * sigma * coulLog * ni / pow(velocity_real, 3.0);
 
    return nu;
 }
