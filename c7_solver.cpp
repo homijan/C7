@@ -487,10 +487,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // A2 = 
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
+   /*
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
    SparseMatrix *Df0T = Transpose(Divf0.SpMat());
    // Efield and Bfield extension.
    SparseMatrix *Ef0T = Transpose(Efieldf0.SpMat());
+   */
 
    /*
    // Hyperbolic system only.
@@ -508,6 +510,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    implMf1nu.SpMat().Add(dv_real * dv_real, *Df1invMf0nuDf0T);
    */
 
+   /*
    // Partial but working variant.
    SparseMatrix *A0 = Add(1.0, *Df0T, 
                           2.0 / velocity_real / velocity_real, 
@@ -533,6 +536,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    implMf1nu.SpMat().Add(-1.0 * dv_real, *A3);
    implMf1nu.SpMat().Add(-1.0, *A2invMf0nuVTE);
    implMf1nu.SpMat().Add(-1.0 * dv_real, *A2invMf0nuA0);
+   */
  
    /*
    // Full but not working with E variant.
@@ -562,6 +566,34 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Complete the system matrix.
    implMf1nu.SpMat().Add(-1.0, *AAAA);
    */
+
+   // Full but directional E field effect.
+   // Fundamental matrices.
+   SparseMatrix *tDI = Transpose(Divf0.SpMat());
+   SparseMatrix *tVE = Transpose(Efieldf0.SpMat());
+   SparseMatrix *invM0_tDI = mfem::Mult(invMf0nu.SpMat(), *tDI);
+   SparseMatrix *invM0_tVE = mfem::Mult(invMf0nu.SpMat(), *tVE);
+   SparseMatrix *DA_invM0_tDI = mfem::Mult(Divf1.SpMat(), *invM0_tDI);
+   SparseMatrix *DA_invM0_tVE = mfem::Mult(Divf1.SpMat(), *invM0_tVE);
+   SparseMatrix *VAE_invM0_tDI = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDI);
+   SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
+   // Fill the rhs vector.
+   Vector F1_rhs(VsizeH1), B, X;
+   Divf1.Mult(F0, F1_rhs);
+   F1_rhs.Neg();
+   Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
+   AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
+   VAE_invM0_tDI->AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   DA_invM0_tDI->AddMult(F1, F1_rhs, -1.0 * dv_real);  
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   // Complete the system matrix.
+   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
+   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Bfieldf1.SpMat());
+   implMf1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDI);
+   implMf1nu.SpMat().Add(dv_real / velocity_real, *DA_invM0_tVE);
+   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDI);
+   implMf1nu.SpMat().Add(-1.0 / velocity_real / velocity_real, *VAE_invM0_tVE);
 
    // Run the HYPRE solver.
    timer.sw_force.Stop();
@@ -595,6 +627,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //          + 2/v^2*M0(nu)^{-1}*VT(E)*(f1^n + dv*df1dv)                    //
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
+   // Full but directional E field effect.
+   dF0 = F0source; 
+   invM0_tDI->AddMult(F1, dF0);
+   invM0_tDI->AddMult(dF1, dF0, dv_real);
+   invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
+
    /*
    // Hyperbolic system only.
    dF0 = F0source;
@@ -602,11 +640,13 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
 
+   /*
    // Partial but working variant.
    dF0 = F0source; 
    invMf0nuA0->AddMult(F1, dF0);
    invMf0nuVTE->AddMult(dF1, dF0);
    invMf0nuA0->AddMult(dF1, dF0, dv_real);
+   */
 
    /*
    // Full but not working variant.
