@@ -490,11 +490,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /*
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
    SparseMatrix *Df0T = Transpose(Divf0.SpMat());
-   // Efield and Bfield extension.
-   SparseMatrix *Ef0T = Transpose(Efieldf0.SpMat());
-   */
-
-   /*
    // Hyperbolic system only.
    SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
    SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
@@ -508,63 +503,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Complete the system matrix.
    implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
    implMf1nu.SpMat().Add(dv_real * dv_real, *Df1invMf0nuDf0T);
-   */
-
-   /*
-   // Partial but working variant.
-   SparseMatrix *A0 = Add(1.0, *Df0T, 
-                          2.0 / velocity_real / velocity_real, 
-                          *Ef0T);
-   SparseMatrix *invMf0nuA0 = mfem::Mult(invMf0nu.SpMat(), *A0);
-   SparseMatrix *invMf0nuVTE = mfem::Mult(invMf0nu.SpMat(), *Ef0T);
-   *invMf0nuVTE *= 1.0 / velocity_real;
-   SparseMatrix *A1 = Add(1.0 / velocity_real / velocity_real, 
-                          AIEfieldf1.SpMat(), -1.0, Divf1.SpMat());
-   SparseMatrix *A2 = Add(1.0 / velocity_real, AEfieldf1.SpMat(), 
-                          dv_real, *A1);
-   SparseMatrix *A2invMf0nuA0 = mfem::Mult(*A2, *invMf0nuA0);
-   SparseMatrix *A2invMf0nuVTE = mfem::Mult(*A2, *invMf0nuVTE);
-   SparseMatrix *A3 = Add(1.0 / velocity_real, Mf1nut.SpMat(), 
-                          1.0 / velocity_real, Bfieldf1.SpMat());
-   // Fill the rhs vector.
-   Vector F1_rhs(VsizeH1), B, X;
-   A1->Mult(F0, F1_rhs);
-   A2->AddMult(F0source, F1_rhs);
-   A2invMf0nuA0->AddMult(F1, F1_rhs);
-   A3->AddMult(F1, F1_rhs); 
-   // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0 * dv_real, *A3);
-   implMf1nu.SpMat().Add(-1.0, *A2invMf0nuVTE);
-   implMf1nu.SpMat().Add(-1.0 * dv_real, *A2invMf0nuA0);
-   */
- 
-   /*
-   // Full but not working with E variant.
-   // Prepare A0* matrices.
-   SparseMatrix *A00 = mfem::Mult(invMf0nu.SpMat(), *Ef0T);
-   SparseMatrix *VED = Add(0.0 * 2.0 / velocity_real / velocity_real, 
-                          *Ef0T, 1.0, *Df0T);
-   SparseMatrix *A01 = mfem::Mult(invMf0nu.SpMat(), *VED);
-   // Prepare A1* matrices.
-   SparseMatrix *A10 = &(AEfieldf1.SpMat());
-   *A10 *= 1.0 / velocity_real;
-   SparseMatrix *A11 = Add(1.0 / velocity_real / velocity_real, 
-                          AIEfieldf1.SpMat(), -1.0, Divf1.SpMat());
-   SparseMatrix *A12 = Add(1.0 / velocity_real, Bfieldf1.SpMat(), 
-                           1.0 / velocity_real, Mf1nut.SpMat());
-   // Auxiliary matrices.
-   SparseMatrix *AA0 = Add(1.0, *A00, dv_real, *A01);
-   SparseMatrix *AA1 = Add(1.0, *A10, dv_real, *A11);
-   SparseMatrix *AAAA = mfem::Mult(*AA1, *AA0);
-   AAAA->Add(dv_real, *A12);
-   SparseMatrix *AAA = mfem::Mult(*AA1, *A01);
-   AAA->Add(1.0, *A12);
-   Vector F1_rhs(VsizeH1), B, X;
-   A11->Mult(F0, F1_rhs); // Correct.
-   AA1->AddMult(F0source, F1_rhs);
-   AAA->AddMult(F1, F1_rhs);
-   // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0, *AAAA);
    */
 
    // Full but directional E field effect.
@@ -639,21 +577,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invMf0nuDf0T->AddMult(F1, dF0);
    invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
-
-   /*
-   // Partial but working variant.
-   dF0 = F0source; 
-   invMf0nuA0->AddMult(F1, dF0);
-   invMf0nuVTE->AddMult(dF1, dF0);
-   invMf0nuA0->AddMult(dF1, dF0, dv_real);
-   */
-
-   /*
-   // Full but not working variant.
-   dF0 = F0source;
-   AA0->AddMult(dF1, dF0);
-   A01->AddMult(F1, dF0);
-   */
 
    /*
    // Some output.
