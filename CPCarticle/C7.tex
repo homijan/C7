@@ -1787,7 +1787,8 @@ a~discrete representation \eqref{eq:FEM1hosf0} and \eqref{eq:FEM1hosf1}, i.e.
 \begin{eqnarray}
   \IM^0_{(g)} &=& \intO\vect{\phi}\, \otimes\, \vect{\phi}^T g\, \dI \Omega ,
   \label{eq:IM0}\\
-  \IM^1_{(g)} &=& \intO\matr{w} \cdot \matr{w}^T g\, \dI\Omega ,
+  \IM^1_{(\matr{G})} &=& \intO\matr{w} \cdot \matr{G}\cdot \matr{w}^T
+  \, \dI\Omega ,
   \label{eq:IM1}\\
   \ID_{(\matr{G})} &=& \intO \matr{G} : \nabla\matr{w}
   \, \otimes\, \vect{\phi}^T\, \dI \Omega ,
@@ -2055,6 +2056,64 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \end{center}
   \label{fig:C7explimpl}
 \end{figure}
+
+\section{Consistent E field treatment}\label{sec:Efield}
+\begin{equation}
+  \pdv{\E}{t} + 4\pi\vect{j} = c\, \nabla\times\B ,
+  \nonumber
+\end{equation}
+\begin{equation}
+  \IM^1_{\left( \nutot \right)}\cdot \fone   
+  =
+  \vmag\left(\IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}
+  + \ID_{\left(\MA\right)}\right)\cdot \vfzero
+  - \IM^1_{\left(\pdv{\vfzero}{\vmag} \MA\right)} \cdot
+  \tE 
+  - \IB_{\left( \tB \right)}\cdot \fone ,
+  \nonumber
+  \label{eq:semiM1hosf1}
+\end{equation}
+\begin{multline}
+  \IM^1_{\left( \MI\right)}\cdot \int\vmag\fone\vmag^2\, \dI\vmag   
+  =
+  - \int\vmag\IM^1_{\left(\frac{1}{\nutot}\pdv{\vfzero}{\vmag} \MA\right)} 
+  \vmag^2\, \dI\vmag \cdot\tE \\
+  + \int\left[
+  \vmag^2\left(\IM^1_{(\frac{\nue}{\nutot}\MI)} \cdot \pdv{\fone}{\vmag}
+  + \ID_{\left(\MA\right)}\right)\cdot \vfzero 
+  - \vmag\IB_{\left(\frac{1}{\nutot} \tB \right)}\cdot \fone
+  \right] \vmag^2\, \dI\vmag ,
+  \nonumber
+  \label{eq:semiM1hosf1}
+\end{multline}
+
+\begin{equation}
+  \IM^1_{\left( \MI\right)}\cdot \vect{j}   
+  =
+  - \matr{A}_{\E} \cdot\tE + \vect{b}_{\E} ,
+  \nonumber
+  \label{eq:semiM1hosf1}
+\end{equation}
+
+\begin{equation}
+  \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot 
+  \pdv{\E}{t} + 4\pi \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot \vect{j} 
+  = c \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot \vect{rotB} ,
+  \nonumber
+\end{equation}
+\begin{equation}
+  \IM^1_{\left( \MI\right)}\cdot\pdv{\E}{t} - 4\pi\matr{A}_{\E} 
+  \cdot \left(\E^n + \pdv{\E}{t} \right) = 
+  - 4\pi \vect{b}_{\E}
+  + c \IM^1_{\left( \MI\right)}\cdot\vect{rotB}
+  \nonumber
+\end{equation}
+\begin{equation}
+  \left[\IM^1_{\left( \MI\right)} - 4\pi\matr{A}_{\E}\right]\cdot\pdv{\E}{t} 
+  = 4\pi\left(\matr{A}_{\E}\cdot \E^n - \vect{b}_{\E}\right)
+  + c \IM^1_{\left( \MI\right)}\cdot\vect{rotB}
+  \nonumber
+\end{equation}
 
 \section{Simulation results}\label{sec:results}
 \begin{figure}[tbh]
