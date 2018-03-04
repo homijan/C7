@@ -2058,10 +2058,35 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
 \end{figure}
 
 \section{Consistent E field treatment}\label{sec:Efield}
-\begin{equation}
-  \pdv{\E}{t} + 4\pi\vect{j} = c\, \nabla\times\B ,
+\begin{eqnarray}
+  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B ,
+  \label{eq:Ampere} \\
+  \pdv{\B}{t} &=& -c\, \nabla\times\E ,
+  \label{eq:Faraday}
+\end{eqnarray}
+
+MFEM Joule app:
+"This is the main computational code that computes dX/dt implicitly
+where X is the state vector containing P, E, B, F, T, and W
+\begin{eqnarray}
+  S0(\sigma) P &=& 0 \\
+  (M1+dt S1(\sigma)) E &=& WeakCurl^T B + Grad P \\
+  dB &=& -Curl E \\
+  (M2+dt S2) F &=& WeakDiv^T T \\
+  M3 dT &=& WeakDiv F + W
+\end{eqnarray}
+where W is the Joule heating."
+This means the Maxwell equations look like this
+\begin{eqnarray}
+  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B , 
+  \nonumber \\
+  \vect{j} &=& \sigma\left(\E - \nabla\Phi\right) ,
   \nonumber
-\end{equation}
+\end{eqnarray}
+where current originates from the~Ohm's law and electric field has induced $\E$ and 
+electrostatic (potential $\Phi$) contributions.
+
+
 \begin{equation}
   \IM^1_{\left( \nutot \right)}\cdot \fone   
   =
@@ -2091,8 +2116,7 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \IM^1_{\left( \MI\right)}\cdot \vect{j}   
   =
   - \matr{A}_{\E} \cdot\tE + \vect{b}_{\E} ,
-  \nonumber
-  \label{eq:semiM1hosf1}
+  \label{eq:GenOhmsLaw}
 \end{equation}
 
 \begin{equation}
@@ -2114,6 +2138,12 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   + c \IM^1_{\left( \MI\right)}\cdot\vect{rotB}
   \nonumber
 \end{equation}
+
+\begin{itemize}
+  \item Write the above equations as variational principle in H(curl).
+  \item Try to build Nedelec for Efield on 1D mesh. Project Efield coeff and plot to see how it works ;).
+  \item Prepare integrators on H(curl) in \eqref{eq:GenOhmsLaw}.
+\end{itemize}
 
 \section{Simulation results}\label{sec:results}
 \begin{figure}[tbh]
