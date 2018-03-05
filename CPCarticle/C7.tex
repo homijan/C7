@@ -118,6 +118,10 @@
 \newcommand{\anisomega}{\fone/\fzero}
 \newcommand{\acl}{\vect{M}_{\left(\anisomega\right)}}
 
+\newcommand{\Wzero}{\psi}
+\newcommand{\Wone}{\matr{w}}
+\newcommand{\Wcurl}{\vect{W_c}}
+\newcommand{\Wdiv}{\vect{W_d}}
 
 \newcommand{\figref}[1]{FIG.~\ref{#1}}
 \newcommand{\refeq}[1]{(\ref{#1})}
@@ -1696,6 +1700,60 @@ which corresponds to the~distribution function approximation
 \end{equation}
 where $\acl \rightarrow 0$ when $\anisomega \rightarrow \vect{0}$. 
 
+\section{Maxwell equations}\label{sec:Efield}
+\begin{eqnarray}
+  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B ,
+  \label{eq:Ampere} \\
+  \pdv{\B}{t} &=& -c\, \nabla\times\E ,
+  \label{eq:Faraday}
+\end{eqnarray}
+\begin{multline}
+  \vmag\fone = \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero - 
+  \frac{\qe\vmag}{\me\nutot}\pdv{\fzero}{\vmag}\MA\cdot\E
+   - \frac{\qe\vmag}{\me c\nutot}\B\times\fone ,
+  \label{eq:current}
+\end{multline}
+\begin{multline}
+  \pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
+  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag \MA\cdot\E 
+   = 
+  - 4\pi\qe\int\left( 
+  \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero\right)\vmag^2\, \dI\vmag  \\
+  - \int \frac{4\pi\qe^2\vmag}{\me c\nutot}\fone\times\B
+  \, \vmag^2\, \dI\vmag + c\, \nabla\times\B ,
+  \label{eq:GeneralizedOhm} 
+\end{multline}
+
+MFEM Joule app:
+"This is the main computational code that computes dX/dt implicitly
+where X is the state vector containing P, E, B, F, T, and W
+\begin{eqnarray}
+  S0(\sigma) P &=& 0 \\
+  (M1+dt S1(\sigma)) E &=& WeakCurl^T B + Grad P \\
+  dB &=& -Curl E \\
+  (M2+dt S2) F &=& WeakDiv^T T \\
+  M3 dT &=& WeakDiv F + W
+\end{eqnarray}
+where W is the Joule heating."
+This means the Maxwell equations look like this
+\begin{eqnarray}
+  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B , 
+  \nonumber \\
+  \vect{j} &=& \sigma\left(\E - \nabla\Phi\right) ,
+  \nonumber
+\end{eqnarray}
+where current originates from the~Ohm's law and electric field has induced $\E$ and 
+electrostatic (potential $\Phi$) contributions.
+
+
+\begin{itemize}
+  \item Write the above equations as variational principle in H(curl).
+  \item Try to build Nedelec for Efield on 1D mesh. Project Efield coeff and plot to see how it works ;).
+  \item Prepare integrators on H(curl) in \eqref{eq:GenOhmsLaw}.
+\end{itemize}
+
 %---------------------------------------------------------------------
 \section{High-order finite element scheme}\label{sec:hos}
 \begin{comment}
@@ -1716,15 +1774,72 @@ where $\acl \rightarrow 0$ when $\anisomega \rightarrow \vect{0}$.
   \label{eq:M1hosf1}
 \end{eqnarray}
 \end{comment}
-\subsection{Variational principle}
+
+\subsection{Variational principle in Electromagnetics}
+We multiply Ampere’s law \eqref{eq:GeneralizedOhm} by a 1-form test function 
+$\Wcurl \in H(Curl)$ and integrate over the~three dimensional problem domain $\Omega$ 
+to obtain the variational form
+%\begin{equation}
+%  \intO \Wcurl\cdot\left[
+%  \Wcurl^T\cdot\pdv{\E}{t} + 4\pi \Wone^T\cdot\vect{j} - c\, \nabla\times(\Wdiv^T\cdot\B)
+%  \right]\, \dI\Omega = \vect{0} ,
+%  \label{eq:HOFAmpere} 
+%\end{equation}
+\begin{multline}
+  \intO \Wcurl\cdot\left[
+  \Wcurl^T\cdot\pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
+  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, \MA\cdot\Wcurl^T\cdot\E 
+  \right]\, \dI\Omega
+   = \\ 
+  4\pi\qe
+  \intO \Wcurl\cdot
+  \int\left(  
+  \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero
+  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\qe\vmag}{\me c\nutot}\fone\times\B 
+  \right)\vmag^2\, \dI\vmag 
+  \, \dI\Omega\\
+  + c\, \intO \Wcurl\cdot \nabla\times\B\, \dI\Omega
+  \label{eq:HOFAmpere} 
+\end{multline}
+
+Now we perform integration by parts on \eqref{eq:HOFAmpere}, apply the Gauss divergence theorem
+and move the resulting surface integral term to the right hand side to obtain
+%\begin{multline}
+%  \intO \left[\Wcurl\cdot
+%  \Wcurl^T\cdot\pdv{\E}{t} + 4\pi \Wcurl\cdot\Wone^T\cdot\vect{j} 
+%  - c\, \nabla\times\Wcurl\cdot\Wdiv^T\cdot\B \right]\, \dI\Omega = \\
+%  \int_{\Gamma} c\, \left(\Wcurl\times\Wdiv^T\cdot\B\right)\cdot\vn_{\Gamma}\, \dI\Gamma ,
+%  \label{eq:HOFAmpere} 
+%\end{multline}
+\begin{multline}
+  \intO \Wcurl\cdot\left[
+  \Wcurl^T\cdot\pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
+  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, \MA\cdot\Wcurl^T\cdot\E 
+  \right]\, \dI\Omega
+   = \\ 
+  4\pi\qe
+  \intO \Wcurl\cdot
+  \int\left(  
+  \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero
+  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\qe\vmag}{\me c\nutot}\fone\times\B 
+  \right)\vmag^2\, \dI\vmag 
+  \, \dI\Omega\\
+  + c\, \intO \nabla\times\Wcurl\cdot\B\, \dI\Omega + 
+  c\, \int_{\Gamma} \left(\Wcurl\times\B\right)\cdot\vn_{\Gamma}\, \dI\Gamma ,
+  \label{eq:WeakHOFAmpere} 
+\end{multline}
+
+\subsection{Variational principle in Kinetics}
 The~general variational formulation of \eqref{eq:M1f0} and \eqref{eq:M1f1} 
 constructed above the~scalar (zero moment) functional space
-represented by test functions $\phi$ and the~vector
+represented by test functions $\Wzero$ and the~vector
 (first moment) functional space represented by test functions $\vect{w}$ 
 takes the~form
 \begin{eqnarray}
-  \intO\phi\nue\pdv{\fzero}{\vmag} &=& 
-  \intO\phi
+  \intO\Wzero\nue\pdv{\fzero}{\vmag} &=& 
+  \intO\Wzero
   \left(\MI:\nabla\fone + 
   \frac{1}{\vmag}\tE\cdot\pdv{\fone}{\vmag}
   + \frac{2}{\vmag^2}\tE\cdot\fone + \nue \pdv{\fM}{\vmag}\right) , 
@@ -1744,39 +1859,39 @@ takes the~form
 The~corresponding discrete variational principal based on the~method of 
 finite elements then reads
 \begin{multline}
-  \intO\vect{\phi}\, \otimes\, \vect{\phi}^T 
+  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T 
   \nue\, \dI \Omega \cdot \pdv{\vfzero}{\vmag} = 
-  \intO\vect{\phi}\, \otimes \left(\MI:\nabla\matr{w}^T + 
-  \frac{2}{\vmag^2}\tE^T \cdot\matr{w}^T \right)\dI \Omega
+  \intO\vect{\Wzero}\, \otimes \left(\MI:\nabla\Wone^T + 
+  \frac{2}{\vmag^2}\tE^T \cdot\Wone^T \right)\dI \Omega
   \cdot \fone \\
-  + \intO\vect{\phi}\, \otimes
-  \frac{1}{\vmag}\tE^T \cdot \matr{w}^T\, \dI \Omega 
+  + \intO\vect{\Wzero}\, \otimes
+  \frac{1}{\vmag}\tE^T \cdot \Wone^T\, \dI \Omega 
   \cdot \pdv{\fone}{\vmag} + 
-  \intO\vect{\phi}\, \otimes\, \vect{\phi}^T \nue\, \dI\Omega\,
+  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T \nue\, \dI\Omega\,
   \cdot \pdv{\vect{\fM}}{\vmag} , 
   \label{eq:FEM1hosf0}
 \end{multline}
 \begin{multline}
-  \intO\matr{w} \cdot \matr{w}^T \nue\, \dI\Omega \cdot 
+  \intO\Wone \cdot \Wone^T \nue\, \dI\Omega \cdot 
   \pdv{\fone}{\vmag} =
   - \intO
-  \left(\MA : \nabla\matr{w}\right)
-  \vect{\phi}^T\, \dI \Omega\, 
+  \left(\MA : \nabla\Wone\right)
+  \vect{\Wzero}^T\, \dI \Omega\, 
   \cdot \vfzero \\
-  + \intO\matr{w} \cdot 
+  + \intO\Wone \cdot 
   \frac{1}{\vmag^2} \left( 3\MA - \MI \right) \cdot \tE\,  
-  \vect{\phi}^T\, \dI\Omega \cdot \vfzero 
-  + \intO\matr{w} \cdot
-  \frac{1}{\vmag} \MA \cdot \tE\, \vect{\phi}^T\, \dI \Omega 
+  \vect{\Wzero}^T\, \dI\Omega \cdot \vfzero 
+  + \intO\Wone \cdot
+  \frac{1}{\vmag} \MA \cdot \tE\, \vect{\Wzero}^T\, \dI \Omega 
   \cdot \pdv{\vfzero}{\vmag}\\
-  + \intO\matr{w} \cdot
-  \left(\frac{1}{\vmag}\tilde{\B}\times\matr{w}^T + 
-  \frac{\nutot}{\vmag} \matr{w}^T\right)\, \dI\Omega 
+  + \intO\Wone \cdot
+  \left(\frac{1}{\vmag}\tilde{\B}\times\Wone^T + 
+  \frac{\nutot}{\vmag} \Wone^T\right)\, \dI\Omega 
   \cdot \fone ,
   \label{eq:FEM1hosf1}
 \end{multline}
-where $\vect{\phi}$ is the~finite vector of scalar bases functions, 
-$\matr{w}$ is the~finite vector of vector bases functions,
+where $\vect{\Wzero}$ is the~finite vector of scalar bases functions, 
+$\Wone$ is the~finite vector of vector bases functions,
 $\Omega$ represents the~computational domain, in principle 1D/2D/3D 
 spatial mesh. 
 
@@ -1785,30 +1900,29 @@ spatial mesh.
 In principle, only five following integrators need to be coded to provide
 a~discrete representation \eqref{eq:FEM1hosf0} and \eqref{eq:FEM1hosf1}, i.e.
 \begin{eqnarray}
-  \IM^0_{(g)} &=& \intO\vect{\phi}\, \otimes\, \vect{\phi}^T g\, \dI \Omega ,
+  \IM^0_{(g)} &=& \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T g\, \dI \Omega ,
   \label{eq:IM0}\\
-  \IM^1_{(\matr{G})} &=& \intO\matr{w} \cdot \matr{G}\cdot \matr{w}^T
-  \, \dI\Omega ,
+  \IM^1_{(g)} &=& \intO\Wone \cdot \Wone^T g\, \dI\Omega ,
   \label{eq:IM1}\\
-  \ID_{(\matr{G})} &=& \intO \matr{G} : \nabla\matr{w}
-  \, \otimes\, \vect{\phi}^T\, \dI \Omega ,
+  \ID_{(\matr{G})} &=& \intO \matr{G} : \nabla\Wone
+  \, \otimes\, \vect{\Wzero}^T\, \dI \Omega ,
   \label{eq:ID}\\
-  \IV_{(\vect{g})} &=& \intO\matr{w} \cdot
-  \vect{g}\, \otimes\, \vect{\phi}^T\, \dI \Omega ,
+  \IV_{(\vect{g})} &=& \intO\Wone \cdot
+  \vect{g}\, \otimes\, \vect{\Wzero}^T\, \dI \Omega ,
   \label{eq:IV}\\
-  \IB_{(\vect{g})} &=& \intO\matr{w} \cdot
-  \vect{g} \times \matr{w}^T\, \dI \Omega .
+  \IB_{(\vect{g})} &=& \intO\Wone \cdot
+  \vect{g} \times \Wone^T\, \dI \Omega .
   \label{eq:IB}
 \end{eqnarray}
 The~algebraic representation of the~above mathematical objects, which
 form the~basis for numerical discretization, reads 
 \begin{equation}
-  \vect{\phi} = \begin{bmatrix}
-    \phi_{1} \\
+  \vect{\Wzero} = \begin{bmatrix}
+    \Wzero_{1} \\
 	\vdots   \\
-	\phi_{N_0}
+	\Wzero_{N_0}
   \end{bmatrix},~
-  \matr{w} = \begin{bmatrix}
+  \Wone = \begin{bmatrix}
     w_{1, 1} & \hdots & w_{1, d} \\
 	\vdots   & \ddots & \vdots \\
 	w_{N_1, 1} & \hdots & w_{N_1, d}
@@ -2056,94 +2170,6 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \end{center}
   \label{fig:C7explimpl}
 \end{figure}
-
-\section{Consistent E field treatment}\label{sec:Efield}
-\begin{eqnarray}
-  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B ,
-  \label{eq:Ampere} \\
-  \pdv{\B}{t} &=& -c\, \nabla\times\E ,
-  \label{eq:Faraday}
-\end{eqnarray}
-
-MFEM Joule app:
-"This is the main computational code that computes dX/dt implicitly
-where X is the state vector containing P, E, B, F, T, and W
-\begin{eqnarray}
-  S0(\sigma) P &=& 0 \\
-  (M1+dt S1(\sigma)) E &=& WeakCurl^T B + Grad P \\
-  dB &=& -Curl E \\
-  (M2+dt S2) F &=& WeakDiv^T T \\
-  M3 dT &=& WeakDiv F + W
-\end{eqnarray}
-where W is the Joule heating."
-This means the Maxwell equations look like this
-\begin{eqnarray}
-  \pdv{\E}{t} + 4\pi\vect{j} &=& c\, \nabla\times\B , 
-  \nonumber \\
-  \vect{j} &=& \sigma\left(\E - \nabla\Phi\right) ,
-  \nonumber
-\end{eqnarray}
-where current originates from the~Ohm's law and electric field has induced $\E$ and 
-electrostatic (potential $\Phi$) contributions.
-
-
-\begin{equation}
-  \IM^1_{\left( \nutot \right)}\cdot \fone   
-  =
-  \vmag\left(\IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}
-  + \ID_{\left(\MA\right)}\right)\cdot \vfzero
-  - \IM^1_{\left(\pdv{\vfzero}{\vmag} \MA\right)} \cdot
-  \tE 
-  - \IB_{\left( \tB \right)}\cdot \fone ,
-  \nonumber
-  \label{eq:semiM1hosf1}
-\end{equation}
-\begin{multline}
-  \IM^1_{\left( \MI\right)}\cdot \int\vmag\fone\vmag^2\, \dI\vmag   
-  =
-  - \int\vmag\IM^1_{\left(\frac{1}{\nutot}\pdv{\vfzero}{\vmag} \MA\right)} 
-  \vmag^2\, \dI\vmag \cdot\tE \\
-  + \int\left[
-  \vmag^2\left(\IM^1_{(\frac{\nue}{\nutot}\MI)} \cdot \pdv{\fone}{\vmag}
-  + \ID_{\left(\MA\right)}\right)\cdot \vfzero 
-  - \vmag\IB_{\left(\frac{1}{\nutot} \tB \right)}\cdot \fone
-  \right] \vmag^2\, \dI\vmag ,
-  \nonumber
-  \label{eq:semiM1hosf1}
-\end{multline}
-
-\begin{equation}
-  \IM^1_{\left( \MI\right)}\cdot \vect{j}   
-  =
-  - \matr{A}_{\E} \cdot\tE + \vect{b}_{\E} ,
-  \label{eq:GenOhmsLaw}
-\end{equation}
-
-\begin{equation}
-  \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot 
-  \pdv{\E}{t} + 4\pi \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot \vect{j} 
-  = c \intO\matr{w} \cdot \matr{w}^T\, \dI\Omega \cdot \vect{rotB} ,
-  \nonumber
-\end{equation}
-\begin{equation}
-  \IM^1_{\left( \MI\right)}\cdot\pdv{\E}{t} - 4\pi\matr{A}_{\E} 
-  \cdot \left(\E^n + \pdv{\E}{t} \right) = 
-  - 4\pi \vect{b}_{\E}
-  + c \IM^1_{\left( \MI\right)}\cdot\vect{rotB}
-  \nonumber
-\end{equation}
-\begin{equation}
-  \left[\IM^1_{\left( \MI\right)} - 4\pi\matr{A}_{\E}\right]\cdot\pdv{\E}{t} 
-  = 4\pi\left(\matr{A}_{\E}\cdot \E^n - \vect{b}_{\E}\right)
-  + c \IM^1_{\left( \MI\right)}\cdot\vect{rotB}
-  \nonumber
-\end{equation}
-
-\begin{itemize}
-  \item Write the above equations as variational principle in H(curl).
-  \item Try to build Nedelec for Efield on 1D mesh. Project Efield coeff and plot to see how it works ;).
-  \item Prepare integrators on H(curl) in \eqref{eq:GenOhmsLaw}.
-\end{itemize}
 
 \section{Simulation results}\label{sec:results}
 \begin{figure}[tbh]
