@@ -276,6 +276,12 @@ int main(int argc, char *argv[])
    ParFiniteElementSpace L2FESpace(pmesh, &L2FEC);
    ParFiniteElementSpace H1FESpace(pmesh, &H1FEC, pmesh->Dimension());
 
+   // ND contains Nedelec "edge-centered" vector finite elements with continuous
+   // tangential component.
+   ND_FECollection HCurlFEC(order_v, dim);
+   ParFiniteElementSpace HCurlFESpace(pmesh, &HCurlFEC);
+   ParGridFunction EfieldNedelec_gf(&HCurlFESpace);
+
    // Boundary conditions: all tests use v.n = 0 on the boundary, and we assume
    // that the boundaries are straight.
    Array<int> ess_tdofs;
@@ -572,6 +578,7 @@ int main(int argc, char *argv[])
    hflux_gf = 0.0;
    Kn_gf.ProjectCoefficient(Kn_cf);
    Efield_gf.ProjectCoefficient(Efield_cf);
+   //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
 /*
    while (abs(dv) >= abs(dvmin))
    {

@@ -111,6 +111,7 @@
 \newcommand{\MI}{\matr{I}}
 \newcommand{\MA}{\matr{A}}
 \newcommand{\intO}{\int_{\Omega}}
+\newcommand{\intv}{\int_{\vmag}}
 \newcommand{\IM}{\boldsymbol{\mathcal{M}}}
 \newcommand{\ID}{\boldsymbol{\mathcal{D}}}
 \newcommand{\IV}{\boldsymbol{\mathcal{V}}}
@@ -1708,21 +1709,34 @@ where $\acl \rightarrow 0$ when $\anisomega \rightarrow \vect{0}$.
   \label{eq:Faraday}
 \end{eqnarray}
 \begin{multline}
-  \vmag\fone = \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  \vect{j} = \qe \intv\vmag\fone\vmag^2\, \dI\vmag = \\
+  \qe \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
   - \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero - 
   \frac{\qe\vmag}{\me\nutot}\pdv{\fzero}{\vmag}\MA\cdot\E
-   - \frac{\qe\vmag}{\me c\nutot}\B\times\fone ,
+   + \frac{\qe\vmag}{\me c\nutot}\fone\times\B\right) \vmag^2\, \dI\vmag ,
   \label{eq:current}
 \end{multline}
 \begin{multline}
   \pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
-  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag \MA\cdot\E 
+  \intv\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag \MA\cdot\E 
    = 
-  - 4\pi\qe\int\left( 
+  - 4\pi\qe\intv\left( 
   \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
   - \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero\right)\vmag^2\, \dI\vmag  \\
-  - \int \frac{4\pi\qe^2\vmag}{\me c\nutot}\fone\times\B
-  \, \vmag^2\, \dI\vmag + c\, \nabla\times\B ,
+  - \intv \frac{4\pi\qe^2\vmag}{\me c\nutot}\fone\, \vmag^2\, \dI\vmag \times\B 
+  + c\, \nabla\times\B ,
+  \label{eq:GeneralizedOhm} 
+\end{multline}
+
+\begin{multline}
+  \frac{\me}{4\pi\qe^2}\pdv{\tE}{t} 
+  - \intv\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag \MA\cdot\tE 
+   = 
+  - \intv\left( 
+  \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero\right)\vmag^2\, \dI\vmag  \\
+  - \intv \frac{\vmag}{\nutot}\fone\, \vmag^2\, \dI\vmag \times\tB
+  + \frac{\me c^2}{4\pi\qe^2}\, \nabla\times\tB ,
   \label{eq:GeneralizedOhm} 
 \end{multline}
 
@@ -1751,86 +1765,91 @@ electrostatic (potential $\Phi$) contributions.
 \begin{itemize}
   \item Write the above equations as variational principle in H(curl).
   \item Try to build Nedelec for Efield on 1D mesh. Project Efield coeff and plot to see how it works ;).
-  \item Prepare integrators on H(curl) in \eqref{eq:GenOhmsLaw}.
+  \item Prepare integrators on H(curl) of generalized Ohm's law.
 \end{itemize}
 
 %---------------------------------------------------------------------
 \section{High-order finite element scheme}\label{sec:hos}
-\begin{comment}
-\begin{eqnarray}
-  \rho \pdv{\fzero}{\vmag} &=& 
-  \frac{\rho}{\nue}\MI:\nabla\fone + 
-  \frac{\qe\rho}{\me\nue\vmag}\E\cdot\pdv{\fone}{\vmag}
-  + \frac{2 \qe\rho}{\me\nue\vmag^2}\E\cdot\fone + \rho \pdv{\fM}{\vmag} , 
-  \label{eq:M1hosf0}\\
-  \rho \pdv{\fone}{\vmag} &=&
-  %\frac{\rho}{\nue}\nabla\cdot\left(\MA\fzero\right) + 
-  \nabla\cdot\left(\frac{\rho\MA}{\nue}\fzero\right) +
-  \left(\frac{\qe\rho}{\me\nue\vmag^2}\E\cdot\left( 3\MA - \MI \right) - 
-  \nabla\left( \frac{\rho}{\nue}\right)\cdot\MA \right)\fzero \nonumber\\
-  &&+ \frac{\qe\rho}{\me\nue\vmag}\E\cdot\pdv{}{\vmag}
-  \left( \MA\fzero\right) + \frac{\qe\rho}{\me c \nue\vmag}\B\times\fone + 
-  \frac{\rho \nutot}{\nue\vmag}\fone .
-  \label{eq:M1hosf1}
-\end{eqnarray}
-\end{comment}
 
 \subsection{Variational principle in Electromagnetics}
 We multiply Ampere’s law \eqref{eq:GeneralizedOhm} by a 1-form test function 
 $\Wcurl \in H(Curl)$ and integrate over the~three dimensional problem domain $\Omega$ 
 to obtain the variational form
-%\begin{equation}
-%  \intO \Wcurl\cdot\left[
-%  \Wcurl^T\cdot\pdv{\E}{t} + 4\pi \Wone^T\cdot\vect{j} - c\, \nabla\times(\Wdiv^T\cdot\B)
-%  \right]\, \dI\Omega = \vect{0} ,
-%  \label{eq:HOFAmpere} 
-%\end{equation}
 \begin{multline}
-  \intO \Wcurl\cdot\left[
-  \Wcurl^T\cdot\pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
-  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, \MA\cdot\Wcurl^T\cdot\E 
+  \intO \Wcurl\cdot\left[\frac{\me}{4\pi\qe^2}
+  \Wcurl^T\cdot\pdv{\tE}{t} 
+  - \intv\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, 
+  \MA\cdot\Wcurl^T\cdot\tE 
   \right]\, \dI\Omega
    = \\ 
-  4\pi\qe
   \intO \Wcurl\cdot
-  \int\left(  
+  \intv\left(  
   \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero
   - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
-  - \frac{\qe\vmag}{\me c\nutot}\fone\times\B 
   \right)\vmag^2\, \dI\vmag 
+  \, \dI\Omega
+  - \intO \Wcurl\cdot\intv
+  \frac{\vmag}{\nutot}\fone 
+  \vmag^2\, \dI\vmag \times\tB
   \, \dI\Omega\\
-  + c\, \intO \Wcurl\cdot \nabla\times\B\, \dI\Omega
+  + \frac{\me c^2}{4\pi\qe^2}\intO \Wcurl\cdot \nabla\times\tB\, \dI\Omega
   \label{eq:HOFAmpere} 
 \end{multline}
 
 Now we perform integration by parts on \eqref{eq:HOFAmpere}, apply the Gauss divergence theorem
 and move the resulting surface integral term to the right hand side to obtain
 %\begin{multline}
-%  \intO \left[\Wcurl\cdot
-%  \Wcurl^T\cdot\pdv{\E}{t} + 4\pi \Wcurl\cdot\Wone^T\cdot\vect{j} 
-%  - c\, \nabla\times\Wcurl\cdot\Wdiv^T\cdot\B \right]\, \dI\Omega = \\
-%  \int_{\Gamma} c\, \left(\Wcurl\times\Wdiv^T\cdot\B\right)\cdot\vn_{\Gamma}\, \dI\Gamma ,
-%  \label{eq:HOFAmpere} 
+%  \intO \Wcurl\cdot\left[\frac{\me}{4\pi\qe^2}
+%  \Wcurl^T\cdot\pdv{\tE}{t} 
+%  - \intv\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, 
+%  \MA\cdot\Wcurl^T\cdot\tE 
+%  \right]\, \dI\Omega
+%   = \\ 
+%  \intO \Wcurl\cdot
+%  \intv\left(  
+%  \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero
+%  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+%  \right)\vmag^2\, \dI\vmag 
+%  \, \dI\Omega
+%  - \intO \Wcurl\cdot\intv
+%  \frac{\vmag}{\nutot}\fone 
+%  \vmag^2\, \dI\vmag \times\tB
+%  \, \dI\Omega\\
+%  + \frac{\me c^2}{4\pi\qe^2}\intO \nabla\times\Wcurl\cdot\tB\, \dI\Omega + 
+%  \frac{\me c^2}{4\pi\qe^2}
+%  \int_{\Gamma} \left(\Wcurl\times\tB\right)\cdot\vn_{\Gamma}\, \dI\Gamma ,
+%  \label{eq:WeakHOFAmpere} 
 %\end{multline}
+
 \begin{multline}
-  \intO \Wcurl\cdot\left[
-  \Wcurl^T\cdot\pdv{\E}{t} - \frac{4\pi\qe^2}{\me}
-  \int\frac{\vmag}{\nutot} \pdv{\fzero}{\vmag}\vmag^2\, \dI\vmag\, \MA\cdot\Wcurl^T\cdot\E 
+  \intO \Wcurl\cdot\left[\frac{\me}{4\pi\qe^2}
+  \Wcurl^T\cdot\pdv{\tE}{t} 
+  - a_0\Wcurl^T\cdot\tE 
   \right]\, \dI\Omega
-   = \\ 
-  4\pi\qe
-  \intO \Wcurl\cdot
-  \int\left(  
-  \frac{\vmag^2}{\nutot}\MA\cdot\nabla\fzero
-  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
-  - \frac{\qe\vmag}{\me c\nutot}\fone\times\B 
-  \right)\vmag^2\, \dI\vmag 
+   =  
+  \intO \Wcurl\cdot\left(\vect{b}_{0} - \vect{b}_{1}\times\tB \right)
   \, \dI\Omega\\
-  + c\, \intO \nabla\times\Wcurl\cdot\B\, \dI\Omega + 
-  c\, \int_{\Gamma} \left(\Wcurl\times\B\right)\cdot\vn_{\Gamma}\, \dI\Gamma ,
+  + \frac{\me c^2}{4\pi\qe^2}\intO \nabla\times\Wcurl\cdot\tB\, \dI\Omega + 
+  \frac{\me c^2}{4\pi\qe^2}
+  \int_{\Gamma} \Wcurl\cdot\left(\tB\times\vect{n}_{\Gamma}\right)\, \dI\Gamma ,
   \label{eq:WeakHOFAmpere} 
 \end{multline}
 
+\begin{eqnarray}
+  a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\fzero}{\vmag}(\vect{x})
+  \vmag^2\, \dI\vmag , \nonumber \\
+  \vect{b}_{0}(\vect{x}) &=& \intv\left(  
+  \frac{\vmag^2}{3 \nutot}\nabla\fzero(\vect{x})
+  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}(\vect{x})
+  \right)\vmag^2\, \dI\vmag , \nonumber \\
+  \vect{b}_{1}(\vect{x}) &=& \intv
+  \frac{\vmag}{\nutot}\fone(\vect{x})
+  \vmag^2\, \dI\vmag , \nonumber
+\end{eqnarray}
+Alors, treat $a_0, \vect{b}_{0}, \vect{b}_1$ as grid functions, 
+where it is obvious to express 
+$\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
+ImplicitSolve().
 \subsection{Variational principle in Kinetics}
 The~general variational formulation of \eqref{eq:M1f0} and \eqref{eq:M1f1} 
 constructed above the~scalar (zero moment) functional space

@@ -104,7 +104,8 @@ PROBLEM=5
 #if false ; then
 #NI=7.044e25 # Zbar = 100, Kn = 1e-10
 #NI=7.044e20 # Zbar = 100, Kn = 1e-5
-NI=7.044e18 # Zbar = 100, Kn = 1e-3
+#NI=7.044e18 # Zbar = 100, Kn = 1e-3
+NI=1.4442e18 # Zbar = 100, Kn = 5e-3
 if [ $ZBAR -le 10 ] ; then
    #NI=3.522e22 # Zbar = 1, Kn = 1e-3
    NI=3.522e21 # Zbar = 1, Kn = 1e-2
