@@ -275,15 +275,24 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 
    const int VsizeL2 = L2FESpace.GetVSize();
    const int VsizeH1 = H1FESpace.GetVSize();
+   int size;
 
-   ParGridFunction F0, F1;
+   ParGridFunction F0, F1, qH_gf;
    Vector* sptr = (Vector*) &F;
-   F0.MakeRef(&L2FESpace, *sptr, 0);
-   F1.MakeRef(&H1FESpace, *sptr, VsizeL2);
+   size = 0;
+   F0.MakeRef(&L2FESpace, *sptr, size);
+   size += VsizeL2;
+   F1.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
+   qH_gf.MakeRef(&H1FESpace, *sptr, size);
 
-   ParGridFunction dF0, dF1;
+   ParGridFunction dF0, dF1, dqH_gf;
+   size = 0;
    dF0.MakeRef(&L2FESpace, dFdv, 0);
+   size += VsizeL2;
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
+   size += VsizeH1;
+   dqH_gf.MakeRef(&H1FESpace, dFdv, size);
 
    Mf0nu.Update();
    invMf0nuE.Update();
@@ -359,6 +368,10 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 
    quad_data_is_current = false;
 
+   // Integrate heat flux.
+   dqH_gf = F1;
+   dqH_gf *= pow(velocity_real, 5.0);
+
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),
    // where the maximum velocity is an N times multiple of thermal velocity 
@@ -405,15 +418,36 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    const int VsizeL2 = L2FESpace.GetVSize();
    const int VsizeH1 = H1FESpace.GetVSize();
+   int size;
 
-   ParGridFunction F0, F1;
+   ParGridFunction F0, F1, qH_gf, a0_gf, b0_gf, b1_gf;
    Vector* sptr = (Vector*) &F;
-   F0.MakeRef(&L2FESpace, *sptr, 0);
-   F1.MakeRef(&H1FESpace, *sptr, VsizeL2);
+   size = 0;
+   F0.MakeRef(&L2FESpace, *sptr, size);
+   size += VsizeL2;
+   F1.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
+   qH_gf.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
+   a0_gf.MakeRef(&L2FESpace, *sptr, size);
+   size += VsizeL2;
+   b0_gf.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
+   b1_gf.MakeRef(&H1FESpace, *sptr, size);
 
-   ParGridFunction dF0, dF1;
-   dF0.MakeRef(&L2FESpace, dFdv, 0);
-   dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
+   ParGridFunction dF0, dF1, dqH_gf, da0_gf, db0_gf, db1_gf;
+   size = 0;
+   dF0.MakeRef(&L2FESpace, dFdv, size);
+   size += VsizeL2;
+   dF1.MakeRef(&H1FESpace, dFdv, size);
+   size += VsizeH1;
+   dqH_gf.MakeRef(&H1FESpace, dFdv, size);
+   size += VsizeH1;
+   da0_gf.MakeRef(&L2FESpace, dFdv, size);
+   size += VsizeL2;
+   db0_gf.MakeRef(&H1FESpace, dFdv, size);
+   size += VsizeH1;
+   db1_gf.MakeRef(&H1FESpace, dFdv, size);
 
    invMf0nu.Update();
    implMf1nu.Update();
@@ -602,6 +636,10 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /////////////////////////////////////////////////////////////////////////////
 
    quad_data_is_current = false;
+
+   // Integrate heat flux.
+   dqH_gf = F1;
+   dqH_gf *= pow(velocity_real, 5.0);
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),

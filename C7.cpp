@@ -421,17 +421,25 @@ int main(int argc, char *argv[])
    // The monolithic BlockVector stores unknown fields as:
    // - 0 -> isotropic F0 (energy density)
    // - 1 -> anisotropic F1 (flux density)
-   Array<int> c7true_offset(3);
-   c7true_offset[0] = 0;
-   c7true_offset[1] = c7true_offset[0] + Vsize_l2;
-   c7true_offset[2] = c7true_offset[1] + Vsize_h1;
+   Array<int> c7true_offset(7);
+   c7true_offset[0] = 0;                           // F0
+   c7true_offset[1] = c7true_offset[0] + Vsize_l2; // F1
+   c7true_offset[2] = c7true_offset[1] + Vsize_h1; // qH
+   c7true_offset[3] = c7true_offset[2] + Vsize_h1; // a0
+   c7true_offset[4] = c7true_offset[3] + Vsize_l2; // b0
+   c7true_offset[5] = c7true_offset[4] + Vsize_h1; // b1
+   c7true_offset[6] = c7true_offset[5] + Vsize_h1;
    BlockVector c7F(c7true_offset);
 
    // Define GridFunction objects for the zero and first moments of
    // the~electron distribution function.
-   ParGridFunction F0_gf, F1_gf;
+   ParGridFunction F0_gf, F1_gf, qH_gf, a0_gf, b0_gf, b1_gf;
    F0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[0]);
    F1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[1]);
+   qH_gf.MakeRef(&H1FESpace, c7F, c7true_offset[2]);
+   a0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[3]);
+   b0_gf.MakeRef(&H1FESpace, c7F, c7true_offset[4]);
+   b1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[5]);
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
@@ -854,8 +862,8 @@ int main(int argc, char *argv[])
             // Perform the integration over velocity space.
             intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
             j_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
-            hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), 
-                         F1_gf);
+            //hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * 
+			//             N_x_vTmax*abs(dv), F1_gf);
 
 			double loc_minF0 = F0_gf.Min(), glob_minF0;
             MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
@@ -889,6 +897,11 @@ int main(int argc, char *argv[])
                << endl;
             }
          }
+
+         // NEW
+         hflux_gf = qH_gf;
+		 hflux_gf *= me / 2.0; // Inside c7oper does not use me.
+		 hflux_gf *= -1.0; // Inside c7oper the integration goes (vmax, vmin).
 
          // Save the distribution function at a given point.
          if (right_proc_point)
