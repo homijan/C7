@@ -1771,6 +1771,70 @@ electrostatic (potential $\Phi$) contributions.
 %---------------------------------------------------------------------
 \section{High-order finite element scheme}\label{sec:hos}
 
+\subsection{Variational principle in Kinetics}
+The~general variational formulation of \eqref{eq:M1f0} and \eqref{eq:M1f1} 
+constructed above the~scalar (zero moment) functional space
+represented by test functions $\Wzero$ and the~vector
+(first moment) functional space represented by test functions $\vect{w}$ 
+takes the~form
+\begin{eqnarray}
+  \intO\Wzero\nue\pdv{\fzero}{\vmag} &=& 
+  \intO\Wzero
+  \left(\MI:\nabla\fone + 
+  \frac{1}{\vmag}\tE\cdot\pdv{\fone}{\vmag}
+  + \frac{2}{\vmag^2}\tE\cdot\fone + \nue \pdv{\fM}{\vmag}\right) , 
+  \label{eq:M1hosf0_variational}\\
+  \intO\vect{w}\cdot\nue\pdv{\fone}{\vmag} &=&
+  %\frac{\rho}{\nue}\nabla\cdot\left(\MA\fzero\right) + 
+  \intO\vect{w}\cdot\Bigg(\nabla\cdot\left(\MA\fzero\right)  
+  + \frac{1}{\vmag^2}\tE\cdot\left( 3\MA - \MI \right)\fzero
+  \nonumber\\
+  && 
+  + \frac{1}{\vmag}\tE\cdot\pdv{}{\vmag}
+  \left( \MA\fzero\right) + \frac{1}{\vmag}\tB\times\fone + 
+  \frac{\nutot}{\vmag}\fone\Bigg) .
+  \label{eq:M1hosf1_variational}
+\end{eqnarray}
+
+The~corresponding discrete variational principal based on the~method of 
+finite elements then reads
+\begin{multline}
+  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T 
+  \nue\, \dI \Omega \cdot \pdv{\vfzero}{\vmag} = 
+  \intO\vect{\Wzero}\, \otimes \left(\MI:\nabla\Wone^T + 
+  \frac{2}{\vmag^2}\tE^T \cdot\Wone^T \right)\dI \Omega
+  \cdot \fone \\
+  + \intO\vect{\Wzero}\, \otimes
+  \frac{1}{\vmag}\tE^T \cdot \Wone^T\, \dI \Omega 
+  \cdot \pdv{\fone}{\vmag} + 
+  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T \nue\, \dI\Omega\,
+  \cdot \pdv{\vect{\fM}}{\vmag} , 
+  \label{eq:FEM1hosf0}
+\end{multline}
+\begin{multline}
+  \intO\Wone \cdot \Wone^T \nue\, \dI\Omega \cdot 
+  \pdv{\fone}{\vmag} =
+  - \intO
+  \left(\MA : \nabla\Wone\right)
+  \vect{\Wzero}^T\, \dI \Omega\, 
+  \cdot \vfzero \\
+  + \intO\Wone \cdot 
+  \frac{1}{\vmag^2} \left( 3\MA - \MI \right) \cdot \tE\,  
+  \vect{\Wzero}^T\, \dI\Omega \cdot \vfzero 
+  + \intO\Wone \cdot
+  \frac{1}{\vmag} \MA \cdot \tE\, \vect{\Wzero}^T\, \dI \Omega 
+  \cdot \pdv{\vfzero}{\vmag}\\
+  + \intO\Wone \cdot
+  \left(\frac{1}{\vmag}\tilde{\B}\times\Wone^T + 
+  \frac{\nutot}{\vmag} \Wone^T\right)\, \dI\Omega 
+  \cdot \fone ,
+  \label{eq:FEM1hosf1}
+\end{multline}
+where $\vect{\Wzero}$ is the~finite vector of scalar bases functions, 
+$\Wone$ is the~finite vector of vector bases functions,
+$\Omega$ represents the~computational domain, in principle 1D/2D/3D 
+spatial mesh. 
+
 \subsection{Variational principle in Electromagnetics}
 We multiply Ampere’s law \eqref{eq:GeneralizedOhm} by a 1-form test function 
 $\Wcurl \in H(Curl)$ and integrate over the~three dimensional problem domain $\Omega$ 
@@ -1836,6 +1900,12 @@ and move the resulting surface integral term to the right hand side to obtain
 \end{multline}
 
 \begin{eqnarray}
+  \vect{q}_h(\vect{x}) &=& \intv
+  \vmag^3 \fone(\vect{x}) \vmag^2\, \dI\vmag , \nonumber \\
+  \vect{q}_c(\vect{x}) &=& \intv
+  \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , \nonumber 
+\end{eqnarray}
+\begin{eqnarray}
   a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\fzero}{\vmag}(\vect{x})
   \vmag^2\, \dI\vmag , \nonumber \\
   \vect{b}_{0}(\vect{x}) &=& \intv\left(  
@@ -1850,69 +1920,30 @@ Alors, treat $a_0, \vect{b}_{0}, \vect{b}_1$ as grid functions,
 where it is obvious to express 
 $\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
 ImplicitSolve().
-\subsection{Variational principle in Kinetics}
-The~general variational formulation of \eqref{eq:M1f0} and \eqref{eq:M1f1} 
-constructed above the~scalar (zero moment) functional space
-represented by test functions $\Wzero$ and the~vector
-(first moment) functional space represented by test functions $\vect{w}$ 
-takes the~form
-\begin{eqnarray}
-  \intO\Wzero\nue\pdv{\fzero}{\vmag} &=& 
-  \intO\Wzero
-  \left(\MI:\nabla\fone + 
-  \frac{1}{\vmag}\tE\cdot\pdv{\fone}{\vmag}
-  + \frac{2}{\vmag^2}\tE\cdot\fone + \nue \pdv{\fM}{\vmag}\right) , 
-  \label{eq:M1hosf0_variational}\\
-  \intO\vect{w}\cdot\nue\pdv{\fone}{\vmag} &=&
-  %\frac{\rho}{\nue}\nabla\cdot\left(\MA\fzero\right) + 
-  \intO\vect{w}\cdot\Bigg(\nabla\cdot\left(\MA\fzero\right)  
-  + \frac{1}{\vmag^2}\tE\cdot\left( 3\MA - \MI \right)\fzero
-  \nonumber\\
-  && 
-  + \frac{1}{\vmag}\tE\cdot\pdv{}{\vmag}
-  \left( \MA\fzero\right) + \frac{1}{\vmag}\tB\times\fone + 
-  \frac{\nutot}{\vmag}\fone\Bigg) .
-  \label{eq:M1hosf1_variational}
-\end{eqnarray}
 
-The~corresponding discrete variational principal based on the~method of 
-finite elements then reads
-\begin{multline}
-  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T 
-  \nue\, \dI \Omega \cdot \pdv{\vfzero}{\vmag} = 
-  \intO\vect{\Wzero}\, \otimes \left(\MI:\nabla\Wone^T + 
-  \frac{2}{\vmag^2}\tE^T \cdot\Wone^T \right)\dI \Omega
-  \cdot \fone \\
-  + \intO\vect{\Wzero}\, \otimes
-  \frac{1}{\vmag}\tE^T \cdot \Wone^T\, \dI \Omega 
-  \cdot \pdv{\fone}{\vmag} + 
-  \intO\vect{\Wzero}\, \otimes\, \vect{\Wzero}^T \nue\, \dI\Omega\,
-  \cdot \pdv{\vect{\fM}}{\vmag} , 
-  \label{eq:FEM1hosf0}
-\end{multline}
-\begin{multline}
-  \intO\Wone \cdot \Wone^T \nue\, \dI\Omega \cdot 
-  \pdv{\fone}{\vmag} =
-  - \intO
-  \left(\MA : \nabla\Wone\right)
-  \vect{\Wzero}^T\, \dI \Omega\, 
-  \cdot \vfzero \\
-  + \intO\Wone \cdot 
-  \frac{1}{\vmag^2} \left( 3\MA - \MI \right) \cdot \tE\,  
-  \vect{\Wzero}^T\, \dI\Omega \cdot \vfzero 
-  + \intO\Wone \cdot
-  \frac{1}{\vmag} \MA \cdot \tE\, \vect{\Wzero}^T\, \dI \Omega 
-  \cdot \pdv{\vfzero}{\vmag}\\
-  + \intO\Wone \cdot
-  \left(\frac{1}{\vmag}\tilde{\B}\times\Wone^T + 
-  \frac{\nutot}{\vmag} \Wone^T\right)\, \dI\Omega 
-  \cdot \fone ,
-  \label{eq:FEM1hosf1}
-\end{multline}
-where $\vect{\Wzero}$ is the~finite vector of scalar bases functions, 
-$\Wone$ is the~finite vector of vector bases functions,
-$\Omega$ represents the~computational domain, in principle 1D/2D/3D 
-spatial mesh. 
+\begin{equation}
+  \frac{\vect{j}}{\qe} = \vect{q}_c =
+  \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\nutot}\nabla\fzero - 
+  \frac{\vmag}{3\nutot}\pdv{\fzero}{\vmag}\tE
+   + \frac{\vmag}{\nutot}\fone\times\tB\right) \vmag^2\, \dI\vmag ,
+  \label{eq:HOFcurrent}
+\end{equation}
+
+\begin{equation}
+  \vect{q}_c(\vect{x}) 
+  = -\vect{b}_{0}(\vect{x}) 
+  - a_{0}(\vect{x})\tE(\vect{x})
+   + \vect{b}_{1}(\vect{x})\times\tB(\vect{x}) ,
+  \label{eq:HOFcurrent}
+\end{equation}
+
+\begin{equation}
+  \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} 
+  - \frac{\vect{q}_c(\vect{x})}{a_{0}(\vect{x})}
+   + \frac{\vect{b}_{1}(\vect{x})}{a_{0}(\vect{x})}\times\tB(\vect{x}) ,
+  \label{eq:HOFcurrent}
+\end{equation}
 
 \subsection{Semi-discrete formulation}\label{sec:semidiscrete_form}
 

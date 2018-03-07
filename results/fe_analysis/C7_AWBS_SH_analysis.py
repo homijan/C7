@@ -360,8 +360,8 @@ plt.show()
 #plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'$q$ [electron/s/cm$^2$]')
-plt.title(r'Flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+plt.ylabel(r'$j$ [e/s/cm$^2$]')
+plt.title(r'Current (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 if (Ecorrect):
    plt.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
 if (Emimic):

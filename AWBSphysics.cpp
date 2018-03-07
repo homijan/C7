@@ -140,6 +140,89 @@ double LorentzEfield::Eval(ElementTransformation &T,
    return V.Norml2();
 }
 
+double P1a0KineticCoefficient::Eval(ElementTransformation &T,
+                                    const IntegrationPoint &ip)
+{
+   mspei_pcf->SetVelocity(velocity);
+   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   const double velocity_real = velocity * N_x_vTmax;
+   double nu_ei =  mspei_pcf->Eval(T, ip);
+
+   double dF0dv = F0->GetValue(T.ElementNo, ip);
+   
+   return velocity_real / 3.0 / nu_ei * dF0dv * velocity_real * velocity_real;
+}
+
+void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
+                                  const IntegrationPoint &ip)
+{
+   mspei_pcf->SetVelocity(velocity);
+   mspee_pcf->SetVelocity(velocity);
+   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   const double velocity_real = velocity * N_x_vTmax;
+   double nu_ei =  mspei_pcf->Eval(T, ip);
+   double nu_ee =  mspee_pcf->Eval(T, ip);
+
+   T.SetIntPoint(&ip);
+   F0->GetGradient(T, V); 
+   V *= 1.0 / 3.0 / nu_ei;
+   
+   for (int d = 0; d < vdim; d++)
+   { 
+      V(d) -= nu_ee / nu_ei * F1->GetValue(T.ElementNo, ip, d);
+   }
+   
+   V *= pow(velocity_real, 4.0);
+}
+
+void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
+                                  const IntegrationPoint &ip)
+{
+   mspei_pcf->SetVelocity(velocity);
+   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   const double velocity_real = velocity * N_x_vTmax;
+   double nu_ei =  mspei_pcf->Eval(T, ip);
+
+   for (int d = 0; d < vdim; d++)
+   { 
+      V(d) = F1->GetValue(T.ElementNo, ip, d);
+   }
+   
+   V *= pow(velocity_real, 3.0) / nu_ei;
+}
+
+void OhmCurrentCoefficient::Eval(Vector &V, ElementTransformation &T,
+                                 const IntegrationPoint &ip)
+{
+   Vector Ex(vdim), Bx(vdim);
+   Efield_pcf->Eval(Ex, T, ip);
+   Bfield_pcf->Eval(Bx, T, ip);
+
+   double a0x = a0_pgf->GetValue(T.ElementNo, ip);
+   for (int d = 0; d < vdim; d++)
+   { 
+	  double b0x_d = b0_pgf->GetValue(T.ElementNo, ip, d);
+      double b1x_d = b1_pgf->GetValue(T.ElementNo, ip, d);
+	  V(d) = - b0x_d - a0x * Ex(d);
+   }
+}
+
+void OhmEfieldCoefficient::Eval(Vector &V, ElementTransformation &T,
+                                const IntegrationPoint &ip)
+{
+   Vector Bx(vdim);
+   Bfield_pcf->Eval(Bx, T, ip);
+
+   double a0x = a0_pgf->GetValue(T.ElementNo, ip);
+   for (int d = 0; d < vdim; d++)
+   { 
+	  double jCx_d = jC_pgf->GetValue(T.ElementNo, ip, d);
+	  double b0x_d = b0_pgf->GetValue(T.ElementNo, ip, d);
+      double b1x_d = b1_pgf->GetValue(T.ElementNo, ip, d);
+	  V(d) = - b0x_d / a0x - alpha * jCx_d / a0x;
+   }
+}
+
 double AWBSF0Source::Eval(ElementTransformation &T,
                           const IntegrationPoint &ip, double rho)
 {

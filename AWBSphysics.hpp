@@ -63,39 +63,6 @@ public:
       { return rho_gf.GetValue(T.ElementNo, ip); }
 };
 
-// Master of physics for nonlocal transport.
-class AWBSMasterOfPhysics
-{
-protected:
-public:
-   // members
-   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
-   VectorCoefficient *Efield_pcf, *Bfield_pcf;
-   // methods
-   AWBSMasterOfPhysics(NTHvHydroCoefficient *mspei_, 
-                       NTHvHydroCoefficient *mspee_,
-                       NTHvHydroCoefficient *source_, 
-                       VectorCoefficient *Efield_,
-                       VectorCoefficient *Bfield_)
-      : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_),
-        Efield_pcf(Efield_), Bfield_pcf(Bfield_) { }
-
-   void SetThermalVelocityMultiple(double vTmultiple)
-   { 
-      mspei_pcf->SetThermalVelocityMultiple(vTmultiple);
-      mspee_pcf->SetThermalVelocityMultiple(vTmultiple);
-      sourceF0_pcf->SetThermalVelocityMultiple(vTmultiple);
-   }
-   void SetTmax(double glob_Tmax)
-   { 
-      mspei_pcf->SetTmax(glob_Tmax); 
-      mspee_pcf->SetTmax(glob_Tmax);
-      sourceF0_pcf->SetTmax(glob_Tmax);
-   }
-
-   ~AWBSMasterOfPhysics() { }
-};
-
 // Classical mean-stopping-power (electron-ion) coefficient.
 class ClassicalMeanStoppingPower : public NTHvHydroCoefficient
 {
@@ -178,6 +145,74 @@ public:
    void SetScale0(double S0_) { S0 = S0_; }
 };
 
+// General entity operating on kinetic distribution function.
+class GeneralKineticCoefficient : public Coefficient, public VectorCoefficient
+{
+protected:
+   double velocity;
+   // GridFunctions related to F0 and F1, e.g. F0, F1, dF0dv, dF1dv, etc.
+   ParGridFunction *F0, *F1;
+   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf;
+public:
+   GeneralKineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
+                             NTHvHydroCoefficient *mspee_pcf_)
+      : F0(NULL), F1(NULL), VectorCoefficient(dim_), mspei_pcf(mspei_pcf_), 
+      mspee_pcf(mspee_pcf_) { }
+
+   virtual void SetF0(ParGridFunction *F0_) { F0 = F0_; }
+   virtual void SetF1(ParGridFunction *F1_) { F1 = F1_; }
+   virtual void SetVelocity(double v_) { velocity = v_; }
+
+   virtual double Eval(ElementTransformation &T, 
+                       const IntegrationPoint &ip) = 0;
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip) = 0;
+};
+
+// P1 Efield Lorentz force kinetic coefficient.
+class P1a0KineticCoefficient : public GeneralKineticCoefficient
+{
+protected:
+public:
+   P1a0KineticCoefficient(NTHvHydroCoefficient *mspei_pcf_,
+                          NTHvHydroCoefficient *mspee_pcf_)
+      : GeneralKineticCoefficient(1, mspei_pcf_, mspee_pcf_) { }
+   virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip);
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip) 
+   { std::cout << "Not defined..." << std::endl; }
+};
+
+// P1 background force kinetic coefficient.
+class P1b0KineticCoefficient : public GeneralKineticCoefficient
+{
+protected:
+public:
+   P1b0KineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
+                          NTHvHydroCoefficient *mspee_pcf_)
+      : GeneralKineticCoefficient(dim_, mspei_pcf_, mspee_pcf_) { }
+   virtual double Eval(ElementTransformation &T, 
+                       const IntegrationPoint &ip)
+   { std::cout << "Not defined..." << std::endl; }
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip);
+};
+
+// P1 magnetic force kinetic coefficient.
+class P1b1KineticCoefficient : public GeneralKineticCoefficient
+{
+protected:
+public:
+   P1b1KineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
+                          NTHvHydroCoefficient *mspee_pcf_)
+      : GeneralKineticCoefficient(dim_, mspei_pcf_, mspee_pcf_) { }
+   virtual double Eval(ElementTransformation &T, 
+                       const IntegrationPoint &ip)
+   { std::cout << "Not defined..." << std::endl; }
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip);
+};
+
 // AWBS source coefficient.
 class AWBSF0Source : public NTHvHydroCoefficient
 {
@@ -191,6 +226,91 @@ public:
    double Eval(ElementTransformation &T, const IntegrationPoint &ip,
                double rho);
    void SetScale0(double S0_) { S0 = S0_; }
+};
+
+// Master of physics for nonlocal transport.
+class AWBSMasterOfPhysics
+{
+protected:
+public:
+   // members
+   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
+   VectorCoefficient *Efield_pcf, *Bfield_pcf;
+   P1a0KineticCoefficient *P1a0_pcf;
+   P1b0KineticCoefficient *P1b0_pcf;
+   P1b1KineticCoefficient *P1b1_pcf;
+   // methods
+   AWBSMasterOfPhysics(int dim_, NTHvHydroCoefficient *mspei_, 
+                       NTHvHydroCoefficient *mspee_,
+                       NTHvHydroCoefficient *source_, 
+                       VectorCoefficient *Efield_,
+                       VectorCoefficient *Bfield_)
+      : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_), 
+        Efield_pcf(Efield_), Bfield_pcf(Bfield_)
+        { 
+           P1a0_pcf = new P1a0KineticCoefficient(mspei_, mspee_); 
+           P1b0_pcf = new P1b0KineticCoefficient(dim_, mspei_, mspee_); 
+		   P1b1_pcf = new P1b1KineticCoefficient(dim_, mspei_, mspee_);
+        }
+
+   void SetThermalVelocityMultiple(double vTmultiple)
+   { 
+      mspei_pcf->SetThermalVelocityMultiple(vTmultiple);
+      mspee_pcf->SetThermalVelocityMultiple(vTmultiple);
+      sourceF0_pcf->SetThermalVelocityMultiple(vTmultiple);
+   }
+   void SetTmax(double glob_Tmax)
+   { 
+      mspei_pcf->SetTmax(glob_Tmax); 
+      mspee_pcf->SetTmax(glob_Tmax);
+      sourceF0_pcf->SetTmax(glob_Tmax);
+   }
+
+   ~AWBSMasterOfPhysics() 
+   { 
+      delete P1a0_pcf;
+      delete P1b0_pcf;
+      delete P1b1_pcf;
+   }
+};
+
+// Post-processing coefficient of generalized Ohm's law current.
+class OhmCurrentCoefficient : public VectorCoefficient
+{
+protected:
+   ParGridFunction *a0_pgf, *b0_pgf, *b1_pgf; 
+   VectorCoefficient *Efield_pcf, *Bfield_pcf;
+public:
+   OhmCurrentCoefficient(int dim_, ParGridFunction *a0_pgf_, 
+                         ParGridFunction *b0_pgf_, ParGridFunction *b1_pgf_,
+                         VectorCoefficient *Efield_pcf_,
+                         VectorCoefficient *Bfield_pcf_)
+      : VectorCoefficient(dim_), a0_pgf(a0_pgf_), b0_pgf(b0_pgf_), 
+      b1_pgf(b1_pgf_), Efield_pcf(Efield_pcf_), Bfield_pcf(Bfield_pcf_) { }
+
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip);
+};
+
+// Post-processing coefficient of generalized Ohm's law E field 
+// corresponding to reduced current.
+class OhmEfieldCoefficient : public VectorCoefficient
+{
+protected:
+   double alpha;
+   ParGridFunction *jC_pgf, *a0_pgf, *b0_pgf, *b1_pgf; 
+   VectorCoefficient *Bfield_pcf;
+public:
+   OhmEfieldCoefficient(int dim_, ParGridFunction *jC_pgf_,
+                        ParGridFunction *a0_pgf_, ParGridFunction *b0_pgf_, 
+                        ParGridFunction *b1_pgf_,
+                        VectorCoefficient *Bfield_pcf_)
+      : VectorCoefficient(dim_), jC_pgf(jC_pgf_), a0_pgf(a0_pgf_), 
+      b0_pgf(b0_pgf_), b1_pgf(b1_pgf_), Bfield_pcf(Bfield_pcf_) { alpha = 0.5; }
+
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip);
+   virtual void SetAlpha(double alpha_) { alpha = alpha_; }
 };
 
 extern double sigma;

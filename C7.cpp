@@ -421,29 +421,32 @@ int main(int argc, char *argv[])
    // The monolithic BlockVector stores unknown fields as:
    // - 0 -> isotropic F0 (energy density)
    // - 1 -> anisotropic F1 (flux density)
-   Array<int> c7true_offset(7);
+   Array<int> c7true_offset(8);
    c7true_offset[0] = 0;                           // F0
    c7true_offset[1] = c7true_offset[0] + Vsize_l2; // F1
    c7true_offset[2] = c7true_offset[1] + Vsize_h1; // qH
-   c7true_offset[3] = c7true_offset[2] + Vsize_h1; // a0
-   c7true_offset[4] = c7true_offset[3] + Vsize_l2; // b0
-   c7true_offset[5] = c7true_offset[4] + Vsize_h1; // b1
-   c7true_offset[6] = c7true_offset[5] + Vsize_h1;
+   c7true_offset[3] = c7true_offset[2] + Vsize_h1; // j
+   c7true_offset[4] = c7true_offset[3] + Vsize_h1; // a0
+   c7true_offset[5] = c7true_offset[4] + Vsize_l2; // b0
+   c7true_offset[6] = c7true_offset[5] + Vsize_h1; // b1
+   c7true_offset[7] = c7true_offset[6] + Vsize_h1;
    BlockVector c7F(c7true_offset);
 
    // Define GridFunction objects for the zero and first moments of
    // the~electron distribution function.
-   ParGridFunction F0_gf, F1_gf, qH_gf, a0_gf, b0_gf, b1_gf;
+   ParGridFunction F0_gf, F1_gf, hflux_gf, jC_gf, a0_gf, b0_gf, b1_gf;
    F0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[0]);
    F1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[1]);
-   qH_gf.MakeRef(&H1FESpace, c7F, c7true_offset[2]);
-   a0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[3]);
-   b0_gf.MakeRef(&H1FESpace, c7F, c7true_offset[4]);
-   b1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[5]);
+   hflux_gf.MakeRef(&H1FESpace, c7F, c7true_offset[2]);
+   jC_gf.MakeRef(&H1FESpace, c7F, c7true_offset[3]);
+   a0_gf.MakeRef(&L2FESpace, c7F, c7true_offset[4]);
+   b0_gf.MakeRef(&H1FESpace, c7F, c7true_offset[5]);
+   b1_gf.MakeRef(&H1FESpace, c7F, c7true_offset[6]);
 
    // Define hydrodynamics related coefficients as mean stopping power and
    // source function depending on plasma temperature and density. 
-   const double kB = 1.6022e-12, me = 9.1094e-28, pi = 3.14159265359; 
+   const double kB = 1.6022e-12, me = 9.1094e-28, qe = 4.8032e-10, 
+                pi = 3.14159265359; 
    const double mi = 1.0 / ni; // Expecting rho = 1.0.
    //const double mi = Zbar / ne;
    // Define an equation of state.
@@ -475,7 +478,14 @@ int main(int argc, char *argv[])
    VectorConstantCoefficient ZeroBfield_cf(vZero);
    VectorCoefficient *Bfield_pcf = &ZeroBfield_cf;
 
-   nth::AWBSMasterOfPhysics AWBSPhysics(mspei_pcf, mspee_pcf, sourceF0_pcf,
+   // NEW 
+   nth::OhmCurrentCoefficient OhmCurrent_cf(pmesh->Dimension(), &a0_gf, &b0_gf,
+                                            &b1_gf, Efield_pcf, Bfield_pcf);
+   nth::OhmEfieldCoefficient OhmEfield_cf(pmesh->Dimension(), &jC_gf, &a0_gf, 
+                                          &b0_gf, &b1_gf, Bfield_pcf);
+
+   nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
+                                        mspee_pcf, sourceF0_pcf,
                                         Efield_pcf, Bfield_pcf);
 
    // Set input scales of the electron source and the Efield.
@@ -540,7 +550,6 @@ int main(int argc, char *argv[])
    // Prepare grid functions integrating the moments of F0 and F1.
    ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace), 
                    Efield_gf(&H1FESpace);
-   ParGridFunction j_gf(&H1FESpace), hflux_gf(&H1FESpace);
 
    // Define the explicit/implicit ODE solver used for velocity integration.
    ODESolver *c7ode_solver = NULL; 
@@ -581,9 +590,9 @@ int main(int argc, char *argv[])
    int c7ti = 0;
    double v = vmax;
    double dv = -dvmin;
-   intf0_gf = 0.0;
-   j_gf = 0.0;
+   intf0_gf = 0.0; 
    hflux_gf = 0.0;
+   jC_gf = 0.0;
    Kn_gf.ProjectCoefficient(Kn_cf);
    Efield_gf.ProjectCoefficient(Efield_cf);
    //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
@@ -595,8 +604,9 @@ int main(int argc, char *argv[])
 
       // Perform the integration over velocity space.
       intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
-      j_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
-      hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), F1_gf);
+      //jC_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
+      //hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), 
+	  //             F1_gf);
 
       double loc_minF0 = F0_gf.Min(), glob_minF0;
       MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
@@ -668,7 +678,7 @@ int main(int argc, char *argv[])
       //VisualizeField(vis_v, vishost, visport, v_gf,
       //               "Velocity", Wx, Wy, Ww, Wh);
       Wx += offx;
-      VisualizeField(vis_j, vishost, visport, j_gf,
+      VisualizeField(vis_j, vishost, visport, jC_gf,
                      "Current", Wx, Wy, Ww, Wh);
       Wx += offx;
       VisualizeField(vis_e, vishost, visport, e_gf,
@@ -789,8 +799,11 @@ int main(int argc, char *argv[])
          double v = vmax;
          double dv = -dvmin;
          intf0_gf = 0.0;
-         j_gf = 0.0;
          hflux_gf = 0.0;
+         jC_gf = 0.0;
+		 a0_gf = 0.0;
+		 b0_gf = 0.0;
+		 b1_gf = 0.0;
          Kn_gf.ProjectCoefficient(Kn_cf);
          Efield_gf.ProjectCoefficient(Efield_cf);
 		 // Point value structures for storing the distribution function.
@@ -861,7 +874,7 @@ int main(int argc, char *argv[])
 
             // Perform the integration over velocity space.
             intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
-            j_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
+            //jC_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
             //hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * 
 			//             N_x_vTmax*abs(dv), F1_gf);
 
@@ -899,9 +912,18 @@ int main(int argc, char *argv[])
          }
 
          // NEW
-         hflux_gf = qH_gf;
-		 hflux_gf *= me / 2.0; // Inside c7oper does not use me.
-		 hflux_gf *= -1.0; // Inside c7oper the integration goes (vmax, vmin).
+         // Treat internally integrated entities.
+		 // Heat flux.
+		 hflux_gf *= me / 2.0; // c7oper does not use me.
+         // Current.
+		 if (ode_solver_type > 2)
+         {
+		    //jC_gf = b0_gf;
+		    //jC_gf *= -1.0;
+		    jC_gf.ProjectCoefficient(OhmCurrent_cf);
+            Efield_gf.ProjectCoefficient(OhmEfield_cf);
+         }
+		 jC_gf *= qe; // c7oper does not use qe.
 
          // Save the distribution function at a given point.
          if (right_proc_point)
@@ -940,7 +962,7 @@ int main(int argc, char *argv[])
                rho[p] = rho_gf.GetValue(elNo, ip);
                Te[p] = e_gf.GetValue(elNo, ip);
                intf0[p] = intf0_gf.GetValue(elNo, ip);
-               j[p] = j_gf.GetValue(elNo, ip);
+               j[p] = jC_gf.GetValue(elNo, ip);
                q[p] = hflux_gf.GetValue(elNo, ip);
                p++;
             }
@@ -974,7 +996,7 @@ int main(int argc, char *argv[])
             //VisualizeField(vis_v, vishost, visport,
             //               v_gf, "Velocity", Wx, Wy, Ww, Wh);
             Wx += offx;
-            VisualizeField(vis_j, vishost, visport, j_gf,
+            VisualizeField(vis_j, vishost, visport, jC_gf,
                            "Current", Wx, Wy, Ww, Wh);		
             Wx += offx;
             VisualizeField(vis_e, vishost, visport, e_gf,
@@ -1050,7 +1072,7 @@ int main(int argc, char *argv[])
 
             ofstream j_ofs(j_name.str().c_str());
             j_ofs.precision(8);
-            j_gf.Save(j_ofs);
+            jC_gf.Save(j_ofs);
             j_ofs.close();
 
             ofstream Kn_ofs(Kn_name.str().c_str());

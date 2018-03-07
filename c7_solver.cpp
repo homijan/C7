@@ -277,7 +277,7 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    const int VsizeH1 = H1FESpace.GetVSize();
    int size;
 
-   ParGridFunction F0, F1, qH_gf;
+   ParGridFunction F0, F1, qH_gf, jC_gf;
    Vector* sptr = (Vector*) &F;
    size = 0;
    F0.MakeRef(&L2FESpace, *sptr, size);
@@ -285,14 +285,18 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    F1.MakeRef(&H1FESpace, *sptr, size);
    size += VsizeH1;
    qH_gf.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
+   jC_gf.MakeRef(&H1FESpace, *sptr, size);
 
-   ParGridFunction dF0, dF1, dqH_gf;
+   ParGridFunction dF0, dF1, dqH_gf, djC_gf;
    size = 0;
    dF0.MakeRef(&L2FESpace, dFdv, 0);
    size += VsizeL2;
    dF1.MakeRef(&H1FESpace, dFdv, VsizeL2);
    size += VsizeH1;
    dqH_gf.MakeRef(&H1FESpace, dFdv, size);
+   size += VsizeH1;
+   djC_gf.MakeRef(&H1FESpace, dFdv, size);
 
    Mf0nu.Update();
    invMf0nuE.Update();
@@ -371,6 +375,13 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    // Integrate heat flux.
    dqH_gf = F1;
    dqH_gf *= pow(velocity_real, 5.0);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   dqH_gf *= -1.0;
+   // Integrate current.
+   djC_gf = F1;
+   djC_gf *= pow(velocity_real, 3.0);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   djC_gf *= -1.0;
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),
@@ -403,14 +414,15 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    const double velocity = GetTime(); 
 
    UpdateQuadratureData(velocity, F);
-   const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
-   // Get the real velocity.
-   const double velocity_real = velocity * N_x_vTmax;
-   const double dv_real = dv * N_x_vTmax;
 
    AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
    ParGridFunction F0source(&L2FESpace);
-   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf)); 
+   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
+
+   const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   // Get the real velocity and velocity step.
+   const double velocity_real = velocity * N_x_vTmax;
+   const double dv_real = dv * N_x_vTmax; 
 
    // The monolithic BlockVector stores the unknown fields as follows:
    // - isotropic F0 (energy density)
@@ -420,7 +432,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    const int VsizeH1 = H1FESpace.GetVSize();
    int size;
 
-   ParGridFunction F0, F1, qH_gf, a0_gf, b0_gf, b1_gf;
+   ParGridFunction F0, F1, qH_gf, jC_gf, a0_gf, b0_gf, b1_gf;
    Vector* sptr = (Vector*) &F;
    size = 0;
    F0.MakeRef(&L2FESpace, *sptr, size);
@@ -429,19 +441,23 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    size += VsizeH1;
    qH_gf.MakeRef(&H1FESpace, *sptr, size);
    size += VsizeH1;
+   jC_gf.MakeRef(&H1FESpace, *sptr, size);
+   size += VsizeH1;
    a0_gf.MakeRef(&L2FESpace, *sptr, size);
    size += VsizeL2;
    b0_gf.MakeRef(&H1FESpace, *sptr, size);
    size += VsizeH1;
    b1_gf.MakeRef(&H1FESpace, *sptr, size);
 
-   ParGridFunction dF0, dF1, dqH_gf, da0_gf, db0_gf, db1_gf;
+   ParGridFunction dF0, dF1, dqH_gf, djC_gf, da0_gf, db0_gf, db1_gf;
    size = 0;
    dF0.MakeRef(&L2FESpace, dFdv, size);
    size += VsizeL2;
    dF1.MakeRef(&H1FESpace, dFdv, size);
    size += VsizeH1;
    dqH_gf.MakeRef(&H1FESpace, dFdv, size);
+   size += VsizeH1;
+   djC_gf.MakeRef(&H1FESpace, dFdv, size);
    size += VsizeH1;
    da0_gf.MakeRef(&L2FESpace, dFdv, size);
    size += VsizeL2;
@@ -640,6 +656,36 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Integrate heat flux.
    dqH_gf = F1;
    dqH_gf *= pow(velocity_real, 5.0);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   dqH_gf *= -1.0;
+   // Integrate current.
+   djC_gf = F1;
+   djC_gf *= pow(velocity_real, 3.0);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   djC_gf *= -1.0;
+
+   // Generalized Ohm's law related grid functions.
+   AWBSPhysics->P1a0_pcf->SetF0(&dF0);
+   AWBSPhysics->P1a0_pcf->SetVelocity(velocity);
+   Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
+   da0_gf.ProjectCoefficient(P1a0_cf);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   da0_gf *= -1.0;
+
+   AWBSPhysics->P1b0_pcf->SetF0(&F0);
+   AWBSPhysics->P1b0_pcf->SetF1(&dF1);
+   AWBSPhysics->P1b0_pcf->SetVelocity(velocity);
+   VectorCoefficient &P1b0_cf = *(AWBSPhysics->P1b0_pcf);
+   db0_gf.ProjectCoefficient(P1b0_cf);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   db0_gf *= -1.0;
+
+   AWBSPhysics->P1b1_pcf->SetF1(&dF1);
+   AWBSPhysics->P1b1_pcf->SetVelocity(velocity);
+   VectorCoefficient &P1b1_cf = *(AWBSPhysics->P1b1_pcf);
+   db1_gf.ProjectCoefficient(P1b1_cf);
+   // Since the integration goes from vmax -> vmin, revert sign.
+   db1_gf *= -1.0;
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),
