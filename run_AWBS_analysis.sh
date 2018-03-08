@@ -30,7 +30,7 @@ MINGIMPL=35
 L=0.1
 PROBLEM=5
 
-#if false; then
+if false; then
 NI=2e25 # Zbar = 100 -> Kn 1e-10
 if [ $ZBAR -le 10 ] ; then
    NI=1e29 # Zbar = 1 -> Kn 1e-10
@@ -78,7 +78,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --labelEmimic 'C7impl' --AWBSoriginal
 cd ../..
-#fi
+fi
 
 ## Diffusive asymptotic test. The SH, AWBS (original and corrected), 
 ## and C7 (proper and mimic Efield) calculations are compared. 

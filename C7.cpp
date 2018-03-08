@@ -474,21 +474,23 @@ int main(int argc, char *argv[])
    nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
    nth::NTHvHydroCoefficient *sourceF0_pcf = &sourceF0_cf;
 
+   // Create original Lorentz zero current Efield and set input scales 
+   // of the electron source and the Efield.
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
-                                       material_pcf, &eos); 
-   // Set input scales of the electron source and the Efield.
+                                       material_pcf, &eos);  
    sourceF0_cf.SetScale0(F0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
-   Coefficient *LorentzEfield_pcf = &LorentzEfield_cf;
-   Coefficient &Efield_cf = *LorentzEfield_pcf;
+   // Represent Lorentz Efield as a VectorCoefficient.
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
+   // Estimate the Efield by projecting Lorentz to the Efield grid function.
    Efield_gf.ProjectCoefficient(Efield_vcf);
 
+   // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
    VectorCoefficient *Efield_pcf = &Efield_gfcf;
-   //VectorCoefficient *Efield_pcf = &LorentzEfield_cf;
 
+   // TMP Prepare a fake Bfield vector coefficient.
    Vector vZero(pmesh->Dimension());
    vZero = 0.0;
    VectorConstantCoefficient ZeroBfield_cf(vZero);
@@ -506,8 +508,10 @@ int main(int argc, char *argv[])
                                             &b1_gf, Efield_pcf, Bfield_pcf);
    nth::OhmEfieldCoefficient OhmEfield_cf(pmesh->Dimension(), &jC_gf, &a0_gf, 
                                           &b0_gf, &b1_gf, Bfield_pcf);
+   // Pure zero current condition. Alpha gives a portion of previous current.
    OhmEfield_cf.SetAlpha(0.0);
 
+   // This object represents physics in AWBS Boltzmann transport model.
    nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
                                         mspee_pcf, sourceF0_pcf,
                                         Efield_pcf, Bfield_pcf);
@@ -614,7 +618,6 @@ int main(int argc, char *argv[])
    hflux_gf = 0.0;
    jC_gf = 0.0;
    Kn_gf.ProjectCoefficient(Kn_cf);
-   //Efield_gf.ProjectCoefficient(Efield_vcf);
    //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
 /*
    while (abs(dv) >= abs(dvmin))
@@ -809,24 +812,8 @@ int main(int argc, char *argv[])
          AWBSPhysics.SetTmax(glob_Tmax);
 		 mfp_cf.SetTmax(glob_Tmax);
          N_x_vTmax = mspei_cf.GetVelocityScale();
-         c7oper.ResetVelocityStepEstimate();
-         c7oper.ResetQuadratureData();
-         c7oper.SetTime(vmax);
-         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-         F0_gf = 0.0; //1e-2; 
-		 F1_gf = 0.0;
-         int c7ti = 0;
-         double v = vmax;
-         double dv = -dvmin;
-         intf0_gf = 0.0;
-         hflux_gf = 0.0;
-         jC_gf = 0.0;
-		 a0_gf = 0.0;
-		 b0_gf = 0.0;
-		 b1_gf = 0.0;
-         Kn_gf.ProjectCoefficient(Kn_cf);
-         //Efield_gf.ProjectCoefficient(Efield_vcf);
-		 // Point value structures for storing the distribution function.
+
+         // Point value structures for storing the distribution function.
          int cell_point = 0;
          IntegrationPoint ip_point;
          ip_point.Set3(0.5, 0.5, 0.5);
@@ -869,15 +856,35 @@ int main(int argc, char *argv[])
             //     << x_max << endl << flush;	
 			elNo++;
          }
+const int Eit_max = 5;
+int Eit = 0;
+//for (int Eit = 1; Eit <= Eit_max; Eit ++)
+while (Eit <= Eit_max)
+{ 
 		 // Actual integration of C7Operator.
-		 //while (abs(dv) >= abs(dvmin))
+         c7oper.ResetVelocityStepEstimate();
+         c7oper.ResetQuadratureData();
+         c7oper.SetTime(vmax);
+         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
+         F0_gf = 0.0; //1e-2; 
+		 F1_gf = 0.0;
+         int c7ti = 0;
+         double v = vmax;
+         double dv = -dvmin;
+         intf0_gf = 0.0;
+         hflux_gf = 0.0;
+         jC_gf = 0.0;
+		 a0_gf = 0.0;
+		 b0_gf = 0.0;
+		 b1_gf = 0.0;
+         Kn_gf.ProjectCoefficient(Kn_cf);	
          while (v > vmin)
 		 {
             c7ti++;
             c7ode_solver->Step(c7F, v, dv);
             
             // Store the distribution function at a given point.
-            if (right_proc_point)
+            if (right_proc_point && Eit == Eit_max)
             {
                //cout << "cell_point: " << cell_point << endl << flush;
 			   f0_point = F0_gf.GetValue(cell_point, ip_point);
@@ -938,12 +945,13 @@ int main(int argc, char *argv[])
          // Current.
 		 if (ode_solver_type > 2)
          {
-		    //jC_gf = b0_gf;
-		    //jC_gf *= -1.0;
 		    jC_gf.ProjectCoefficient(OhmCurrent_cf);
             Efield_gf.ProjectCoefficient(OhmEfield_cf);
          }
 		 jC_gf *= qe; // c7oper does not use qe.
+         // End of this loop.
+		 Eit++;
+} // Efield loop.
 
          // Save the distribution function at a given point.
          if (right_proc_point)
