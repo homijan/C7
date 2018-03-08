@@ -59,6 +59,8 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
    // and SH, and a resulting dependence on Zbar.
    double corrAWBS = (688.9*Zbar + 114.4) / 
                      (Zbar*Zbar + 1038.0*Zbar + 474.1);
+          // TMP
+          corrAWBS = 1.0;
    return corrAWBS * nu_ee;
 }
 

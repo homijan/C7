@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
    // The point where the detailed kinetic output will be stored at.
    double x_point = 0.5;
    double c7cfl = 0.25;
+   // Number of consistent Efield iterations.
+   int Efield_consistent_iter_max = 15;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -175,6 +177,8 @@ int main(int argc, char *argv[])
                   "Temperature gradient scale in the function tanh(a*x).");
    args.AddOption(&rho_gradscale, "-rgrad", "--rhograd",
                   "Density gradient scale in the function tanh(a*x).");
+   args.AddOption(&Efield_consistent_iter_max, "-EIt", "--EconsistenIt",
+                  "Number of consistent Electric field iterations.");
    args.AddOption(&EfieldS0, "-E0", "--ES0",
                   "Electric field scaling, i.e. E = S0*E.");
    args.AddOption(&F0SourceS0, "-S0", "--S0",
@@ -484,7 +488,8 @@ int main(int argc, char *argv[])
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
-   Efield_gf.ProjectCoefficient(Efield_vcf);
+   //Efield_gf.ProjectCoefficient(Efield_vcf);
+   Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
@@ -856,102 +861,98 @@ int main(int argc, char *argv[])
             //     << x_max << endl << flush;	
 			elNo++;
          }
-const int Eit_max = 5;
-int Eit = 0;
-//for (int Eit = 1; Eit <= Eit_max; Eit ++)
-while (Eit <= Eit_max)
-{ 
-		 // Actual integration of C7Operator.
-         c7oper.ResetVelocityStepEstimate();
-         c7oper.ResetQuadratureData();
-         c7oper.SetTime(vmax);
-         double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-         F0_gf = 0.0; //1e-2; 
-		 F1_gf = 0.0;
-         int c7ti = 0;
-         double v = vmax;
-         double dv = -dvmin;
-         intf0_gf = 0.0;
-         hflux_gf = 0.0;
-         jC_gf = 0.0;
-		 a0_gf = 0.0;
-		 b0_gf = 0.0;
-		 b1_gf = 0.0;
-         Kn_gf.ProjectCoefficient(Kn_cf);	
-         while (v > vmin)
-		 {
-            c7ti++;
-            c7ode_solver->Step(c7F, v, dv);
-            
-            // Store the distribution function at a given point.
-            if (right_proc_point && Eit == Eit_max)
-            {
-               //cout << "cell_point: " << cell_point << endl << flush;
-			   f0_point = F0_gf.GetValue(cell_point, ip_point);
-               F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
-               v_point.push_back(N_x_vTmax * v);
-			   f0_v_point.push_back(f0_point);
-			   // TODO extend to more dimensions.
-			   f1x_v_point.push_back(f1_point(0));
-			   f0v2_v_point.push_back(f0_point * pow(N_x_vTmax*v, 2.0));
-			   // TODO extend to more dimensions.
-			   mehalff1xv5_v_point.push_back(0.5 * me * f1_point(0) * 
-                                             pow(N_x_vTmax*v, 5.0));
-            }
-
-            // Perform the integration over velocity space.
-            intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
-            //jC_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
-            //hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * 
-			//             N_x_vTmax*abs(dv), F1_gf);
-
-			double loc_minF0 = F0_gf.Min(), glob_minF0;
-            MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
-                          pmesh->GetComm());
-            double loc_maxF0 = F0_gf.Max(), glob_maxF0;
-            MPI_Allreduce(&loc_maxF0, &glob_maxF0, 1, MPI_DOUBLE, MPI_MAX,
-                          pmesh->GetComm());
-            double loc_minF1 = F1_gf.Min(), glob_minF1;
-            MPI_Allreduce(&loc_minF1, &glob_minF1, 1, MPI_DOUBLE, MPI_MIN,
-                          pmesh->GetComm());
-            double loc_maxF1 = F1_gf.Max(), glob_maxF1;
-            MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
-                          pmesh->GetComm());
-
+ 
+         int Eit = 0;
+         while (Eit <= Efield_consistent_iter_max)
+         { 
+		    // Actual integration of C7Operator.
             c7oper.ResetVelocityStepEstimate();
             c7oper.ResetQuadratureData();
-            c7oper.SetTime(v);
-            dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-            if (v + dv < vmin) { dv = vmin - v; }
+            c7oper.SetTime(vmax);
+            double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
+            F0_gf = 0.0; //1e-2; 
+		    F1_gf = 0.0;
+            int c7ti = 0;
+            double v = vmax;
+            double dv = -dvmin;
+            intf0_gf = 0.0;
+            hflux_gf = 0.0;
+            jC_gf = 0.0;
+		    a0_gf = 0.0;
+		    b0_gf = 0.0;
+		    b1_gf = 0.0;
+            Kn_gf.ProjectCoefficient(Kn_cf);	
+            while (v > vmin)
+		    {
+               c7ti++;
+               c7ode_solver->Step(c7F, v, dv);
+            
+               // Store the distribution function at a given point.
+               if (right_proc_point && Eit == Efield_consistent_iter_max)
+               {
+                  //cout << "cell_point: " << cell_point << endl << flush;
+			      f0_point = F0_gf.GetValue(cell_point, ip_point);
+                  F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
+                  v_point.push_back(N_x_vTmax * v);
+			      f0_v_point.push_back(f0_point);
+			      // TODO extend to more dimensions.
+			      f1x_v_point.push_back(f1_point(0));
+			      f0v2_v_point.push_back(f0_point * pow(N_x_vTmax*v, 2.0));
+			      // TODO extend to more dimensions.
+			      mehalff1xv5_v_point.push_back(0.5 * me * f1_point(0) * 
+                                                pow(N_x_vTmax*v, 5.0));
+               }
 
-            if (mpi.Root())
-            {
-               cout << fixed;
-               cout << "group " << setw(5) << c7ti
-               << ",\tv = " << setw(5) << setprecision(4) << v
-               << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
-               << "[min(f0), max(f0)] = [" << setprecision(17)
-               << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
-               << "[min(f1), max(f1)] = [" << setprecision(17)
-               << glob_minF1 << ",\t" << glob_maxF1 << "]"
-               << endl;
+               // Perform the integration over velocity space.
+               intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
+
+			   double loc_minF0 = F0_gf.Min(), glob_minF0;
+               MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
+                             pmesh->GetComm());
+               double loc_maxF0 = F0_gf.Max(), glob_maxF0;
+               MPI_Allreduce(&loc_maxF0, &glob_maxF0, 1, MPI_DOUBLE, MPI_MAX,
+                             pmesh->GetComm());
+               double loc_minF1 = F1_gf.Min(), glob_minF1;
+               MPI_Allreduce(&loc_minF1, &glob_minF1, 1, MPI_DOUBLE, MPI_MIN,
+                             pmesh->GetComm());
+               double loc_maxF1 = F1_gf.Max(), glob_maxF1;
+               MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
+                             pmesh->GetComm());
+
+               c7oper.ResetVelocityStepEstimate();
+               c7oper.ResetQuadratureData();
+               c7oper.SetTime(v);
+               dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
+               if (v + dv < vmin) { dv = vmin - v; }
+
+               if (mpi.Root())
+               {
+                  cout << fixed;
+                  cout << "group " << setw(5) << c7ti
+                  << ",\tv = " << setw(5) << setprecision(4) << v
+                  << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
+                  << "[min(f0), max(f0)] = [" << setprecision(17)
+                  << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
+                  << "[min(f1), max(f1)] = [" << setprecision(17)
+                  << glob_minF1 << ",\t" << glob_maxF1 << "]"
+                  << endl;
+               }
             }
-         }
 
-         // NEW
-         // Treat internally integrated entities.
-		 // Heat flux.
-		 hflux_gf *= me / 2.0; // c7oper does not use me.
-         // Current.
-		 if (ode_solver_type > 2)
-         {
-		    jC_gf.ProjectCoefficient(OhmCurrent_cf);
-            Efield_gf.ProjectCoefficient(OhmEfield_cf);
-         }
-		 jC_gf *= qe; // c7oper does not use qe.
-         // End of this loop.
-		 Eit++;
-} // Efield loop.
+            // NEW
+            // Treat internally integrated entities.
+		    // Heat flux.
+		    hflux_gf *= me / 2.0; // c7oper does not use me.
+            // Current.
+		    if (ode_solver_type > 2)
+            {
+		       jC_gf.ProjectCoefficient(OhmCurrent_cf);
+               Efield_gf.ProjectCoefficient(OhmEfield_cf);
+            }
+		    jC_gf *= qe; // c7oper does not use qe.
+            // End of this loop.
+		    Eit++;
+         } // Efield loop.
 
          // Save the distribution function at a given point.
          if (right_proc_point)
