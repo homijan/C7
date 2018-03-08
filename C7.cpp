@@ -473,6 +473,9 @@ int main(int argc, char *argv[])
                                             &eos);
    nth::ClassicalAWBSMeanStoppingPower mspee_cf(rho_gf, e_gf, v_gf, 
                                                 material_pcf, &eos);
+   // TMP 
+   //mspee_cf.SetCorrAWBS(1.0);
+   
    nth::NTHvHydroCoefficient *mspei_pcf = &mspei_cf;
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;
    nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
@@ -946,7 +949,7 @@ int main(int argc, char *argv[])
             // Current.
 		    if (ode_solver_type > 2)
             {
-		       jC_gf.ProjectCoefficient(OhmCurrent_cf);
+		       //jC_gf.ProjectCoefficient(OhmCurrent_cf);
                Efield_gf.ProjectCoefficient(OhmEfield_cf);
             }
 		    jC_gf *= qe; // c7oper does not use qe.

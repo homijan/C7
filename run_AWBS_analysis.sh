@@ -4,16 +4,18 @@ CL=10.0 # Coulomb logarithm.
 
 NPROC=8
 
-RS=8
+RS=6
 MINGSAFE=2000
-F1ORDER=3
-F0ORDER=2
+F1ORDER=4
+F0ORDER=3
 
 TMAX=1000
 TMIN=100
 TGRAD=180
 XPOINT=0.046775 # in cm
 
+#IT=15
+IT=50
 #ZBAR=1
 #ZBAR=2
 #ZBAR=5
@@ -22,13 +24,43 @@ XPOINT=0.046775 # in cm
 #ZBAR=50
 ZBAR=100
 
-MINGSAFE=1000
-MINGIMPL=35
-#MINGSAFE=2000
-#MINGIMPL=2000
+#MINGSAFE=1000
+#MINGIMPL=150
+MINGIMPL=1000
 
 L=0.1
 PROBLEM=5
+
+if false; then
+NI=2e25 # Zbar = 100 -> Kn 1e-10
+if [ $ZBAR -le 10 ] ; then
+   NI=1e29 # Zbar = 1 -> Kn 1e-10
+fi
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt $IT
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --labelEmimic 'C7impl*' --AWBSoriginal
+cd ../..
+#fi
+#if false; then
+NI=2e20 # Zbar = 100 -> Kn 1e-5
+if [ $ZBAR -le 10 ] ; then
+   NI=1.0e22 # Zbar = 1 -> Kn 1e-3
+fi
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt $IT
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
+
+cd results/fe_analysis
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --labelEmimic 'C7impl*' --AWBSoriginal
+cd ../..
+fi
+
+
+
+
 
 if false; then
 NI=2e25 # Zbar = 100 -> Kn 1e-10
@@ -49,29 +81,15 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecor
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --Ecorrect --labelEmimic C7impl --labelEcorrect C7expl --AWBSoriginal
 cd ../..
-#fi
-
-#if false; then
-NI=2e18 # Zbar = 100 -> Kn 1e-3
-if [ $ZBAR -le 10 ] ; then
-   NI=1e21 # Zbar = 1 -> Kn 1e-2
 fi
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10
-cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
-cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --labelEmimic 'C7impl*' --AWBSoriginal
-cd ../..
-#fi
-
-#if false; then
+if false; then
 ## Highest Kn limit to compute.
 NI=2e20 # Zbar = 100 -> Kn 1e-5
 if [ $ZBAR -le 10 ] ; then
    NI=1e22 # Zbar = 1 -> Kn 1e-3
 fi
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt 20
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
@@ -88,7 +106,7 @@ fi
 ## A pure diffusion case. 
 ## Converged numerical flux from -minG 200. Err 1e-5 -minG 50.
 
-RS=8
+RS=7
 F1ORDER=3
 F0ORDER=2
 MING=25
@@ -110,12 +128,16 @@ PROBLEM=5
 NI=1.4442e18 # Zbar = 100, Kn = 5e-3
 if [ $ZBAR -le 10 ] ; then
    #NI=3.522e22 # Zbar = 1, Kn = 1e-3
-   NI=3.522e21 # Zbar = 1, Kn = 1e-2
+   NI=0.704e21 # Zbar = 1, Kn = 5e-2
 fi
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt 15
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt $IT
+cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
+cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
+
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -EIt 0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Emimic --labelEmimic 'C7impl' --AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ecorrect --labelEcorrect 'C7' --Emimic --labelEmimic 'C7*' --AWBSoriginal
 #fi

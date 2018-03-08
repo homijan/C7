@@ -81,15 +81,18 @@ public:
 class ClassicalAWBSMeanStoppingPower : public ClassicalMeanStoppingPower
 {
 protected:
+   double corrAWBS;
 public:
    ClassicalAWBSMeanStoppingPower(ParGridFunction &rho_, 
                                   ParGridFunction &Te_,
                                   ParGridFunction &v_, 
                                   Coefficient *material_,
                                   EOS *eos_)
-      : ClassicalMeanStoppingPower(rho_, Te_, v_, material_, eos_) {}
+      : ClassicalMeanStoppingPower(rho_, Te_, v_, material_, eos_) 
+      { corrAWBS = 1.0; }
    virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip,
                        double rho);
+   virtual void SetCorrAWBS(double corrAWBS_) { corrAWBS = corrAWBS_; }
 };
 
 // General mean-free-path coefficient.

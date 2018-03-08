@@ -57,10 +57,8 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
    double nu_ee = nu_ei / Zbar;
    // AWBS correction based on comparison of diffusive asymptotic of AWBS 
    // and SH, and a resulting dependence on Zbar.
-   double corrAWBS = (688.9*Zbar + 114.4) / 
-                     (Zbar*Zbar + 1038.0*Zbar + 474.1);
-          // TMP
-          corrAWBS = 1.0;
+   corrAWBS = (688.9*Zbar + 114.4) / (Zbar*Zbar + 1038.0*Zbar + 474.1);
+
    return corrAWBS * nu_ee;
 }
 
