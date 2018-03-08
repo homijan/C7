@@ -281,6 +281,10 @@ int main(int argc, char *argv[])
    ND_FECollection HCurlFEC(order_v, dim);
    ParFiniteElementSpace HCurlFESpace(pmesh, &HCurlFEC);
    ParGridFunction EfieldNedelec_gf(&HCurlFESpace);
+   // RT contains Raviart-Thomas "face-centered" vector finite elements with
+   // continuous normal component.
+   //RT_FECollection HDivFEC(order_v-1, dim);
+   //ParFiniteElementSpace  HDivFESpace(pmesh, &HDivFEC);
 
    // Boundary conditions: all tests use v.n = 0 on the boundary, and we assume
    // that the boundaries are straight.
@@ -418,6 +422,11 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
+   // Efield and Bfield grid functions.
+   //ParGridFunction Efield_gf(&HCurlFESpace);
+   ParGridFunction Efield_gf(&H1FESpace);
+   //ParGridFunction Bfield_gf(&HDivFESpace);
+
    // The monolithic BlockVector stores unknown fields as:
    // - 0 -> isotropic F0 (energy density)
    // - 1 -> anisotropic F1 (flux density)
@@ -462,35 +471,47 @@ int main(int argc, char *argv[])
                                                 material_pcf, &eos);
    nth::NTHvHydroCoefficient *mspei_pcf = &mspei_cf;
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;
-   nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
-   nth::MeanFreePath *mfp_pcf = &mfp_cf;
    nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
    nth::NTHvHydroCoefficient *sourceF0_pcf = &sourceF0_cf;
-   nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
-   Coefficient *Kn_pcf = &Kn_cf;
+
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
-                                material_pcf, &eos); 
-   VectorCoefficient *Efield_pcf = &LorentzEfield_cf;
+                                       material_pcf, &eos); 
+   // Set input scales of the electron source and the Efield.
+   sourceF0_cf.SetScale0(F0SourceS0);
+   LorentzEfield_cf.SetScale0(EfieldS0);
    Coefficient *LorentzEfield_pcf = &LorentzEfield_cf;
    Coefficient &Efield_cf = *LorentzEfield_pcf;
+   VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
+   VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
+   Efield_gf.ProjectCoefficient(Efield_vcf);
+
+   VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
+   VectorCoefficient *Efield_pcf = &Efield_gfcf;
+   //VectorCoefficient *Efield_pcf = &LorentzEfield_cf;
+
    Vector vZero(pmesh->Dimension());
    vZero = 0.0;
    VectorConstantCoefficient ZeroBfield_cf(vZero);
    VectorCoefficient *Bfield_pcf = &ZeroBfield_cf;
+
+
+   nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
+   nth::MeanFreePath *mfp_pcf = &mfp_cf;
+   nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
+   Coefficient *Kn_pcf = &Kn_cf;
+
 
    // NEW 
    nth::OhmCurrentCoefficient OhmCurrent_cf(pmesh->Dimension(), &a0_gf, &b0_gf,
                                             &b1_gf, Efield_pcf, Bfield_pcf);
    nth::OhmEfieldCoefficient OhmEfield_cf(pmesh->Dimension(), &jC_gf, &a0_gf, 
                                           &b0_gf, &b1_gf, Bfield_pcf);
+   OhmEfield_cf.SetAlpha(0.0);
 
    nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
                                         mspee_pcf, sourceF0_pcf,
                                         Efield_pcf, Bfield_pcf);
 
-   // Set input scales of the electron source and the Efield.
-   sourceF0_cf.SetScale0(F0SourceS0);
-   LorentzEfield_cf.SetScale0(EfieldS0);
    // Static coefficient defined in c7_solver.hpp.
    //double c7cfl = 0.25;
    //double c7cfl = 0.005;
@@ -548,8 +569,7 @@ int main(int argc, char *argv[])
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
    // Prepare grid functions integrating the moments of F0 and F1.
-   ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace), 
-                   Efield_gf(&H1FESpace);
+   ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace);
 
    // Define the explicit/implicit ODE solver used for velocity integration.
    ODESolver *c7ode_solver = NULL; 
@@ -594,7 +614,7 @@ int main(int argc, char *argv[])
    hflux_gf = 0.0;
    jC_gf = 0.0;
    Kn_gf.ProjectCoefficient(Kn_cf);
-   Efield_gf.ProjectCoefficient(Efield_cf);
+   //Efield_gf.ProjectCoefficient(Efield_vcf);
    //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
 /*
    while (abs(dv) >= abs(dvmin))
@@ -805,7 +825,7 @@ int main(int argc, char *argv[])
 		 b0_gf = 0.0;
 		 b1_gf = 0.0;
          Kn_gf.ProjectCoefficient(Kn_cf);
-         Efield_gf.ProjectCoefficient(Efield_cf);
+         //Efield_gf.ProjectCoefficient(Efield_vcf);
 		 // Point value structures for storing the distribution function.
          int cell_point = 0;
          IntegrationPoint ip_point;

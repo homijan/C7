@@ -22,10 +22,10 @@ XPOINT=0.046775 # in cm
 #ZBAR=50
 ZBAR=100
 
-#MINGSAFE=1000
-#MINGIMPL=35
-MINGSAFE=2000
-MINGIMPL=2000
+MINGSAFE=1000
+MINGIMPL=35
+#MINGSAFE=2000
+#MINGIMPL=2000
 
 L=0.1
 PROBLEM=5
@@ -38,7 +38,7 @@ fi
 ## Nonlocal solution very well corresponding to Pascal's solution with Aladin.
 ## P1 closure.
 ## C7*
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
