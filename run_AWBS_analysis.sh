@@ -16,16 +16,16 @@ XPOINT=0.046775 # in cm
 
 #IT=15
 IT=50
-#ZBAR=1
+ZBAR=1
 #ZBAR=2
 #ZBAR=5
 #ZBAR=10
 #ZBAR=20
 #ZBAR=50
-ZBAR=100
+#ZBAR=100
 
 #MINGSAFE=1000
-#MINGIMPL=150
+#MINGIMPL=50
 MINGIMPL=1000
 
 L=0.1
@@ -123,11 +123,13 @@ PROBLEM=5
 
 #if false ; then
 #NI=7.044e25 # Zbar = 100, Kn = 1e-10
-#NI=7.044e20 # Zbar = 100, Kn = 1e-5
-#NI=7.044e18 # Zbar = 100, Kn = 1e-3
+#NI=7.044e19 # Zbar = 100, Kn = 1e-4
+#NI=7.0442e18 # Zbar = 100, Kn = 1e-3
 NI=1.4442e18 # Zbar = 100, Kn = 5e-3
 if [ $ZBAR -le 10 ] ; then
+   #NI=3.522e29 # Zbar = 1, Kn = 1e-10
    #NI=3.522e22 # Zbar = 1, Kn = 1e-3
+   #NI=3.522e21 # Zbar = 1, Kn = 1e-2
    NI=0.704e21 # Zbar = 1, Kn = 5e-2
 fi
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -EIt $IT
@@ -139,5 +141,5 @@ cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ecorrect --labelEcorrect 'C7' --Emimic --labelEmimic 'C7*' --AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ecorrect --labelEcorrect 'C7' #--Emimic --labelEmimic 'C7*' --AWBSoriginal
 #fi

@@ -581,7 +581,7 @@ int main(int argc, char *argv[])
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
    // Prepare grid functions integrating the moments of F0 and F1.
-   ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace);
+   //ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace);
 
    // Define the explicit/implicit ODE solver used for velocity integration.
    ODESolver *c7ode_solver = NULL; 
@@ -622,11 +622,11 @@ int main(int argc, char *argv[])
    int c7ti = 0;
    double v = vmax;
    double dv = -dvmin;
-   intf0_gf = 0.0; 
+   //intf0_gf = 0.0;
+   //Kn_gf.ProjectCoefficient(Kn_cf);
+   //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
    hflux_gf = 0.0;
    jC_gf = 0.0;
-   Kn_gf.ProjectCoefficient(Kn_cf);
-   //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
 /*
    while (abs(dv) >= abs(dvmin))
    {
@@ -717,9 +717,6 @@ int main(int argc, char *argv[])
 
       Wx = 0;
       Wy +=offx;
-      VisualizeField(vis_f0, vishost, visport, intf0_gf,
-                     "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
-      Wx += offx;
       VisualizeField(vis_Efield, vishost, visport, Efield_gf, "Efield", 
                      Wx, Wy, Ww, Wh);
 	  //VisualizeField(vis_Kn, vishost, visport, Kn_gf, "Kn", 
@@ -727,7 +724,9 @@ int main(int argc, char *argv[])
       Wx += offx;
       VisualizeField(vis_hflux, vishost, visport, hflux_gf,
                      "Heat flux", Wx, Wy, Ww, Wh);
-
+      //Wx += offx;
+      //VisualizeField(vis_f0, vishost, visport, intf0_gf,
+      //               "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
    }
 
    // Save data for VisIt visualization
@@ -828,7 +827,7 @@ int main(int argc, char *argv[])
          double f0_point;
          Vector f1_point; 
          vector<double> v_point, f0_v_point, f1x_v_point, f0v2_v_point,
-                        mehalff1xv5_v_point;
+                        mehalff1xv5_v_point, mehalff0v5_v_point;
          bool right_proc_point = false;
          // Find an element where the x_point belongs and find its ip.
          IntegrationPoint ip_min, ip_max;
@@ -878,13 +877,13 @@ int main(int argc, char *argv[])
             int c7ti = 0;
             double v = vmax;
             double dv = -dvmin;
-            intf0_gf = 0.0;
+            //intf0_gf = 0.0;
+            //Kn_gf.ProjectCoefficient(Kn_cf);
             hflux_gf = 0.0;
             jC_gf = 0.0;
 		    a0_gf = 0.0;
 		    b0_gf = 0.0;
-		    b1_gf = 0.0;
-            Kn_gf.ProjectCoefficient(Kn_cf);	
+		    b1_gf = 0.0;	
             while (v > vmin)
 		    {
                c7ti++;
@@ -904,10 +903,12 @@ int main(int argc, char *argv[])
 			      // TODO extend to more dimensions.
 			      mehalff1xv5_v_point.push_back(0.5 * me * f1_point(0) * 
                                                 pow(N_x_vTmax*v, 5.0));
+			      mehalff0v5_v_point.push_back(0.5 * me * f0_point * 
+                                                pow(N_x_vTmax*v, 5.0));
                }
 
                // Perform the integration over velocity space.
-               intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
+               //intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
 
 			   double loc_minF0 = F0_gf.Min(), glob_minF0;
                MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
@@ -966,12 +967,13 @@ int main(int argc, char *argv[])
             ofstream fe_ofs(fe_file_name.str().c_str());
             fe_ofs.precision(8);
 
-            fe_ofs << "# v  f0  f1x  f0*v^2  0.5*me*f1x*v^5\n";
+            fe_ofs << "# v  f0  f1x  f0*v^2  0.5*me*f1x*v^5 0.5*me*f0*v^5\n";
             for (int i = 0; i < v_point.size(); i++)
             {
                fe_ofs << v_point[i] << " " << f0_v_point[i] << " "
                       << f1x_v_point[i] << " " << f0v2_v_point[i] << " "
-                      << mehalff1xv5_v_point[i] << endl;
+                      << mehalff1xv5_v_point[i] << " "
+                      << mehalff0v5_v_point[i] << endl;
             }
             fe_ofs.close();
          }
@@ -980,8 +982,8 @@ int main(int argc, char *argv[])
          int NpointsPerElement = 20;
          int Nelements = x_gf.FESpace()->GetNE();
          int Npoints = NpointsPerElement * Nelements;
-         double x[Npoints], rho[Npoints], Te[Npoints], intf0[Npoints],
-                j[Npoints], q[Npoints];
+         double x[Npoints], rho[Npoints], Te[Npoints], j[Npoints], Ex[Npoints], 
+                q[Npoints];
          IntegrationPoint ip;
          double dip = 1. / NpointsPerElement;
          int p = 0;
@@ -993,9 +995,9 @@ int main(int argc, char *argv[])
                x[p] = x_gf.GetValue(elNo, ip);
                rho[p] = rho_gf.GetValue(elNo, ip);
                Te[p] = e_gf.GetValue(elNo, ip);
-               intf0[p] = intf0_gf.GetValue(elNo, ip);
                j[p] = jC_gf.GetValue(elNo, ip);
-               q[p] = hflux_gf.GetValue(elNo, ip);
+               Ex[p] = Efield_gf.GetValue(elNo, ip, 1);
+			   q[p] = hflux_gf.GetValue(elNo, ip);
                p++;
             }
          }
@@ -1004,11 +1006,11 @@ int main(int argc, char *argv[])
                             << setfill('0') << setw(6) << myid;
          ofstream profiles_ofs(profiles_file_name.str().c_str());
          profiles_ofs.precision(8);
-         profiles_ofs << "# x  rho Te intf0  j q\n";
+         profiles_ofs << "# x  rho Te j Ex q\n";
          for (int i = 0; i < Npoints; i++)
          {
             profiles_ofs << x[i] << " " << rho[i] << " " << Te[i] << " "
-                         << intf0[i] << " " << j[i] << " " << q[i] << endl;
+                         << j[i] << " " << Ex[i] << " " << q[i] << endl;
          }
          profiles_ofs.close();
 ///////////////////////////////////////////////////////////////
@@ -1036,13 +1038,13 @@ int main(int argc, char *argv[])
 
             Wx = 0;
             Wy +=offx;
-            VisualizeField(vis_f0, vishost, visport, intf0_gf,
-                           "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
-            Wx += offx;
             VisualizeField(vis_Efield, vishost, visport, Efield_gf, "Efield", 
                            Wx, Wy, Ww, Wh);
             //VisualizeField(vis_Kn, vishost, visport, Kn_gf, "Kn", 
             //               Wx, Wy, Ww, Wh);
+            //Wx += offx;
+            //VisualizeField(vis_f0, vishost, visport, intf0_gf,
+            //               "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
             Wx += offx;
             VisualizeField(vis_hflux, vishost, visport, hflux_gf,
                            "Heat flux", Wx, Wy, Ww, Wh);
@@ -1087,9 +1089,7 @@ int main(int argc, char *argv[])
             e_gf.Save(e_ofs);
             e_ofs.close();
 
-            ostringstream intf0_name, j_name, Kn_name, hflux_name;
-            intf0_name << basename << "_" << ti
-                   << "_f0." << setfill('0') << setw(6) << myid;
+            ostringstream j_name, Kn_name, hflux_name;
             j_name << basename << "_" << ti
                    << "_j." << setfill('0') << setw(6) << myid;
             Kn_name << basename << "_" << ti
@@ -1097,20 +1097,15 @@ int main(int argc, char *argv[])
             hflux_name << basename << "_" << ti
                    << "_hflux." << setfill('0') << setw(6) << myid;
 
-            ofstream intf0_ofs(intf0_name.str().c_str());
-            intf0_ofs.precision(8);
-            intf0_gf.Save(intf0_ofs);
-            intf0_ofs.close();
-
             ofstream j_ofs(j_name.str().c_str());
             j_ofs.precision(8);
             jC_gf.Save(j_ofs);
             j_ofs.close();
 
-            ofstream Kn_ofs(Kn_name.str().c_str());
-            Kn_ofs.precision(8);
-            Kn_gf.Save(Kn_ofs);
-            Kn_ofs.close();
+            //ofstream Kn_ofs(Kn_name.str().c_str());
+            //Kn_ofs.precision(8);
+            //Kn_gf.Save(Kn_ofs);
+            //Kn_ofs.close();
 
             ofstream hflux_ofs(hflux_name.str().c_str());
             hflux_ofs.precision(8);

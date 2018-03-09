@@ -72,19 +72,19 @@ def loadC7data(Nproc, file_base):
    C7x_raw = []
    C7rho_raw = []
    C7Te_raw = []
-   C7intf0_raw = []
    C7j_raw = []
+   C7Ex_raw = []
    C7q_raw = []
    ## Gather together the lists from each processors output.
    print "Loading data from files:"
    for proc in range(Nproc):
       file = file_base+str(proc).zfill(maxProcOrder)
-      C7x_proc, C7rho_proc, C7Te_proc, C7intf0_proc, C7j_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
+      C7x_proc, C7rho_proc, C7Te_proc, C7j_proc, C7Ex_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
       C7x_raw.extend(C7x_proc)
       C7rho_raw.extend(C7rho_proc)
       C7Te_raw.extend(C7Te_proc)
-      C7intf0_raw.extend(C7intf0_proc)
       C7j_raw.extend(C7j_proc)
+      C7Ex_raw.extend(C7Ex_proc)
       C7q_raw.extend(C7q_proc)
       print file
    ## Sort the lists with respect to the position x.
@@ -92,15 +92,15 @@ def loadC7data(Nproc, file_base):
    C7x = np.array([C7x_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7rho = np.array([C7rho_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7Te = np.array([C7Te_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-   C7intf0 = np.array([C7intf0_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7j = np.array([C7j_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   C7Ex = np.array([C7Ex_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-   return C7x, C7rho, C7Te, C7intf0, C7j, C7q
+   return C7x, C7rho, C7Te, C7j, C7Ex, C7q
 
 if (Ecorrect):
-   C7x, C7rho, C7Te, C7intf0_Ec, C7j_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
+   C7x, C7rho, C7Te, C7j_Ec, C7Ex_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
 if (Emimic):
-   C7x, C7rho, C7Te, C7intf0_Em, C7j_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
+   C7x, C7rho, C7Te, C7j_Em, C7Ex_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################
@@ -222,7 +222,7 @@ for i in range(N):
 #######################################
 ## No explicit treatment of Efield, we use mimicing by reducing ne in source.
 if (Emimic):
-   C7v, C7mehalff1v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4), unpack=True)
+   C7v, C7mehalff1v5, C7mehalff0v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4, 5), unpack=True)
    C7Q = 0.0
    NC7 = C7v.size - 1
    for i in range(NC7): 
@@ -230,7 +230,7 @@ if (Emimic):
       C7Q = C7Q + C7mehalff1v5[i]*dC7v
 ## Explicit treatment of Efield.
 if (Ecorrect):
-   C7Ev, C7Emehalff1v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4), unpack=True)
+   C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4, 5), unpack=True)
    C7EQ = 0.0
    NC7E = C7Ev.size - 1
    for i in range(NC7E):
@@ -275,6 +275,7 @@ C7mfp_ei = (vTh(C7Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)
 Temin_reference = 0.9*C7Te.min()
 C7Kn = C7mfp_ei * abs(C7gradTe) / (C7Te - Temin_reference)
 C7SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/coulLog/ni/Zbar/Zbar*C7gradTe/C7Te
+C7SHE_analytic = xi*vTh(C7Te)**2.0*C7gradTe/C7Te
 
 #######################################
 ## Print comparison results ###########
@@ -350,23 +351,24 @@ ax2.set_ylabel(r'Kn')
 fig.tight_layout()
 plt.show()
 ## Set labels.
-#plt.xlabel(r'z [$\mu$m]')
-#plt.ylabel(r'$\int f_0 dv$ [1/cm$^3$]')
-#plt.title(r'Isotropic part of f')
-#if (Ecorrect):
-#   plt.plot(C7x_microns, C7intf0_Ec, lsC7E, label=lblC7E)
-#if (Emimic):
-#   plt.plot(C7x_microns, C7intf0_Em, lsC7, label=lblC7)
-#plt.show()
-## Set labels.
-plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'$j$ [e/s/cm$^2$]')
-plt.title(r'Current (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+fig, ax1 = plt.subplots()
+ax1.set_xlabel(r'z [$\mu$m]')
+ax1.set_ylabel(r'$j$ [e/s/cm$^2$]')
+ax1.set_title(r'Current (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 if (Ecorrect):
-   plt.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
+   ax1.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
 if (Emimic):
-   plt.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
-plt.legend()
+   ax1.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
+ax2 = ax1.twinx()
+ax2.plot(C7x_microns, C7SHE_analytic, lsSH, label=r'E$_x$ - '+lblSH)
+if (Ecorrect):
+   ax2.plot(C7x_microns, C7Ex_Ec, lsC7E, label=r'E$_x$ - '+lblC7E)
+if (Emimic):
+   ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_x$ - '+lblC7)
+ax2.set_ylabel(r'Ex [a.u.]')
+fig.tight_layout()
+ax1.legend(loc='upper left')
+ax2.legend(loc='upper right')
 plt.show()
 ## Set labels.
 plt.xlabel(r'z [$\mu$m]')
@@ -394,9 +396,11 @@ p_AWBSq = AWBSq[v < mult*vTh(Te)]
 if (Ecorrect):
    p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
    p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
+   p_C7Emehalff0v5 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
 if (Emimic):
    p_C7v = C7v[C7v < mult*vTh(Te)]
    p_C7mehalff1v5 = C7mehalff1v5[C7v < mult*vTh(Te)]
+   p_C7mehalff0v5 = C7mehalff0v5[C7v < mult*vTh(Te)]
 
 
 pointlimit = 40
@@ -423,7 +427,11 @@ if (Emimic):
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 ax2 = ax1.twinx()
 ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, 'k:')
-ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_M v^2$ [a.u.]')
+if (Ecorrect):
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), lsC7E, label=lblC7E)
+if (Emimic):
+   ax2.plot(p_C7v/vTh(Te), p_C7mehalff0v5 / (4.0*pi), lsC7, label=lblC7)
+ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 #ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
 ax1.legend(loc='best')
 plt.show()
