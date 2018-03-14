@@ -360,12 +360,12 @@ if (Ecorrect):
 if (Emimic):
    ax1.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
 ax2 = ax1.twinx()
-ax2.plot(C7x_microns, C7SHE_analytic, lsSH, label=r'E$_x$ - '+lblSH)
+ax2.plot(C7x_microns, C7SHE_analytic, lsSH, label=r'E$_z$ - '+lblSH)
 if (Ecorrect):
-   ax2.plot(C7x_microns, C7Ex_Ec, lsC7E, label=r'E$_x$ - '+lblC7E)
+   ax2.plot(C7x_microns, C7Ex_Ec, lsC7E, label=r'E$_z$ - '+lblC7E)
 if (Emimic):
-   ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_x$ - '+lblC7)
-ax2.set_ylabel(r'Ex [a.u.]')
+   ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
+ax2.set_ylabel(r'E$_z$ [a.u.]')
 fig.tight_layout()
 ax1.legend(loc='upper left')
 ax2.legend(loc='upper right')

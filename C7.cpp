@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
    double t_final = 0.5;
    double cfl = 0.5;
    double cg_tol = 1e-8;
-   int cg_max_iter = 300;
+   int cg_max_iter = 100;
    int max_tsteps = -1;
    bool p_assembly = true;
    bool visualization = false;
@@ -116,7 +116,8 @@ int main(int argc, char *argv[])
    double x_point = 0.5;
    double c7cfl = 0.25;
    // Number of consistent Efield iterations.
-   int Efield_consistent_iter_max = 15;
+   double dEfield_norm_limit = 1e-2;
+   int Efield_consistent_iter_max = 100;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -177,8 +178,8 @@ int main(int argc, char *argv[])
                   "Temperature gradient scale in the function tanh(a*x).");
    args.AddOption(&rho_gradscale, "-rgrad", "--rhograd",
                   "Density gradient scale in the function tanh(a*x).");
-   args.AddOption(&Efield_consistent_iter_max, "-EIt", "--EconsistenIt",
-                  "Number of consistent Electric field iterations.");
+   args.AddOption(&dEfield_norm_limit, "-dE", "--dEfieldnorm",
+                  "Change in the Electric field norm to stop iterations.");
    args.AddOption(&EfieldS0, "-E0", "--ES0",
                   "Electric field scaling, i.e. E = S0*E.");
    args.AddOption(&F0SourceS0, "-S0", "--S0",
@@ -863,10 +864,18 @@ int main(int argc, char *argv[])
             //     << x_max << endl << flush;	
 			elNo++;
          }
- 
-         int Eit = 0;
-         while (Eit <= Efield_consistent_iter_max)
-         { 
+
+         // Starting value of the E field norm.
+		 double loc_Efield_norm = Efield_gf.Norml2();
+         double glob_old_Efield_norm;
+         MPI_Allreduce(&loc_Efield_norm, &glob_old_Efield_norm, 1, 
+                       MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+         double dEfield_norm = 1.0;
+         bool converging = true;
+		 int Eit = 0;
+         while (dEfield_norm > dEfield_norm_limit && 
+                Eit < Efield_consistent_iter_max && converging)
+		 { 
 		    // Actual integration of C7Operator.
             c7oper.ResetVelocityStepEstimate();
             c7oper.ResetQuadratureData();
@@ -884,13 +893,16 @@ int main(int argc, char *argv[])
 		    a0_gf = 0.0;
 		    b0_gf = 0.0;
 		    b1_gf = 0.0;	
-            while (v > vmin)
+            v_point.resize(0); f0_v_point.resize(0); f1x_v_point.resize(0); 
+            f0v2_v_point.resize(0); mehalff1xv5_v_point.resize(0); 
+            mehalff0v5_v_point.resize(0);
+			while (v > vmin)
 		    {
                c7ti++;
                c7ode_solver->Step(c7F, v, dv);
             
                // Store the distribution function at a given point.
-               if (right_proc_point && Eit == Efield_consistent_iter_max)
+               if (right_proc_point)
                {
                   //cout << "cell_point: " << cell_point << endl << flush;
 			      f0_point = F0_gf.GetValue(cell_point, ip_point);
@@ -910,6 +922,12 @@ int main(int argc, char *argv[])
                // Perform the integration over velocity space.
                //intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
 
+               c7oper.ResetVelocityStepEstimate();
+               c7oper.ResetQuadratureData();
+               c7oper.SetTime(v);
+               dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
+               if (v + dv < vmin) { dv = vmin - v; }
+
 			   double loc_minF0 = F0_gf.Min(), glob_minF0;
                MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
                              pmesh->GetComm());
@@ -922,12 +940,6 @@ int main(int argc, char *argv[])
                double loc_maxF1 = F1_gf.Max(), glob_maxF1;
                MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
                              pmesh->GetComm());
-
-               c7oper.ResetVelocityStepEstimate();
-               c7oper.ResetQuadratureData();
-               c7oper.SetTime(v);
-               dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-               if (v + dv < vmin) { dv = vmin - v; }
 
                if (mpi.Root())
                {
@@ -952,6 +964,21 @@ int main(int argc, char *argv[])
             {
 		       //jC_gf.ProjectCoefficient(OhmCurrent_cf);
                Efield_gf.ProjectCoefficient(OhmEfield_cf);
+               double loc_Efield_norm = Efield_gf.Norml2();
+			   double glob_new_Efield_norm;
+               MPI_Allreduce(&loc_Efield_norm, &glob_new_Efield_norm, 1, 
+                             MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+               double dEfield_norm_new = abs(glob_old_Efield_norm - 
+                                             glob_new_Efield_norm) 
+                                         / glob_new_Efield_norm;
+               if (dEfield_norm_new > dEfield_norm) { converging = false; }
+			   dEfield_norm = dEfield_norm_new;
+               if (mpi.Root())
+               {
+                  cout << "Eit, dEfield_norm: " << Eit << ", " << dEfield_norm 
+                       << endl;
+			   }
+			   glob_old_Efield_norm = glob_new_Efield_norm;
             }
 		    jC_gf *= qe; // c7oper does not use qe.
             // End of this loop.

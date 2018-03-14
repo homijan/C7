@@ -665,7 +665,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    djC_gf *= -1.0;
 
    // Generalized Ohm's law related grid functions.
-   AWBSPhysics->P1a0_pcf->SetF0(&dF0);
+   AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
    AWBSPhysics->P1a0_pcf->SetVelocity(velocity);
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
@@ -673,7 +673,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    da0_gf *= -1.0;
 
    AWBSPhysics->P1b0_pcf->SetF0(&F0);
-   AWBSPhysics->P1b0_pcf->SetF1(&dF1);
+   AWBSPhysics->P1b0_pcf->SetdF1(&dF1);
    AWBSPhysics->P1b0_pcf->SetVelocity(velocity);
    VectorCoefficient &P1b0_cf = *(AWBSPhysics->P1b0_pcf);
    db0_gf.ProjectCoefficient(P1b0_cf);
@@ -815,7 +815,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    int nqp_batch = nqp * nzones_batch;
    double *mspee_b = new double[nqp_batch],
           *mspei_b = new double[nqp_batch],
-		  *rho_b = new double[nqp_batch];
+		  *rho_b = new double[nqp_batch],
+          *f1overf0_b = new double[nqp_batch];
    // Electric and Magnetic fields for all quadrature points in the batch.
    //DenseMatrix *Efield_b = new DenseMatrix[nqp_batch],
    //            *Bfield_b = new DenseMatrix[nqp_batch];
@@ -857,6 +858,14 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             mspei_b[idx] = AWBSPhysics->mspei_pcf->Eval(*T, ip, rho_b[idx]);
             mspee_b[idx] = AWBSPhysics->mspee_pcf->Eval(*T, ip, rho_b[idx]);
 
+            // Anisotropy measure.
+            double normlim = 1e-32;
+			double f0norm = max(normlim, F0.GetValue((*T).ElementNo, ip));
+            Vector f1;
+            F1.GetVectorValue((*T).ElementNo, ip, f1);
+            double f1norm = f1.Norml2();
+            f1overf0_b[idx] = f1norm / f0norm;
+
             // M1 closure.
             // Matric closure maximizing angular entropy
             // A = 1/3*I + M^2/2*(1 + M^2)*((f1xf1^T)/f1^2 - 1/3*I),
@@ -885,7 +894,12 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                   double M = min(f1norm / f0norm, 1.0);
                   double Msquare = M * M;
                   double c = Msquare / 2.0 * (1.0 + Msquare);
-                  DenseMatrix normf1xf1T(dim);
+				  cout << "c: " << c << endl << flush;
+                  // Shotr version for 1D.
+                  AM1_b[z](q) = P1;
+                  AM1_b[z](q) *= 1.0 + 2.0 * c;
+				  /*
+				  DenseMatrix normf1xf1T(dim);
                   normf1xf1T.Diag(1.0, dim);
                   //f1 *= 1.0 / f1norm;
 			      // f1 directional matrix.
@@ -899,7 +913,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 			      AM1_b[z](q) = 0.0;
                   AM1_b[z](q).Add(1.0 - c, P1);
                   AM1_b[z](q).Add(c, normf1xf1T);
-                  //cout << "f0norm, f1norm, c:" << f0norm << ", " << f1norm
+                  */
+				  //cout << "f0norm, f1norm, c:" << f0norm << ", " << f1norm
 			      //     << ", " << c << endl << flush;
                   //cout << "normf1xf1T:" << endl << flush;
                   //normf1xf1T.Print();
@@ -942,8 +957,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //Efield_b[z].GetColumn(q, Efield);
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-			//Efield = 0.0;
-            //Bfield = 0.0; 
+			// TMP on/off anisotropy correction on Lorentz force.
+            Efield *= min(1.0, 0.9 * mspee * velocity_real / Efield.Norml2());
+			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
             AIEfield = 0.0;
             A1.AddMult_a(3.0, Efield, AIEfield);
@@ -1009,8 +1025,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    delete [] mspee_b;
    delete [] mspei_b;
    delete [] rho_b;
+   delete [] f1overf0_b;
    delete [] Jpr_b;
-   delete [] AM1_b;
+   delete [] AM1_b; 
    quad_data_is_current = true;
 
    timer.sw_qdata.Stop();

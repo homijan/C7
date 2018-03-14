@@ -147,10 +147,17 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    const double N_x_vTmax = mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
    double nu_ei =  mspei_pcf->Eval(T, ip);
+   double nu_ee =  mspee_pcf->Eval(T, ip);
 
-   double dF0dv = F0->GetValue(T.ElementNo, ip);
-   
-   return velocity_real / 3.0 / nu_ei * dF0dv * velocity_real * velocity_real;
+   double dF0dv = dF0->GetValue(T.ElementNo, ip);
+
+   Vector Efield(vdim);
+   Efield = 1.0;
+   Efield_pcf->Eval(Efield, T, ip);
+   double corrEfield = min(1.0, 0.9 * nu_ee * velocity_real / Efield.Norml2());
+
+   return corrEfield * velocity_real / 3.0 / nu_ei * dF0dv 
+          * velocity_real * velocity_real;
 }
 
 void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
@@ -169,7 +176,7 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    
    for (int d = 0; d < vdim; d++)
    { 
-      V(d) -= nu_ee / nu_ei * F1->GetValue(T.ElementNo, ip, d);
+      V(d) -= nu_ee / nu_ei * dF1->GetValue(T.ElementNo, ip, d);
    }
    
    V *= pow(velocity_real, 4.0);

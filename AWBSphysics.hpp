@@ -154,8 +154,9 @@ class GeneralKineticCoefficient : public Coefficient, public VectorCoefficient
 protected:
    double velocity;
    // GridFunctions related to F0 and F1, e.g. F0, F1, dF0dv, dF1dv, etc.
-   ParGridFunction *F0, *F1;
+   ParGridFunction *F0, *F1, *dF0, *dF1;
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf;
+   VectorCoefficient *Efield_pcf;
 public:
    GeneralKineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
                              NTHvHydroCoefficient *mspee_pcf_)
@@ -164,6 +165,9 @@ public:
 
    virtual void SetF0(ParGridFunction *F0_) { F0 = F0_; }
    virtual void SetF1(ParGridFunction *F1_) { F1 = F1_; }
+   virtual void SetdF0(ParGridFunction *dF0_) { dF0 = dF0_; }
+   virtual void SetdF1(ParGridFunction *dF1_) { dF1 = dF1_; }
+   virtual void SetEfield(VectorCoefficient *Efield_) { Efield_pcf = Efield_; }
    virtual void SetVelocity(double v_) { velocity = v_; }
 
    virtual double Eval(ElementTransformation &T, 
@@ -177,9 +181,9 @@ class P1a0KineticCoefficient : public GeneralKineticCoefficient
 {
 protected:
 public:
-   P1a0KineticCoefficient(NTHvHydroCoefficient *mspei_pcf_,
+   P1a0KineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
                           NTHvHydroCoefficient *mspee_pcf_)
-      : GeneralKineticCoefficient(1, mspei_pcf_, mspee_pcf_) { }
+      : GeneralKineticCoefficient(dim_, mspei_pcf_, mspee_pcf_) { }
    virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip);
    virtual void Eval(Vector &V, ElementTransformation &T,
                      const IntegrationPoint &ip) 
@@ -251,9 +255,10 @@ public:
       : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_), 
         Efield_pcf(Efield_), Bfield_pcf(Bfield_)
         { 
-           P1a0_pcf = new P1a0KineticCoefficient(mspei_, mspee_); 
+           P1a0_pcf = new P1a0KineticCoefficient(dim_, mspei_, mspee_); 
            P1b0_pcf = new P1b0KineticCoefficient(dim_, mspei_, mspee_); 
 		   P1b1_pcf = new P1b1KineticCoefficient(dim_, mspei_, mspee_);
+		   P1a0_pcf->SetEfield(Efield_);
         }
 
    void SetThermalVelocityMultiple(double vTmultiple)
