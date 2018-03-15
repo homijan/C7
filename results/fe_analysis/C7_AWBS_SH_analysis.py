@@ -333,61 +333,93 @@ if args.labelEmimic:
 ###############################################################################
 # It is useful to plot the profiles with respect to microns.
 C7x_microns = np.array(C7x) * 1e4
-## Set labels.
+### Set labels.
 #plt.xlabel(r'z [$\mu$m]')
 #plt.ylabel(r'$\rho$ [g/cm$^3$]')
 #plt.title(r'Density')
 #plt.plot(C7x_microns, C7rho)
 #plt.show()
 ## Set labels.
-fig, ax1 = plt.subplots()
-ax1.set_xlabel(r'z [$\mu$m]')
-ax1.set_ylabel(r'$T_e$ [eV]')
-ax1.set_title(r'Electron temperature')
-ax1.plot(C7x_microns, C7Te, 'r')
-ax2 = ax1.twinx()
-ax2.plot(C7x_microns, C7Kn, 'g')
-ax2.set_ylabel(r'Kn')
-fig.tight_layout()
-plt.show()
+#fig, ax1 = plt.subplots()
+#ax1.set_xlabel(r'z [$\mu$m]')
+#ax1.set_ylabel(r'$T_e$ [eV]')
+#ax1.set_title(r'Electron temperature')
+#ax1.plot(C7x_microns, C7Te, 'r')
+#ax2 = ax1.twinx()
+#ax2.plot(C7x_microns, C7Kn, 'g')
+#ax2.set_ylabel(r'Kn')
+#fig.tight_layout()
+#plt.show()
+
+### Set labels.
+#fig, ax1 = plt.subplots()
+#ax1.set_xlabel(r'z [$\mu$m]')
+#ax1.set_ylabel(r'$j$ [e/s/cm$^2$]')
+#ax1.set_title(r'Current (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+#if (Ecorrect):
+#   ax1.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
+#if (Emimic):
+#   ax1.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
+#ax2 = ax1.twinx()
+#ax2.plot(C7x_microns, C7SHE_analytic, lsSH, label=r'E$_z$ - '+lblSH)
+#if (Ecorrect):
+#   ax2.plot(C7x_microns, C7Ex_Ec, lsC7E, label=r'E$_z$ - '+lblC7E)
+#if (Emimic):
+#   ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
+#ax2.set_ylabel(r'E$_z$ [a.u.]')
+#fig.tight_layout()
+#ax1.legend(loc='upper left')
+#ax2.legend(loc='upper right')
+#plt.show()
+
+### Set labels.
+#plt.xlabel(r'z [$\mu$m]')
+#plt.ylabel(r'q$_H$ [W/cm$^2$]')
+#plt.title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+### Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+#plt.plot(C7x_microns, C7SHQ_analytic * 1e-7, lsSH, label=lblSH)
+#if (Ecorrect):
+#   plt.plot(C7x_microns, C7q_Ec * 1e-7, lsC7E, label=lblC7E)
+#if (Emimic):
+#   plt.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
+#plt.legend()
+#plt.show()
+
+SHcolor = 'k'
+C7Ecolor = 'r'
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_xlabel(r'z [$\mu$m]')
-ax1.set_ylabel(r'$j$ [e/s/cm$^2$]')
-ax1.set_title(r'Current (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
+ax1.set_title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
+## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min()) - (C7Te.min() - C7SHQ_analytic.min())
+ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h^{SH}$')
 if (Ecorrect):
-   ax1.plot(C7x_microns, C7j_Ec, lsC7E, label=lblC7E)
+   ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7E}$')
 if (Emimic):
-   ax1.plot(C7x_microns, C7j_Em, lsC7, label=lblC7)
+   ax1.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
+ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ax2 = ax1.twinx()
-ax2.plot(C7x_microns, C7SHE_analytic, lsSH, label=r'E$_z$ - '+lblSH)
+ax2.plot(C7x_microns, C7SHE_analytic, SHcolor+':', label=r'E$^{SH}$')
 if (Ecorrect):
-   ax2.plot(C7x_microns, C7Ex_Ec, lsC7E, label=r'E$_z$ - '+lblC7E)
+   ax2.plot(C7x_microns, C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
 if (Emimic):
    ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
-ax2.set_ylabel(r'E$_z$ [a.u.]')
+ax2.set_ylabel(r'E [a.u.]')
 fig.tight_layout()
-ax1.legend(loc='upper left')
-ax2.legend(loc='upper right')
-plt.show()
-## Set labels.
-plt.xlabel(r'z [$\mu$m]')
-plt.ylabel(r'q$_H$ [W/cm$^2$]')
-plt.title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
-## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-plt.plot(C7x_microns, C7SHQ_analytic * 1e-7, lsSH, label=lblSH)
-if (Ecorrect):
-   plt.plot(C7x_microns, C7q_Ec * 1e-7, lsC7E, label=lblC7E)
-if (Emimic):
-   plt.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
-plt.legend()
+ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
+ax2.legend(loc='center right', fancybox=True, framealpha=0.8)
+for ext in ["png", "pdf", "eps"]:
+   print("saving heatflux.%s" % (ext,))
+   plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
 plt.show()
 
 ###############################################################################
 ########### Kinetic SH, Diffusive AWBS and C7 comparison ######################
 ###############################################################################
 ## Shrink the x axis appropriately.
-mult = 9
+mult = 8
 p_v = v[v < mult*vTh(Te)]
 p_fM_analytic = fM_analytic[v < mult*vTh(Te)]
 p_SHq = SHq[v < mult*vTh(Te)]
@@ -410,30 +442,33 @@ ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 ax1.set_xlabel('v/vT')
 ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Plot kinetic analysis.
-ax1.plot(p_v/vTh(Te), p_SHq, lsSH, label=lblSH)
+ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1^{SH}$')
 if (AWBSoriginal):
    ax1.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
-ax1.plot(p_v/vTh(Te), p_AWBSq_corr, lsAWBSc, label=lblAWBSc)
+ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
 if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
-      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), lsC7E, label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
-#plt.plot(C7v/vTh(Te), 1.5 * C7mehalff1v5 / (4.0*pi/3.0), 'k:', label=r'C7')
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$'+'('+"{:.2f}".format(proporC7EQ)+r'$q_h^{SH}$)')
 if (Emimic):
    if (len(C7v)<=pointlimit):
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
    else:
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 ax2 = ax1.twinx()
-ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, 'k:')
+ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (Ecorrect):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), lsC7E, label=lblC7E)
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 if (Emimic):
    ax2.plot(p_C7v/vTh(Te), p_C7mehalff0v5 / (4.0*pi), lsC7, label=lblC7)
 ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 #ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
-ax1.legend(loc='best')
+ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
+for ext in ["png", "pdf", "eps"]:
+   print("saving kinetics.%s" % (ext,))
+   plt.savefig("kinetics.%s" % (ext,), bbox_inches="tight")
 plt.show()
 
 """

@@ -963,7 +963,12 @@ int main(int argc, char *argv[])
 		    if (ode_solver_type > 2)
             {
 		       //jC_gf.ProjectCoefficient(OhmCurrent_cf);
-               Efield_gf.ProjectCoefficient(OhmEfield_cf);
+               double loc_jC_norm = jC_gf.Norml2();
+			   double glob_jC_norm;
+               MPI_Allreduce(&loc_jC_norm, &glob_jC_norm, 1, 
+                             MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+               // Consistent Efield (zero current) computation.
+			   Efield_gf.ProjectCoefficient(OhmEfield_cf);
                double loc_Efield_norm = Efield_gf.Norml2();
 			   double glob_new_Efield_norm;
                MPI_Allreduce(&loc_Efield_norm, &glob_new_Efield_norm, 1, 
@@ -975,8 +980,9 @@ int main(int argc, char *argv[])
 			   dEfield_norm = dEfield_norm_new;
                if (mpi.Root())
                {
-                  cout << "Eit, dEfield_norm: " << Eit << ", " << dEfield_norm 
-                       << endl;
+                  cout << "Eit, jC_norm, dEfield_norm: " << Eit << ", " 
+                       << std::scientific << setprecision(4) 
+					   << glob_jC_norm << ", " << dEfield_norm << endl;
 			   }
 			   glob_old_Efield_norm = glob_new_Efield_norm;
             }
