@@ -21,8 +21,8 @@ ZBAR=1
 #ZBAR=100
 
 #MINGSAFE=1000
-#MINGIMPL=250
-MINGIMPL=2000
+MING=35
+#MING=2000
 
 L=0.1
 PROBLEM=5
@@ -30,42 +30,44 @@ PROBLEM=5
 #if false; then
 ## Highest Kn limit to compute.
 if [ $ZBAR -eq 100 ] ; then 
-   #NI=2e20 # Zbar = 100 -> Kn 1e-5
-   NI=2e19 # Zbar = 100 -> Kn 1e-4
+   NI=2e20 # Zbar = 100 -> Kn 1e-5
+   #NI=2e19 # Zbar = 100 -> Kn 1e-4
    #NI=4e18 # Zbar = 100 -> Kn 5e-4
 elif [ $ZBAR -eq 20 ] ; then 
-   #NI=4.8e21 # Zbar = 20 -> Kn 1e-5
+   NI=4.8e21 # Zbar = 20 -> Kn 1e-5
    #NI=4.8e20 # Zbar = 20 -> Kn 1e-4
    #NI=4.8e19 # Zbar = 20 -> Kn 1e-3 
-   NI=4.8e18 # Zbar = 20 -> Kn 1e-2
+   #NI=4.8e18 # Zbar = 20 -> Kn 1e-2
    #NI=0.963e18 # Zbar = 20 -> Kn 5e-2
 elif [ $ZBAR -eq 10 ] ; then 
-   #NI=1.84e22 # Zbar = 10 -> Kn 1e-5
+   NI=1.84e22 # Zbar = 10 -> Kn 1e-5
    #NI=1.84e21 # Zbar = 10 -> Kn 1e-4
    #NI=1.84e20 # Zbar = 10 -> Kn 1e-3
    #NI=0.368e20 # Zbar = 10 -> Kn 5e-3
-   NI=1.84e19 # Zbar = 10 -> Kn 1e-2
+   #NI=1.84e19 # Zbar = 10 -> Kn 1e-2
 elif [ $ZBAR -eq 5 ] ; then 
-   #NI=6.74e22 # Zbar = 5 -> Kn 1e-5
+   NI=6.74e22 # Zbar = 5 -> Kn 1e-5
    #NI=6.74e21 # Zbar = 5 -> Kn 1e-4
    #NI=6.74e20 # Zbar = 5 -> Kn 1e-3
-   NI=6.74e19 # Zbar = 5 -> Kn 1e-2
+   #NI=6.74e19 # Zbar = 5 -> Kn 1e-2
    #NI=1.348e19 # Zbar = 5 -> Kn 5e-2
 elif [ $ZBAR -eq 1 ] ; then
    #NI=1e24 # Zbar = 1 -> Kn 1e-5
    #NI=1e23 # Zbar = 1 -> Kn 1e-4
    #NI=1e22 # Zbar = 1 -> Kn 1e-3
-   NI=1e21 # Zbar = 1 -> Kn 1e-2
+   #NI=1e21 # Zbar = 1 -> Kn 1e-2
    #NI=2.02e20 # Zbar = 1 -> Kn 5e-2
+   NI=1e20 # Zbar = 1 -> Kn 1e-1, dE 0.1, MING 35
 fi
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -dE 0.001  | tee C7E.out
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 4 -cfl 1e10 -S0 1.0 -dE 0.001  | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 4 -cfl 1e10 -S0 0.5 -dE 0.05  | tee C7E.out
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 # Store the output file.
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-5.out
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-4.out
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-3.out
-cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-2.out
+#cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-2.out
 
 cd results/fe_analysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ecorrect --labelEcorrect 'C7E' #--AWBSoriginal
@@ -76,8 +78,8 @@ python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ec
 #cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-4.png
 #cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-3.png
 #cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-3.png
-cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-2.png
-cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-2.png
+#cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-2.png
+#cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-2.png
 cd ../..
 #fi
 
@@ -115,11 +117,11 @@ if [ $ZBAR -le 10 ] ; then
    #NI=3.522e21 # Zbar = 1, Kn = 1e-2
    #NI=0.704e21 # Zbar = 1, Kn = 5e-2
 fi
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -dE 0.001
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 4 -cfl 1e10 -S0 1.0 -E0 1.0 -dE 0.001
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MINGIMPL -s 4 -cfl 1e10 -dE 1.0
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 4 -cfl 1e10 -dE 1.0
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Emimic_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Emimic_data/fe_point_Emimic.txt
 

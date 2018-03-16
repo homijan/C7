@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
    double t_final = 0.5;
    double cfl = 0.5;
    double cg_tol = 1e-8;
-   int cg_max_iter = 100;
+   int cg_max_iter = 64;
    int max_tsteps = -1;
    bool p_assembly = true;
    bool visualization = false;

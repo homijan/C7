@@ -444,7 +444,7 @@ ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"
 ## Plot kinetic analysis.
 ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1^{SH}$')
 if (AWBSoriginal):
-   ax1.plot(p_v/vTh(Te), p_AWBSq, lsAWBSo, label=lblAWBSo)
+   ax1.plot(p_v/vTh(Te), p_AWBSq, "r-", label=r'$q_1^{AWBS}$')
 ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
 if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
