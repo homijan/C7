@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
    double t_final = 0.5;
    double cfl = 0.5;
    double cg_tol = 1e-8;
-   int cg_max_iter = 64;
+   int cg_max_iter = 23;
    int max_tsteps = -1;
    bool p_assembly = true;
    bool visualization = false;
@@ -132,9 +132,9 @@ int main(int argc, char *argv[])
    args.AddOption(&order_e, "-ot", "--order-thermo",
                   "Order (degree) of the thermodynamic finite element space.");
    args.AddOption(&ode_solver_type, "-s", "--ode-solver",
-                  "ODE solver: 1 - Forward Euler,  2 - RK4,\n\t"
-                  "            3 - Backward Euler, 4 - SDIRK23 SSP,\n\t" 
-				  "            5 - SDIRK 33,       6 - SDIRK 43.");
+                  "ODE solver: 1 - Backward Euler, 2 - SDIRK23 SSP,\n\t" 
+				  "            3 - SDIRK 33,       4 - SDIRK 43,\n\t"
+                  "            5 - Forward Euler,  6 - RK4.");
    args.AddOption(&t_final, "-tf", "--t-final",
                   "Final time; start time is 0.");
    args.AddOption(&c7cfl, "-cfl", "--cfl", "CFL-condition number.");
@@ -507,12 +507,6 @@ int main(int argc, char *argv[])
    VectorCoefficient *Bfield_pcf = &ZeroBfield_cf;
 
 
-   //nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
-   //nth::MeanFreePath *mfp_pcf = &mfp_cf;
-   //nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
-   //Coefficient *Kn_pcf = &Kn_cf;
-
-
    // NEW 
    nth::OhmCurrentCoefficient OhmCurrent_cf(pmesh->Dimension(), &a0_gf, &b0_gf,
                                             &b1_gf, Efield_pcf, Bfield_pcf);
@@ -569,15 +563,11 @@ int main(int argc, char *argv[])
    }
 
    oper.ComputeDensity(rho_gf); 
-   //AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
-   //mfp_cf.SetThermalVelocityMultiple(vTmultiple);
    double loc_Tmax = e_gf.Max(), glob_Tmax;
    MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                  pmesh->GetComm());
-   //AWBSPhysics.SetTmax(glob_Tmax);
-   //mfp_cf.SetTmax(glob_Tmax);
-
    AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);
+   // Check, must return exactly vTmultiple.
    double N_x_vTmax = AWBSPhysics.GetVelocityScale();
 
    // Initialize the C7-AWBS operator
@@ -585,26 +575,25 @@ int main(int argc, char *argv[])
                           c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
-   // Prepare grid functions integrating the moments of F0 and F1.
-   //ParGridFunction intf0_gf(&L2FESpace), Kn_gf(&L2FESpace);
 
    // Define the explicit/implicit ODE solver used for velocity integration.
    ODESolver *c7ode_solver = NULL; 
 
    switch (ode_solver_type)
    {
-      case 1: c7ode_solver = new ForwardEulerSolver;
-      //c7ode_solver = new RK2Solver(0.5);
-      case 2: c7ode_solver = new RK4Solver; break;
-      //c7ode_solver = new RK6Solver;
       // L-stable
-      case 3: c7ode_solver = new BackwardEulerSolver; break;
-      case 4: c7ode_solver = new SDIRK23Solver(2); break;
-      case 5: c7ode_solver = new SDIRK33Solver; break;
+      case 1: c7ode_solver = new BackwardEulerSolver; break;
+      case 2: c7ode_solver = new SDIRK23Solver(2); break;
+      case 3: c7ode_solver = new SDIRK33Solver; break;
       // A-stable
       //c7ode_solver = new ImplicitMidpointSolver;
       //c7ode_solver = new SDIRK23Solver;
-      case 6: c7ode_solver = new SDIRK34Solver; break;
+      case 4: c7ode_solver = new SDIRK34Solver; break;
+      // Explicit
+	  case 5: c7ode_solver = new ForwardEulerSolver;
+      //c7ode_solver = new RK2Solver(0.5);
+      case 6: c7ode_solver = new RK4Solver; break;
+      //c7ode_solver = new RK6Solver;
       default:
          if (myid == 0)
          {
@@ -616,8 +605,6 @@ int main(int argc, char *argv[])
    }
    
    c7ode_solver->Init(c7oper);
-
-   //double N_x_vTmax = mspei_cf.GetVelocityScale();
    
    c7oper.ResetVelocityStepEstimate();
    c7oper.ResetQuadratureData();
@@ -628,8 +615,6 @@ int main(int argc, char *argv[])
    int c7ti = 0;
    double v = vmax;
    double dv = -dvmin;
-   //intf0_gf = 0.0;
-   //Kn_gf.ProjectCoefficient(Kn_cf);
    //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
    hflux_gf = 0.0;
    jC_gf = 0.0;
@@ -730,9 +715,6 @@ int main(int argc, char *argv[])
       Wx += offx;
       VisualizeField(vis_hflux, vishost, visport, hflux_gf,
                      "Heat flux", Wx, Wy, Ww, Wh);
-      //Wx += offx;
-      //VisualizeField(vis_f0, vishost, visport, intf0_gf,
-      //               "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
    }
 
    // Save data for VisIt visualization
@@ -817,17 +799,11 @@ int main(int argc, char *argv[])
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
          oper.ComputeDensity(rho_gf); 
-		 //AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
-		 //mfp_cf.SetThermalVelocityMultiple(vTmultiple);          
          double loc_Tmax = e_gf.Max(), glob_Tmax;
          MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
-         //AWBSPhysics.SetTmax(glob_Tmax);
-		 //mfp_cf.SetTmax(glob_Tmax);
-         //N_x_vTmax = mspei_cf.GetVelocityScale();
-
-         AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);
-         
+         AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);         
+		 // Check, must return exactly vTmultiple.
 		 N_x_vTmax = AWBSPhysics.GetVelocityScale();
 
          // Point value structures for storing the distribution function.
@@ -883,8 +859,6 @@ int main(int argc, char *argv[])
          bool converging = true;
 		 int Eit = 0;
          while (Eit < Efield_consistent_iter_max && converging)
-         //while (djC_norm > djC_norm_limit && 
-         //       Eit < Efield_consistent_iter_max && converging)
 		 { 
 		    // Actual integration of C7Operator.
             c7oper.ResetVelocityStepEstimate();
@@ -896,8 +870,6 @@ int main(int argc, char *argv[])
             int c7ti = 0;
             double v = vmax;
             double dv = -dvmin;
-            //intf0_gf = 0.0;
-            //Kn_gf.ProjectCoefficient(Kn_cf);
             hflux_gf = 0.0;
             jC_gf = 0.0;
 		    a0_gf = 0.0;
@@ -928,9 +900,6 @@ int main(int argc, char *argv[])
 			      mehalff0v5_v_point.push_back(0.5 * me * f0_point * 
                                                 pow(N_x_vTmax*v, 5.0));
                }
-
-               // Perform the integration over velocity space.
-               //intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
 
                c7oper.ResetVelocityStepEstimate();
                c7oper.ResetQuadratureData();
@@ -980,7 +949,6 @@ int main(int argc, char *argv[])
             { 
                converging = false; 
             }
-			//if (djC_norm_new > djC_norm) { converging = false; }
             djC_norm = djC_norm_new;
             if (mpi.Root())
             {

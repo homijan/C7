@@ -263,7 +263,6 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
 
    UpdateQuadratureData(velocity, F);
    const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
-   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
 
    AWBSPhysics->sourceF0_pcf->SetVelocityReal(velocity_real);
@@ -417,7 +416,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    UpdateQuadratureData(velocity, F);
 
    const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
-   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    // Get the real velocity and velocity step.
    const double velocity_real = velocity * N_x_vTmax;
    const double dv_real = dv * N_x_vTmax; 
@@ -784,10 +782,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    if (quad_data_is_current) { return; }
    timer.sw_qdata.Start();
 
-   const double N_x = AWBSPhysics->GetVelocityMultiple();
+   const double N_x = AWBSPhysics->GetVelocityMultiple(); 
    const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
-   //const double N_x = AWBSPhysics->mspei_pcf->GetVelocityMultiple();
-   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
    const int nqp = integ_rule.GetNPoints();
 
@@ -822,6 +818,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    double *mspee_b = new double[nqp_batch],
           *mspei_b = new double[nqp_batch],
 		  *rho_b = new double[nqp_batch],
+          *vTe_b = new double[nqp_batch],
           *f1overf0_b = new double[nqp_batch];
    // Electric and Magnetic fields for all quadrature points in the batch.
    //DenseMatrix *Efield_b = new DenseMatrix[nqp_batch],
@@ -863,7 +860,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                          detJ / ip.weight;
             mspei_b[idx] = AWBSPhysics->mspei_pcf->Eval(*T, ip, rho_b[idx]);
             mspee_b[idx] = AWBSPhysics->mspee_pcf->Eval(*T, ip, rho_b[idx]);
-
+            vTe_b[idx] = AWBSPhysics->mspee_pcf->GetvTe(*T, ip);
             // Anisotropy measure.
             double normlim = 1e-32;
 			double f0norm = max(normlim, F0.GetValue((*T).ElementNo, ip));
@@ -953,7 +950,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const double mspei = mspei_b[z*nqp + q];
             const double mspee = mspee_b[z*nqp + q];
 			double rho = rho_b[z*nqp + q];
-            // VEF transport closure matrix is either P1 or M1.
+            double vTe = vTe_b[z*nqp + q];
+			// VEF transport closure matrix is either P1 or M1.
 			DenseMatrix A1 = P1;
 			if (M1_closure) { A1 = AM1_b[z](q); }
 
@@ -963,8 +961,12 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //Efield_b[z].GetColumn(q, Efield);
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
+
 			// TMP on/off anisotropy correction on Lorentz force.
             Efield *= min(1.0, 0.9 * mspee * velocity_real / Efield.Norml2());
+            // ATTEMPT of some physics.
+            //if (velocity_real > 0.9 * N_x * vTe) { Efield *= 0.0; }
+
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
             AIEfield = 0.0;
@@ -1033,6 +1035,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    delete [] mspee_b;
    delete [] mspei_b;
    delete [] rho_b;
+   delete [] vTe_b;
    delete [] f1overf0_b;
    delete [] Jpr_b;
    delete [] AM1_b; 

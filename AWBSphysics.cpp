@@ -32,8 +32,8 @@ double coulLog = 10.0; // TMP will be moved to the eos.
 double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
                                         const IntegrationPoint &ip, double rho)
 {
+   // "velocity_real" must be set previously.
    double Te = Te_gf.GetValue(T.ElementNo, ip);
-   //velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double Zbar = eos->GetZbar(index, rho, Te);
    double ni = eos->GetIonDensity(index, rho);
@@ -62,42 +62,6 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
 
    return corrAWBS * nu_ee;
 }
-
-/*
-double ClassicalMeanFreePath::EvalThermalMFP(ElementTransformation &T,
-                                             const IntegrationPoint &ip,
-                                             double rho)
-{
-   //double rho = rho_gf.GetValue(T.ElementNo, ip);
-   double Te = Te_gf.GetValue(T.ElementNo, ip);
-   // Set the scaled velocity to correspond to the local thermal velocity.
-   double velocity = eos->GetvTe(Te) / N_x_vTmax;
-   double velocity_real = N_x_vTmax * velocity;
-   // Compute the mean free path.
-   double nu = ClassicalMeanStoppingPower::Eval(T, ip, rho);
-   double mfp = velocity_real / nu;
-
-   return mfp;
-}
-
-double KnudsenNumber::Eval(ElementTransformation &T,
-                           const IntegrationPoint &ip)
-{
-   double rho = rho_gf.GetValue(T.ElementNo, ip);
-   double Te = Te_gf.GetValue(T.ElementNo, ip);
-   // Compute the mean free path.
-   double lambda = mfp->EvalThermalMFP(T, ip, rho);
-   // Compute the temperature and density length scales.
-   Vector grad_Te;
-   Te_gf.GetGradient(T, grad_Te);
-   double L_Te = Te / grad_Te.Norml2();
-   Vector grad_rho;
-   rho_gf.GetGradient(T, grad_rho);
-   double L_rho = rho / grad_rho.Norml2();
-   // Return the Knudsen number of thermal velocity particle.
-   return lambda / min(L_Te, L_rho);
-}
-*/
 
 void LorentzEfield::Eval(Vector &V, ElementTransformation &T,
                            const IntegrationPoint &ip)
@@ -146,8 +110,7 @@ double LorentzEfield::Eval(ElementTransformation &T,
 double P1a0KineticCoefficient::Eval(ElementTransformation &T,
                                     const IntegrationPoint &ip)
 {
-   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   //velocity_real = velocity * N_x_vTmax;
+   // "velocity_real" must be set previously.
    mspei_pcf->SetVelocityReal(velocity_real);
    mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
@@ -170,8 +133,7 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
 void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
                                   const IntegrationPoint &ip)
 {
-   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   //velocity_real = velocity * N_x_vTmax;
+   // "velocity_real" must be set previously.
    mspei_pcf->SetVelocityReal(velocity_real);
    mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
@@ -196,8 +158,7 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
 void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
                                   const IntegrationPoint &ip)
 {
-   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   //velocity_real = velocity * N_x_vTmax;
+   // "velocity_real" must be set previously.
    mspei_pcf->SetVelocityReal(velocity_real);
    mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
@@ -248,10 +209,10 @@ void OhmEfieldCoefficient::Eval(Vector &V, ElementTransformation &T,
 double AWBSF0Source::Eval(ElementTransformation &T,
                           const IntegrationPoint &ip, double rho)
 {
+   // "velocity_real" must be set previously.
    double pi = 3.14159265359;
    double Te = max(1e-10, Te_gf.GetValue(T.ElementNo, ip));
    double vTe = eos->GetvTe(Te);
-   //velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double ne = eos->GetElectronDensity(index, rho, Te);
 
