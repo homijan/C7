@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
    double x_point = 0.5;
    double c7cfl = 0.25;
    // Number of consistent Efield iterations.
-   double dEfield_norm_limit = 1e-2;
+   double djC_norm_limit = 1e-2;
    int Efield_consistent_iter_max = 100;
 
    OptionsParser args(argc, argv);
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
                   "Temperature gradient scale in the function tanh(a*x).");
    args.AddOption(&rho_gradscale, "-rgrad", "--rhograd",
                   "Density gradient scale in the function tanh(a*x).");
-   args.AddOption(&dEfield_norm_limit, "-dE", "--dEfieldnorm",
+   args.AddOption(&djC_norm_limit, "-dE", "--dEfieldnorm",
                   "Change in the Electric field norm to stop iterations.");
    args.AddOption(&EfieldS0, "-E0", "--ES0",
                   "Electric field scaling, i.e. E = S0*E.");
@@ -493,8 +493,8 @@ int main(int argc, char *argv[])
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
-   //Efield_gf.ProjectCoefficient(Efield_vcf);
-   Efield_gf = 0.0;
+   Efield_gf.ProjectCoefficient(Efield_vcf);
+   //Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
@@ -507,10 +507,10 @@ int main(int argc, char *argv[])
    VectorCoefficient *Bfield_pcf = &ZeroBfield_cf;
 
 
-   nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
-   nth::MeanFreePath *mfp_pcf = &mfp_cf;
-   nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
-   Coefficient *Kn_pcf = &Kn_cf;
+   //nth::ClassicalMeanFreePath mfp_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
+   //nth::MeanFreePath *mfp_pcf = &mfp_cf;
+   //nth::KnudsenNumber Kn_cf(rho_gf, e_gf, v_gf, material_pcf, &eos, mfp_pcf);
+   //Coefficient *Kn_pcf = &Kn_cf;
 
 
    // NEW 
@@ -524,7 +524,7 @@ int main(int argc, char *argv[])
    // This object represents physics in AWBS Boltzmann transport model.
    nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
                                         mspee_pcf, sourceF0_pcf,
-                                        Efield_pcf, Bfield_pcf);
+                                        Efield_pcf, Bfield_pcf, &eos);
 
    // Static coefficient defined in c7_solver.hpp.
    //double c7cfl = 0.25;
@@ -568,14 +568,17 @@ int main(int argc, char *argv[])
       }
    }
 
-   oper.ComputeDensity(rho_gf);
-   AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
-   mfp_cf.SetThermalVelocityMultiple(vTmultiple);
+   oper.ComputeDensity(rho_gf); 
+   //AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
+   //mfp_cf.SetThermalVelocityMultiple(vTmultiple);
    double loc_Tmax = e_gf.Max(), glob_Tmax;
    MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                  pmesh->GetComm());
-   AWBSPhysics.SetTmax(glob_Tmax);
-   mfp_cf.SetTmax(glob_Tmax);
+   //AWBSPhysics.SetTmax(glob_Tmax);
+   //mfp_cf.SetTmax(glob_Tmax);
+
+   AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);
+   double N_x_vTmax = AWBSPhysics.GetVelocityScale();
 
    // Initialize the C7-AWBS operator
    nth::C7Operator c7oper(c7F.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
@@ -614,7 +617,8 @@ int main(int argc, char *argv[])
    
    c7ode_solver->Init(c7oper);
 
-   double N_x_vTmax = mspei_cf.GetVelocityScale();
+   //double N_x_vTmax = mspei_cf.GetVelocityScale();
+   
    c7oper.ResetVelocityStepEstimate();
    c7oper.ResetQuadratureData();
    c7oper.SetTime(vmax);
@@ -812,15 +816,19 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-         oper.ComputeDensity(rho_gf);
-         AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
-		 mfp_cf.SetThermalVelocityMultiple(vTmultiple);          
+         oper.ComputeDensity(rho_gf); 
+		 //AWBSPhysics.SetThermalVelocityMultiple(vTmultiple);
+		 //mfp_cf.SetThermalVelocityMultiple(vTmultiple);          
          double loc_Tmax = e_gf.Max(), glob_Tmax;
          MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
-         AWBSPhysics.SetTmax(glob_Tmax);
-		 mfp_cf.SetTmax(glob_Tmax);
-         N_x_vTmax = mspei_cf.GetVelocityScale();
+         //AWBSPhysics.SetTmax(glob_Tmax);
+		 //mfp_cf.SetTmax(glob_Tmax);
+         //N_x_vTmax = mspei_cf.GetVelocityScale();
+
+         AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);
+         
+		 N_x_vTmax = AWBSPhysics.GetVelocityScale();
 
          // Point value structures for storing the distribution function.
          int cell_point = 0;
@@ -867,15 +875,16 @@ int main(int argc, char *argv[])
          }
 
          // Starting value of the E field norm.
-		 double loc_Efield_norm = Efield_gf.Norml2();
-         double glob_old_Efield_norm;
-         MPI_Allreduce(&loc_Efield_norm, &glob_old_Efield_norm, 1, 
-                       MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-         double dEfield_norm = 1e32;
+		 double loc_jC_norm = Efield_gf.Norml2();
+         double glob_old_jC_norm = 1.0;
+         //MPI_Allreduce(&loc_jC_norm, &glob_old_jC_norm, 1, 
+         //              MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+         double djC_norm = 1e64;
          bool converging = true;
 		 int Eit = 0;
-         while (dEfield_norm > dEfield_norm_limit && 
-                Eit < Efield_consistent_iter_max && converging)
+         while (Eit < Efield_consistent_iter_max && converging)
+         //while (djC_norm > djC_norm_limit && 
+         //       Eit < Efield_consistent_iter_max && converging)
 		 { 
 		    // Actual integration of C7Operator.
             c7oper.ResetVelocityStepEstimate();
@@ -956,34 +965,30 @@ int main(int argc, char *argv[])
                }
             }
 
-		    //if (ode_solver_type > 2)
-            //{
-            //jC_gf.ProjectCoefficient(OhmCurrent_cf);
-            double loc_jC_norm = jC_gf.Norml2();
-            double glob_jC_norm;
-            MPI_Allreduce(&loc_jC_norm, &glob_jC_norm, 1, 
-                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
             // Consistent Efield (zero current) computation.
             Efield_gf.ProjectCoefficient(OhmEfield_cf);
-            double loc_Efield_norm = Efield_gf.Norml2();
-            double glob_new_Efield_norm;
-            MPI_Allreduce(&loc_Efield_norm, &glob_new_Efield_norm, 1, 
-                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+
             // TMP testing of jC current convergence.
-            glob_new_Efield_norm = glob_jC_norm;
-            double dEfield_norm_new = abs(glob_old_Efield_norm - 
-                                          glob_new_Efield_norm) 
-                                      / glob_new_Efield_norm;
-            if (dEfield_norm_new > dEfield_norm) { converging = false; }
-            dEfield_norm = dEfield_norm_new;
+            //jC_gf.ProjectCoefficient(OhmCurrent_cf);
+            double loc_jC_norm = jC_gf.Norml2();
+            double glob_new_jC_norm;
+            MPI_Allreduce(&loc_jC_norm, &glob_new_jC_norm, 1, 
+                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+            double djC_norm_new = abs(glob_old_jC_norm - glob_new_jC_norm) 
+                                  / glob_old_jC_norm;
+            if (djC_norm_new > djC_norm || djC_norm_new < djC_norm_limit)
+            { 
+               converging = false; 
+            }
+			//if (djC_norm_new > djC_norm) { converging = false; }
+            djC_norm = djC_norm_new;
             if (mpi.Root())
             {
-               cout << "Eit, jC_norm, dEfield_norm: " << Eit << ", " 
+               cout << "Eit, jC_norm, djC_norm(|j0-j1|/|j0|): " << Eit << ", " 
                     << std::scientific << setprecision(4) 
-                    << glob_jC_norm << ", " << dEfield_norm << endl;
+                    << glob_new_jC_norm << ", " << djC_norm << endl;
             }
-            glob_old_Efield_norm = glob_new_Efield_norm;
-            //}
+            glob_old_jC_norm = glob_new_jC_norm;
 
             // Maximum flux point look up.
             double loc_hflux_max = hflux_gf.Max();

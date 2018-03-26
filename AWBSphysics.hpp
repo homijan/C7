@@ -35,32 +35,37 @@ namespace nth
 // NTH hydro coefficient including velocity dependence.
 class NTHvHydroCoefficient : public HydroCoefficient
 {
-   void SetVelocityScale(double N_x_, double Tmax)
-      { N_x_vTmax = N_x * eos->GetvTe(Tmax); }
+   //void SetVelocityScale(double N_x_, double Tmax)
+   //   { N_x_vTmax = N_x * eos->GetvTe(Tmax); }
 protected:
    // Velocity is always scaled wit respect to maximum thermal velocity
    // (its multiple) so it is in (0, 1)
-   double N_x, Tmax, N_x_vTmax;
+   //double N_x, Tmax, N_x_vTmax;
    // Current particle velocity from the velocity spectra.
-   double velocity;
+   double velocity_real;
 public:
    NTHvHydroCoefficient(ParGridFunction &rho_, ParGridFunction &T_,
                         ParGridFunction &v_, Coefficient *material_, EOS *eos_)
-      : HydroCoefficient(rho_, T_, v_, material_, eos_)
-	  { N_x = 1.0; Tmax = 1.0; SetVelocityScale(N_x, Tmax); }
+      : HydroCoefficient(rho_, T_, v_, material_, eos_) { }
+	  //{ N_x = 1.0; Tmax = 1.0; SetVelocityScale(N_x, Tmax); }
    virtual double Eval(ElementTransformation &T,
       const IntegrationPoint &ip)
       { double rho = rho_gf.GetValue(T.ElementNo, ip); Eval(T, ip, rho); }
    virtual double Eval(ElementTransformation &T,
       const IntegrationPoint &ip, double rho) = 0; 
-   void SetVelocity(double v_) { velocity = v_; }
-   void SetThermalVelocityMultiple(double N_x_)
-      { N_x = N_x_; SetVelocityScale(N_x, Tmax); }
-   void SetTmax(double Tmax_)
-      { Tmax = Tmax_; SetVelocityScale(N_x, Tmax); }
-   double GetVelocityScale() { return N_x_vTmax; }
+   void SetVelocityReal(double v_) { velocity_real = v_; }
+   //void SetThermalVelocityMultiple(double N_x_)
+   //   { N_x = N_x_; SetVelocityScale(N_x, Tmax); }
+   //void SetTmax(double Tmax_)
+   //   { Tmax = Tmax_; SetVelocityScale(N_x, Tmax); }
+   //double GetVelocityMultiple() { return N_x; }
+   //double GetVelocityScale() { return N_x_vTmax; }
    double GetRho(ElementTransformation &T, const IntegrationPoint &ip)
       { return rho_gf.GetValue(T.ElementNo, ip); }
+   double GetTe(ElementTransformation &T, const IntegrationPoint &ip)
+      { return Te_gf.GetValue(T.ElementNo, ip); }
+   double GetvTe(ElementTransformation &T, const IntegrationPoint &ip)
+      { return eos->GetvTe(GetTe(T, ip)); }
 };
 
 // Classical mean-stopping-power (electron-ion) coefficient.
@@ -95,6 +100,7 @@ public:
    virtual void SetCorrAWBS(double corrAWBS_) { corrAWBS = corrAWBS_; }
 };
 
+/*
 // General mean-free-path coefficient.
 class MeanFreePath
 {
@@ -131,6 +137,7 @@ public:
       : HydroCoefficient(rho_, Te_, v_, material_, eos_), mfp(mfp_) {}
    virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip);
 };
+*/
 
 // Classical Lorentz approximation E field coefficient.
 class LorentzEfield : public HydroCoefficient, public VectorCoefficient
@@ -152,7 +159,7 @@ public:
 class GeneralKineticCoefficient : public Coefficient, public VectorCoefficient
 {
 protected:
-   double velocity;
+   double velocity_real;
    // GridFunctions related to F0 and F1, e.g. F0, F1, dF0dv, dF1dv, etc.
    ParGridFunction *F0, *F1, *dF0, *dF1;
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf;
@@ -168,7 +175,7 @@ public:
    virtual void SetdF0(ParGridFunction *dF0_) { dF0 = dF0_; }
    virtual void SetdF1(ParGridFunction *dF1_) { dF1 = dF1_; }
    virtual void SetEfield(VectorCoefficient *Efield_) { Efield_pcf = Efield_; }
-   virtual void SetVelocity(double v_) { velocity = v_; }
+   virtual void SetVelocityReal(double v_) { velocity_real = v_; }
 
    virtual double Eval(ElementTransformation &T, 
                        const IntegrationPoint &ip) = 0;
@@ -239,6 +246,12 @@ public:
 class AWBSMasterOfPhysics
 {
 protected:
+   // Integration over velocity is always scaled wit respect to 
+   // a global maximum of thermal velocity (its multiple) so 
+   // velocity spans (0, 1).
+   double N_x, Tmax, N_x_vTmax;
+   // General equation of state.
+   EOS *eos;
 public:
    // members
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
@@ -251,28 +264,33 @@ public:
                        NTHvHydroCoefficient *mspee_,
                        NTHvHydroCoefficient *source_, 
                        VectorCoefficient *Efield_,
-                       VectorCoefficient *Bfield_)
+                       VectorCoefficient *Bfield_, EOS *eos_)
       : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_), 
-        Efield_pcf(Efield_), Bfield_pcf(Bfield_)
+        Efield_pcf(Efield_), Bfield_pcf(Bfield_), eos(eos_)
         { 
            P1a0_pcf = new P1a0KineticCoefficient(dim_, mspei_, mspee_); 
            P1b0_pcf = new P1b0KineticCoefficient(dim_, mspei_, mspee_); 
 		   P1b1_pcf = new P1b1KineticCoefficient(dim_, mspei_, mspee_);
 		   P1a0_pcf->SetEfield(Efield_);
         }
+   void SetVelocityScale(double N_x_, double Tmax)
+      { N_x = N_x_; N_x_vTmax = N_x_ * eos->GetvTe(Tmax); }
 
-   void SetThermalVelocityMultiple(double vTmultiple)
-   { 
-      mspei_pcf->SetThermalVelocityMultiple(vTmultiple);
-      mspee_pcf->SetThermalVelocityMultiple(vTmultiple);
-      sourceF0_pcf->SetThermalVelocityMultiple(vTmultiple);
-   }
-   void SetTmax(double glob_Tmax)
-   { 
-      mspei_pcf->SetTmax(glob_Tmax); 
-      mspee_pcf->SetTmax(glob_Tmax);
-      sourceF0_pcf->SetTmax(glob_Tmax);
-   }
+   //void SetThermalVelocityMultiple(double vTmultiple)
+   //{ 
+   //   N_x = vTmultiple;
+   //   mspei_pcf->SetThermalVelocityMultiple(vTmultiple);
+   //   mspee_pcf->SetThermalVelocityMultiple(vTmultiple);
+   //   sourceF0_pcf->SetThermalVelocityMultiple(vTmultiple);
+   //}
+   //void SetTmax(double glob_Tmax)
+   //{ 
+   //   mspei_pcf->SetTmax(glob_Tmax); 
+   //   mspee_pcf->SetTmax(glob_Tmax);
+   //   sourceF0_pcf->SetTmax(glob_Tmax);
+   //}
+   double GetVelocityMultiple() { return N_x; }
+   double GetVelocityScale() { return N_x_vTmax; }
 
    ~AWBSMasterOfPhysics() 
    { 

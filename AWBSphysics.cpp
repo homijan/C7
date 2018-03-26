@@ -33,7 +33,7 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
                                         const IntegrationPoint &ip, double rho)
 {
    double Te = Te_gf.GetValue(T.ElementNo, ip);
-   double velocity_real = N_x_vTmax * velocity;
+   //velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double Zbar = eos->GetZbar(index, rho, Te);
    double ni = eos->GetIonDensity(index, rho);
@@ -63,6 +63,7 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
    return corrAWBS * nu_ee;
 }
 
+/*
 double ClassicalMeanFreePath::EvalThermalMFP(ElementTransformation &T,
                                              const IntegrationPoint &ip,
                                              double rho)
@@ -70,7 +71,7 @@ double ClassicalMeanFreePath::EvalThermalMFP(ElementTransformation &T,
    //double rho = rho_gf.GetValue(T.ElementNo, ip);
    double Te = Te_gf.GetValue(T.ElementNo, ip);
    // Set the scaled velocity to correspond to the local thermal velocity.
-   velocity = eos->GetvTe(Te) / N_x_vTmax;
+   double velocity = eos->GetvTe(Te) / N_x_vTmax;
    double velocity_real = N_x_vTmax * velocity;
    // Compute the mean free path.
    double nu = ClassicalMeanStoppingPower::Eval(T, ip, rho);
@@ -96,6 +97,7 @@ double KnudsenNumber::Eval(ElementTransformation &T,
    // Return the Knudsen number of thermal velocity particle.
    return lambda / min(L_Te, L_rho);
 }
+*/
 
 void LorentzEfield::Eval(Vector &V, ElementTransformation &T,
                            const IntegrationPoint &ip)
@@ -144,9 +146,10 @@ double LorentzEfield::Eval(ElementTransformation &T,
 double P1a0KineticCoefficient::Eval(ElementTransformation &T,
                                     const IntegrationPoint &ip)
 {
-   mspei_pcf->SetVelocity(velocity);
-   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   const double velocity_real = velocity * N_x_vTmax;
+   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   //velocity_real = velocity * N_x_vTmax;
+   mspei_pcf->SetVelocityReal(velocity_real);
+   mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
@@ -167,10 +170,10 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
 void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
                                   const IntegrationPoint &ip)
 {
-   mspei_pcf->SetVelocity(velocity);
-   mspee_pcf->SetVelocity(velocity);
-   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   const double velocity_real = velocity * N_x_vTmax;
+   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   //velocity_real = velocity * N_x_vTmax;
+   mspei_pcf->SetVelocityReal(velocity_real);
+   mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
@@ -193,9 +196,10 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
 void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
                                   const IntegrationPoint &ip)
 {
-   mspei_pcf->SetVelocity(velocity);
-   const double N_x_vTmax = mspei_pcf->GetVelocityScale();
-   const double velocity_real = velocity * N_x_vTmax;
+   //const double N_x_vTmax = mspei_pcf->GetVelocityScale();
+   //velocity_real = velocity * N_x_vTmax;
+   mspei_pcf->SetVelocityReal(velocity_real);
+   mspee_pcf->SetVelocityReal(velocity_real);
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
@@ -247,7 +251,7 @@ double AWBSF0Source::Eval(ElementTransformation &T,
    double pi = 3.14159265359;
    double Te = max(1e-10, Te_gf.GetValue(T.ElementNo, ip));
    double vTe = eos->GetvTe(Te);
-   double velocity_real = N_x_vTmax * velocity;
+   //velocity_real = N_x_vTmax * velocity;
    double index = material_pcf->Eval(T, ip);
    double ne = eos->GetElectronDensity(index, rho, Te);
 

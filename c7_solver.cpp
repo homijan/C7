@@ -262,10 +262,11 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    const double velocity = GetTime(); 
 
    UpdateQuadratureData(velocity, F);
-   const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
+   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
 
-   AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
+   AWBSPhysics->sourceF0_pcf->SetVelocityReal(velocity_real);
    ParGridFunction F0source(&L2FESpace);
    F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
 
@@ -415,14 +416,15 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    UpdateQuadratureData(velocity, F);
 
-   AWBSPhysics->sourceF0_pcf->SetVelocity(velocity);
-   ParGridFunction F0source(&L2FESpace);
-   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
-
-   const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
+   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    // Get the real velocity and velocity step.
    const double velocity_real = velocity * N_x_vTmax;
    const double dv_real = dv * N_x_vTmax; 
+
+   AWBSPhysics->sourceF0_pcf->SetVelocityReal(velocity_real);
+   ParGridFunction F0source(&L2FESpace);
+   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
 
    // The monolithic BlockVector stores the unknown fields as follows:
    // - isotropic F0 (energy density)
@@ -666,7 +668,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    // Generalized Ohm's law related grid functions.
    AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
-   AWBSPhysics->P1a0_pcf->SetVelocity(velocity);
+   AWBSPhysics->P1a0_pcf->SetVelocityReal(velocity_real); 
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
    // Since the integration goes from vmax -> vmin, revert sign.
@@ -674,14 +676,14 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    AWBSPhysics->P1b0_pcf->SetF0(&F0);
    AWBSPhysics->P1b0_pcf->SetdF1(&dF1);
-   AWBSPhysics->P1b0_pcf->SetVelocity(velocity);
+   AWBSPhysics->P1b0_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b0_cf = *(AWBSPhysics->P1b0_pcf);
    db0_gf.ProjectCoefficient(P1b0_cf);
    // Since the integration goes from vmax -> vmin, revert sign.
    db0_gf *= -1.0;
 
    AWBSPhysics->P1b1_pcf->SetF1(&dF1);
-   AWBSPhysics->P1b1_pcf->SetVelocity(velocity);
+   AWBSPhysics->P1b1_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b1_cf = *(AWBSPhysics->P1b1_pcf);
    db1_gf.ProjectCoefficient(P1b1_cf);
    // Since the integration goes from vmax -> vmin, revert sign.
@@ -782,11 +784,15 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    if (quad_data_is_current) { return; }
    timer.sw_qdata.Start();
 
-   AWBSPhysics->mspei_pcf->SetVelocity(velocity);
-   AWBSPhysics->mspee_pcf->SetVelocity(velocity);
-   const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
+   const double N_x = AWBSPhysics->GetVelocityMultiple();
+   const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
+   //const double N_x = AWBSPhysics->mspei_pcf->GetVelocityMultiple();
+   //const double N_x_vTmax = AWBSPhysics->mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
    const int nqp = integ_rule.GetNPoints();
+
+   AWBSPhysics->mspei_pcf->SetVelocityReal(velocity_real);
+   AWBSPhysics->mspee_pcf->SetVelocityReal(velocity_real);
 
    ParGridFunction F0, F1;
    Vector* sptr = (Vector*) &S;
