@@ -132,7 +132,8 @@ def solve_bweuler(v, f0, T, gradT, Z, E):
         vp = v[i]
         rhs = Z/vp*((vp**2.0/2.0/vTh(T)**2.0 - 1.5)*gradT/T - E/vTh(T)**2.0)
         rhs = rhs * fM(vp, T)
-        f1[i+1] = (f1[i] + dv*rhs)/(1.0 + dv*(4.0 - Z)/vp)
+        f1[i+1] = (f1[i] + dv*rhs)/(1.0 + dv*(3.0 - Z)/vp) # ee isotropization
+        #f1[i+1] = (f1[i] + dv*rhs)/(1.0 + dv*(4.0 - Z)/vp)
     return f1
 
 ## Evaluate at the given point xpoint.

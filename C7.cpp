@@ -417,6 +417,7 @@ int main(int argc, char *argv[])
       case 6: visc = true; break;
       case 7: visc = true; break;
       case 8: visc = true; break;
+      case 9: visc = true; break;
       default: MFEM_ABORT("Wrong problem specification!");
    }
 
@@ -534,7 +535,7 @@ int main(int argc, char *argv[])
    double vTmultiple = 6.0; //7.0;
    // well, not really, since the lowest v = 0 is singular, so
    //double vmin = 0.001 * vmax;
-   double vmin_multiple = 0.1;
+   double vmin_multiple = 0.01;
    double vmin = vmin_multiple * vmax;
    //double vmin = 0.07 * vmax;
    // and provide some maximum dv step.
@@ -870,7 +871,7 @@ int main(int argc, char *argv[])
          double glob_old_Efield_norm;
          MPI_Allreduce(&loc_Efield_norm, &glob_old_Efield_norm, 1, 
                        MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-         double dEfield_norm = 1.0;
+         double dEfield_norm = 1e32;
          bool converging = true;
 		 int Eit = 0;
          while (dEfield_norm > dEfield_norm_limit && 
@@ -955,38 +956,47 @@ int main(int argc, char *argv[])
                }
             }
 
-            // NEW
-            // Treat internally integrated entities.
-		    // Heat flux.
-		    hflux_gf *= me / 2.0; // c7oper does not use me.
-            // Current.
-		    if (ode_solver_type > 2)
+		    //if (ode_solver_type > 2)
+            //{
+            //jC_gf.ProjectCoefficient(OhmCurrent_cf);
+            double loc_jC_norm = jC_gf.Norml2();
+            double glob_jC_norm;
+            MPI_Allreduce(&loc_jC_norm, &glob_jC_norm, 1, 
+                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+            // Consistent Efield (zero current) computation.
+            Efield_gf.ProjectCoefficient(OhmEfield_cf);
+            double loc_Efield_norm = Efield_gf.Norml2();
+            double glob_new_Efield_norm;
+            MPI_Allreduce(&loc_Efield_norm, &glob_new_Efield_norm, 1, 
+                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+            // TMP testing of jC current convergence.
+            glob_new_Efield_norm = glob_jC_norm;
+            double dEfield_norm_new = abs(glob_old_Efield_norm - 
+                                          glob_new_Efield_norm) 
+                                      / glob_new_Efield_norm;
+            if (dEfield_norm_new > dEfield_norm) { converging = false; }
+            dEfield_norm = dEfield_norm_new;
+            if (mpi.Root())
             {
-		       //jC_gf.ProjectCoefficient(OhmCurrent_cf);
-               double loc_jC_norm = jC_gf.Norml2();
-			   double glob_jC_norm;
-               MPI_Allreduce(&loc_jC_norm, &glob_jC_norm, 1, 
-                             MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-               // Consistent Efield (zero current) computation.
-			   Efield_gf.ProjectCoefficient(OhmEfield_cf);
-               double loc_Efield_norm = Efield_gf.Norml2();
-			   double glob_new_Efield_norm;
-               MPI_Allreduce(&loc_Efield_norm, &glob_new_Efield_norm, 1, 
-                             MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-               double dEfield_norm_new = abs(glob_old_Efield_norm - 
-                                             glob_new_Efield_norm) 
-                                         / glob_new_Efield_norm;
-               if (dEfield_norm_new > dEfield_norm) { converging = false; }
-			   dEfield_norm = dEfield_norm_new;
-               if (mpi.Root())
-               {
-                  cout << "Eit, jC_norm, dEfield_norm: " << Eit << ", " 
-                       << std::scientific << setprecision(4) 
-					   << glob_jC_norm << ", " << dEfield_norm << endl;
-			   }
-			   glob_old_Efield_norm = glob_new_Efield_norm;
+               cout << "Eit, jC_norm, dEfield_norm: " << Eit << ", " 
+                    << std::scientific << setprecision(4) 
+                    << glob_jC_norm << ", " << dEfield_norm << endl;
             }
-		    jC_gf *= qe; // c7oper does not use qe.
+            glob_old_Efield_norm = glob_new_Efield_norm;
+            //}
+
+            // Maximum flux point look up.
+            double loc_hflux_max = hflux_gf.Max();
+            double glob_hflux_max;
+            struct { double val; int rank; } loc_doubleint, glob_doubleint;
+            MPI_Allreduce(&loc_doubleint, &glob_doubleint, 1, MPI_DOUBLE_INT,
+                          MPI_MAXLOC, pmesh->GetComm());
+
+            // Treat internally integrated entities.
+            // Heat flux.
+            hflux_gf *= me / 2.0; // c7oper does not use me.
+            // Current.
+            jC_gf *= qe; // c7oper does not use qe.
             // End of this loop.
 		    Eit++;
          } // Efield loop.

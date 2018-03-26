@@ -1581,13 +1581,13 @@ The~AWBS electron transport equation in 6D reads
   {\vmag\sin(\phi)}\pdv{f}{\theta} \right] 
   =\\
   \frac{\vmag}{\lambda^e}\pdv{}{\vmag}\left(f - f_M\right) 
-  + \frac{1}{2 \lambda^{ei}} 
+  + \left(\frac{1}{\mfpei} + \frac{1}{\mfpe} \right) \frac{1}{2}
   \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
   + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right) ,
   \label{eq:AWBS_spherical}
 \end{multline}
 where $\mu = \cos(\phi)$, $\mfpe$ is the~electron-electron mean free path, and
-$\mfpei$ is the~electron-ion mean free path.
+$\mfpei$ is the~electron-ion mean free path, and $\mfpe = \Zbar \mfpei$.
 
 We can try to find an~approximate solution while using the~first term of
 expansion in $\mfpe$ and $\mu$ as
@@ -1613,7 +1613,7 @@ AWBS equation reads
   =\\
   \frac{\vmag}{\mfpe}\pdv{}{\vmag}
   \left(\left( f^0 + f^1 \mfpei\mu \right) -\fM\right)
-  + \frac{1}{2 \mfpei}\pdv{}{\mu}\left((1 - \mu^2)
+  + \frac{\Zbar +1}{2 \mfpei \Zbar}\pdv{}{\mu}\left((1 - \mu^2)
   \pdv{}{\mu}\left( f^0 + f^1 \mfpei\mu \right) \right) ,
   \label{eq:AWBS_spherical}
 \end{multline}
@@ -1628,7 +1628,7 @@ AWBS equation reads
   \frac{\vmag}{\Zbar\mfpei}\pdv{}{\vmag}
   \left( f^0 -\fM\right)
   + \mu\frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag} 
-  - \mu f^1 ,
+  - \mu \frac{\Zbar + 1}{\Zbar}f^1 ,
   \label{eq:AWBS_spherical}
 \end{multline}
 consequently, we have the~following anisotropy expansion 
@@ -1638,7 +1638,8 @@ $\mu^0, \mu^1, \mu^2, ...$ equations
   \left( f^0 -\fM\right) &=& \frac{1}{\vmag}f^1 \mfpei , 
   \nonumber \\
   \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} &=& 
-  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  - f^1 , 
+  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
+  - \frac{\Zbar + 1}{\Zbar} f^1 , 
   \nonumber \\ 
   \pdv{}{z}\left(f^1 \mfpei \right) 
   + \frac{\tilde{E}_z}{\vmag} \left[\pdv{}{\vmag} \left( f^1 \mfpei \right)
@@ -1648,13 +1649,15 @@ which lead to the~definitions
 \begin{eqnarray}
   \pdv{}{\vmag}\left( f^0 -\fM\right) &=& \frac{1}{\vmag^2}f^1 \Zbar\mfpei^2 ,
   \label{eq:AWBS_f0} \\
-  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  - f^1 &=&
+  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
+  - \frac{\Zbar + 1}{\Zbar} f^1 &=&
   \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   \nonumber \\  
-  \frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 - f^1 &=&
+  \frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
+  - \frac{\Zbar + 1}{\Zbar} f^1 &=&
   \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   \nonumber \\
-  \pdv{f^1}{\vmag} + \frac{1}{\vmag}(4-\Zbar)f^1
+  \pdv{f^1}{\vmag} + \frac{1}{\vmag}(3-\Zbar)f^1
   &=&
   \frac{\Zbar}{\vmag}\left(\frac{1}{\rho}\pdv{\rho}{z} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
@@ -2158,6 +2161,7 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
 
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 
+\begin{comment} % tmp
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{cc}
@@ -2256,6 +2260,7 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \end{center}
   \label{fig:C7explimpl}
 \end{figure}
+\end{comment} % tmp
 
 %\section{Electric field implementation}\label{sec:Efield}
 %1) Do the consistent approximation (ok, first do the BGK approximation).
@@ -2303,6 +2308,7 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \label{fig:AWBScorrection_f1}
 \end{figure}
 
+\begin{comment} % tmp
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
@@ -2358,6 +2364,7 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \end{center}
   \label{fig:AWBSvsSH_f1}
 \end{figure}
+\end{comment} % tmp
 
 \begin{figure}[tbh]
   \begin{center}

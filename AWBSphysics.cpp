@@ -58,6 +58,7 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
    // AWBS correction based on comparison of diffusive asymptotic of AWBS 
    // and SH, and a resulting dependence on Zbar.
    corrAWBS = (688.9*Zbar + 114.4) / (Zbar*Zbar + 1038.0*Zbar + 474.1);
+   //corrAWBS = 1.0;
 
    return corrAWBS * nu_ee;
 }
@@ -156,8 +157,11 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    Efield_pcf->Eval(Efield, T, ip);
    double corrEfield = min(1.0, 0.9 * nu_ee * velocity_real / Efield.Norml2());
 
-   return corrEfield * velocity_real / 3.0 / nu_ei * dF0dv 
+   // Scattering on ions and electrons.
+   return corrEfield * velocity_real / 3.0 / (nu_ei + nu_ee) * dF0dv 
           * velocity_real * velocity_real;
+   //return corrEfield * velocity_real / 3.0 / nu_ei * dF0dv 
+   //       * velocity_real * velocity_real;
 }
 
 void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
@@ -172,11 +176,15 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
 
    T.SetIntPoint(&ip);
    F0->GetGradient(T, V); 
-   V *= 1.0 / 3.0 / nu_ei;
+   // Scattering on ions and electrons.
+   V *= 1.0 / 3.0 / (nu_ei + nu_ee);
+   //V *= 1.0 / 3.0 / nu_ei;
    
    for (int d = 0; d < vdim; d++)
    { 
-      V(d) -= nu_ee / nu_ei * dF1->GetValue(T.ElementNo, ip, d);
+      // Scattering on ions and electrons.
+      V(d) -= nu_ee / (nu_ei + nu_ee) * dF1->GetValue(T.ElementNo, ip, d);
+      //V(d) -= nu_ee / nu_ei * dF1->GetValue(T.ElementNo, ip, d);
    }
    
    V *= pow(velocity_real, 4.0);
@@ -189,13 +197,16 @@ void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    const double N_x_vTmax = mspei_pcf->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
    double nu_ei =  mspei_pcf->Eval(T, ip);
+   double nu_ee =  mspee_pcf->Eval(T, ip);
 
    for (int d = 0; d < vdim; d++)
    { 
       V(d) = F1->GetValue(T.ElementNo, ip, d);
    }
    
-   V *= pow(velocity_real, 3.0) / nu_ei;
+   // Scattering on ions and electrons.
+   V *= pow(velocity_real, 3.0) / (nu_ei + nu_ee);
+   //V *= pow(velocity_real, 3.0) / nu_ei;
 }
 
 void OhmCurrentCoefficient::Eval(Vector &V, ElementTransformation &T,

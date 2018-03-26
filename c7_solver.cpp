@@ -1001,7 +1001,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                                                    / rho;
             //cout << "Ef1/v/f0/rho: " <<  quad_data.Ef1invvf0rho(z_id*nqp + q) 
             //     << endl << flush;
-            quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
+            // Scattering on ions and electrons.
+			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee) / rho;
+			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
 
             // Time step estimate at the point. Here the more relevant length
             // scale is related to the actual mesh deformation; we use the min
