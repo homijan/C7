@@ -963,7 +963,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
 
 			// TMP on/off anisotropy correction on Lorentz force.
-            Efield *= min(1.0, 0.9 * mspee * velocity_real / Efield.Norml2());
+            double scale = 1.0;
+			Efield *= min(1.0, scale * mspee * velocity_real / Efield.Norml2());
             // ATTEMPT of some physics.
             //if (velocity_real > 0.9 * N_x * vTe) { Efield *= 0.0; }
 

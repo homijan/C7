@@ -11,7 +11,8 @@ F0ORDER=3
 TMAX=1000
 TMIN=100
 TGRAD=180
-XPOINT=0.046775 # in cm
+XPOINT=0.051722 # in cm
+#XPOINT=0.046775 # in cm
 
 ZBAR=1
 #ZBAR=5
@@ -41,6 +42,7 @@ if [ $ZBAR -eq 100 ] ; then
    #NI=4e18 # Zbar = 100 -> Kn 5e-4
    #NI=2e18 # Zbar = 100 -> Kn 1e-3
    NI=2e17 # Zbar = 100 -> Kn 1e-2
+   #NI=2e16 # Zbar = 100 -> Kn 1e-1
 elif [ $ZBAR -eq 20 ] ; then 
    NI=4.8e21 # Zbar = 20 -> Kn 1e-5
    #NI=4.8e20 # Zbar = 20 -> Kn 1e-4
@@ -72,6 +74,7 @@ fi
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.05  | tee C7E.out
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
+cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointmax_Ecorrect.txt
 # Store the output file.
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-5.out
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-4.out
@@ -79,7 +82,7 @@ cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecor
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-2.out
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI -xp $XPOINT --Ecorrect --labelEcorrect 'C7E' #--AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' #--AWBSoriginal
 # Safe figs.
 #cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-5.png
 #cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-5.png

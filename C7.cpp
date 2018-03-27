@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
    // Minimum number of velocity groups.
    double MinimumGroups = 10.0;
    // The point where the detailed kinetic output will be stored at.
-   double x_point = 0.5;
+   double xpoint = 0.5;
    double c7cfl = 0.25;
    // Number of consistent Efield iterations.
    double djC_norm_limit = 1e-2;
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
                   "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
    args.AddOption(&MinimumGroups, "-minG", "--minimumGroups",
                   "The minimum number of velocity groups.");
-   args.AddOption(&x_point, "-xp", "--xpoint",
+   args.AddOption(&xpoint, "-xp", "--xpoint",
                   "An x point within the mesh, where a detailed kinetic profiles as stored.");
 
    args.Parse();
@@ -807,40 +807,56 @@ int main(int argc, char *argv[])
 		 N_x_vTmax = AWBSPhysics.GetVelocityScale();
 
          // Point value structures for storing the distribution function.
-         int cell_point = 0;
+         // For a given point.
+		 //int mpirank_point;
+		 int cell_point = 0;
          IntegrationPoint ip_point;
          ip_point.Set3(0.5, 0.5, 0.5);
          double f0_point;
          Vector f1_point; 
          vector<double> v_point, f0_v_point, f1x_v_point, f0v2_v_point,
-                        mehalff1xv5_v_point, mehalff0v5_v_point;
+                        mehalff1xv5_v_point, mehalff0v5_v_point; 
          bool right_proc_point = false;
-         // Find an element where the x_point belongs and find its ip.
+		 // For a point of the nonlocal heat flux maximum.
+		 int mpirank_pointmax;
+		 int cell_pointmax = 0;
+         IntegrationPoint ip_pointmax;
+         ip_pointmax.Set3(0.5, 0.5, 0.5);
+         double xpointmax;
+		 double f0_pointmax;
+         Vector f1_pointmax; 
+         vector<double> v_pointmax, f0_v_pointmax, f1x_v_pointmax, 
+                        f0v2_v_pointmax, mehalff1xv5_v_pointmax, 
+                        mehalff0v5_v_pointmax;
+         bool right_proc_pointmax = false;
+		 // Find an element where the xpoint belongs and find its ip.
          IntegrationPoint ip_min, ip_max;
          ip_min.Set3(0.0, 0.0, 0.0);
          ip_max.Set3(1.0, 1.0, 1.0); 
-         int elNo = 0;
-         while (!right_proc_point & elNo < x_gf.FESpace()->GetNE() - 1)
+         int elNo = 0; 
+		 while (!right_proc_point & elNo < x_gf.FESpace()->GetNE() - 1)
          {
             double x_min = x_gf.GetValue(elNo, ip_min);
             double x_max = x_gf.GetValue(elNo, ip_max);
-            if (x_point >= x_min & x_point <= x_max) 
+            if (xpoint >= x_min & xpoint <= x_max) 
             { 
-               right_proc_point = true;
-               cell_point = elNo;
-			   // Find an ip corresponding to x_point.
+               // We are on the right processor.
+			   right_proc_point = true;
+			   // The correct cell number
+			   cell_point = elNo;
+			   // Find an ip corresponding to xpoint.
                double tol = 1e-3;
                double L = x_max - x_min, dx, xc, sc, sL = 0.0, sR = 1.0;
-			   cout << "x_point: " << x_point << endl << flush;
+			   cout << "xpoint: " << xpoint << endl << flush;
 			   do
                {
                   sc = (sL + sR) / 2.0;
 				  ip_point.Set3(sc, sc, sc);
 				  xc = x_gf.GetValue(cell_point, ip_point);
-                  if (xc > x_point) { sR = sc; }
+                  if (xc > xpoint) { sR = sc; }
                   else { sL = sc; }
-				  dx = abs(xc - x_point);
-				  //cout << "x_point, xc: " << x_point << ", " << xc << ", " 
+				  dx = abs(xc - xpoint);
+				  //cout << "xpoint, xc: " << xpoint << ", " << xc << ", " 
                   //     << sL << ", " << sR << endl << flush; 
 			   } while (dx/L > tol);
             }
@@ -875,9 +891,14 @@ int main(int argc, char *argv[])
 		    a0_gf = 0.0;
 		    b0_gf = 0.0;
 		    b1_gf = 0.0;	
+            // Point distribution function output restart.
             v_point.resize(0); f0_v_point.resize(0); f1x_v_point.resize(0); 
             f0v2_v_point.resize(0); mehalff1xv5_v_point.resize(0); 
             mehalff0v5_v_point.resize(0);
+            // Heat flux max point distribution function output restart. 
+            v_pointmax.resize(0); f0_v_pointmax.resize(0); 
+            f1x_v_pointmax.resize(0); f0v2_v_pointmax.resize(0); 
+            mehalff1xv5_v_pointmax.resize(0); mehalff0v5_v_pointmax.resize(0);
 			while (v > vmin)
 		    {
                c7ti++;
@@ -885,7 +906,7 @@ int main(int argc, char *argv[])
             
                // Store the distribution function at a given point.
                if (right_proc_point)
-               {
+			   {
                   //cout << "cell_point: " << cell_point << endl << flush;
 			      f0_point = F0_gf.GetValue(cell_point, ip_point);
                   F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
@@ -900,6 +921,24 @@ int main(int argc, char *argv[])
 			      mehalff0v5_v_point.push_back(0.5 * me * f0_point * 
                                                 pow(N_x_vTmax*v, 5.0));
                }
+               // Store the distribution function at the max heat flux point.
+               if (right_proc_pointmax)
+			   {
+                  //cout << "cell_point: " << cell_point << endl << flush;
+			      f0_point = F0_gf.GetValue(cell_point, ip_point);
+                  F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
+                  v_pointmax.push_back(N_x_vTmax * v);
+			      f0_v_pointmax.push_back(f0_point);
+			      // TODO extend to more dimensions.
+			      f1x_v_pointmax.push_back(f1_point(0));
+			      f0v2_v_pointmax.push_back(f0_point * pow(N_x_vTmax*v, 2.0));
+			      // TODO extend to more dimensions.
+			      mehalff1xv5_v_pointmax.push_back(0.5 * me * f1_point(0) * 
+                                                   pow(N_x_vTmax*v, 5.0));
+			      mehalff0v5_v_pointmax.push_back(0.5 * me * f0_point * 
+                                                  pow(N_x_vTmax*v, 5.0));
+               }
+
 
                c7oper.ResetVelocityStepEstimate();
                c7oper.ResetQuadratureData();
@@ -945,6 +984,7 @@ int main(int argc, char *argv[])
                           MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
             double djC_norm_new = abs(glob_old_jC_norm - glob_new_jC_norm) 
                                   / glob_old_jC_norm;
+            // Stop iteration if reached convergence or not converging.
             if (djC_norm_new > djC_norm || djC_norm_new < djC_norm_limit)
             { 
                converging = false; 
@@ -959,11 +999,44 @@ int main(int argc, char *argv[])
             glob_old_jC_norm = glob_new_jC_norm;
 
             // Maximum flux point look up.
-            double loc_hflux_max = hflux_gf.Max();
-            double glob_hflux_max;
-            struct { double val; int rank; } loc_doubleint, glob_doubleint;
-            MPI_Allreduce(&loc_doubleint, &glob_doubleint, 1, MPI_DOUBLE_INT,
-                          MPI_MAXLOC, pmesh->GetComm());
+            // Construct a double-int memory structure.
+			struct { 
+               double val; 
+               int rank; 
+            } loc_hflux_doubleint, glob_hflux_doubleint;
+            // Store values.
+			loc_hflux_doubleint.val = hflux_gf.Max();
+			loc_hflux_doubleint.rank = myid;
+			// Reduce the correct mpirank.
+			MPI_Allreduce(&loc_hflux_doubleint, &glob_hflux_doubleint, 1, 
+                          MPI_DOUBLE_INT, MPI_MAXLOC, pmesh->GetComm());
+			// Go over all cells and find pointmax.
+            mpirank_pointmax = glob_hflux_doubleint.rank;
+			if(myid == mpirank_pointmax)
+            {
+               double hflux_max = 0.0;
+			   for (int elNo = 0; elNo < x_gf.FESpace()->GetNE(); elNo++)
+               {
+                  int N = 10;
+                  for (int p = 0; p < N; p++)
+                  {
+                     double sc = p * 1./(N-1);
+                     ip_pointmax.Set3(sc, sc, sc);
+                     double hflux = hflux_gf.GetValue(elNo, ip_pointmax);
+					 if (hflux > hflux_max)
+                     {
+                        hflux_max = hflux;
+                        xpointmax = x_gf.GetValue(elNo, ip_pointmax);
+                     }
+                  }
+               }
+               // Allow for distribution function storing.
+			   right_proc_pointmax = true;
+
+               cout << "xpointmax, hflux_max: " << xpointmax << ", " 
+                    << 1e-7 * 0.5 * me * hflux_max << endl;
+            }
+            else { right_proc_pointmax = false; }
 
             // Treat internally integrated entities.
             // Heat flux.
@@ -976,20 +1049,41 @@ int main(int argc, char *argv[])
 
          // Save the distribution function at a given point.
          if (right_proc_point)
-         {
+		 {
             ostringstream fe_file_name;
             fe_file_name << basename << "_" << ti
                       << "_fe_point.txt";
             ofstream fe_ofs(fe_file_name.str().c_str());
             fe_ofs.precision(8);
 
-            fe_ofs << "# v  f0  f1x  f0*v^2  0.5*me*f1x*v^5 0.5*me*f0*v^5\n";
+            fe_ofs << "#x  v  f0  f1x  f0*v^2  0.5*me*f1x*v^5 0.5*me*f0*v^5\n";
             for (int i = 0; i < v_point.size(); i++)
             {
-               fe_ofs << v_point[i] << " " << f0_v_point[i] << " "
+               fe_ofs << xpoint << " " << v_point[i] << " " 
+                      << f0_v_point[i] << " "
                       << f1x_v_point[i] << " " << f0v2_v_point[i] << " "
                       << mehalff1xv5_v_point[i] << " "
                       << mehalff0v5_v_point[i] << endl;
+            }
+            fe_ofs.close();
+         }
+         // Save the distribution function at the max heat flux point.
+         if (right_proc_pointmax)
+		 {
+            ostringstream fe_file_name;
+            fe_file_name << basename << "_" << ti
+                      << "_fe_pointmax.txt";
+            ofstream fe_ofs(fe_file_name.str().c_str());
+            fe_ofs.precision(8);
+
+            fe_ofs << "#x  v  f0  f1x  f0*v^2  0.5*me*f1x*v^5 0.5*me*f0*v^5\n";
+            for (int i = 0; i < v_pointmax.size(); i++)
+            {
+               fe_ofs << xpointmax << " " << v_pointmax[i] << " " 
+                      << f0_v_pointmax[i] << " "
+                      << f1x_v_pointmax[i] << " " << f0v2_v_pointmax[i] << " "
+                      << mehalff1xv5_v_pointmax[i] << " "
+                      << mehalff0v5_v_pointmax[i] << endl;
             }
             fe_ofs.close();
          }

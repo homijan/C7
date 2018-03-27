@@ -19,7 +19,7 @@ Te = 1000.0
 gradTe = -1.0
 Zbar = 4.0
 sigma = 8.1027575e17 ## Matching the SH diffusive flux.
-xpoint = 0.5
+#xpoint = 0.5
 AWBSoriginal=False
 Ecorrect=False
 Emimic=False
@@ -32,7 +32,7 @@ parser.add_argument("-n", "--ni", help="Ion density at the point.", type=float)
 parser.add_argument("-s", "--sigma", help="Electro-ion cross-section.", type=float)
 parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion cross-section.", type=float)
 parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
-parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
+#parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
@@ -52,8 +52,8 @@ if args.coulLog:
     coulLog = args.coulLog
 if args.Zbar:
     Zbar = args.Zbar
-if args.xpoint:
-    xpoint = args.xpoint
+#if args.xpoint:
+#    xpoint = args.xpoint
 if args.Nproc:
     Nproc = args.Nproc
 if args.AWBSoriginal:
@@ -116,6 +116,28 @@ C7gradTe = splev(C7x, tck, der=1)
 ## Electron density.
 ne = ni * Zbar
 
+#######################################
+## Load C7 kinetic results ############
+#######################################
+## No explicit treatment of Efield, we use mimicing by reducing ne in source.
+if (Emimic):
+   C7xpoints, C7v, C7mehalff1v5, C7mehalff0v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 1, 5, 6), unpack=True)
+   C7xpoint = C7xpoints[0]
+   C7Q = 0.0
+   NC7 = C7v.size - 1
+   for i in range(NC7): 
+      dC7v = C7v[i] - C7v[i+1]
+      C7Q = C7Q + C7mehalff1v5[i]*dC7v
+## Explicit treatment of Efield.
+if (Ecorrect):
+   C7Expoints, C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_pointmax_Ecorrect.txt',  usecols=(0, 1, 5, 6), unpack=True)
+   C7Expoint = C7Expoints[0]
+   C7EQ = 0.0
+   NC7E = C7Ev.size - 1
+   for i in range(NC7E):
+      dC7Ev = C7Ev[i] - C7Ev[i+1]
+      C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
+
 ###############################################################################
 ########### AWBS diffusive asymptotic ######################################### 
 ###############################################################################
@@ -136,6 +158,8 @@ def solve_bweuler(v, f0, T, gradT, Z, E):
         #f1[i+1] = (f1[i] + dv*rhs)/(1.0 + dv*(4.0 - Z)/vp)
     return f1
 
+## Use the C7E xpoint as reference.
+xpoint = C7Expoint
 ## Evaluate at the given point xpoint.
 xp = np.array(xpoint)
 ## Assign temperature profile values for further analysis.
@@ -217,26 +241,6 @@ for i in range(N):
     AWBSq[i] = mfp_ei*vp*vp*vp*me/2.0*AWBSf1[i]
     AWBSJ = AWBSJ + 4.0*pi/3.0*AWBSj[i]*dv
     AWBSQ = AWBSQ + 4.0*pi/3.0*AWBSq[i]*dv
-
-#######################################
-## Load C7 kinetic results ############
-#######################################
-## No explicit treatment of Efield, we use mimicing by reducing ne in source.
-if (Emimic):
-   C7v, C7mehalff1v5, C7mehalff0v5 = np.loadtxt('Emimic_data/fe_point_Emimic.txt',  usecols=(0, 4, 5), unpack=True)
-   C7Q = 0.0
-   NC7 = C7v.size - 1
-   for i in range(NC7): 
-      dC7v = C7v[i] - C7v[i+1]
-      C7Q = C7Q + C7mehalff1v5[i]*dC7v
-## Explicit treatment of Efield.
-if (Ecorrect):
-   C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 4, 5), unpack=True)
-   C7EQ = 0.0
-   NC7E = C7Ev.size - 1
-   for i in range(NC7E):
-      dC7Ev = C7Ev[i] - C7Ev[i+1]
-      C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
 #######################################
 ## Analytic SH formula ################
