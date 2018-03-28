@@ -11,8 +11,9 @@ F0ORDER=3
 TMAX=1000
 TMIN=100
 TGRAD=180
-XPOINT=0.051722 # in cm
-#XPOINT=0.046775 # in cm
+#XPOINT=0.0542 # in cm Zbar = 1, Kn = 1e-1
+#XPOINT=0.0552 # in cm Zbar = 100, Kn = 1e-2
+XPOINT=0.046775 # in cm qSH maximum
 
 ZBAR=1
 #ZBAR=5
@@ -22,12 +23,11 @@ ZBAR=1
 
 #MINGSAFE=1000
 MING=100
-#MING=2000
 
 # Challenge SNB ;)
 #MING=25
-#F1ORDER=2
-#F0ORDER=1
+#F1ORDER=1
+#F0ORDER=0
 
 L=0.1
 PROBLEM=5
@@ -60,15 +60,15 @@ elif [ $ZBAR -eq 5 ] ; then
    #NI=6.74e21 # Zbar = 5 -> Kn 1e-4
    #NI=6.74e20 # Zbar = 5 -> Kn 1e-3
    #NI=6.74e19 # Zbar = 5 -> Kn 1e-2
-   #NI=1.348e19 # Zbar = 5 -> Kn 5e-2
+   NI=1.348e19 # Zbar = 5 -> Kn 5e-2
 elif [ $ZBAR -eq 1 ] ; then
    #NI=1e29 # Zbar = 1 -> Kn 1e-10
    #NI=1e24 # Zbar = 1 -> Kn 1e-5
    #NI=1e23 # Zbar = 1 -> Kn 1e-4
    #NI=1e22 # Zbar = 1 -> Kn 1e-3
    #NI=1e21 # Zbar = 1 -> Kn 1e-2
-   #NI=2.02e20 # Zbar = 1 -> Kn 5e-2
-   NI=1e20 # Zbar = 1 -> Kn 1e-1, dE 0.1, MING 35
+   NI=2.02e20 # Zbar = 1 -> Kn 5e-2
+   #NI=1e20 # Zbar = 1 -> Kn 1e-1
 fi
 #mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.001  | tee C7E.out
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.05  | tee C7E.out
@@ -82,7 +82,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointma
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-2.out
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' #--AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' #-xp #--AWBSoriginal
 # Safe figs.
 #cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-5.png
 #cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-5.png

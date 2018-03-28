@@ -19,10 +19,10 @@ Te = 1000.0
 gradTe = -1.0
 Zbar = 4.0
 sigma = 8.1027575e17 ## Matching the SH diffusive flux.
-#xpoint = 0.5
 AWBSoriginal=False
 Ecorrect=False
 Emimic=False
+usexpoint=False
 
 import argparse
 ## Create parser object.
@@ -38,6 +38,7 @@ parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
 parser.add_argument("-Ec", "--Ecorrect", action='store_true', help="Display the Ecorrect computation results by adding -Ec/--Ecorrect argument.")
 parser.add_argument("-Em", "--Emimic", action='store_true', help="Display the Emimic computation results by adding -Em/--Emimic argument.")
+parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoint computed output of distribution function instead of nonlocal heat flux maximum.")
 ## Faking arguments providing different labels than C7E and C7*.
 parser.add_argument("-lEc", "--labelEcorrect", help="Force to use -lEc/--labelEcorrect label for Ecorrect_data.")
 parser.add_argument("-lEm", "--labelEmimic", help="Force to use -lEm/--labelEmimic label for Emimc_data.")
@@ -52,8 +53,6 @@ if args.coulLog:
     coulLog = args.coulLog
 if args.Zbar:
     Zbar = args.Zbar
-#if args.xpoint:
-#    xpoint = args.xpoint
 if args.Nproc:
     Nproc = args.Nproc
 if args.AWBSoriginal:
@@ -62,6 +61,8 @@ if args.Ecorrect:
     Ecorrect = args.Ecorrect
 if args.Emimic:
     Emimic = args.Emimic
+if args.usexpoint:
+    usexpoint = args.usexpoint
 ###############################################################################
 ########### Loading of results of parallel C7 code ############################
 ###############################################################################
@@ -75,17 +76,19 @@ def loadC7data(Nproc, file_base):
    C7j_raw = []
    C7Ex_raw = []
    C7q_raw = []
+   C7corrE_raw = []
    ## Gather together the lists from each processors output.
    print "Loading data from files:"
    for proc in range(Nproc):
       file = file_base+str(proc).zfill(maxProcOrder)
-      C7x_proc, C7rho_proc, C7Te_proc, C7j_proc, C7Ex_proc, C7q_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5), unpack=True)
+      C7x_proc, C7rho_proc, C7Te_proc, C7j_proc, C7Ex_proc, C7q_proc, C7corrE_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5, 6), unpack=True)
       C7x_raw.extend(C7x_proc)
       C7rho_raw.extend(C7rho_proc)
       C7Te_raw.extend(C7Te_proc)
       C7j_raw.extend(C7j_proc)
       C7Ex_raw.extend(C7Ex_proc)
       C7q_raw.extend(C7q_proc)
+      C7corrE_raw.extend(C7corrE_proc)
       print file
    ## Sort the lists with respect to the position x.
    sorted_indices = np.array(C7x_raw).argsort()
@@ -95,12 +98,13 @@ def loadC7data(Nproc, file_base):
    C7j = np.array([C7j_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7Ex = np.array([C7Ex_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
    C7q = np.array([C7q_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
-   return C7x, C7rho, C7Te, C7j, C7Ex, C7q
+   C7corrE = np.array([C7corrE_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
+   return C7x, C7rho, C7Te, C7j, C7Ex, C7q, C7corrE
 
 if (Ecorrect):
-   C7x, C7rho, C7Te, C7j_Ec, C7Ex_Ec, C7q_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
+   C7x, C7rho, C7Te, C7j_Ec, C7Ex_Ec, C7q_Ec, C7corrE_Ec = loadC7data(Nproc, 'Ecorrect_data/C7_1_profiles.')
 if (Emimic):
-   C7x, C7rho, C7Te, C7j_Em, C7Ex_Em, C7q_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
+   C7x, C7rho, C7Te, C7j_Em, C7Ex_Em, C7q_Em, C7corrE_Em = loadC7data(Nproc, 'Emimic_data/C7_1_profiles.')
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################
@@ -129,14 +133,24 @@ if (Emimic):
       dC7v = C7v[i] - C7v[i+1]
       C7Q = C7Q + C7mehalff1v5[i]*dC7v
 ## Explicit treatment of Efield.
-if (Ecorrect):
-   C7Expoints, C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_pointmax_Ecorrect.txt',  usecols=(0, 1, 5, 6), unpack=True)
-   C7Expoint = C7Expoints[0]
-   C7EQ = 0.0
-   NC7E = C7Ev.size - 1
-   for i in range(NC7E):
-      dC7Ev = C7Ev[i] - C7Ev[i+1]
-      C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
+if (usexpoint):
+   if (Ecorrect):
+      C7Expoints, C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_point_Ecorrect.txt',  usecols=(0, 1, 5, 6), unpack=True)
+      C7Expoint = C7Expoints[0]
+      C7EQ = 0.0
+      NC7E = C7Ev.size - 1
+      for i in range(NC7E):
+         dC7Ev = C7Ev[i] - C7Ev[i+1]
+         C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
+else:
+   if (Ecorrect):
+      C7Expoints, C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('Ecorrect_data/fe_pointmax_Ecorrect.txt',  usecols=(0, 1, 5, 6), unpack=True)
+      C7Expoint = C7Expoints[0]
+      C7EQ = 0.0
+      NC7E = C7Ev.size - 1
+      for i in range(NC7E):
+         dC7Ev = C7Ev[i] - C7Ev[i+1]
+         C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
 ###############################################################################
 ########### AWBS diffusive asymptotic ######################################### 
@@ -398,20 +412,25 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
 ax1.set_title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min()) - (C7Te.min() - C7SHQ_analytic.min())
 ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h^{SH}$')
 if (Ecorrect):
    ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7E}$')
 if (Emimic):
    ax1.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
+## Special treatment of temperature profile.
+C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min()) - (C7Te.min() - C7SHQ_analytic.min())
 ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ax2 = ax1.twinx()
+ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE_Ec.min())+', '+"{:.0f}".format(C7corrE_Ec.max())+')' )
 ax2.plot(C7x_microns, C7SHE_analytic, SHcolor+':', label=r'E$^{SH}$')
 if (Ecorrect):
    ax2.plot(C7x_microns, C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
 if (Emimic):
    ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
-ax2.set_ylabel(r'E [a.u.]')
+## Special treatment of the corrE showing the limit velocity/vTh 
+## to be affected by E field.
+C7corrE_scaled = C7corrE_Ec*(C7Ex_Ec.max() - C7Ex_Ec.min())/(C7corrE_Ec.max() - C7corrE_Ec.min()) - (C7corrE_Ec.min() - C7Ex_Ec.min())
+ax2.plot(C7x_microns, C7corrE_scaled, 'k-', label=r'$v_{lim}/v_{th}$')
 fig.tight_layout()
 ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='center right', fancybox=True, framealpha=0.8)

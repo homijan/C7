@@ -275,6 +275,20 @@ public:
    virtual void SetAlpha(double alpha_) { alpha = alpha_; }
 };
 
+// Diagnostics.
+class CorrEfieldCoefficient : public GeneralKineticCoefficient
+{
+protected:
+public:
+   CorrEfieldCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
+                         NTHvHydroCoefficient *mspee_pcf_)
+      : GeneralKineticCoefficient(dim_, mspei_pcf_, mspee_pcf_) { }
+   virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip);
+   virtual void Eval(Vector &V, ElementTransformation &T,
+                     const IntegrationPoint &ip) 
+   { std::cout << "Not defined..." << std::endl; }
+};
+
 extern double sigma;
 extern double coulLog; // TMP will be moved to the eos.
 

@@ -520,6 +520,14 @@ int main(int argc, char *argv[])
                                         mspee_pcf, sourceF0_pcf,
                                         Efield_pcf, Bfield_pcf, &eos);
 
+   // Diagnostics.
+   // Create the Efield correction coefficient.
+   nth::CorrEfieldCoefficient corrEfield_cf(pmesh->Dimension(), mspei_pcf, 
+                                            mspee_pcf); 
+   corrEfield_cf.SetEfield(Efield_pcf);
+   Coefficient * corrEfield_pcf = &corrEfield_cf;
+   GridFunction corrEfield_gf(&L2FESpace);
+
    // Static coefficient defined in c7_solver.hpp.
    //double c7cfl = 0.25;
    //double c7cfl = 0.005;
@@ -1047,6 +1055,9 @@ int main(int argc, char *argv[])
 		    Eit++;
          } // Efield loop.
 
+         // Consistent Efield (zero current) computation.
+         corrEfield_gf.ProjectCoefficient(*corrEfield_pcf);
+
          // Save the distribution function at a given point.
          if (right_proc_point)
 		 {
@@ -1093,7 +1104,7 @@ int main(int argc, char *argv[])
          int Nelements = x_gf.FESpace()->GetNE();
          int Npoints = NpointsPerElement * Nelements;
          double x[Npoints], rho[Npoints], Te[Npoints], j[Npoints], Ex[Npoints], 
-                q[Npoints];
+                q[Npoints], corrE[Npoints];
          IntegrationPoint ip;
          double dip = 1. / NpointsPerElement;
          int p = 0;
@@ -1108,7 +1119,8 @@ int main(int argc, char *argv[])
                j[p] = jC_gf.GetValue(elNo, ip);
                Ex[p] = Efield_gf.GetValue(elNo, ip, 1);
 			   q[p] = hflux_gf.GetValue(elNo, ip);
-               p++;
+               corrE[p] = corrEfield_gf.GetValue(elNo, ip);
+			   p++;
             }
          }
          ostringstream profiles_file_name;
@@ -1116,11 +1128,12 @@ int main(int argc, char *argv[])
                             << setfill('0') << setw(6) << myid;
          ofstream profiles_ofs(profiles_file_name.str().c_str());
          profiles_ofs.precision(8);
-         profiles_ofs << "# x  rho Te j Ex q\n";
+         profiles_ofs << "# x  rho Te j Ex q corrE\n";
          for (int i = 0; i < Npoints; i++)
          {
             profiles_ofs << x[i] << " " << rho[i] << " " << Te[i] << " "
-                         << j[i] << " " << Ex[i] << " " << q[i] << endl;
+                         << j[i] << " " << Ex[i] << " " << q[i] << " "
+                         << corrE[i] << endl;
          }
          profiles_ofs.close();
 ///////////////////////////////////////////////////////////////

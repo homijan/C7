@@ -121,7 +121,9 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    Vector Efield(vdim);
    Efield = 1.0;
    Efield_pcf->Eval(Efield, T, ip);
-   double corrEfield = min(1.0, 0.9 * nu_ee * velocity_real / Efield.Norml2());
+   double scale = 1.0;
+   double corrEfield = min(1.0, 
+                           scale * nu_ee * velocity_real / Efield.Norml2());
 
    // Scattering on ions and electrons.
    return corrEfield * velocity_real / 3.0 / (nu_ei + nu_ee) * dF0dv 
@@ -232,6 +234,41 @@ double AWBSF0Source::Eval(ElementTransformation &T, const IntegrationPoint &ip)
    double rho = rho_gf.GetValue(T.ElementNo, ip);
 
    return Eval(T, ip, rho);
+}
+
+// Diagnostics.
+double CorrEfieldCoefficient::Eval(ElementTransformation &T,
+                                   const IntegrationPoint &ip)
+{
+   int N_x = 10, Nd = 1000;
+   double vTe = mspei_pcf->GetvTe(T, ip);
+   double dv = N_x * vTe / Nd;
+
+   Vector Efield(vdim);
+   Efield = 1.0;
+   Efield_pcf->Eval(Efield, T, ip);
+   double Efield_norm = Efield.Norml2();
+
+   // Start with a low velocity compared to vTe.
+   double velocity_limit = Nd * dv;
+   for (int i = Nd; i > 1; i--)
+   {
+      double velocity_real = i*dv;
+      mspee_pcf->SetVelocityReal(velocity_real);
+      double nu_ee =  mspee_pcf->Eval(T, ip);
+
+      double scale = 1.0;
+      if (scale * nu_ee * velocity_real < Efield_norm) 
+      {
+         velocity_limit = velocity_real;
+         //break;
+      }
+   }
+
+   //cout << "velocity_limit/vTe: " << velocity_limit / vTe << endl;
+
+   // Return velocity limit scaled to local thermal velocity.
+   return velocity_limit / vTe;
 }
 
 
