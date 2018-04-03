@@ -19,6 +19,7 @@ Te = 1000.0
 gradTe = -1.0
 Zbar = 4.0
 sigma = 8.1027575e17 ## Matching the SH diffusive flux.
+AWBSstar=False
 AWBSoriginal=False
 Ecorrect=False
 Emimic=False
@@ -35,6 +36,7 @@ parser.add_argument("-Z", "--Zbar", help="Ionization at the point.", type=float)
 #parser.add_argument("-xp", "--xpoint", help="Kinetic analysis at this point.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
+parser.add_argument("-As", "--AWBSstar", action='store_true', help="Display the AWBS* diffusive asymptotic by adding -As/--AWBSstar argument.")
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
 parser.add_argument("-Ec", "--Ecorrect", action='store_true', help="Display the Ecorrect computation results by adding -Ec/--Ecorrect argument.")
 parser.add_argument("-Em", "--Emimic", action='store_true', help="Display the Emimic computation results by adding -Em/--Emimic argument.")
@@ -55,6 +57,8 @@ if args.Zbar:
     Zbar = args.Zbar
 if args.Nproc:
     Nproc = args.Nproc
+if args.AWBSstar:
+    AWBSstar = args.AWBSstar
 if args.AWBSoriginal:
     AWBSoriginal = args.AWBSoriginal
 if args.Ecorrect:
@@ -412,13 +416,14 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
 ax1.set_title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h^{SH}$')
+ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-', label=r'$q_h^{SH}$')
 if (Ecorrect):
    ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7E}$')
 if (Emimic):
    ax1.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
 ## Special treatment of temperature profile.
-C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min()) - (C7Te.min() - C7SHQ_analytic.min())
+C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min())
+C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7SHQ_analytic.max())
 ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ax2 = ax1.twinx()
 ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE_Ec.min())+', '+"{:.0f}".format(C7corrE_Ec.max())+')' )
@@ -429,8 +434,9 @@ if (Emimic):
    ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
 ## Special treatment of the corrE showing the limit velocity/vTh 
 ## to be affected by E field.
-C7corrE_scaled = C7corrE_Ec*(C7Ex_Ec.max() - C7Ex_Ec.min())/(C7corrE_Ec.max() - C7corrE_Ec.min()) - (C7corrE_Ec.min() - C7Ex_Ec.min())
-ax2.plot(C7x_microns, C7corrE_scaled, 'k-', label=r'$v_{lim}/v_{th}$')
+C7corrE_scaled = C7corrE_Ec*(C7Ex_Ec.max() - C7Ex_Ec.min())/(C7corrE_Ec.max() - C7corrE_Ec.min()) 
+C7corrE_scaled = C7corrE_scaled - (C7corrE_scaled.max() - C7Ex_Ec.max())
+ax2.plot(C7x_microns, C7corrE_scaled, 'k-.', label=r'$v_{lim}/v_{th}$')
 fig.tight_layout()
 ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='center right', fancybox=True, framealpha=0.8)
@@ -466,10 +472,11 @@ ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 ax1.set_xlabel('v/vT')
 ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Plot kinetic analysis.
-ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1^{SH}$')
+ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-", label=r'$q_1^{SH}$')
 if (AWBSoriginal):
    ax1.plot(p_v/vTh(Te), p_AWBSq, "r-", label=r'$q_1^{AWBS}$')
-ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
+if (AWBSstar):
+   ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
 if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')

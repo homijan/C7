@@ -67,8 +67,8 @@ elif [ $ZBAR -eq 1 ] ; then
    #NI=1e23 # Zbar = 1 -> Kn 1e-4
    #NI=1e22 # Zbar = 1 -> Kn 1e-3
    #NI=1e21 # Zbar = 1 -> Kn 1e-2
-   NI=2.02e20 # Zbar = 1 -> Kn 5e-2
-   #NI=1e20 # Zbar = 1 -> Kn 1e-1
+   #NI=2.02e20 # Zbar = 1 -> Kn 5e-2
+   NI=1e20 # Zbar = 1 -> Kn 1e-1
 fi
 #mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.001  | tee C7E.out
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.05  | tee C7E.out
@@ -82,7 +82,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointma
 #cp C7E.out results/fe_analysis/C7E/P5_Z1_Kn1e-2.out
 
 cd results/fe_analysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' #-xp #--AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' #-xp #--AWBSstar #--AWBSoriginal
 # Safe figs.
 #cp heatflux.png C7E/P5_heatflux_Z1_Kn1e-5.png
 #cp kinetics.png C7E/P5_kinetics_Z1_Kn1e-5.png
