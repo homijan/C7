@@ -1,0 +1,3595 @@
+
+       __                __                 
+      / /   ____  ____  / /_  ____  _____   
+     / /   / __ `/ __ `/ __ \/ __ \/ ___/ 
+    / /___/ /_/ / /_/ / / / / /_/ (__  )    
+   /_____/\__,_/\__, /_/ /_/\____/____/  
+               /____/                       
+
+Options used:
+   --mesh data/segment01.mesh
+   --refine-serial 6
+   --refine-parallel 0
+   --problem 5
+   --order-kinematic 4
+   --order-thermo 3
+   --ode-solver 2
+   --t-final 0
+   --cfl 1e+10
+   --cg-tol 1e-08
+   --cg-max-steps 23
+   --max-steps -1
+   --full-assembly
+   --no-visualization
+   --visualization-steps 10
+   --no-visit
+   --print
+   --outputfilename results/tmp/C7
+   --sigma 8.10276e+17
+   --coulLog 7.09
+   --Zbar 10
+   --Tmax 1000
+   --Tmin 100
+   --rhomax 10
+   --rhomin 1
+   --Length 0.1
+   --Tgrad 180
+   --rhograd 50
+   --dEfielditerationnorm 0.005
+   --Emaxit 100
+   --ES0 0
+   --S0 1
+   --ni 7.7e+18
+   --no-M1closure->P1closure
+   --minimumGroups 100
+   --xpoint 0.046775
+Number of kinematic (position, velocity) dofs: 513
+Number of specific internal energy dofs: 512
+step     1,	t = 0.0000,	dt = 0.000000,	|e| = 15717.5061746840
+xpoint: 0.046775
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000003,	0.00000000000000011]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000004]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000017,	0.00000000000000017]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000030,	0.00000000000000032]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000045,	0.00000000000000056]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000010]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000073,	0.00000000000000082]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000015]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000110,	0.00000000000000121]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000020]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000157,	0.00000000000000180]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000028]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000225,	0.00000000000000257]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000041]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000320,	0.00000000000000362]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000058]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000446,	0.00000000000000509]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000080]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000618,	0.00000000000000712]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000113]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000853,	0.00000000000000987]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000160]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001170,	0.00000000000001360]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000222]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001595,	0.00000000000001869]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000308]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002164,	0.00000000000002558]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000427]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002924,	0.00000000000003485]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000589]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003935,	0.00000000000004730]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000810]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005271,	0.00000000000006397]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001110]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000007032,	0.00000000000008623]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001516]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000009344,	0.00000000000011584]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002063]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000012367,	0.00000000000015507]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002797]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000016302,	0.00000000000020692]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003779]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000021401,	0.00000000000027521]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000005088]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000027980,	0.00000000000036487]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000006825]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000036435,	0.00000000000048219]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000009121]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000047250,	0.00000000000063522]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000012146]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000061022,	0.00000000000083418]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000016114]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000078481,	0.00000000000109206]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000021298]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000100508,	0.00000000000142522]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000028044]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000128171,	0.00000000000185429]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000036786]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000162742,	0.00000000000240513]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000048066]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000205734,	0.00000000000311007]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000062563]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000258932,	0.00000000000400939]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000081107]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000324421,	0.00000000000515307]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000104737]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000404617,	0.00000000000660291]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000134696]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000502295,	0.00000000000843504]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000172517]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000620611,	0.00000000001074291]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000220044]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000763115,	0.00000000001364071]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000279475]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000933755,	0.00000000001726747]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000353435]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001136864,	0.00000000002179170]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000445003]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001377134,	0.00000000002741677]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000557865]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001659561,	0.00000000003438699]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000696149]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001989372,	0.00000000004299444]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000864818]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002371918,	0.00000000005358655]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001069323]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002812539,	0.00000000006657442]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001315956]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003316398,	0.00000000008244178]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001611640]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003888278,	0.00000000010175452]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001964341]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004532363,	0.00000000012517054]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002382326]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005251981,	0.00000000015344974]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002874839]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006049349,	0.00000000018746386]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003451567]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006925305,	0.00000000022820570]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004122736]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007879062,	0.00000000027679729]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004898704]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008907981,	0.00000000033449651]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005790922]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010007409,	0.00000000040270159]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006809325]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011170572,	0.00000000048295286]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007964427]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012388563,	0.00000000057693109]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000009265934]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013650430,	0.00000000068645213]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010722823]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014943381,	0.00000000081345701]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000012343016]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016253100,	0.00000000095999752]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000014133499]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000017564172,	0.00000000112821692]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000016099834]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000018860614,	0.00000000132032584]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000018244925]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000020126459,	0.00000000153857359]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000020572624]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000021346392,	0.00000000178521536]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000023083493]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000022506365,	0.00000000206247580]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000025777905]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000023594171,	0.00000000237250972]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000028656895]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000024599928,	0.00000000271736059]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000031715172]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000025516441,	0.00000000309891754]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000034973203]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000026339443,	0.00000000351887157]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000038419925]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000027067771,	0.00000000397867140]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000042059280]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000027703649,	0.00000000447947948]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000045909774]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000028253546,	0.00000000502212848]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000049964648]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000028730724,	0.00000000560707875]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000054257805]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000029161970,	0.00000000623437698]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000058762226]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000029604009,	0.00000000690361692]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000063454741]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000030180919,	0.00000000761390261]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000068385866]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000031164862,	0.00000000836381534]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000073408190]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000033141603,	0.00000000915138518]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000078402444]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000037333173,	0.00000000997406869]
+[min(f1), max(f1)] = [-0.00000000001628936,	0.00000000083167591]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000046195383,	0.00000001161141477]
+[min(f1), max(f1)] = [-0.00000000007079515,	0.00000000087527006]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000064466448,	0.00000001369927002]
+[min(f1), max(f1)] = [-0.00000000013312498,	0.00000000091077006]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000100904818,	0.00000001630476875]
+[min(f1), max(f1)] = [-0.00000000020135774,	0.00000000093318350]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000170994793,	0.00000001957521732]
+[min(f1), max(f1)] = [-0.00000000027302816,	0.00000000093826719]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000300873021,	0.00000002368888895]
+[min(f1), max(f1)] = [-0.00000000034509558,	0.00000000092043463]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000532574553,	0.00000002888287126]
+[min(f1), max(f1)] = [-0.00000000041403054,	0.00000000087616649]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000930344869,	0.00000003548177547]
+[min(f1), max(f1)] = [-0.00000000047595854,	0.00000000080218237]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001587171049,	0.00000004393700437]
+[min(f1), max(f1)] = [-0.00000000052681518,	0.00000000070111507]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001779032479,	0.00000005481994070]
+[min(f1), max(f1)] = [-0.00000000056256500,	0.00000000057545109]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001870890192,	0.00000006898312794]
+[min(f1), max(f1)] = [-0.00000000057968874,	0.00000000043507764]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001959873659,	0.00000008769914101]
+[min(f1), max(f1)] = [-0.00000000057570346,	0.00000000029273013]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002045229426,	0.00000011293176120]
+[min(f1), max(f1)] = [-0.00000000054994394,	0.00000000016390005]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002126210795,	0.00000014806808222]
+[min(f1), max(f1)] = [-0.00000000050233783,	0.00000000006455163]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002202097303,	0.00000019939558347]
+[min(f1), max(f1)] = [-0.00000000043638317,	0.00000000000871454]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002272174135,	0.00000026877047911]
+[min(f1), max(f1)] = [-0.00000000035681449,	0.00000000000036251]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002335766943,	0.00000035024791262]
+[min(f1), max(f1)] = [-0.00000000026964397,	0.00000000000021048]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002392262583,	0.00000044069642459]
+[min(f1), max(f1)] = [-0.00000000018403511,	0.00000000000011242]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002441094582,	0.00000053531724340]
+[min(f1), max(f1)] = [-0.00000000010916215,	0.00000000000005348]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002481770577,	0.00000062772234168]
+[min(f1), max(f1)] = [-0.00000000005276362,	0.00000000000002137]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002513875677,	0.00000071055449618]
+[min(f1), max(f1)] = [-0.00000000001834642,	0.00000000000000636]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002537077512,	0.00000077641634700]
+[min(f1), max(f1)] = [-0.00000000000319269,	0.00000000000000097]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002551135534,	0.00000081894758773]
+[min(f1), max(f1)] = [-0.00000000000000008,	0.00000000000025172]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 0, 2.6194e+29, 2.7226e+48
+xpointmax, hflux_max: 0.0517361, 4.8904e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000012]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000008,	0.00000000000000017]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000023,	0.00000000000000035]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000035,	0.00000000000000058]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000054,	0.00000000000000086]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000014]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000085,	0.00000000000000127]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000019]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000124,	0.00000000000000188]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000176,	0.00000000000000268]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000038]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000250,	0.00000000000000378]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000054]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000351,	0.00000000000000532]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000075]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000484,	0.00000000000000743]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000105]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000665,	0.00000000000001030]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000148]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000909,	0.00000000000001421]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000206]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001236,	0.00000000000001954]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000285]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001669,	0.00000000000002675]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000394]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002244,	0.00000000000003646]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000543]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003005,	0.00000000000004951]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000746]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000004006,	0.00000000000006701]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001020]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005316,	0.00000000000009038]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001390]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000007024,	0.00000000000012147]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001888]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000009242,	0.00000000000016272]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002555]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000012109,	0.00000000000021726]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003444]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000015801,	0.00000000000028914]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004626]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000020530,	0.00000000000038357]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000006192]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000026562,	0.00000000000050721]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000008257]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000034221,	0.00000000000066858]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010969]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000043900,	0.00000000000087852]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000014518]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000056074,	0.00000000000115078]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000019141]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000071314,	0.00000000000150273]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000025140]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000090297,	0.00000000000195625]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000032891]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000113825,	0.00000000000253879]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000042866]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000142842,	0.00000000000328469]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000055642]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000178442,	0.00000000000423671]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000071940]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000221891,	0.00000000000544794]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000092636]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000274637,	0.00000000000698406]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000118796]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000338319,	0.00000000000892594]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000151710]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000414778,	0.00000000001137285]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000192929]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000506056,	0.00000000001444607]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000244298]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000614389,	0.00000000001829321]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000308016]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000742199,	0.00000000002309310]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000386625]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000892071,	0.00000000002906142]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000483167]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001066714,	0.00000000003645706]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000601062]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001268919,	0.00000000004558918]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000744289]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001501499,	0.00000000005682510]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000917322]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001767214,	0.00000000007059881]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001125282]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002068685,	0.00000000008742006]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001373759]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002408286,	0.00000000010788394]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001668932]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002788044,	0.00000000013268065]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002017511]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003209513,	0.00000000016260525]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002426735]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003673652,	0.00000000019856695]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002904099]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004180704,	0.00000000024159760]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003457974]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004730080,	0.00000000029285878]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004096120]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005320271,	0.00000000035364699]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004826928]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005948760,	0.00000000042539645]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005658438]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006611992,	0.00000000050967874]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006598455]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007305358,	0.00000000060819888]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007654493]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008023235,	0.00000000072278740]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000008833291]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008759071,	0.00000000085538815]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010140664]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009505528,	0.00000000100804152]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000011581889]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010254666,	0.00000000118286335]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000013160682]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010998173,	0.00000000138201973]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000014879710]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011727632,	0.00000000160769803]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000016740210]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012434813,	0.00000000186207484]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000018745226]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013111972,	0.00000000214728152]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000020889345]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013752144,	0.00000000246536811]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000023179801]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014349415,	0.00000000281826597]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000025607999]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014899141,	0.00000000320774967]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000028171249]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015398161,	0.00000000363539842]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000030883112]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015845023,	0.00000000410255712]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000033732865]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016240410,	0.00000000461029708]
+[min(f1), max(f1)] = [-0.00000000000000175,	0.00000000036706637]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016588193,	0.00000000515937634]
+[min(f1), max(f1)] = [-0.00000000000092274,	0.00000000039773369]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016898207,	0.00000000575019965]
+[min(f1), max(f1)] = [-0.00000000000259945,	0.00000000042979620]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 10
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000017193210,	0.00000000638277844]
+[min(f1), max(f1)] = [-0.00000000000479160,	0.00000000046262531]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000017525454,	0.00000000705669134]
+[min(f1), max(f1)] = [-0.00000000000748491,	0.00000000049496038]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000018014168,	0.00000000777104616]
+[min(f1), max(f1)] = [-0.00000000003125880,	0.00000000052585552]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000018926201,	0.00000000852444451]
+[min(f1), max(f1)] = [-0.00000000007197452,	0.00000000055322150]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000020841272,	0.00000000931495042]
+[min(f1), max(f1)] = [-0.00000000012402801,	0.00000000057548213]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000024974206,	0.00000001014006469]
+[min(f1), max(f1)] = [-0.00000000018667967,	0.00000000058943413]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000033771921,	0.00000001167218937]
+[min(f1), max(f1)] = [-0.00000000025934572,	0.00000000059141657]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000051961595,	0.00000001376367987]
+[min(f1), max(f1)] = [-0.00000000034061395,	0.00000000057710199]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000088288427,	0.00000001637208929]
+[min(f1), max(f1)] = [-0.00000000042859806,	0.00000000054215696]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000158221876,	0.00000001963535184]
+[min(f1), max(f1)] = [-0.00000000052039903,	0.00000000048049017]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000287883863,	0.00000002372708769]
+[min(f1), max(f1)] = [-0.00000000061258597,	0.00000000039007374]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000519297646,	0.00000002887702435]
+[min(f1), max(f1)] = [-0.00000000070233327,	0.00000000026609231]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000916703512,	0.00000003541904053]
+[min(f1), max(f1)] = [-0.00000000078451933,	0.00000000011131290]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001573093538,	0.00000004375350761]
+[min(f1), max(f1)] = [-0.00000000085473145,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001799206754,	0.00000005447437435]
+[min(f1), max(f1)] = [-0.00000000090856864,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001891035914,	0.00000006843249816]
+[min(f1), max(f1)] = [-0.00000000094339248,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001979981170,	0.00000008693758840]
+[min(f1), max(f1)] = [-0.00000000095581814,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002065306078,	0.00000011200450421]
+[min(f1), max(f1)] = [-0.00000000094641173,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002146268295,	0.00000014723927666]
+[min(f1), max(f1)] = [-0.00000000091479695,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002222123350,	0.00000019915305061]
+[min(f1), max(f1)] = [-0.00000000086012466,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002292174395,	0.00000026859701782]
+[min(f1), max(f1)] = [-0.00000000076210993,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002355751511,	0.00000035007691231]
+[min(f1), max(f1)] = [-0.00000000061144430,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002412227527,	0.00000044052534834]
+[min(f1), max(f1)] = [-0.00000000043299950,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002461047350,	0.00000053514606411]
+[min(f1), max(f1)] = [-0.00000000026182504,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002501713657,	0.00000062755127768]
+[min(f1), max(f1)] = [-0.00000000012761026,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002533815307,	0.00000071038364112]
+[min(f1), max(f1)] = [-0.00000000004448754,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002557008445,	0.00000077624564912]
+[min(f1), max(f1)] = [-0.00000000000773811,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002571060528,	0.00000081877696594]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000060942]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 1, 1.6865e+29, 2.7146e-01
+xpointmax, hflux_max: 0.0513889, 3.83597e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000012]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000008,	0.00000000000000018]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000022,	0.00000000000000035]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000035,	0.00000000000000059]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000053,	0.00000000000000087]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000014]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000084,	0.00000000000000129]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000019]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000123,	0.00000000000000190]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000174,	0.00000000000000271]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000038]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000247,	0.00000000000000382]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000054]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000346,	0.00000000000000538]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000074]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000478,	0.00000000000000752]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000105]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000656,	0.00000000000001044]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000147]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000897,	0.00000000000001440]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000204]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001218,	0.00000000000001981]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000283]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001644,	0.00000000000002713]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000390]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002209,	0.00000000000003699]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000538]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002956,	0.00000000000005026]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000738]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003937,	0.00000000000006805]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005221,	0.00000000000009183]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001375]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000006893,	0.00000000000012349]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001866]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000009062,	0.00000000000016551]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002523]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000011864,	0.00000000000022110]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003400]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000015465,	0.00000000000029441]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004564]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000020075,	0.00000000000039077]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000006104]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000025946,	0.00000000000051703]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000008134]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000033391,	0.00000000000068191]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010797]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000042786,	0.00000000000089656]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000014278]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000054586,	0.00000000000117510]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000018809]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000069334,	0.00000000000153540]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000024681]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000087675,	0.00000000000199996]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000032260]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000110368,	0.00000000000259705]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000042001]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000138304,	0.00000000000336205]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000054462]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000172515,	0.00000000000433904]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000070338]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000214186,	0.00000000000558276]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000090468]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000264667,	0.00000000000716097]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000115877]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000325484,	0.00000000000915714]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000147798]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000398339,	0.00000000001167374]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000187704]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000485109,	0.00000000001483601]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000237369]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000587840,	0.00000000001879637]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000298848]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000708732,	0.00000000002373949]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000374589]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000850118,	0.00000000002988808]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000467403]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001014420,	0.00000000003750942]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000580548]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001204111,	0.00000000004692257]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000717720]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001421663,	0.00000000005850644]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000883174]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001669461,	0.00000000007270846]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001081482]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001949729,	0.00000000009005370]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001318060]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002264450,	0.00000000011115459]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001598426]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002615250,	0.00000000013672063]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001928692]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003003300,	0.00000000016756809]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002315808]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003429226,	0.00000000020462885]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002766396]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003892976,	0.00000000024895852]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003287599]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004393761,	0.00000000030174307]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003886758]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004929972,	0.00000000036430295]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004571277]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005499116,	0.00000000043809494]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005348911]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006097828,	0.00000000052471045]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006225264]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006721823,	0.00000000062587022]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007207450]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007366005,	0.00000000074341471]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000008301153]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008024529,	0.00000000087929024]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000009510150]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008690935,	0.00000000103553082]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010838705]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009358299,	0.00000000121423577]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000012292005]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010019451,	0.00000000141754354]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000013866997]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010667211,	0.00000000164760275]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000015567567]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011294589,	0.00000000190654056]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000017390355]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011895060,	0.00000000219642947]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000019331556]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012462771,	0.00000000251925344]
+[min(f1), max(f1)] = [-0.00000000000013500,	0.00000000021394879]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012992760,	0.00000000287687342]
+[min(f1), max(f1)] = [-0.00000000000160355,	0.00000000023567318]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013481147,	0.00000000327099257]
+[min(f1), max(f1)] = [-0.00000000000411877,	0.00000000025844138]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013925279,	0.00000000370312128]
+[min(f1), max(f1)] = [-0.00000000000758753,	0.00000000028207534]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014323955,	0.00000000417454171]
+[min(f1), max(f1)] = [-0.00000000001204549,	0.00000000030662504]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014677853,	0.00000000468627152]
+[min(f1), max(f1)] = [-0.00000000001766741,	0.00000000033170227]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014990596,	0.00000000523902643]
+[min(f1), max(f1)] = [-0.00000000002507097,	0.00000000035677165]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015271541,	0.00000000583318162]
+[min(f1), max(f1)] = [-0.00000000003731868,	0.00000000038163616]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015542759,	0.00000000646873210]
+[min(f1), max(f1)] = [-0.00000000006159454,	0.00000000040511573]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015855602,	0.00000000714525267]
+[min(f1), max(f1)] = [-0.00000000009917022,	0.00000000042577040]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016328130,	0.00000000786185864]
+[min(f1), max(f1)] = [-0.00000000014997295,	0.00000000044143461]
+HyprePCG(BoomerAMG) GetNumIterations: 13
+HyprePCG(BoomerAMG) GetNumIterations: 13
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000017225637,	0.00000000861716861]
+[min(f1), max(f1)] = [-0.00000000021456217,	0.00000000044891677]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000019125699,	0.00000000940927092]
+[min(f1), max(f1)] = [-0.00000000029381172,	0.00000000044361378]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000023240110,	0.00000001024231826]
+[min(f1), max(f1)] = [-0.00000000038800120,	0.00000000041903638]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000032011553,	0.00000001198433447]
+[min(f1), max(f1)] = [-0.00000000049741658,	0.00000000036625456]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 12
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000050161512,	0.00000001416563836]
+[min(f1), max(f1)] = [-0.00000000062126090,	0.00000000027426135]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 20
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000086427370,	0.00000001688701124]
+[min(f1), max(f1)] = [-0.00000000075816943,	0.00000000012816146]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000156267949,	0.00000002027423621]
+[min(f1), max(f1)] = [-0.00000000090587846,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 6
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000285794668,	0.00000002451004967]
+[min(f1), max(f1)] = [-0.00000000105968714,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000517023411,	0.00000002980217725]
+[min(f1), max(f1)] = [-0.00000000121635160,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000914189293,	0.00000003644339752]
+[min(f1), max(f1)] = [-0.00000000137897005,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001570285282,	0.00000004485133610]
+[min(f1), max(f1)] = [-0.00000000154238725,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001817486198,	0.00000005557783367]
+[min(f1), max(f1)] = [-0.00000000171086246,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001909129415,	0.00000006949016227]
+[min(f1), max(f1)] = [-0.00000000188972331,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 3
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001997918183,	0.00000008783794406]
+[min(f1), max(f1)] = [-0.00000000205862736,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 3
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002083097793,	0.00000011270073611]
+[min(f1), max(f1)] = [-0.00000000216294838,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002163926436,	0.00000014774762140]
+[min(f1), max(f1)] = [-0.00000000215410734,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002239677133,	0.00000019946259224]
+[min(f1), max(f1)] = [-0.00000000200789498,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002309629238,	0.00000026869067466]
+[min(f1), max(f1)] = [-0.00000000172796320,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002373127897,	0.00000035011208446]
+[min(f1), max(f1)] = [-0.00000000135120536,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002429531915,	0.00000044053352671]
+[min(f1), max(f1)] = [-0.00000000093795988,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002478297411,	0.00000053513952229]
+[min(f1), max(f1)] = [-0.00000000055895624,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002518914764,	0.00000062753695246]
+[min(f1), max(f1)] = [-0.00000000026943299,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002550975376,	0.00000071036417387]
+[min(f1), max(f1)] = [-0.00000000009313305,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002574147043,	0.00000077622436224]
+[min(f1), max(f1)] = [-0.00000000001609947,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002588184465,	0.00000081875411434]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000126970]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 2, 1.1768e+29, 1.4587e-01
+xpointmax, hflux_max: 0.0515625, 3.41159e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000013]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000008,	0.00000000000000018]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000022,	0.00000000000000035]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000035,	0.00000000000000059]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000053,	0.00000000000000088]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000014]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000083,	0.00000000000000130]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000019]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000122,	0.00000000000000191]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000172,	0.00000000000000273]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000038]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000244,	0.00000000000000385]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000053]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000343,	0.00000000000000542]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000074]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000473,	0.00000000000000758]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000104]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000650,	0.00000000000001051]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000146]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000887,	0.00000000000001452]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000203]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001205,	0.00000000000001997]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000281]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001626,	0.00000000000002735]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000388]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002184,	0.00000000000003731]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000534]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002920,	0.00000000000005071]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000733]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003888,	0.00000000000006868]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001001]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005153,	0.00000000000009271]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001364]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000006799,	0.00000000000012470]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001850]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000008934,	0.00000000000016719]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002501]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000011688,	0.00000000000022342]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003368]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000015227,	0.00000000000029759]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004520]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000019751,	0.00000000000039513]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000006042]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000025510,	0.00000000000052296]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000008047]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000032805,	0.00000000000068998]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010676]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000042003,	0.00000000000090747]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000014111]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000053543,	0.00000000000118980]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000018578]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000067951,	0.00000000000155512]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000024363]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000085849,	0.00000000000202632]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000031824]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000107971,	0.00000000000263215]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000041407]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000135170,	0.00000000000340859]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000053655]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000168435,	0.00000000000440049]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000069246]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000208903,	0.00000000000566357]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000088999]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000257861,	0.00000000000726676]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000113909]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000316760,	0.00000000000929503]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000145173]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000387213,	0.00000000001185267]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000184222]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000470994,	0.00000000001506714]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000232766]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000570028,	0.00000000001909355]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000292803]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000686383,	0.00000000002411982]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000366681]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000822231,	0.00000000003037248]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000457121]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000979822,	0.00000000003812334]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000567247]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001161437,	0.00000000004769680]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000700624]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001369343,	0.00000000005947791]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000861298]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001605706,	0.00000000007392113]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001053658]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001872527,	0.00000000009155952]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001282908]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002171547,	0.00000000011301440]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001554248]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002504185,	0.00000000013900513]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001873548]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002871391,	0.00000000017035855]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002247371]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003273594,	0.00000000020801784]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002682011]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003710624,	0.00000000025305053]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003184228]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004181574,	0.00000000030665447]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003760973]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004684786,	0.00000000037016170]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004419226]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005217823,	0.00000000044503996]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005166377]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005777416,	0.00000000053289018]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006007578]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006359500,	0.00000000063544031]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006949667]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006959313,	0.00000000075453526]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007998128]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007571379,	0.00000000089212234]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000009156151]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008189740,	0.00000000105023185]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010428195]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008808074,	0.00000000123095419]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000011819591]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009419839,	0.00000000143641356]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000013327251]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010018555,	0.00000000166873848]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000014954759]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010597925,	0.00000000193003042]
+[min(f1), max(f1)] = [-0.00000000000016224,	0.00000000016699493]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011152095,	0.00000000222233155]
+[min(f1), max(f1)] = [-0.00000000000168679,	0.00000000018558009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011675874,	0.00000000254759168]
+[min(f1), max(f1)] = [-0.00000000000434911,	0.00000000020535642]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012164851,	0.00000000290763518]
+[min(f1), max(f1)] = [-0.00000000000813254,	0.00000000022619544]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012615593,	0.00000000330412799]
+[min(f1), max(f1)] = [-0.00000000001313543,	0.00000000024804731]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013025778,	0.00000000373854474]
+[min(f1), max(f1)] = [-0.00000000001956361,	0.00000000027075658]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013394385,	0.00000000421213513]
+[min(f1), max(f1)] = [-0.00000000002784315,	0.00000000029440599]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013722141,	0.00000000472588925]
+[min(f1), max(f1)] = [-0.00000000003897797,	0.00000000031858008]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014012571,	0.00000000528050139]
+[min(f1), max(f1)] = [-0.00000000005526635,	0.00000000034278657]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014274792,	0.00000000587633220]
+[min(f1), max(f1)] = [-0.00000000008023090,	0.00000000036685592]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014530508,	0.00000000651336927]
+[min(f1), max(f1)] = [-0.00000000011634892,	0.00000000038963102]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014830561,	0.00000000719118674]
+[min(f1), max(f1)] = [-0.00000000016773311,	0.00000000040971765]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015292318,	0.00000000790890526]
+[min(f1), max(f1)] = [-0.00000000023228549,	0.00000000042501867]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 14
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016180122,	0.00000000866515363]
+[min(f1), max(f1)] = [-0.00000000031127218,	0.00000000043244390]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000018070199,	0.00000000945803412]
+[min(f1), max(f1)] = [-0.00000000040746092,	0.00000000042753655]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000022172417,	0.00000001028509328]
+[min(f1), max(f1)] = [-0.00000000052219521,	0.00000000040400952]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000030926742,	0.00000001192729611]
+[min(f1), max(f1)] = [-0.00000000065741462,	0.00000000035319562]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000049050434,	0.00000001412146378]
+[min(f1), max(f1)] = [-0.00000000081515773,	0.00000000026421084]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 13
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000085274446,	0.00000001687242590]
+[min(f1), max(f1)] = [-0.00000000099764698,	0.00000000012261986]
+HyprePCG(BoomerAMG) GetNumIterations: 11
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000155051822,	0.00000002032192390]
+[min(f1), max(f1)] = [-0.00000000120773586,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000284489340,	0.00000002466284067]
+[min(f1), max(f1)] = [-0.00000000144992037,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000515595553,	0.00000003013541812]
+[min(f1), max(f1)] = [-0.00000000173285526,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000912601733,	0.00000003705806618]
+[min(f1), max(f1)] = [-0.00000000207412734,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001568500921,	0.00000004588401249]
+[min(f1), max(f1)] = [-0.00000000251491582,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001829615590,	0.00000005714537286]
+[min(f1), max(f1)] = [-0.00000000315482575,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001921137115,	0.00000007145566168]
+[min(f1), max(f1)] = [-0.00000000356834239,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002009813105,	0.00000009004166712]
+[min(f1), max(f1)] = [-0.00000000376532030,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002094897584,	0.00000011498048174]
+[min(f1), max(f1)] = [-0.00000000382813937,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002175635394,	0.00000014978196285]
+[min(f1), max(f1)] = [-0.00000000372659117,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002251306127,	0.00000020047651644]
+[min(f1), max(f1)] = [-0.00000000341938231,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002321193663,	0.00000026903657288]
+[min(f1), max(f1)] = [-0.00000000290945769,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002384631165,	0.00000035028164426]
+[min(f1), max(f1)] = [-0.00000000225779129,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002440987509,	0.00000044062442807]
+[min(f1), max(f1)] = [-0.00000000155909552,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002489711733,	0.00000053519091108]
+[min(f1), max(f1)] = [-0.00000000092488319,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002530295587,	0.00000062756494441]
+[min(f1), max(f1)] = [-0.00000000044430316,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002562328096,	0.00000071037932730]
+[min(f1), max(f1)] = [-0.00000000015318608,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002585479789,	0.00000077623235580]
+[min(f1), max(f1)] = [-0.00000000002643808,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002599507359,	0.00000081875880665]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000208584]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 3, 8.7392e+28, 9.2100e-02
+xpointmax, hflux_max: 0.0516493, 3.23098e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000013]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000007,	0.00000000000000018]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000021,	0.00000000000000036]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000034,	0.00000000000000059]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000053,	0.00000000000000088]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000014]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000083,	0.00000000000000130]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000019]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000121,	0.00000000000000192]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000171,	0.00000000000000274]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000038]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000242,	0.00000000000000387]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000053]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000340,	0.00000000000000545]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000074]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000469,	0.00000000000000762]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000104]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000644,	0.00000000000001058]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000145]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000879,	0.00000000000001461]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000202]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001193,	0.00000000000002010]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000279]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001610,	0.00000000000002753]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000386]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002162,	0.00000000000003757]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000531]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002890,	0.00000000000005107]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000728]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003846,	0.00000000000006918]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000994]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005095,	0.00000000000009340]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001353]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000006719,	0.00000000000012567]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001835]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000008824,	0.00000000000016852]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002480]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000011539,	0.00000000000022525]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003339]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000015024,	0.00000000000030010]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004479]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000019477,	0.00000000000039855]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000005985]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000025141,	0.00000000000052762]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000007968]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000032311,	0.00000000000069628]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010566]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000041343,	0.00000000000091597]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000013958]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000052667,	0.00000000000120123]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000018367]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000066792,	0.00000000000157041]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000024075]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000084324,	0.00000000000204670]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000031429]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000105972,	0.00000000000265918]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000040870]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000132563,	0.00000000000344430]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000052929]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000165053,	0.00000000000444744]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000068265]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000204535,	0.00000000000572501]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000087684]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000252250,	0.00000000000734682]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000112150]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000309587,	0.00000000000939885]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000142832]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000378092,	0.00000000001198665]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000181128]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000459457,	0.00000000001523918]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000228683]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000555520,	0.00000000001931337]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000287460]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000668237,	0.00000000002439926]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000359703]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000799663,	0.00000000003072586]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000448084]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000951917,	0.00000000003856788]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000555589]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001127140,	0.00000000004825298]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000685666]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001327440,	0.00000000006016996]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000842189]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001554828,	0.00000000007477746]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001029460]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001811128,	0.00000000009261310]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001252353]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002097929,	0.00000000011430324]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001515938]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002416485,	0.00000000014057261]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001825842]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002767614,	0.00000000017225362]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002188225]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003151605,	0.00000000021029525]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002609141]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003568177,	0.00000000025577071]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003095125]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004016394,	0.00000000030988337]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003652457]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004494562,	0.00000000037397056]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004288426]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005000283,	0.00000000044950434]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005009084]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005530418,	0.00000000053808899]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005820190]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006081040,	0.00000000064145469]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006727589]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006647587,	0.00000000076144701]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007736266]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007224947,	0.00000000090001157]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000008850261]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007807472,	0.00000000105917447]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010072711]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008389250,	0.00000000124101988]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000011408507]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008964250,	0.00000000144766303]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000012854895]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009526394,	0.00000000168122040]
+[min(f1), max(f1)] = [-0.00000000000014457,	0.00000000014416275]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010069921,	0.00000000194377912]
+[min(f1), max(f1)] = [-0.00000000000162832,	0.00000000016089365]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010589461,	0.00000000223736499]
+[min(f1), max(f1)] = [-0.00000000000428170,	0.00000000017871123]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011080236,	0.00000000256390972]
+[min(f1), max(f1)] = [-0.00000000000812478,	0.00000000019765563]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011538276,	0.00000000292521866]
+[min(f1), max(f1)] = [-0.00000000001329252,	0.00000000021761226]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011960453,	0.00000000332293903]
+[min(f1), max(f1)] = [-0.00000000002001781,	0.00000000023855616]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012344666,	0.00000000375852779]
+[min(f1), max(f1)] = [-0.00000000002869766,	0.00000000026032275]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012690087,	0.00000000423321896]
+[min(f1), max(f1)] = [-0.00000000004006277,	0.00000000028294903]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012997485,	0.00000000474798981]
+[min(f1), max(f1)] = [-0.00000000005541503,	0.00000000030613419]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013270325,	0.00000000530352523]
+[min(f1), max(f1)] = [-0.00000000007674779,	0.00000000032936749]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013517600,	0.00000000590018008]
+[min(f1), max(f1)] = [-0.00000000010713047,	0.00000000035244530]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013760791,	0.00000000653793989]
+[min(f1), max(f1)] = [-0.00000000014673044,	0.00000000037429180]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014050409,	0.00000000721638032]
+[min(f1), max(f1)] = [-0.00000000019522346,	0.00000000039357473]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014503373,	0.00000000793462652]
+[min(f1), max(f1)] = [-0.00000000025441187,	0.00000000040828963]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 13
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015383410,	0.00000000869131414]
+[min(f1), max(f1)] = [-0.00000000032696692,	0.00000000041547972]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000017265872,	0.00000000948455395]
+[min(f1), max(f1)] = [-0.00000000041601120,	0.00000000041086982]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000021359383,	0.00000001031190189]
+[min(f1), max(f1)] = [-0.00000000052384344,	0.00000000038840642]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000030102174,	0.00000001195835480]
+[min(f1), max(f1)] = [-0.00000000065211977,	0.00000000033970113]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000048208464,	0.00000001415384850]
+[min(f1), max(f1)] = [-0.00000000080272943,	0.00000000025390949]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 14
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000084404899,	0.00000001690245200]
+[min(f1), max(f1)] = [-0.00000000097720732,	0.00000000011702261]
+HyprePCG(BoomerAMG) GetNumIterations: 12
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000154142879,	0.00000002034497199]
+[min(f1), max(f1)] = [-0.00000000117795483,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000283523755,	0.00000002467514141]
+[min(f1), max(f1)] = [-0.00000000140924873,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000514552130,	0.00000003013236233]
+[min(f1), max(f1)] = [-0.00000000167937514,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000911456664,	0.00000003703490549]
+[min(f1), max(f1)] = [-0.00000000200559546,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001567230230,	0.00000004583496331]
+[min(f1), max(f1)] = [-0.00000000243035921,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001837980309,	0.00000005713290806]
+[min(f1), max(f1)] = [-0.00000000312606008,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001929426109,	0.00000007183608790]
+[min(f1), max(f1)] = [-0.00000000431827023,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002018025859,	0.00000009131643090]
+[min(f1), max(f1)] = [-0.00000000527690037,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002103040568,	0.00000011692418858]
+[min(f1), max(f1)] = [-0.00000000549141367,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002183723926,	0.00000015148643642]
+[min(f1), max(f1)] = [-0.00000000519562388,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002259342712,	0.00000020154157733]
+[min(f1), max(f1)] = [-0.00000000465609748,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002329181107,	0.00000026948824195]
+[min(f1), max(f1)] = [-0.00000000389936047,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002392578085,	0.00000035052272936]
+[min(f1), max(f1)] = [-0.00000000299049195,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002448899955,	0.00000044077302460]
+[min(f1), max(f1)] = [-0.00000000205026451,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002497590597,	0.00000053528907658]
+[min(f1), max(f1)] = [-0.00000000120935724,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002538153278,	0.00000062763481530]
+[min(f1), max(f1)] = [-0.00000000057884887,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002570168827,	0.00000071043145039]
+[min(f1), max(f1)] = [-0.00000000019903826,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002593305595,	0.00000077627545311]
+[min(f1), max(f1)] = [-0.00000000003425195,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002607324097,	0.00000081879611420]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000270479]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 4, 7.0002e+28, 6.6998e-02
+xpointmax, hflux_max: 0.0516493, 3.10487e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000013]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000007,	0.00000000000000019]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000021,	0.00000000000000036]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000034,	0.00000000000000059]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000052,	0.00000000000000089]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000014]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000082,	0.00000000000000131]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000018]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000120,	0.00000000000000193]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000170,	0.00000000000000276]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000037]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000241,	0.00000000000000390]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000053]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000337,	0.00000000000000549]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000073]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000466,	0.00000000000000767]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000103]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000639,	0.00000000000001064]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000144]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000871,	0.00000000000001470]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000200]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001182,	0.00000000000002023]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000277]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001595,	0.00000000000002771]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000383]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002140,	0.00000000000003782]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000527]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002860,	0.00000000000005142]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000722]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003804,	0.00000000000006968]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000986]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000005037,	0.00000000000009408]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001342]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000006641,	0.00000000000012661]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001820]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000008717,	0.00000000000016983]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002458]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000011392,	0.00000000000022704]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003308]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000014825,	0.00000000000030256]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004435]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000019209,	0.00000000000040189]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000005924]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000024781,	0.00000000000053216]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000007882]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000031829,	0.00000000000070241]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010448]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000040702,	0.00000000000092422]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000013794]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000051817,	0.00000000000121228]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000018142]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000065670,	0.00000000000158516]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000023766]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000082850,	0.00000000000206628]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000031009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000104045,	0.00000000000268508]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000040298]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000130056,	0.00000000000347837]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000052157]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000161807,	0.00000000000449206]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000067222]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000200354,	0.00000000000578318]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000086288]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000246890,	0.00000000000742227]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000110286]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000302754,	0.00000000000949621]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000140359]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000369427,	0.00000000001211164]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000177859]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000448530,	0.00000000001539880]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000224374]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000541811,	0.00000000001951612]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000281832]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000651135,	0.00000000002465535]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000352366]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000778455,	0.00000000003104754]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000438590]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000925773,	0.00000000003896958]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000543357]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001095102,	0.00000000004875171]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000669992]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001288416,	0.00000000006078543]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000822176]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001507580,	0.00000000007553233]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001004158]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001754296,	0.00000000009353324]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001220414]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002030009,	0.00000000011541774]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001475938]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002335819,	0.00000000014191375]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001776042]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002672435,	0.00000000017385701]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002126466]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003040071,	0.00000000021219950]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002533013]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003438362,	0.00000000025801713]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003002049]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003866300,	0.00000000031251557]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003539356]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004322235,	0.00000000037703353]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004151539]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004803812,	0.00000000045304384]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004844290]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005307929,	0.00000000054215098]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005623279]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005830862,	0.00000000064608381]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006493602]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006368284,	0.00000000076668514]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007459801]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006915263,	0.00000000090589700]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000008525706]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007466506,	0.00000000106574095]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000009693945]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008016459,	0.00000000124829438]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010967830]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008559404,	0.00000000145566467]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000012345089]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009089731,	0.00000000168996020]
+[min(f1), max(f1)] = [-0.00000000000082276,	0.00000000013831455]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009602082,	0.00000000195325879]
+[min(f1), max(f1)] = [-0.00000000000296096,	0.00000000015422058]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010091436,	0.00000000224757596]
+[min(f1), max(f1)] = [-0.00000000000628237,	0.00000000017114153]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010553406,	0.00000000257483321]
+[min(f1), max(f1)] = [-0.00000000001090942,	0.00000000018908697]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010984336,	0.00000000293682640]
+[min(f1), max(f1)] = [-0.00000000001705431,	0.00000000020796301]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011381365,	0.00000000333519401]
+[min(f1), max(f1)] = [-0.00000000002504426,	0.00000000022778408]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011742632,	0.00000000377138518]
+[min(f1), max(f1)] = [-0.00000000003539991,	0.00000000024836020]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012067419,	0.00000000424662749]
+[min(f1), max(f1)] = [-0.00000000004894438,	0.00000000026964565]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012356536,	0.00000000476189361]
+[min(f1), max(f1)] = [-0.00000000006691282,	0.00000000029152975]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012613449,	0.00000000531786616]
+[min(f1), max(f1)] = [-0.00000000009108408,	0.00000000031345930]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012847070,	0.00000000591489988]
+[min(f1), max(f1)] = [-0.00000000012283458,	0.00000000033517908]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013078712,	0.00000000655298199]
+[min(f1), max(f1)] = [-0.00000000016094522,	0.00000000035573980]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013358659,	0.00000000723169131]
+[min(f1), max(f1)] = [-0.00000000020663908,	0.00000000037390171]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013803523,	0.00000000795015741]
+[min(f1), max(f1)] = [-0.00000000026186411,	0.00000000038779391]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000014676606,	0.00000000870702129]
+[min(f1), max(f1)] = [-0.00000000033035739,	0.00000000039466983]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000016552684,	0.00000000950039956]
+[min(f1), max(f1)] = [-0.00000000041538747,	0.00000000039040621]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000020639596,	0.00000001032785408]
+[min(f1), max(f1)] = [-0.00000000051846084,	0.00000000036931133]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000029374257,	0.00000001200986749]
+[min(f1), max(f1)] = [-0.00000000064108489,	0.00000000032327074]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000047469166,	0.00000001420341739]
+[min(f1), max(f1)] = [-0.00000000078373569,	0.00000000024139785]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 13
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000083649199,	0.00000001694693728]
+[min(f1), max(f1)] = [-0.00000000094827366,	0.00000000010999746]
+HyprePCG(BoomerAMG) GetNumIterations: 12
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000153363626,	0.00000002037873339]
+[min(f1), max(f1)] = [-0.00000000113678141,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000282710932,	0.00000002469325635]
+[min(f1), max(f1)] = [-0.00000000135295085,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000513693311,	0.00000003012921920]
+[min(f1), max(f1)] = [-0.00000000160493684,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000910537777,	0.00000003700484157]
+[min(f1), max(f1)] = [-0.00000000191007891,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001566236972,	0.00000004577130353]
+[min(f1), max(f1)] = [-0.00000000231430593,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001844567673,	0.00000005702935571]
+[min(f1), max(f1)] = [-0.00000000308028566,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001935942175,	0.00000007169799407]
+[min(f1), max(f1)] = [-0.00000000433541757,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002024481142,	0.00000009115559415]
+[min(f1), max(f1)] = [-0.00000000565399759,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002109438813,	0.00000011763027692]
+[min(f1), max(f1)] = [-0.00000000660475377,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 16
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002190070656,	0.00000015281209393]
+[min(f1), max(f1)] = [-0.00000000670274091,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002265639710,	0.00000020208187721]
+[min(f1), max(f1)] = [-0.00000000593825147,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002335436709,	0.00000026968394608]
+[min(f1), max(f1)] = [-0.00000000484757472,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002398794076,	0.00000035064317725]
+[min(f1), max(f1)] = [-0.00000000365049533,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002455084124,	0.00000044085061035]
+[min(f1), max(f1)] = [-0.00000000246243953,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002503745182,	0.00000053534681124]
+[min(f1), max(f1)] = [-0.00000000143592382,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002544286614,	0.00000062768036816]
+[min(f1), max(f1)] = [-0.00000000068122338,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002576283601,	0.00000071047252684]
+[min(f1), max(f1)] = [-0.00000000023285919,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002599409001,	0.00000077630789399]
+[min(f1), max(f1)] = [-0.00000000003992710,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002613420075,	0.00000081882740401]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000315651]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 5, 5.8724e+28, 6.0011e-02
+xpointmax, hflux_max: 0.0515625, 2.97662e+12
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     1,	v = 0.9901,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000001,	0.00000000000000013]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000003]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     2,	v = 0.9802,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000007,	0.00000000000000019]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000005]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     3,	v = 0.9703,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000021,	0.00000000000000036]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000006]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     4,	v = 0.9604,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000034,	0.00000000000000060]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000009]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     5,	v = 0.9505,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000052,	0.00000000000000089]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000013]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     6,	v = 0.9406,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000081,	0.00000000000000132]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000018]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     7,	v = 0.9307,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000118,	0.00000000000000194]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000026]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     8,	v = 0.9208,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000169,	0.00000000000000277]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000037]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group     9,	v = 0.9109,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000238,	0.00000000000000393]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000052]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    10,	v = 0.9010,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000333,	0.00000000000000552]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000073]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    11,	v = 0.8911,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000461,	0.00000000000000772]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000102]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    12,	v = 0.8812,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000632,	0.00000000000001072]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000143]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    13,	v = 0.8713,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000000862,	0.00000000000001481]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000199]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    14,	v = 0.8614,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001169,	0.00000000000002038]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000275]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    15,	v = 0.8515,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000001576,	0.00000000000002793]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000380]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    16,	v = 0.8416,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002115,	0.00000000000003812]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000522]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    17,	v = 0.8317,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000002825,	0.00000000000005185]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000715]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    18,	v = 0.8218,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000003755,	0.00000000000007026]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000000977]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    19,	v = 0.8119,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000004970,	0.00000000000009490]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001328]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    20,	v = 0.8020,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000006548,	0.00000000000012774]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000001800]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    21,	v = 0.7921,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000008591,	0.00000000000017138]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000002431]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    22,	v = 0.7822,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000011222,	0.00000000000022917]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000003269]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    23,	v = 0.7723,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000014594,	0.00000000000030546]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000004381]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    24,	v = 0.7624,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000018898,	0.00000000000040584]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000005848]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    25,	v = 0.7525,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000024363,	0.00000000000053750]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000007777]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    26,	v = 0.7426,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000031271,	0.00000000000070961]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000010302]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    27,	v = 0.7327,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000039960,	0.00000000000093390]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000013593]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    28,	v = 0.7228,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000050834,	0.00000000000122521]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000017866]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    29,	v = 0.7129,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000064376,	0.00000000000160236]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000023388]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    30,	v = 0.7030,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000081153,	0.00000000000208906]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000030495]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    31,	v = 0.6931,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000101831,	0.00000000000271511]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000039598]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    32,	v = 0.6832,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000127181,	0.00000000000351776]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000051213]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    33,	v = 0.6733,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000158093,	0.00000000000454349]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000065956]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    34,	v = 0.6634,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000195580,	0.00000000000584997]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000084588]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    35,	v = 0.6535,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000240786,	0.00000000000750857]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000108027]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    36,	v = 0.6436,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000294989,	0.00000000000960714]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000137363]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    37,	v = 0.6337,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000359603,	0.00000000001225345]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000173904]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    38,	v = 0.6238,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000436169,	0.00000000001557908]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000219192]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    39,	v = 0.6139,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000526346,	0.00000000001974399]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000275044]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    40,	v = 0.6040,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000631896,	0.00000000002494172]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000343565]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    41,	v = 0.5941,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000754656,	0.00000000003140528]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000427182]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    42,	v = 0.5842,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000000896510,	0.00000000003941374]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000528682]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    43,	v = 0.5743,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001059338,	0.00000000004929971]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000651219]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    44,	v = 0.5644,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001244973,	0.00000000006145725]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000798310]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    45,	v = 0.5545,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001455138,	0.00000000007635053]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000973951]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    46,	v = 0.5446,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001691381,	0.00000000009452298]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001182323]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    47,	v = 0.5347,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000001955017,	0.00000000011660689]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001428296]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    48,	v = 0.5248,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002247022,	0.00000000014333244]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000001716800]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    49,	v = 0.5149,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002567967,	0.00000000017553757]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002053045]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    50,	v = 0.5050,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000002917979,	0.00000000021417582]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002442641]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    51,	v = 0.4951,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003296632,	0.00000000026032400]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000002891517]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    52,	v = 0.4852,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000003702901,	0.00000000031518811]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003405111]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    53,	v = 0.4753,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004135123,	0.00000000038010650]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000003989022]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    54,	v = 0.4654,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000004590997,	0.00000000045655034]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000004648688]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    55,	v = 0.4555,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005067584,	0.00000000054612118]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000005389127]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    56,	v = 0.4456,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000005561269,	0.00000000065054416]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000006214999]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    57,	v = 0.4357,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006067946,	0.00000000077165724]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000007130190]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    58,	v = 0.4258,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000006583006,	0.00000000091139652]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000008137786]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    59,	v = 0.4159,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007101428,	0.00000000107177677]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000009240071]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    60,	v = 0.4060,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000007618009,	0.00000000125486829]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000010438032]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    61,	v = 0.3961,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008127452,	0.00000000146277065]
+[min(f1), max(f1)] = [-0.00000000000012371,	0.00000000011731917]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    62,	v = 0.3862,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000008624513,	0.00000000169758425]
+[min(f1), max(f1)] = [-0.00000000000152895,	0.00000000013121983]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    63,	v = 0.3763,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009104235,	0.00000000196137946]
+[min(f1), max(f1)] = [-0.00000000000410794,	0.00000000014608700]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    64,	v = 0.3664,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009562041,	0.00000000225616497]
+[min(f1), max(f1)] = [-0.00000000000792083,	0.00000000016186766]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    65,	v = 0.3565,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000009993863,	0.00000000258385622]
+[min(f1), max(f1)] = [-0.00000000001314685,	0.00000000017852066]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    66,	v = 0.3466,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010396352,	0.00000000294624396]
+[min(f1), max(f1)] = [-0.00000000002005325,	0.00000000019598146]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    67,	v = 0.3367,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000010766949,	0.00000000334496296]
+[min(f1), max(f1)] = [-0.00000000002903881,	0.00000000021432205]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    68,	v = 0.3268,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011103980,	0.00000000378146056]
+[min(f1), max(f1)] = [-0.00000000004068499,	0.00000000023330874]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    69,	v = 0.3169,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011406869,	0.00000000425696424]
+[min(f1), max(f1)] = [-0.00000000005582553,	0.00000000025276940]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    70,	v = 0.3070,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011676508,	0.00000000477244782]
+[min(f1), max(f1)] = [-0.00000000007542710,	0.00000000027287741]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    71,	v = 0.2971,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000011916341,	0.00000000532859599]
+[min(f1), max(f1)] = [-0.00000000010149208,	0.00000000029301087]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    72,	v = 0.2872,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012135211,	0.00000000592576673]
+[min(f1), max(f1)] = [-0.00000000013300282,	0.00000000031284554]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    73,	v = 0.2773,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012354317,	0.00000000656395149]
+[min(f1), max(f1)] = [-0.00000000017023338,	0.00000000033162023]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    74,	v = 0.2674,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000012623748,	0.00000000724273402]
+[min(f1), max(f1)] = [-0.00000000021410405,	0.00000000034823318]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    75,	v = 0.2575,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013059860,	0.00000000796124903]
+[min(f1), max(f1)] = [-0.00000000026686597,	0.00000000036100658]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 11
+group    76,	v = 0.2476,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000013925651,	0.00000000871814460]
+[min(f1), max(f1)] = [-0.00000000033243987,	0.00000000036761143]
+HyprePCG(BoomerAMG) GetNumIterations: 9
+HyprePCG(BoomerAMG) GetNumIterations: 9
+group    77,	v = 0.2377,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000015795510,	0.00000000951154251]
+[min(f1), max(f1)] = [-0.00000000041367013,	0.00000000036374138]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    78,	v = 0.2278,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000019876785,	0.00000001033900610]
+[min(f1), max(f1)] = [-0.00000000051151793,	0.00000000034455542]
+HyprePCG(BoomerAMG) GetNumIterations: 6
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    79,	v = 0.2179,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000028605555,	0.00000001208120106]
+[min(f1), max(f1)] = [-0.00000000062659385,	0.00000000030204122]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 23
+group    80,	v = 0.2080,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000046693289,	0.00000001427249455]
+[min(f1), max(f1)] = [-0.00000000075966123,	0.00000000022542234]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 13
+group    81,	v = 0.1981,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000082864466,	0.00000001700728401]
+[min(f1), max(f1)] = [-0.00000000091139915,	0.00000000010051114]
+HyprePCG(BoomerAMG) GetNumIterations: 12
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    82,	v = 0.1882,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000152566741,	0.00000002042376503]
+[min(f1), max(f1)] = [-0.00000000108325530,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    83,	v = 0.1783,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000281897260,	0.00000002471649997]
+[min(f1), max(f1)] = [-0.00000000127819510,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    84,	v = 0.1684,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000512856973,	0.00000003012284128]
+[min(f1), max(f1)] = [-0.00000000150329828,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    85,	v = 0.1585,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000000909672015,	0.00000003696157973]
+[min(f1), max(f1)] = [-0.00000000177534558,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    86,	v = 0.1486,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001565334828,	0.00000004568324918]
+[min(f1), max(f1)] = [-0.00000000215071930,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    87,	v = 0.1387,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001850367784,	0.00000005689125809]
+[min(f1), max(f1)] = [-0.00000000305860776,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    88,	v = 0.1288,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000001941666805,	0.00000007152184504]
+[min(f1), max(f1)] = [-0.00000000433198033,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 5
+HyprePCG(BoomerAMG) GetNumIterations: 5
+group    89,	v = 0.1189,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002030136211,	0.00000009096189372]
+[min(f1), max(f1)] = [-0.00000000572913290,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 4
+HyprePCG(BoomerAMG) GetNumIterations: 4
+group    90,	v = 0.1090,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002115031890,	0.00000011745454312]
+[min(f1), max(f1)] = [-0.00000000692835527,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 23
+HyprePCG(BoomerAMG) GetNumIterations: 19
+group    91,	v = 0.0991,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002195600415,	0.00000015380597793]
+[min(f1), max(f1)] = [-0.00000000754800765,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 10
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    92,	v = 0.0892,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002271116656,	0.00000020222621401]
+[min(f1), max(f1)] = [-0.00000000721959482,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    93,	v = 0.0793,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002340866765,	0.00000026964502776]
+[min(f1), max(f1)] = [-0.00000000607094521,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    94,	v = 0.0694,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002404178016,	0.00000035062221028]
+[min(f1), max(f1)] = [-0.00000000444212852,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 8
+group    95,	v = 0.0595,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002460435127,	0.00000044084264284]
+[min(f1), max(f1)] = [-0.00000000294141252,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 8
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    96,	v = 0.0496,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002509064635,	0.00000053534499624]
+[min(f1), max(f1)] = [-0.00000000168786598,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    97,	v = 0.0397,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002549577843,	0.00000062768016815]
+[min(f1), max(f1)] = [-0.00000000078835248,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    98,	v = 0.0298,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002581558140,	0.00000071047305076]
+[min(f1), max(f1)] = [-0.00000000026640481,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group    99,	v = 0.0199,	dv = -0.00990000
+[min(f0), max(f0)] = [0.00000002604670035,	0.00000077630944317]
+[min(f1), max(f1)] = [-0.00000000004525493,	0.00000000000000000]
+HyprePCG(BoomerAMG) GetNumIterations: 7
+HyprePCG(BoomerAMG) GetNumIterations: 7
+group   100,	v = 0.0100,	dv = 0.00000000
+[min(f0), max(f0)] = [0.00000002618672433,	0.00000081882916826]
+[min(f1), max(f1)] = [0.00000000000000000,	0.00000000000358813]
+Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): 6, 4.9640e+28, 6.5669e-02
+xpointmax, hflux_max: 0.0514757, 2.8229e+12
+Hydrodynamics kernel timer:
+
+CG (H1) total time: 4.7016e-04
+CG (H1) rate (megadofs x cg_iterations / second): 2.4004e+01
+
+CG (L2) total time: 1.5204e-04
+CG (L2) rate (megadofs x cg_iterations / second): 6.7351e+00
+
+Forces total time: 1.7872e-04
+Forces rate (megadofs x timesteps / second): 1.1470e+01
+
+UpdateQuadData total time: 8.4946e-04
+UpdateQuadData rate (megaquads x timesteps / second): 3.6164e+00
+
+Major kernels total time (seconds): 1.2532e-03
+Major kernels total rate (megadofs x time steps / second): 8.1870e-01
+C7 kernel timer:
+
+CG (H1) total time: 0.0000e+00
+CG (H1) rate (megadofs x cg_iterations / second): inf
+
+CG (L2) total time: 0.0000e+00
+CG (L2) rate (megadofs x cg_iterations / second): -nan
+
+Divergences total time: 3.1176e-01
+Divergences rate (megadofs x timesteps / second): 2.3037e+00
+
+UpdateQuadData total time: 5.5601e-01
+UpdateQuadData rate (megaquads x timesteps / second): 2.5931e+00
+
+Major kernels total time (seconds): 8.6777e-01
+Major kernels total rate (megadofs x time steps / second): 1.1823e-03

@@ -15,14 +15,8 @@ TGRAD=180
 #XPOINT=0.0552 # in cm Zbar = 100, Kn = 1e-2
 XPOINT=0.046775 # in cm qSH maximum
 
-ZBAR=1
-#ZBAR=5
-#ZBAR=10
-#ZBAR=20
-#ZBAR=100
-
-#MINGSAFE=1000
-MING=100
+#MING=2000
+MING=250
 
 # Challenge SNB ;)
 #MING=25
@@ -33,6 +27,12 @@ L=0.1
 PROBLEM=5
 #PROBLEM=9
 
+ZBAR=1
+#ZBAR=5
+#ZBAR=10
+#ZBAR=20
+#ZBAR=100
+
 #if false; then
 ## Highest Kn limit to compute.
 if [ $ZBAR -eq 100 ] ; then 
@@ -41,8 +41,8 @@ if [ $ZBAR -eq 100 ] ; then
    #NI=2e19 # Zbar = 100 -> Kn 1e-4
    #NI=4e18 # Zbar = 100 -> Kn 5e-4
    #NI=2e18 # Zbar = 100 -> Kn 1e-3
-   NI=2e17 # Zbar = 100 -> Kn 1e-2
-   #NI=2e16 # Zbar = 100 -> Kn 1e-1
+   #NI=2e17 # Zbar = 100 -> Kn 1e-2
+   NI=2e16 # Zbar = 100 -> Kn 1e-1
 elif [ $ZBAR -eq 20 ] ; then 
    NI=4.8e21 # Zbar = 20 -> Kn 1e-5
    #NI=4.8e20 # Zbar = 20 -> Kn 1e-4
@@ -50,11 +50,13 @@ elif [ $ZBAR -eq 20 ] ; then
    #NI=4.8e18 # Zbar = 20 -> Kn 1e-2
    #NI=0.963e18 # Zbar = 20 -> Kn 5e-2
 elif [ $ZBAR -eq 10 ] ; then 
-   NI=1.84e22 # Zbar = 10 -> Kn 1e-5
+   #NI=1.84e22 # Zbar = 10 -> Kn 1e-5
    #NI=1.84e21 # Zbar = 10 -> Kn 1e-4
    #NI=1.84e20 # Zbar = 10 -> Kn 1e-3
    #NI=0.368e20 # Zbar = 10 -> Kn 5e-3
    #NI=1.84e19 # Zbar = 10 -> Kn 1e-2
+   NI=0.73e19 # Zbar = 10 -> Kn 2.2e-2
+   #NI=0.368e19 # Zbar = 10 -> Kn 5e-2
 elif [ $ZBAR -eq 5 ] ; then 
    NI=6.74e22 # Zbar = 5 -> Kn 1e-5
    #NI=6.74e21 # Zbar = 5 -> Kn 1e-4
@@ -67,11 +69,11 @@ elif [ $ZBAR -eq 1 ] ; then
    #NI=1e23 # Zbar = 1 -> Kn 1e-4
    #NI=1e22 # Zbar = 1 -> Kn 1e-3
    #NI=1e21 # Zbar = 1 -> Kn 1e-2
-   #NI=2.02e20 # Zbar = 1 -> Kn 5e-2
-   NI=1e20 # Zbar = 1 -> Kn 1e-1
+   NI=2.02e20 # Zbar = 1 -> Kn 5e-2
+   #NI=1e20 # Zbar = 1 -> Kn 1e-1
 fi
 #mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.001  | tee C7E.out
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.05  | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.005 -Em 100 | tee C7E.out
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointmax_Ecorrect.txt

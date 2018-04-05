@@ -819,7 +819,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
           *mspei_b = new double[nqp_batch],
 		  *rho_b = new double[nqp_batch],
           *vTe_b = new double[nqp_batch],
-          *f1overf0_b = new double[nqp_batch];
+          *f1overf0_b = new double[nqp_batch],
+          *Edotf1overf0_b = new double[nqp_batch];
    // Electric and Magnetic fields for all quadrature points in the batch.
    //DenseMatrix *Efield_b = new DenseMatrix[nqp_batch],
    //            *Bfield_b = new DenseMatrix[nqp_batch];
@@ -864,10 +865,13 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             // Anisotropy measure.
             double normlim = 1e-32;
 			double f0norm = max(normlim, F0.GetValue((*T).ElementNo, ip));
-            Vector f1;
+            Vector f1, Efield;
             F1.GetVectorValue((*T).ElementNo, ip, f1);
-            double f1norm = f1.Norml2();
+            AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
+			double f1norm = f1.Norml2();
             f1overf0_b[idx] = f1norm / f0norm;
+			double Edotf1 = Efield * f1;
+            Edotf1overf0_b[idx] = Edotf1 / f0norm;
 
             // M1 closure.
             // Matric closure maximizing angular entropy
@@ -951,6 +955,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const double mspee = mspee_b[z*nqp + q];
 			double rho = rho_b[z*nqp + q];
             double vTe = vTe_b[z*nqp + q];
+            double Edotf1overf0 = Edotf1overf0_b[z*nqp + q];
 			// VEF transport closure matrix is either P1 or M1.
 			DenseMatrix A1 = P1;
 			if (M1_closure) { A1 = AM1_b[z](q); }
@@ -964,8 +969,15 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 
 			// TMP on/off anisotropy correction on Lorentz force.
             double scale = 1.0;
+            double Efield_norm = Efield.Norml2();
 			double corrE = min(1.0, scale * mspee * velocity_real 
-                                    / Efield.Norml2());
+                                    / Efield_norm);
+            //double corrE = 1.0;
+			//if (Edotf1overf0 > 0.0) 
+            //{
+            //   min(1.0, scale * mspee * velocity_real / Edotf1overf0);
+            //}
+			double mspE = Efield_norm / velocity_real * (1.0 - corrE);
 			Efield *= corrE;
             // ATTEMPT of some physics.
             //if (velocity_real > 0.9 * N_x * vTe) { Efield *= 0.0; }
@@ -1013,7 +1025,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //cout << "Ef1/v/f0/rho: " <<  quad_data.Ef1invvf0rho(z_id*nqp + q) 
             //     << endl << flush;
             // Scattering on ions and electrons.
-			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee) / rho;
+			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee + mspE) / rho;
 			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
 
             // Time step estimate at the point. Here the more relevant length
@@ -1040,6 +1052,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    delete [] rho_b;
    delete [] vTe_b;
    delete [] f1overf0_b;
+   delete [] Edotf1overf0_b;
    delete [] Jpr_b;
    delete [] AM1_b; 
    quad_data_is_current = true;

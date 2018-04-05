@@ -122,11 +122,12 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    Efield = 1.0;
    Efield_pcf->Eval(Efield, T, ip);
    double scale = 1.0;
+   double Efield_norm = Efield.Norml2();
    double corrEfield = min(1.0, 
-                           scale * nu_ee * velocity_real / Efield.Norml2());
-
+                           scale * nu_ee * velocity_real / Efield_norm);
+   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
    // Scattering on ions and electrons.
-   return corrEfield * velocity_real / 3.0 / (nu_ei + nu_ee) * dF0dv 
+   return corrEfield * velocity_real / 3.0 / (nu_ei + nu_ee + nu_E) * dF0dv 
           * velocity_real * velocity_real;
    //return corrEfield * velocity_real / 3.0 / nu_ei * dF0dv 
    //       * velocity_real * velocity_real;
@@ -141,16 +142,26 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
+   Vector Efield(vdim);
+   Efield = 1.0;
+   Efield_pcf->Eval(Efield, T, ip);
+   double scale = 1.0;
+   double Efield_norm = Efield.Norml2();
+   double corrEfield = min(1.0, 
+                           scale * nu_ee * velocity_real / Efield_norm);
+   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
+
    T.SetIntPoint(&ip);
    F0->GetGradient(T, V); 
    // Scattering on ions and electrons.
-   V *= 1.0 / 3.0 / (nu_ei + nu_ee);
+   V *= 1.0 / 3.0 / (nu_ei + nu_ee + nu_E);
    //V *= 1.0 / 3.0 / nu_ei;
    
    for (int d = 0; d < vdim; d++)
    { 
       // Scattering on ions and electrons.
-      V(d) -= nu_ee / (nu_ei + nu_ee) * dF1->GetValue(T.ElementNo, ip, d);
+      V(d) -= nu_ee / (nu_ei + nu_ee + nu_E) 
+              * dF1->GetValue(T.ElementNo, ip, d);
       //V(d) -= nu_ee / nu_ei * dF1->GetValue(T.ElementNo, ip, d);
    }
    
@@ -166,13 +177,22 @@ void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
+   Vector Efield(vdim);
+   Efield = 1.0;
+   Efield_pcf->Eval(Efield, T, ip);
+   double scale = 1.0;
+   double Efield_norm = Efield.Norml2();
+   double corrEfield = min(1.0, 
+                           scale * nu_ee * velocity_real / Efield_norm);
+   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
+
    for (int d = 0; d < vdim; d++)
    { 
       V(d) = F1->GetValue(T.ElementNo, ip, d);
    }
    
    // Scattering on ions and electrons.
-   V *= pow(velocity_real, 3.0) / (nu_ei + nu_ee);
+   V *= pow(velocity_real, 3.0) / (nu_ei + nu_ee + nu_E);
    //V *= pow(velocity_real, 3.0) / nu_ei;
 }
 

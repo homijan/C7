@@ -221,6 +221,8 @@ public:
            P1b0_pcf = new P1b0KineticCoefficient(dim_, mspei_, mspee_); 
 		   P1b1_pcf = new P1b1KineticCoefficient(dim_, mspei_, mspee_);
 		   P1a0_pcf->SetEfield(Efield_);
+           P1b0_pcf->SetEfield(Efield_);
+           P1b1_pcf->SetEfield(Efield_);
         }
    void SetVelocityScale(double N_x_, double Tmax)
       { N_x = N_x_; N_x_vTmax = N_x_ * eos->GetvTe(Tmax); }

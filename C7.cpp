@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
    double xpoint = 0.5;
    double c7cfl = 0.25;
    // Number of consistent Efield iterations.
-   double djC_norm_limit = 1e-2;
+   double dEit_norm_limit = 1e-2;
    int Efield_consistent_iter_max = 100;
 
    OptionsParser args(argc, argv);
@@ -178,8 +178,10 @@ int main(int argc, char *argv[])
                   "Temperature gradient scale in the function tanh(a*x).");
    args.AddOption(&rho_gradscale, "-rgrad", "--rhograd",
                   "Density gradient scale in the function tanh(a*x).");
-   args.AddOption(&djC_norm_limit, "-dE", "--dEfieldnorm",
-                  "Change in the Electric field norm to stop iterations.");
+   args.AddOption(&dEit_norm_limit, "-dE", "--dEfielditerationnorm",
+                  "Change in the norm related to Electric field to stop iterations.");
+   args.AddOption(&Efield_consistent_iter_max, "-Em", "--Emaxit",
+                  "Maximum number of the the Electric field iterations.");
    args.AddOption(&EfieldS0, "-E0", "--ES0",
                   "Electric field scaling, i.e. E = S0*E.");
    args.AddOption(&F0SourceS0, "-S0", "--S0",
@@ -493,8 +495,8 @@ int main(int argc, char *argv[])
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
-   Efield_gf.ProjectCoefficient(Efield_vcf);
-   //Efield_gf = 0.0;
+   //Efield_gf.ProjectCoefficient(Efield_vcf);
+   Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
@@ -875,11 +877,11 @@ int main(int argc, char *argv[])
          }
 
          // Starting value of the E field norm.
-		 double loc_jC_norm = Efield_gf.Norml2();
-         double glob_old_jC_norm = 1.0;
-         //MPI_Allreduce(&loc_jC_norm, &glob_old_jC_norm, 1, 
+		 double loc_Eit_norm = Efield_gf.Norml2();
+         double glob_old_Eit_norm = 1.0;
+         //MPI_Allreduce(&loc_Eit_norm, &glob_old_Eit_norm, 1, 
          //              MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-         double djC_norm = 1e64;
+         double dEit_norm = 1e64;
          bool converging = true;
 		 int Eit = 0;
          while (Eit < Efield_consistent_iter_max && converging)
@@ -986,25 +988,33 @@ int main(int argc, char *argv[])
 
             // TMP testing of jC current convergence.
             //jC_gf.ProjectCoefficient(OhmCurrent_cf);
+            // Gather the current norm.
             double loc_jC_norm = jC_gf.Norml2();
-            double glob_new_jC_norm;
-            MPI_Allreduce(&loc_jC_norm, &glob_new_jC_norm, 1, 
+			double glob_jC_norm;
+            MPI_Allreduce(&loc_jC_norm, &glob_jC_norm, 1, 
                           MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
-            double djC_norm_new = abs(glob_old_jC_norm - glob_new_jC_norm) 
-                                  / glob_old_jC_norm;
+            // Gather the heat flux norm.
+			double loc_hflux_norm = hflux_gf.Norml2();
+			double glob_hflux_norm;
+            MPI_Allreduce(&loc_hflux_norm, &glob_hflux_norm, 1, 
+                          MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+            // Use the heat flux norm as converging criteria.
+			double glob_new_Eit_norm = glob_hflux_norm;
+            double dEit_norm_new = abs(glob_old_Eit_norm - glob_new_Eit_norm) 
+                                  / glob_old_Eit_norm;
             // Stop iteration if reached convergence or not converging.
-            if (djC_norm_new > djC_norm || djC_norm_new < djC_norm_limit)
+            if (dEit_norm_new > dEit_norm || dEit_norm_new < dEit_norm_limit)
             { 
                converging = false; 
             }
-            djC_norm = djC_norm_new;
+            dEit_norm = dEit_norm_new;
             if (mpi.Root())
             {
-               cout << "Eit, jC_norm, djC_norm(|j0-j1|/|j0|): " << Eit << ", " 
-                    << std::scientific << setprecision(4) 
-                    << glob_new_jC_norm << ", " << djC_norm << endl;
+               cout << "Eit, jC_norm, dhflux_norm(|j0-j1|/|j0|): " << Eit 
+                    << ", " << std::scientific << setprecision(4) 
+                    << glob_jC_norm << ", " << dEit_norm << endl;
             }
-            glob_old_jC_norm = glob_new_jC_norm;
+            glob_old_Eit_norm = glob_new_Eit_norm;
 
             // Maximum flux point look up.
             // Construct a double-int memory structure.
