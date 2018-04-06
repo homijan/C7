@@ -441,7 +441,8 @@ if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
-      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$'+'('+"{:.2f}".format(proporC7EQ)+r'$q_h^{SH}$)')
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$')
+      #ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$'+'('+"{:.2f}".format(proporC7EQ)+r'$q_h^{SH}$)')
 if (Emimic):
    if (len(C7v)<=pointlimit):
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')

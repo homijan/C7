@@ -260,7 +260,10 @@ double AWBSF0Source::Eval(ElementTransformation &T, const IntegrationPoint &ip)
 double CorrEfieldCoefficient::Eval(ElementTransformation &T,
                                    const IntegrationPoint &ip)
 {
-   int N_x = 10, Nd = 1000;
+   // Multiple of the local thermal velocity, 
+   // i.e. the maximum velocity considered is N_x * vTe.
+   int N_x = 9;
+   int Nd = 1000;
    double vTe = mspei_pcf->GetvTe(T, ip);
    double dv = N_x * vTe / Nd;
 

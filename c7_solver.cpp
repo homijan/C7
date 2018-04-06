@@ -557,13 +557,16 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    // Full but directional E field effect.
    // Fundamental matrices.
-   SparseMatrix *tDI = Transpose(Divf0.SpMat());
    SparseMatrix *tVE = Transpose(Efieldf0.SpMat());
-   SparseMatrix *invM0_tDI = mfem::Mult(invMf0nu.SpMat(), *tDI);
+   // Diffusion plus directional effect of Efield matrices.
+   SparseMatrix *tDIVE = Transpose(Divf0.SpMat()); 
+   tDIVE->Add(2.0 / velocity_real / velocity_real, *tVE);
+   // Proceed with matrix inversions.
+   SparseMatrix *invM0_tDIVE = mfem::Mult(invMf0nu.SpMat(), *tDIVE);
    SparseMatrix *invM0_tVE = mfem::Mult(invMf0nu.SpMat(), *tVE);
-   SparseMatrix *DA_invM0_tDI = mfem::Mult(Divf1.SpMat(), *invM0_tDI);
+   SparseMatrix *DA_invM0_tDIVE = mfem::Mult(Divf1.SpMat(), *invM0_tDIVE);
    SparseMatrix *DA_invM0_tVE = mfem::Mult(Divf1.SpMat(), *invM0_tVE);
-   SparseMatrix *VAE_invM0_tDI = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDI);
+   SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDIVE);
    SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1), B, X;
@@ -571,16 +574,16 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    F1_rhs.Neg();
    Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
    AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
-   VAE_invM0_tDI->AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   DA_invM0_tDI->AddMult(F1, F1_rhs, -1.0 * dv_real);  
+   VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);  
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
    Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
    // Complete the system matrix.
    implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
    implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Bfieldf1.SpMat());
-   implMf1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDI);
+   implMf1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDIVE);
    implMf1nu.SpMat().Add(dv_real / velocity_real, *DA_invM0_tVE);
-   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDI);
+   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDIVE);
    implMf1nu.SpMat().Add(-1.0 / velocity_real / velocity_real, *VAE_invM0_tVE);
 
    // Run the HYPRE solver.
@@ -617,8 +620,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
    dF0 = F0source; 
-   invM0_tDI->AddMult(F1, dF0);
-   invM0_tDI->AddMult(dF1, dF0, dv_real);
+   invM0_tDIVE->AddMult(F1, dF0);
+   invM0_tDIVE->AddMult(dF1, dF0, dv_real);
    invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
 
    /*
