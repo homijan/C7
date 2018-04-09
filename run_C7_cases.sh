@@ -2,7 +2,7 @@
 SIGMA=8.1027575e17 ## Matching the SH diffusive flux.
 CL=7.09 # Coulomb logarithm.
 
-NPROC=8
+NPROC=7
 
 RS=6
 F1ORDER=4
@@ -15,7 +15,7 @@ TGRAD=180
 XPOINT=0.046775 # in cm qSH maximum
 
 #MING=2000
-MING=100
+MING=500
 
 # Challenge SNB ;)
 #MING=25
@@ -107,7 +107,7 @@ NI=${NIarray[$i]}
 KN=${KNarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.005 -Em 100 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.05 -Em 100 | tee C7E.out
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointmax_Ecorrect.txt
@@ -115,7 +115,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointma
 cp C7E.out $DIRanalysis$DIRout"P5_Z"$ZBAR"_"$KN".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7E' --vlimshow #--pltshow #-xp #--AWBSstar #--AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7' --pltshow #--vlimshow #-xp #--AWBSstar #--AWBSoriginal
 # Safe figs.
 cp heatflux.png $DIRout"P5_heatflux_Z"$ZBAR"_"$KN".png"
 cp kinetics.png $DIRout"P5_kinetics_Z"$ZBAR"_"$KN".png"

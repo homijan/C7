@@ -466,6 +466,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    db1_gf.MakeRef(&H1FESpace, dFdv, size);
 
    invMf0nu.Update();
+   //Mf0nu.Update();
    implMf1nu.Update();
    Mf1nu.Update(); 
    Mf1nut.Update();
@@ -474,11 +475,13 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Efieldf0 = 0.0;
    Divf1 = 0.0; 
    AEfieldf1 = 0.0;
-   AIEfieldf1 = 0.0; 
+   //AIEfieldf1 = 0.0; 
 
    timer.sw_force.Start(); 
    invMf0nu.Assemble();
    invMf0nu.Finalize();
+   //Mf0nu.Assemble();
+   //Mf0nu.Finalize();
    implMf1nu.Assemble();
    implMf1nu.Finalize();
    Mf1nu.Assemble(); 
@@ -495,11 +498,11 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Divf1.Finalize();
    AEfieldf1.Assemble(0); 
    AEfieldf1.Finalize();
-   AIEfieldf1.Assemble(0);
-   AIEfieldf1.Finalize(0); 
+   //AIEfieldf1.Assemble(0);
+   //AIEfieldf1.Finalize(0); 
    timer.sw_force.Stop();
 
-   AIEfieldf1.SpMat() *= 0.0;
+   //AIEfieldf1.SpMat() *= 0.0;
    Bfieldf1.SpMat()   *= 0.0; 
 
    /////////////////////////////////////////////////////////////////////////////
@@ -568,10 +571,16 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    SparseMatrix *DA_invM0_tVE = mfem::Mult(Divf1.SpMat(), *invM0_tVE);
    SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDIVE);
    SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
+   // Prepare source of electrons.
+   //Vector S0(VsizeL2), invM0_S0(VsizeL2);
+   //Mf0nu.Mult(F0source, S0);
+   //invMf0nu.Mult(S0, invM0_S0);
    // Fill the rhs vector.
-   Vector F1_rhs(VsizeH1), B, X;
+   Vector F1_rhs(VsizeH1);
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg();
+   //Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
+   //AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
    Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
    AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
@@ -589,6 +598,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Run the HYPRE solver.
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+   Vector B, X;
    HypreParMatrix A;
    dF1 = 0.0;
    implMf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
@@ -609,7 +619,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    { 
       cout << "HyprePCG(BoomerAMG) GetNumIterations: " 
            <<  PCGNumIter << endl << flush;
-   }   
+   }    
    implMf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
  
    ////// f0 equation //////////////////////////////////////////////////////////
@@ -619,6 +629,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
+   //dF0 = invM0_S0;
    dF0 = F0source; 
    invM0_tDIVE->AddMult(F1, dF0);
    invM0_tDIVE->AddMult(dF1, dF0, dv_real);
@@ -659,36 +670,26 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Integrate heat flux.
    dqH_gf = F1;
    dqH_gf *= pow(velocity_real, 5.0);
-   // Since the integration goes from vmax -> vmin, revert sign.
-   dqH_gf *= -1.0;
    // Integrate current.
    djC_gf = F1;
    djC_gf *= pow(velocity_real, 3.0);
-   // Since the integration goes from vmax -> vmin, revert sign.
-   djC_gf *= -1.0;
 
    // Generalized Ohm's law related grid functions.
    AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
    AWBSPhysics->P1a0_pcf->SetVelocityReal(velocity_real); 
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
-   // Since the integration goes from vmax -> vmin, revert sign.
-   da0_gf *= -1.0;
 
    AWBSPhysics->P1b0_pcf->SetF0(&F0);
    AWBSPhysics->P1b0_pcf->SetdF1(&dF1);
    AWBSPhysics->P1b0_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b0_cf = *(AWBSPhysics->P1b0_pcf);
    db0_gf.ProjectCoefficient(P1b0_cf);
-   // Since the integration goes from vmax -> vmin, revert sign.
-   db0_gf *= -1.0;
 
    AWBSPhysics->P1b1_pcf->SetF1(&dF1);
    AWBSPhysics->P1b1_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b1_cf = *(AWBSPhysics->P1b1_pcf);
    db1_gf.ProjectCoefficient(P1b1_cf);
-   // Since the integration goes from vmax -> vmin, revert sign.
-   db1_gf *= -1.0;
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),
@@ -821,12 +822,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    double *mspee_b = new double[nqp_batch],
           *mspei_b = new double[nqp_batch],
 		  *rho_b = new double[nqp_batch],
-          *vTe_b = new double[nqp_batch],
-          *f1overf0_b = new double[nqp_batch],
-          *Edotf1overf0_b = new double[nqp_batch];
-   // Electric and Magnetic fields for all quadrature points in the batch.
-   //DenseMatrix *Efield_b = new DenseMatrix[nqp_batch],
-   //            *Bfield_b = new DenseMatrix[nqp_batch];
+          *vTe_b = new double[nqp_batch];
    // Jacobians of reference->physical transformations for all quadrature
    // points in the batch.
    DenseTensor *Jpr_b = new DenseTensor[nqp_batch],
@@ -845,8 +841,6 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
       for (int z = 0; z < nzones_batch; z++)
       {
          ElementTransformation *T = H1FESpace.GetElementTransformation(z_id);
-         //Efield_b[z].SetSize(dim, nqp);
-		 //Bfield_b[z].SetSize(dim, nqp);
 		 Jpr_b[z].SetSize(dim, dim, nqp);
          AM1_b[z].SetSize(dim, dim, nqp);
 
@@ -864,17 +858,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                          detJ / ip.weight;
             mspei_b[idx] = AWBSPhysics->mspei_pcf->Eval(*T, ip, rho_b[idx]);
             mspee_b[idx] = AWBSPhysics->mspee_pcf->Eval(*T, ip, rho_b[idx]);
-            vTe_b[idx] = AWBSPhysics->mspee_pcf->GetvTe(*T, ip);
-            // Anisotropy measure.
-            double normlim = 1e-32;
-			double f0norm = max(normlim, F0.GetValue((*T).ElementNo, ip));
-            Vector f1, Efield;
-            F1.GetVectorValue((*T).ElementNo, ip, f1);
-            AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
-			double f1norm = f1.Norml2();
-            f1overf0_b[idx] = f1norm / f0norm;
-			double Edotf1 = Efield * f1;
-            Edotf1overf0_b[idx] = Edotf1 / f0norm;
+            vTe_b[idx] = AWBSPhysics->mspee_pcf->GetvTe(*T, ip); 
 
             // M1 closure.
             // Matric closure maximizing angular entropy
@@ -944,10 +928,10 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
          {
             const IntegrationPoint &ip = integ_rule.IntPoint(q);
             T->SetIntPoint(&ip);
-            double f0min = 1e-32;
-            double f0 = max(f0min, F0.GetValue((*T).ElementNo, ip));
-            Vector f1;
-            F1.GetVectorValue((*T).ElementNo, ip, f1);
+            //double f0min = 1e-32;
+            //double f0 = max(f0min, F0.GetValue((*T).ElementNo, ip));
+            //Vector f1;
+            //F1.GetVectorValue((*T).ElementNo, ip, f1);
 
             // Note that the Jacobian was already computed above. We've chosen
             // not to store the Jacobians for all batched quadrature points.
@@ -958,32 +942,25 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const double mspee = mspee_b[z*nqp + q];
 			double rho = rho_b[z*nqp + q];
             double vTe = vTe_b[z*nqp + q];
-            double Edotf1overf0 = Edotf1overf0_b[z*nqp + q];
 			// VEF transport closure matrix is either P1 or M1.
 			DenseMatrix A1 = P1;
 			if (M1_closure) { A1 = AM1_b[z](q); }
 
             Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim);
-            // TODO Here the vector E and B evaluation.
-            // And consequent evaluation of AE and AIE.
-            //Efield_b[z].GetColumn(q, Efield);
+            // 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-
+            // Represent Efield effect as friction.
+            double mspE = Efield.Norml2() / velocity_real;
+            // Scale the mspE effect.
+			mspE = max(0.0, mspE - mspee);
 			// TMP on/off anisotropy correction on Lorentz force.
-            double scale = 1.0;
-            double Efield_norm = Efield.Norml2();
-			double corrE = min(1.0, scale * mspee * velocity_real 
-                                    / Efield_norm);
-            //double corrE = 1.0;
-			//if (Edotf1overf0 > 0.0) 
-            //{
-            //   min(1.0, scale * mspee * velocity_real / Edotf1overf0);
-            //}
-			double mspE = Efield_norm / velocity_real * (1.0 - corrE);
-			Efield *= corrE;
-            // ATTEMPT of some physics.
-            //if (velocity_real > 0.9 * N_x * vTe) { Efield *= 0.0; }
+            //double Escale = 10000.0;
+            //double Efield_norm = Efield.Norml2();
+			//double corrE = min(1.0, Escale * mspee * velocity_real 
+            //                        / Efield_norm);
+			////mspE *= (1.0 - corrE);
+			//Efield *= corrE;
 
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
@@ -1022,13 +999,12 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 
             // Extensive scalar quadrature data.
             quad_data.nuinvrho(z_id*nqp + q) = mspee / rho; //nue/rho;
-            quad_data.Ef1invvf0rho(z_id*nqp + q) = Efield * f1
-                                                   / velocity_real / f0
-                                                   / rho;
-            //cout << "Ef1/v/f0/rho: " <<  quad_data.Ef1invvf0rho(z_id*nqp + q) 
-            //     << endl << flush;
+            quad_data.nuEinvrho(z_id*nqp + q) = mspE / rho;
+			//quad_data.Ef1invvf0rho(z_id*nqp + q) = Efield * f1
+            //                                       / velocity_real / f0
+            //                                       / rho;
             // Scattering on ions and electrons.
-			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee + mspE) / rho;
+			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee) / rho;
 			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
 
             // Time step estimate at the point. Here the more relevant length
@@ -1038,13 +1014,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             const double h_min =
                Jpr.CalcSingularvalue(dim-1) / (double) H1FESpace.GetOrder(0);
 
-            //double f0dvdx = mspee - abs(Efield * f1 / velocity_real / f0);
-            //double f1dvdx = mspei - abs(AEfield * f1 / velocity_real / f0);
-            double f0dvdx = mspee;
-            double f1dvdx = mspei;
-            // The scaled cfl condition on velocity step.
-            double dv = h_min * min(abs(f0dvdx), abs(f1dvdx)) / N_x_vTmax;
-			//double dv = h_min * min(mspee, mspei) / N_x_vTmax; // / rho;
+			double dv = h_min * min(mspee, mspei) / N_x_vTmax;;
             quad_data.dt_est = min(quad_data.dt_est, cfl * dv);		
          }
          ++z_id;
@@ -1054,8 +1024,6 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
    delete [] mspei_b;
    delete [] rho_b;
    delete [] vTe_b;
-   delete [] f1overf0_b;
-   delete [] Edotf1overf0_b;
    delete [] Jpr_b;
    delete [] AM1_b; 
    quad_data_is_current = true;

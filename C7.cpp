@@ -495,8 +495,8 @@ int main(int argc, char *argv[])
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
-   //Efield_gf.ProjectCoefficient(Efield_vcf);
-   Efield_gf = 0.0;
+   Efield_gf.ProjectCoefficient(Efield_vcf);
+   //Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
@@ -982,6 +982,15 @@ int main(int argc, char *argv[])
                   << endl;
                }
             }
+            // After the integration:
+			// Since a deceleration (int_vmax->vmin) run has been performed, 
+			// the integrated quantities needs to revert sign.
+            hflux_gf *= -1.0;
+            jC_gf *= -1.0;
+            // Microscopic Ohm's law / Ampere's law components too.
+			a0_gf *= -1.0;
+            b0_gf *= -1.0;
+            b1_gf *= -1.0;
 
             // Consistent Efield (zero current) computation.
             Efield_gf.ProjectCoefficient(OhmEfield_cf);

@@ -54,7 +54,7 @@ struct QuadratureData
    Vector rho0DetJ0w;
 
    // Mass integrators.
-   Vector nuinvrho, nutinvrho;
+   Vector nuinvrho, nutinvrho, nuEinvrho;
 
    // The pointwise equality rho * detJ = rho0 * detJ0 is used by integrators.
    // Electric and magnetic fields. 
@@ -77,6 +77,7 @@ struct QuadratureData
         rho0DetJ0w(nzones * quads_per_zone),
         nuinvrho(nzones * quads_per_zone),
         nutinvrho(nzones * quads_per_zone),
+        nuEinvrho(nzones * quads_per_zone),
         Einvrho(nzones * quads_per_zone, dim),
         AEinvrho(nzones * quads_per_zone, dim),
         AIEinvrho(nzones * quads_per_zone, dim),
@@ -223,21 +224,6 @@ public:
    virtual double GetIntegrator(int q, int vd) = 0;
 };
 
-/*
-// Assembles element contributions to the global velocity force matrix.
-// This class is used for the full assembly case; it's not used with partial
-// assembly.
-class Mass0cIntegrator : public Mass0Integrator
-{
-private:
-public:
-   Mass0cIntegrator(QuadratureData &quad_data_) :
-      Mass0Integrator(quad_data_) { }
-
-   double GetIntegrator(int i);
-};
-*/
-
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
@@ -289,21 +275,6 @@ public:
 
    double GetIntegrator(int i);
 };
-
-/*
-// Assembles element contributions to the global velocity force matrix.
-// This class is used for the full assembly case; it's not used with partial
-// assembly.
-class Mass1cIntegrator : public Mass1Integrator
-{
-private:
-public:
-   Mass1cIntegrator(QuadratureData &quad_data_) :
-      Mass1Integrator(quad_data_) { }
-
-   double GetIntegrator(int i);
-};
-*/
 
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial

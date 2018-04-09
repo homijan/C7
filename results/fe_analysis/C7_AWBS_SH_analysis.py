@@ -5,6 +5,7 @@ from math import exp
 ## Fundamental physical constants in cgs. 
 kB = 1.6022e-12
 me = 9.1094e-28
+qe = 4.8032e-10
 
 ## Number of processors used to run C7.
 Nproc = 8
@@ -383,19 +384,23 @@ if (Emimic):
 C7Te_scaled = C7Te*(C7SHQ_analytic.max() - C7SHQ_analytic.min())/(C7Te.max() - C7Te.min())
 C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7SHQ_analytic.max())
 ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
+## Second Efield axis.
 ax2 = ax1.twinx()
-ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE_Ec.min())+', '+"{:.0f}".format(C7corrE_Ec.max())+')' )
-ax2.plot(C7x_microns, C7SHE_analytic, SHcolor+':', label=r'E$^{SH}$')
+if (vlimshow):
+   ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE_Ec.min())+', '+"{:.0f}".format(C7corrE_Ec.max())+')' )
+else:
+   ax2.set_ylabel(r'E [a.u.]')
+ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+':', label=r'E$^{SH}$')
 if (Ecorrect):
-   ax2.plot(C7x_microns, C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
+   ax2.plot(C7x_microns, me/qe*C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
 if (Emimic):
-   ax2.plot(C7x_microns, C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
+   ax2.plot(C7x_microns, me/qe*C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
 ## Special treatment of the corrE showing the limit velocity/vTh 
 ## to be affected by E field.
 if (vlimshow):
    C7corrE_scaled = C7corrE_Ec*(C7Ex_Ec.max() - C7Ex_Ec.min())/(C7corrE_Ec.max() - C7corrE_Ec.min()) 
    C7corrE_scaled = C7corrE_scaled - (C7corrE_scaled.max() - C7Ex_Ec.max())
-   ax2.plot(C7x_microns, C7corrE_scaled, 'k-.', label=r'$v_{lim}/v_{th}$')
+   ax2.plot(C7x_microns, me/qe*C7corrE_scaled, 'k-.', label=r'$v_{lim}/v_{th}$')
 fig.tight_layout()
 ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='center right', fancybox=True, framealpha=0.8)
@@ -448,14 +453,17 @@ if (Emimic):
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), 'kx', label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
    else:
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
+## q0 axis
 ax2 = ax1.twinx()
-ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
+ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
+#ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (Ecorrect):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$q_0^{C7E}$')
+   #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 if (Emimic):
    ax2.plot(p_C7v/vTh(Te), p_C7mehalff0v5 / (4.0*pi), lsC7, label=lblC7)
-ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
-#ax2.set_ylabel(r'$f_M = n_e/v_{th}^3 (2\pi)^{3/2}\, \exp(-v^2/2 v_{th}^2) v^2$ [a.u.]')
+ax2.set_ylabel(r'$f_0 v^2$ [a.u.]')
+#ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:

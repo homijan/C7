@@ -118,18 +118,24 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
 
    double dF0dv = dF0->GetValue(T.ElementNo, ip);
 
-   Vector Efield(vdim);
-   Efield = 1.0;
-   Efield_pcf->Eval(Efield, T, ip);
-   double scale = 1.0;
-   double Efield_norm = Efield.Norml2();
-   double corrEfield = min(1.0, 
-                           scale * nu_ee * velocity_real / Efield_norm);
-   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
+   //Vector Efield(vdim);
+   //Efield = 1.0;
+   //Efield_pcf->Eval(Efield, T, ip);
+   //double Escale = 10000.0;
+   //double Efield_norm = Efield.Norml2();
+   //double corrEfield = min(1.0, 
+   //                        Escale * nu_ee * velocity_real / Efield_norm);
+   //double nu_E = Efield_norm / velocity_real;
+   // Scale the mspE effect.
+   //nu_E = max(0.0, nu_E - nu_ee);
+   //nu_E *= (1.0 - corrEfield);
+
+   double nu_t = nu_ei + nu_ee;
+   //double nu_t = nu_ei + nu_ee + nu_E;
+
    // Scattering on ions and electrons.
-   return corrEfield * velocity_real / 3.0 / (nu_ei + nu_ee + nu_E) * dF0dv 
-          * velocity_real * velocity_real;
-   //return corrEfield * velocity_real / 3.0 / nu_ei * dF0dv 
+   return velocity_real / 3.0 / nu_t * dF0dv * velocity_real * velocity_real;
+   //return corrEfield * velocity_real / 3.0 / nu_t * dF0dv 
    //       * velocity_real * velocity_real;
 }
 
@@ -145,24 +151,28 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    Vector Efield(vdim);
    Efield = 1.0;
    Efield_pcf->Eval(Efield, T, ip);
-   double scale = 1.0;
-   double Efield_norm = Efield.Norml2();
-   double corrEfield = min(1.0, 
-                           scale * nu_ee * velocity_real / Efield_norm);
-   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
+   //double Escale = 10000.0;
+   //double Efield_norm = Efield.Norml2();
+   //double corrEfield = min(1.0, 
+   //                        Escale * nu_ee * velocity_real / Efield_norm);
+   double nu_E = Efield.Norml2() / velocity_real;
+   //nu_E *= (1.0 - corrEfield);
+   // Scale the mspE effect.
+   nu_E = max(0.0, nu_E - nu_ee);
+
+   double nu_t = nu_ei + nu_ee;
+   //double nu_t = nu_ei + nu_ee + nu_E;
 
    T.SetIntPoint(&ip);
    F0->GetGradient(T, V); 
    // Scattering on ions and electrons.
-   V *= 1.0 / 3.0 / (nu_ei + nu_ee + nu_E);
-   //V *= 1.0 / 3.0 / nu_ei;
+   V *= 1.0 / 3.0 / nu_t;
    
    for (int d = 0; d < vdim; d++)
    { 
       // Scattering on ions and electrons.
-      V(d) -= nu_ee / (nu_ei + nu_ee + nu_E) 
-              * dF1->GetValue(T.ElementNo, ip, d);
-      //V(d) -= nu_ee / nu_ei * dF1->GetValue(T.ElementNo, ip, d);
+      V(d) -= (nu_ee + nu_E) / nu_t * dF1->GetValue(T.ElementNo, ip, d);
+      //V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
    }
    
    V *= pow(velocity_real, 4.0);
@@ -177,14 +187,18 @@ void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
-   Vector Efield(vdim);
-   Efield = 1.0;
-   Efield_pcf->Eval(Efield, T, ip);
-   double scale = 1.0;
-   double Efield_norm = Efield.Norml2();
-   double corrEfield = min(1.0, 
-                           scale * nu_ee * velocity_real / Efield_norm);
-   double nu_E = Efield_norm / velocity_real * (1.0 - corrEfield);
+   //Vector Efield(vdim);
+   //Efield = 1.0;
+   //Efield_pcf->Eval(Efield, T, ip);
+   //double Escale = 10000.0;
+   //double Efield_norm = Efield.Norml2();
+   //double corrEfield = min(1.0, 
+   //                        Escale * nu_ee * velocity_real / Efield_norm);
+   //double nu_E = Efield.Norml2() / velocity_real;
+   //nu_E *= (1.0 - corrEfield);
+
+   double nu_t = nu_ei + nu_ee;
+   //double nu_t = nu_ei + nu_ee + nu_E;
 
    for (int d = 0; d < vdim; d++)
    { 
@@ -192,7 +206,7 @@ void P1b1KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    }
    
    // Scattering on ions and electrons.
-   V *= pow(velocity_real, 3.0) / (nu_ei + nu_ee + nu_E);
+   V *= pow(velocity_real, 3.0) / nu_t;
    //V *= pow(velocity_real, 3.0) / nu_ei;
 }
 
@@ -262,7 +276,7 @@ double CorrEfieldCoefficient::Eval(ElementTransformation &T,
 {
    // Multiple of the local thermal velocity, 
    // i.e. the maximum velocity considered is N_x * vTe.
-   int N_x = 9;
+   int N_x = 99;
    int Nd = 1000;
    double vTe = mspei_pcf->GetvTe(T, ip);
    double dv = N_x * vTe / Nd;
@@ -280,8 +294,11 @@ double CorrEfieldCoefficient::Eval(ElementTransformation &T,
       mspee_pcf->SetVelocityReal(velocity_real);
       double nu_ee =  mspee_pcf->Eval(T, ip);
 
-      double scale = 1.0;
-      if (scale * nu_ee * velocity_real < Efield_norm) 
+      double Escale = 1.0;
+      double corrE = Escale * nu_ee * velocity_real / Efield_norm;
+      double Efield_portion = 0.5;
+	  if (corrE < Efield_portion)
+      //if (scale * nu_ee * velocity_real < Efield_norm) 
       {
          velocity_limit = velocity_real;
          //break;

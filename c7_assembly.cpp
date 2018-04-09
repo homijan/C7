@@ -214,13 +214,6 @@ void VcrossIntegrator::AssembleElementMatrix2(const FiniteElement &trial_fe,
    }
 }
 
-/*
-double Mass0cIntegrator::GetIntegrator(int i)
-{
-   return quad_data.rho0DetJ0w(i);
-}
-*/
-
 double Mass0NuIntegrator::GetIntegrator(int i)
 {
    return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
@@ -235,7 +228,9 @@ double ExplMass0Integrator::GetIntegrator(int i)
 
 double invMass0NuIntegrator::GetIntegrator(int i)
 {
-   return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
+   return (quad_data.nuinvrho(i) + quad_data.nuEinvrho(i)) 
+          * quad_data.rho0DetJ0w(i);
+   //return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double invMass0NuEIntegrator::GetIntegrator(int i)
@@ -244,16 +239,11 @@ double invMass0NuEIntegrator::GetIntegrator(int i)
           * quad_data.rho0DetJ0w(i);
 }
 
-/*
-double Mass1cIntegrator::GetIntegrator(int i)
-{
-   return quad_data.rho0DetJ0w(i);
-}
-*/
-
 double Mass1NuIntegrator::GetIntegrator(int i)
 {
-   return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
+   return (quad_data.nuinvrho(i) + quad_data.nuEinvrho(i)) 
+          * quad_data.rho0DetJ0w(i);   
+   //return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double Mass1NutIntegrator::GetIntegrator(int i)

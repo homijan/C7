@@ -2089,14 +2089,16 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
 %more than 1000x longer than classical (SH) hydro.
 
 \subsection{Implicit fully-discrete scheme}\label{sec:impl_fullydiscrete_scheme}
+The moment P1 model can be written in a semi-discrete form
 \begin{eqnarray}
   \IM^0_{(\nue)} \cdot \pdv{\vfzero}{\vmag}  
   &=& 
-  \ID^T_{\left(\MI\right)} \cdot \fone
+  \left(\ID^T_{\left(\MI\right)}
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}\right) \cdot \fone
   + \frac{1}{\vmag}\IV^T_{\left(\tE\right)} \cdot 
   \pdv{\fone}{\vmag} 
-  + \IM^0_{(\nue)} \cdot \pdv{\vect{\fM}}{\vmag} ,  
-  \label{eq:semiM1hosf0} \\
+  + \IM^0_{(\nue)} \cdot \pdv{\vect{\fM}}{\vmag},  
+  \nonumber \label{eq:semiM1hosf0} \\
   \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
   &=& 
   - \ID_{\left(\MA\right)}\cdot \vfzero
@@ -2104,22 +2106,30 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   \pdv{\vfzero}{\vmag}
   + \frac{1}{\vmag}\left(
   \IM^1_{\left( \nutot \right)} + \IB_{\left( \tB \right)}  
-  \right) \cdot \fone ,
+  \right) \cdot \fone.
   \nonumber\\
   \label{eq:semiM1hosf1}
 \end{eqnarray}
-
+It is convenient to define
+\begin{equation}
+  \matr{DIVE} = \ID^T_{\left(\MI\right)} 
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}.
+  \nonumber
+\end{equation}
+The next step is towards implicit Runge-Kutta method (DIRK).
+Then, a~very effective inversion in the~L2 space can be formally performed
 \begin{equation}
   \pdv{\vfzero}{\vmag}  
   = \frac{1}{\vmag}
   \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
   \pdv{\fone}{\vmag} 
-  + \IM^{0^{-1}}_{(\nue)} \cdot \ID^T_{\left(\MI\right)}\cdot  
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot  
   \left(\fone^n 
   + \Delta\vmag\pdv{\fone}{\vmag}\right) 
-  + \pdv{\vect{\fM}}{\vmag},  
-  \label{eq:semiM1hosf0}
+  + \pdv{\vect{\fM}}{\vmag}.
+  \label{eq:fullP1hosf0}
 \end{equation}
+The~first moment equation in the DIRK framework reads
 \begin{multline}
   \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
   = \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
@@ -2129,10 +2139,11 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
   + \IM^1_{\left( \nutot \right)}\right) 
   \cdot \left(\fone^n 
-  + \Delta\vmag\pdv{\fone}{\vmag}\right) ,
+  + \Delta\vmag\pdv{\fone}{\vmag}\right).
   \label{eq:semiM1hosf1}
 \end{multline}
-
+Finally, one can eliminate $\pdv{\vfzero}{\vmag}$, 
+which leads to the~final form
 \begin{multline}
   \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
   = 
@@ -2140,25 +2151,28 @@ The~superscript $n$ stands for quantities from the~previous level of velocity.
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \IM^{0^{-1}}_{(\nue)} \cdot 
   \left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
-  + \Delta\vmag \ID^T_{\left(\MI\right)}
+  + \Delta\vmag \matr{DIVE}
   \right)
   \cdot \pdv{\fone}{\vmag}
   \\
-  \frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  +\frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
   + \IM^1_{\left( \nutot \right)}\right) 
   \cdot \pdv{\fone}{\vmag} + 
   \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
   + \IM^1_{\left( \nutot \right)}\right) 
   \cdot \fone^n\\ 
-  \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \left[  
-  \IM^{0^{-1}}_{(\nue)} \cdot \ID^T_{\left(\MI\right)}\cdot\fone^n 
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
   + \pdv{\vect{\fM}}{\vmag}
-  \right] - \ID_{\left(\MA\right)}\cdot\vfzero^n
-  \label{eq:semiM1hosf1}
+  \right] - \ID_{\left(\MA\right)}\cdot\vfzero^n,
+  \label{eq:fullP1hosf1}
 \end{multline}
-
+where the~only unknown is $\pdv{\fone}{\vmag}$. Once \eqref{eq:fullP1hosf1}
+is solved the~completion of the~solution 
+$[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
+\eqref{eq:fullP1hosf0}.
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 
 \begin{comment} % tmp
