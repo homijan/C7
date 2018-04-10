@@ -31,6 +31,9 @@ double T_max = 1000.0, T_min = 100.0;
 double rho_max = 10.0, rho_min = 1.0;
 double L = 1.0, T_gradscale = 50.0, rho_gradscale = 50.0;
 
+// Objects for input profile data reading.
+InputProfile *inTemp = NULL, *inDens = NULL;
+
 double rho0(const Vector &x)
 {
    switch (nth_problem)
@@ -140,10 +143,45 @@ double e0(const Vector &x)
          { return T_min; }
          else return T_gradscale / L * (T_min - T_max) * x.Norml2() +
                      0.5 * (T_min + T_max - T_gradscale * (T_min - T_max));
-      case 9: return T_min + (T_max - T_min) *
-                     (0.5 * (tanh(T_gradscale * (0.3 * L - x.Norml2())) + 1.0) 
-					 +0.5 * (tanh(T_gradscale * (x.Norml2() - 0.7 * L)) + 1.0));
+      case 9: return inTemp->GetValue(x.Norml2());
+      //case 9: return T_min + (T_max - T_min) *
+      //               (0.5 * (tanh(T_gradscale * (0.3 * L - x.Norml2())) 
+	  //               + 1.0) + 0.5 * (tanh(T_gradscale * (x.Norml2() 
+	  //               - 0.7 * L)) + 1.0));
       default: MFEM_ABORT("Bad number given for problem id!"); return 0.0;
+   }
+}
+
+InputProfile::InputProfile(std::string filename)
+{
+   x_data.resize(0);
+   data.resize(0);
+   double x, value;
+   //std::ifstream ifs("VFPdata/temperature.dat", std::ifstream::in);
+   std::ifstream ifs(filename.c_str(), std::ifstream::in);
+   while(!ifs.eof())
+   {
+      ifs >> x;
+      ifs >> value;
+      // Store x coordinate in [cm].
+      x_data.push_back(x * 1e-4);
+      // Store temperature in [eV].
+      data.push_back(value * 1e3);
+   }
+}
+
+double InputProfile::GetValue(double x)
+{
+   int index = 0;
+   if (x <= x_data[0]) { return data[0]; }
+   if (x >= x_data[x_data.size()-1]) { return data[data.size()-1]; }
+   for (int i = 0; i < x_data.size() - 1; i++)
+   {
+      if (x > x_data[i] && x <= x_data[i+1])
+      {
+         return data[i] + (data[i+1] - data[i]) / (x_data[i+1] - x_data[i])
+                 * (x - x_data[i]);
+      }
    }
 }
 

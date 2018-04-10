@@ -14,8 +14,8 @@ TGRAD=180
 
 XPOINT=0.046775 # in cm qSH maximum
 
-#MING=2000
-MING=75
+MING=2000
+#MING=75
 
 # Challenge SNB ;)
 #MING=25
@@ -24,14 +24,6 @@ MING=75
 
 L=0.1
 PROBLEM=5
-#PROBLEM=9
-
-ZBAR=1
-#ZBAR=5
-#ZBAR=10
-#ZBAR=20
-#ZBAR=100
-
 
 ## ZBAR 100
 #NI=2e25 # Zbar = 100 -> Kn 1e-10
@@ -100,15 +92,13 @@ declare -a Zarray=("1" "1" "1" "3" "3" "3" "10" "10" "10" "20" "20" "20" "100" "
 declare -a NIarray=("1.428e29" "6.25e20" "1.65e20" "2.38e28" "1.6e20" "4.1e19"  "2.6e27" "2.65e19" "7.7e18" "6.8e26" "8.1e18" "2.5e18" "2.828e25" "6.0e17" "1.1e17")
 declare -a KNarray=("Kn1e-10" "Kn25e-3" "Kn72e-3" "Kn1e-10" "Kn16e-3" "Kn46e-3"  "Kn1e-10" "Kn1e-2" "Kn27e-3" "Kn1e-10" "Kn84e-4" "Kn21e-3" "Kn1e-10" "Kn53e-4" "Kn28e-3")
 
-#declare -a Zarray=("1")
+# Philippe's test!
+#PROBLEM=9
+#L=0.035
+#declare -a Zarray=("4")
 ## full flux, half flux, fifth flux
-#declare -a NIarray=("1.428e29")
+#declare -a NIarray=("1.25e20")
 #declare -a KNarray=("Kn1e-10")
-
-#declare -a Zarray=("100")
-## full flux, half flux, fifth flux
-#declare -a NIarray=("1e16")
-#declare -a KNarray=("Kn28e-3")
 
 # get length of an array
 length=${#Zarray[@]}

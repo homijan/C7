@@ -214,6 +214,9 @@ int main(int argc, char *argv[])
    nth::rho_gradscale = rho_gradscale;
    nth::sigma = sigma;
    nth::coulLog = coulLog; // TMP, will be moved to the eos.
+   // Read input temperature profile.
+   nth::InputProfile inTemp("VFPdata/temperature.dat");
+   nth::inTemp = &inTemp;
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.

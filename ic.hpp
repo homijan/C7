@@ -18,6 +18,7 @@
 #define MFEM_NTH_IC
 
 #include "mfem.hpp"
+#include <fstream>
 
 #ifdef MFEM_USE_MPI
 
@@ -36,6 +37,21 @@ double rho0(const Vector &x);
 double gamma(const Vector &x);
 void v0(const Vector &x, Vector &v);
 double e0(const Vector &x);
+
+class InputProfile
+{
+protected:
+   // members
+   std::vector<double> x_data, data;
+   // methods
+public:
+   // members
+   // methods
+   InputProfile(std::string filename);
+   double GetValue(double x);
+};
+
+extern InputProfile *inTemp, *inDens;
 
 } // namespace nth
 

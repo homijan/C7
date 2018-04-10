@@ -1,0 +1,3 @@
+Z = 4
+ne = 5e20
+Log Lambda = 7.09
