@@ -390,7 +390,7 @@ if (vlimshow):
    ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE_Ec.min())+', '+"{:.0f}".format(C7corrE_Ec.max())+')' )
 else:
    ax2.set_ylabel(r'E [a.u.]')
-ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+':', label=r'E$^{SH}$')
+ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+'-.', label=r'E$^{SH}$')
 if (Ecorrect):
    ax2.plot(C7x_microns, me/qe*C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
 if (Emimic):
@@ -439,9 +439,10 @@ ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"
 ## Plot kinetic analysis.
 ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-", label=r'$q_1^{SH}$')
 if (AWBSoriginal):
-   ax1.plot(p_v/vTh(Te), p_AWBSq, "r-", label=r'$q_1^{AWBS}$')
+   ax1.plot(p_v/vTh(Te), p_AWBSq, "b-.", label=r'$q_1^{AWBS}$')
 if (AWBSstar):
-   ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
+   ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0), "g--", label=r'$q_1^{KIPP}$')
+   #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
 if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
@@ -455,10 +456,10 @@ if (Emimic):
       ax1.plot(p_C7v/vTh(Te), p_C7mehalff1v5 / (4.0*pi/3.0), lsC7, label=lblC7+'('+"{:.2f}".format(proporC7Q)+r'q$_{SH}$)')
 ## q0 axis
 ax2 = ax1.twinx()
-ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
+ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0^{SH}$')
 #ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (Ecorrect):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$q_0^{C7E}$')
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7E}$')
    #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 if (Emimic):
    ax2.plot(p_C7v/vTh(Te), p_C7mehalff0v5 / (4.0*pi), lsC7, label=lblC7)

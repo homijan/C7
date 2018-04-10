@@ -495,8 +495,8 @@ int main(int argc, char *argv[])
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
-   Efield_gf.ProjectCoefficient(Efield_vcf);
-   //Efield_gf = 0.0;
+   //Efield_gf.ProjectCoefficient(Efield_vcf);
+   Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
    VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
    }
    
    c7ode_solver->Init(c7oper);
-   
+/*   
    c7oper.ResetVelocityStepEstimate();
    c7oper.ResetQuadratureData();
    c7oper.SetTime(vmax);
@@ -628,7 +628,6 @@ int main(int argc, char *argv[])
    //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
    hflux_gf = 0.0;
    jC_gf = 0.0;
-/*
    while (abs(dv) >= abs(dvmin))
    {
       c7ti++;
@@ -1007,12 +1006,15 @@ int main(int argc, char *argv[])
 			double glob_hflux_norm;
             MPI_Allreduce(&loc_hflux_norm, &glob_hflux_norm, 1, 
                           MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
+            // Use the current norm as converging criteria.
+			double glob_new_Eit_norm = glob_jC_norm;
             // Use the heat flux norm as converging criteria.
-			double glob_new_Eit_norm = glob_hflux_norm;
+			//double glob_new_Eit_norm = glob_hflux_norm;
             double dEit_norm_new = abs(glob_old_Eit_norm - glob_new_Eit_norm) 
                                   / glob_old_Eit_norm;
             // Stop iteration if reached convergence or not converging.
-            if (dEit_norm_new > dEit_norm || dEit_norm_new < dEit_norm_limit)
+            if (dEit_norm_new < dEit_norm_limit)
+            //if (dEit_norm_new > dEit_norm || dEit_norm_new < dEit_norm_limit)
             { 
                converging = false; 
             }

@@ -953,7 +953,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             // Represent Efield effect as friction.
             double mspE = Efield.Norml2() / velocity_real;
             // Scale the mspE effect.
-			mspE = max(0.0, mspE - mspee);
+			double Escale = max(0.0, mspE - mspee) / mspee;
+			mspE = Escale * mspee;
 			// TMP on/off anisotropy correction on Lorentz force.
             //double Escale = 10000.0;
             //double Efield_norm = Efield.Norml2();
