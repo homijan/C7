@@ -366,6 +366,11 @@ if args.labelEmimic:
 # It is useful to plot the profiles with respect to microns.
 C7x_microns = np.array(C7x) * 1e4
 
+## r=2 corresponds better
+#xmicronsSH, QWcm2SH = np.loadtxt('../../VFPdata/flux_SH.dat',  usecols=(0, 1), unpack=True)
+xmicronsVFP, QWcm2VFP = np.loadtxt('../../VFPdata/flux_VFP.dat',  usecols=(0, 1), unpack=True)
+xmicronsSNB, QWcm2SNB = np.loadtxt('../../VFPdata/flux_SNB.dat',  usecols=(0, 1), unpack=True)
+
 SHcolor = 'k'
 C7Ecolor = 'r'
 ## Set labels.
@@ -375,6 +380,10 @@ ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+',
 ax1.set_title(r'Heat flux (Z = '+str(Zbar)+r', $\lambda_{th}$='+"{:.4f}".format(mfp_tot*1e4)+r'[$\mu$m])')
 #ax1.set_title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+#ax1.plot(xmicronsSH, QWcm2SH, 'y-', label=r'SH')
+ax1.plot(xmicronsVFP, QWcm2VFP, 'y-', label=r'$q_h^{VFP}$')
+ax1.plot(xmicronsSNB, QWcm2SNB, 'm-', label=r'$q_h^{SNB}$')
+
 ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-', label=r'$q_h^{SH}$')
 if (Ecorrect):
    ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7E}$')

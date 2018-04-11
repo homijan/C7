@@ -101,6 +101,9 @@ if __name__ == "__main__":
          flux.append(row[1])
       x = np.array(x)
       flux = np.array(flux)
+      ## Flux output is in microns and W/cm2
+      x = x * 1e4
+      flux = flux * 1e-7
       #print '# legend=' + td.legends()[i] + ' comment=' + td.comments()[i]
       print '# legend='
       print legend 

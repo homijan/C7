@@ -466,7 +466,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    db1_gf.MakeRef(&H1FESpace, dFdv, size);
 
    invMf0nu.Update();
-   //Mf0nu.Update();
+   Mf0nu.Update();
    implMf1nu.Update();
    Mf1nu.Update(); 
    Mf1nut.Update();
@@ -480,8 +480,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    timer.sw_force.Start(); 
    invMf0nu.Assemble();
    invMf0nu.Finalize();
-   //Mf0nu.Assemble();
-   //Mf0nu.Finalize();
+   Mf0nu.Assemble(); // Not using SpMat.
    implMf1nu.Assemble();
    implMf1nu.Finalize();
    Mf1nu.Assemble(); 
@@ -572,17 +571,17 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDIVE);
    SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
    // Prepare source of electrons.
-   //Vector S0(VsizeL2), invM0_S0(VsizeL2);
-   //Mf0nu.Mult(F0source, S0);
-   //invMf0nu.Mult(S0, invM0_S0);
+   Vector S0(VsizeL2), invM0_S0(VsizeL2);
+   Mf0nu.Mult(F0source, S0);
+   invMf0nu.Mult(S0, invM0_S0);
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1);
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg();
-   //Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
-   //AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
-   Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
-   AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
+   Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
+   AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
+   //Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
+   //AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
    DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);  
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
@@ -629,8 +628,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
-   //dF0 = invM0_S0;
-   dF0 = F0source; 
+   dF0 = invM0_S0;
+   //dF0 = F0source; 
    invM0_tDIVE->AddMult(F1, dF0);
    invM0_tDIVE->AddMult(dF1, dF0, dv_real);
    invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
@@ -946,32 +945,24 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 			DenseMatrix A1 = P1;
 			if (M1_closure) { A1 = AM1_b[z](q); }
 
-            Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim);
-            // 
+            Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim); 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
             double Enorm = max(1e-32, Efield.Norml2());
 			// Represent Efield effect as friction.
-            double mspE = Enorm / velocity_real;
+            //double mspE = Enorm / velocity_real;
             // Scale the mspE effect.
-			double mspEscale = max(0.0, mspE - mspee) / mspee;
-			//double mspEscale = max(0.0 ,
-            //                   (Enorm - velocity_real * mspee) 
-            //                   / 2.0 / velocity_real
-            //                   / mspee);
-            //double Efield_scale = min(1.0, (Enorm 
-            //                       - (Enorm - velocity_real * mspee) 
-            //                      / 2.0)
-            //                      / Enorm);
-            //Efield *= Efield_scale;
-			mspE = mspEscale * mspee;	
-			// TMP on/off anisotropy correction on Lorentz force.
-            //double Escale = 10000.0;
-            //double Efield_norm = Efield.Norml2();
-			//double corrE = min(1.0, Escale * mspee * velocity_real 
-            //                        / Efield_norm);
-			////mspE *= (1.0 - corrE);
-			//Efield *= corrE;
+			//double mspEscale = max(0.0, mspE - mspee) / mspee;
+			double mspEscale = max(0.0 ,
+                               (Enorm - velocity_real * mspee) 
+                               / 2.0 / velocity_real
+                               / mspee);
+            double mspE = mspEscale * mspee;
+            double Efield_scale = min(1.0, (Enorm 
+                                           - (Enorm - velocity_real * mspee) 
+                                           / 2.0)
+                                           / Enorm);
+            Efield *= Efield_scale;	
 
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
