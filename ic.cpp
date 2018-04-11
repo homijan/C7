@@ -164,9 +164,11 @@ InputProfile::InputProfile(std::string filename)
       ifs >> x;
       ifs >> value;
       // Store x coordinate in [cm].
-      x_data.push_back(x * 1e-4);
+      x_data.push_back(x);
+      //x_data.push_back(x * 1e-4);
       // Store temperature in [eV].
-      data.push_back(value * 1e3);
+      data.push_back(value); 
+      //data.push_back(value * 1e3);
    }
 }
 

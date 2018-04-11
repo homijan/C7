@@ -950,11 +950,21 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             // 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-            // Represent Efield effect as friction.
-            double mspE = Efield.Norml2() / velocity_real;
+            double Enorm = max(1e-32, Efield.Norml2());
+			// Represent Efield effect as friction.
+            double mspE = Enorm / velocity_real;
             // Scale the mspE effect.
-			double Escale = max(0.0, mspE - mspee) / mspee;
-			mspE = Escale * mspee;
+			double mspEscale = max(0.0, mspE - mspee) / mspee;
+			//double mspEscale = max(0.0 ,
+            //                   (Enorm - velocity_real * mspee) 
+            //                   / 2.0 / velocity_real
+            //                   / mspee);
+            //double Efield_scale = min(1.0, (Enorm 
+            //                       - (Enorm - velocity_real * mspee) 
+            //                      / 2.0)
+            //                      / Enorm);
+            //Efield *= Efield_scale;
+			mspE = mspEscale * mspee;	
 			// TMP on/off anisotropy correction on Lorentz force.
             //double Escale = 10000.0;
             //double Efield_norm = Efield.Norml2();
