@@ -381,8 +381,8 @@ ax1.set_title(r'Heat flux (Z = '+str(Zbar)+r', $\lambda_{th}$='+"{:.4f}".format(
 #ax1.set_title(r'Heat flux (Z = '+str(Zbar)+', Kn='+"{:.1e}".format(Kn)+')')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 #ax1.plot(xmicronsSH, QWcm2SH, 'y-', label=r'SH')
-ax1.plot(xmicronsVFP, QWcm2VFP, 'y-', label=r'$q_h^{VFP}$')
-ax1.plot(xmicronsSNB, QWcm2SNB, 'm-', label=r'$q_h^{SNB}$')
+#ax1.plot(xmicronsVFP, QWcm2VFP, 'y-', label=r'$q_h^{VFP}$')
+#ax1.plot(xmicronsSNB, QWcm2SNB, 'm-', label=r'$q_h^{SNB}$')
 
 ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-', label=r'$q_h^{SH}$')
 if (Ecorrect):
@@ -481,6 +481,26 @@ for ext in ["png", "pdf", "eps"]:
    plt.savefig("kinetics.%s" % (ext,), bbox_inches="tight")
 if (pltshow):
    plt.show()
+
+if (0):
+   fig, ax1 = plt.subplots()
+   ax1.set_ylabel(r'$j_1 =  q_e v f_1 v^2$ [a.u.]')
+   ax1.set_xlabel('v/vT')
+   ax1.set_title('Kinetics (Z='+str(Zbar)+r', n$_e$='+"{:.1e}".format(ne)+', Kn='+"{:.1e}".format(Kn)+')')
+   ## Plot kinetic analysis.
+   ax1.plot(p_v/vTh(Te), p_SHq / p_v / p_v / me * qe, SHcolor+"-", label=r'$j_1^{SH}$')
+   if (AWBSoriginal):
+      ax1.plot(p_v/vTh(Te), p_AWBSq / p_v / p_v / me * qe, "b-.", label=r'$j_1^{AWBS}$')
+   if (AWBSstar):
+      ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0) / p_v / p_v / me * qe, "g--", label=r'$j_1^{KIPP}$')
+   if (Ecorrect):
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0) / p_C7Ev / p_C7Ev / me * qe, C7Ecolor+'-', label=r'$j_1^{C7}$')
+   ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+   for ext in ["png", "pdf", "eps"]:
+      print("saving j_kinetics.%s" % (ext,))
+      plt.savefig("j_kinetics.%s" % (ext,), bbox_inches="tight")
+   if (pltshow):
+      plt.show()
 
 """
 ###############################################################################

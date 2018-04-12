@@ -2,7 +2,7 @@
 SIGMA=8.1027575e17 ## Matching the SH diffusive flux.
 CL=7.09 # Coulomb logarithm.
 
-NPROC=8
+NPROC=7
 
 RS=6
 F1ORDER=4
@@ -14,8 +14,8 @@ TGRAD=180
 
 XPOINT=0.046775 # in cm qSH maximum
 
-MING=2000
-#MING=250
+#MING=2000
+MING=250
 
 # Challenge SNB ;)
 #MING=25
@@ -24,43 +24,6 @@ MING=2000
 
 L=0.1
 PROBLEM=5
-
-## ZBAR 100
-#NI=2e25 # Zbar = 100 -> Kn 1e-10
-#NI=2e20 # Zbar = 100 -> Kn 1e-5
-#NI=2e19 # Zbar = 100 -> Kn 1e-4
-#NI=4e18 # Zbar = 100 -> Kn 5e-4
-#NI=2e18 # Zbar = 100 -> Kn 1e-3
-#NI=2e17 # Zbar = 100 -> Kn 1e-2
-#NI=2e16 # Zbar = 100 -> Kn 1e-1
-## ZBAR 20 
-#NI=4.8e21 # Zbar = 20 -> Kn 1e-5
-#NI=4.8e20 # Zbar = 20 -> Kn 1e-4
-#NI=4.8e19 # Zbar = 20 -> Kn 1e-3 
-#NI=4.8e18 # Zbar = 20 -> Kn 1e-2
-#NI=0.963e18 # Zbar = 20 -> Kn 5e-2
-## ZBAR 10
-#NI=1.84e22 # Zbar = 10 -> Kn 1e-5
-#NI=1.84e21 # Zbar = 10 -> Kn 1e-4
-#NI=1.84e20 # Zbar = 10 -> Kn 1e-3
-#NI=0.368e20 # Zbar = 10 -> Kn 5e-3
-#NI=1.84e19 # Zbar = 10 -> Kn 1e-2
-#NI=0.73e19 # Zbar = 10 -> Kn 2.2e-2
-#NI=0.368e19 # Zbar = 10 -> Kn 5e-2
-## ZBAR 5 
-#NI=6.74e22 # Zbar = 5 -> Kn 1e-5
-#NI=6.74e21 # Zbar = 5 -> Kn 1e-4
-#NI=6.74e20 # Zbar = 5 -> Kn 1e-3
-#NI=6.74e19 # Zbar = 5 -> Kn 1e-2
-#NI=1.348e19 # Zbar = 5 -> Kn 5e-2
-## ZBAR 1
-#NI=1e29 # Zbar = 1 -> Kn 1e-10
-#NI=1e24 # Zbar = 1 -> Kn 1e-5
-#NI=1e23 # Zbar = 1 -> Kn 1e-4
-#NI=1e22 # Zbar = 1 -> Kn 1e-3
-#NI=1e21 # Zbar = 1 -> Kn 1e-2
-#NI=2.02e20 # Zbar = 1 -> Kn 5e-2
-#NI=1e20 # Zbar = 1 -> Kn 1e-1
 
 DIRroot=$PWD
 DIRanalysis="results/fe_analysis/"
@@ -88,29 +51,15 @@ DIRout="C7E/"
 
 
 ## Complete set of test cases.
-#declare -a Zarray=("1" "1" "1" "3" "3" "3" "10" "10" "10" "20" "20" "20" "100" "100" "100")
-#declare -a NIarray=("1.428e29" "6.25e20" "1.65e20" "2.38e28" "1.6e20" "4.1e19"  "2.6e27" "2.65e19" "7.7e18" "6.8e26" "8.1e18" "2.5e18" "2.828e25" "6.0e17" "1.1e17")
+declare -a Zarray=("1" "1" "1" "3" "3" "3" "10" "10" "10" "20" "20" "20" "100" "100" "100")
+declare -a NIarray=("1.428e29" "6.25e20" "1.65e20" "2.38e28" "1.6e20" "4.1e19"  "2.6e27" "2.65e19" "7.7e18" "6.8e26" "8.1e18" "2.5e18" "2.828e25" "6.0e17" "1.1e17")
+declare -a NAMEarray=("fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF"  "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF")
 #declare -a KNarray=("Kn1e-10" "Kn25e-3" "Kn72e-3" "Kn1e-10" "Kn16e-3" "Kn46e-3"  "Kn1e-10" "Kn1e-2" "Kn27e-3" "Kn1e-10" "Kn84e-4" "Kn21e-3" "Kn1e-10" "Kn53e-4" "Kn28e-3")
 
-# Philippe's test!
-PROBLEM=9
-L=0.035
-declare -a Zarray=("4")
+#declare -a Zarray=("1")
 ## full flux, half flux, fifth flux
-declare -a NIarray=("1.25e20")
-declare -a KNarray=("Kn1e-10")
-## Prepare data profiles.
-cd VFPdata
-python loadgrace.py
-## case 6ps
-#cp Te_VFP_6ps.dat temperature.dat
-#cp flux_VFP_6_ps.dat flux_VFP.dat
-#cp flux_SNB_6_ps_r=2.dat flux_SNB.dat
-## case 12ps
-cp Te_VFP_12_ps.dat temperature.dat
-cp flux_VFP_12_ps.dat flux_VFP.dat
-cp flux_SNB_12_ps_r=2.dat flux_SNB.dat
-cd ..
+#declare -a NIarray=("1.428e29")
+#declare -a KNarray=("Kn1e-10")
 
 # get length of an array
 length=${#Zarray[@]}
@@ -121,29 +70,22 @@ do
 # assign iterated values
 ZBAR=${Zarray[$i]}
 NI=${NIarray[$i]}
-KN=${KNarray[$i]}
+NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.1 -Em 100 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em 100 | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointmax_Ecorrect.txt
 # Store the output file.
-cp C7E.out $DIRanalysis$DIRout"P5_Z"$ZBAR"_"$KN".output"
+cp C7E.out $DIRanalysis$DIRout"P5_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7' --pltshow #--vlimshow #-xp #--AWBSstar #--AWBSoriginal
+python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7' #--pltshow #--vlimshow #-xp #--AWBSstar #--AWBSoriginal
 #python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --pltshow --AWBSstar --AWBSoriginal
 # Safe figs.
-cp heatflux.png $DIRout"P5_heatflux_Z"$ZBAR"_"$KN".png"
-cp kinetics.png $DIRout"P5_kinetics_Z"$ZBAR"_"$KN".png"
-## Philippe's test.
-## 6ps.
-#cp heatflux.png $DIRroot/VFPdata/C7_heatflux_6ps.png
-#cp kinetics.png $DIRroot/VFPdata/C7_kinetics_6ps.png
-## 12ps.
-cp heatflux.png $DIRroot/VFPdata/C7_heatflux_12ps.png
-cp kinetics.png $DIRroot/VFPdata/C7_kinetics_12ps.png
+cp heatflux.png $DIRout"P5_heatflux_Z"$ZBAR"_"$NAME".png"
+cp kinetics.png $DIRout"P5_kinetics_Z"$ZBAR"_"$NAME".png"
 cd $DIRroot
 done

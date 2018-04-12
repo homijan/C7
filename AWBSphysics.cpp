@@ -118,17 +118,9 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
 
    double dF0dv = dF0->GetValue(T.ElementNo, ip);
 
-   Vector Efield(vdim);
-   //Efield = 1.0;
-   Efield_pcf->Eval(Efield, T, ip);
-   double Enorm = max(1e-32, Efield.Norml2());
-   //double nu_E = Enorm / velocity_real;
-   // Scale the mspE effect.
-   //nu_E = max(0.0, nu_E - nu_ee); 
-   double Efield_scale = min(1.0, (Enorm 
-                                  - (Enorm - velocity_real * nu_ee) 
-                                  / 2.0)
-                                  / Enorm);
+   double nuE_scale, Efield_scale;
+   Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee,
+                          nuE_scale, Efield_scale);
 
    double nu_t = nu_ei + nu_ee;
    //double nu_t = nu_ei + nu_ee + nu_E;
@@ -148,15 +140,11 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
-   Vector Efield(vdim);
-   Efield = 1.0;
-   Efield_pcf->Eval(Efield, T, ip);
-   double Enorm = max(1e-32, Efield.Norml2());
-   double nu_E = max(0.0 , (Enorm - velocity_real * nu_ee) / 2.0 
-                           / velocity_real);
-   //double nu_E = Efield.Norml2() / velocity_real;
-   // Scale the mspE effect. 
-   //nu_E = max(0.0, nu_E - nu_ee); 
+   double nu_E, nuE_scale, Efield_scale;
+   Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee,
+                          nuE_scale, Efield_scale);
+   // Provide appropriate isotropic Efield effect.
+   nu_E = nu_ee * nuE_scale;
 
    double nu_t = nu_ei + nu_ee;
    //double nu_t = nu_ei + nu_ee + nu_E;

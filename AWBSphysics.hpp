@@ -104,6 +104,30 @@ public:
    void SetScale0(double S0_) { S0 = S0_; }
 };
 
+// E field coefficient class.
+class EfieldCoefficient : public VectorGridFunctionCoefficient
+{
+protected:
+public:
+   EfieldCoefficient(GridFunction *gf_) : VectorGridFunctionCoefficient(gf_) { }
+   void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
+                   double velocity, double mspee, 
+                   double &mspE_scale, double &Efield_scale)
+   {
+      Vector Efield(vdim); 
+      Eval(Efield, T, ip);
+      double Enorm = std::max(1e-32, Efield.Norml2());
+      // Represent Efield effect as friction.
+      //double mspE = Enorm / velocity;
+      //mspE_scale = std::max(0.0, mspE - mspee) / mspee;
+      //Efield_scale = 1.0;
+	  mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
+                                  / mspee);
+      Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)
+                                   / Enorm);
+   }
+}; 
+
 // General entity operating on kinetic distribution function.
 class GeneralKineticCoefficient : public Coefficient, public VectorCoefficient
 {
@@ -112,7 +136,7 @@ protected:
    // GridFunctions related to F0 and F1, e.g. F0, F1, dF0dv, dF1dv, etc.
    ParGridFunction *F0, *F1, *dF0, *dF1;
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf;
-   VectorCoefficient *Efield_pcf;
+   EfieldCoefficient *Efield_pcf;
 public:
    GeneralKineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
                              NTHvHydroCoefficient *mspee_pcf_)
@@ -123,7 +147,7 @@ public:
    virtual void SetF1(ParGridFunction *F1_) { F1 = F1_; }
    virtual void SetdF0(ParGridFunction *dF0_) { dF0 = dF0_; }
    virtual void SetdF1(ParGridFunction *dF1_) { dF1 = dF1_; }
-   virtual void SetEfield(VectorCoefficient *Efield_) { Efield_pcf = Efield_; }
+   virtual void SetEfield(EfieldCoefficient *Efield_) { Efield_pcf = Efield_; }
    virtual void SetVelocityReal(double v_) { velocity_real = v_; }
 
    virtual double Eval(ElementTransformation &T, 
@@ -204,7 +228,8 @@ protected:
 public:
    // members
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
-   VectorCoefficient *Efield_pcf, *Bfield_pcf;
+   EfieldCoefficient *Efield_pcf;
+   VectorCoefficient *Bfield_pcf;
    P1a0KineticCoefficient *P1a0_pcf;
    P1b0KineticCoefficient *P1b0_pcf;
    P1b1KineticCoefficient *P1b1_pcf;
@@ -212,7 +237,7 @@ public:
    AWBSMasterOfPhysics(int dim_, NTHvHydroCoefficient *mspei_, 
                        NTHvHydroCoefficient *mspee_,
                        NTHvHydroCoefficient *source_, 
-                       VectorCoefficient *Efield_,
+                       EfieldCoefficient *Efield_,
                        VectorCoefficient *Bfield_, EOS *eos_)
       : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_), 
         Efield_pcf(Efield_), Bfield_pcf(Bfield_), eos(eos_)
@@ -243,11 +268,12 @@ class OhmCurrentCoefficient : public VectorCoefficient
 {
 protected:
    ParGridFunction *a0_pgf, *b0_pgf, *b1_pgf; 
-   VectorCoefficient *Efield_pcf, *Bfield_pcf;
+   EfieldCoefficient *Efield_pcf;
+   VectorCoefficient *Bfield_pcf;
 public:
    OhmCurrentCoefficient(int dim_, ParGridFunction *a0_pgf_, 
                          ParGridFunction *b0_pgf_, ParGridFunction *b1_pgf_,
-                         VectorCoefficient *Efield_pcf_,
+                         EfieldCoefficient *Efield_pcf_,
                          VectorCoefficient *Bfield_pcf_)
       : VectorCoefficient(dim_), a0_pgf(a0_pgf_), b0_pgf(b0_pgf_), 
       b1_pgf(b1_pgf_), Efield_pcf(Efield_pcf_), Bfield_pcf(Bfield_pcf_) { }

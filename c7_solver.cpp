@@ -578,10 +578,10 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Vector F1_rhs(VsizeH1);
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg();
-   Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
-   AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
-   //Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
-   //AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
+   //Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
+   //AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
+   Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
+   AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
    DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);  
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
@@ -628,8 +628,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
-   dF0 = invM0_S0;
-   //dF0 = F0source; 
+   //dF0 = invM0_S0;
+   dF0 = F0source; 
    invM0_tDIVE->AddMult(F1, dF0);
    invM0_tDIVE->AddMult(dF1, dF0, dv_real);
    invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
@@ -948,20 +948,21 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim); 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-            double Enorm = max(1e-32, Efield.Norml2());
+            double mspE, mspE_scale, Efield_scale;
+			//double Enorm = max(1e-32, Efield.Norml2());
 			// Represent Efield effect as friction.
-            //double mspE = Enorm / velocity_real;
+            // mspE = Enorm / velocity_real;
             // Scale the mspE effect.
-			//double mspEscale = max(0.0, mspE - mspee) / mspee;
-			double mspEscale = max(0.0 ,
-                               (Enorm - velocity_real * mspee) 
-                               / 2.0 / velocity_real
-                               / mspee);
-            double mspE = mspEscale * mspee;
-            double Efield_scale = min(1.0, (Enorm 
-                                           - (Enorm - velocity_real * mspee) 
-                                           / 2.0)
-                                           / Enorm);
+			//mspEscale = max(0.0, mspE - mspee) / mspee;
+			//mspE_scale = max(0.0 , (Enorm - velocity_real * mspee) 
+            //                       / 2.0 / velocity_real
+            //                       / mspee); 
+            //Efield_scale = min(1.0, (Enorm - (Enorm - velocity_real * mspee) 
+            //                        / 2.0) 
+            //                        / Enorm);
+            AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
+                                                mspE_scale, Efield_scale);
+            mspE = mspE_scale * mspee;
             Efield *= Efield_scale;	
 
 			// Matrix projections. 

@@ -502,8 +502,8 @@ int main(int argc, char *argv[])
    Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
-   VectorGridFunctionCoefficient Efield_gfcf(&Efield_gf);
-   VectorCoefficient *Efield_pcf = &Efield_gfcf;
+   nth::EfieldCoefficient Efield_gfcf(&Efield_gf);
+   nth::EfieldCoefficient *Efield_pcf = &Efield_gfcf;
 
    // TMP Prepare a fake Bfield vector coefficient.
    Vector vZero(pmesh->Dimension());
