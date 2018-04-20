@@ -114,17 +114,33 @@ public:
                    double velocity, double mspee, 
                    double &mspE_scale, double &Efield_scale)
    {
+	  //mspE_scale = 0.0;
+	  //Efield_scale = 1.0;
+      //return;
+
       Vector Efield(vdim); 
       Eval(Efield, T, ip);
       double Enorm = std::max(1e-32, Efield.Norml2());
-      // Represent Efield effect as friction.
+
+      // Represent Efield effect overshot as E field weakening. 
+      //double sqrt3 = 1.0;
+      //mspE_scale = 0.0;
+	  //Efield_scale = std::min(1.0, sqrt3 * mspee * velocity / Enorm);
+	  //return;
+
+      // Represent Efield effect overshot as friction.
       //double mspE = Enorm / velocity;
       //mspE_scale = std::max(0.0, mspE - mspee) / mspee;
       //Efield_scale = 1.0;
+      //return;
+
+
+      // Represent Efield effect overshot as weakening of E field and friction.
 	  mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
                                   / mspee);
       Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)
                                    / Enorm);
+      return;
    }
 }; 
 

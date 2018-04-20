@@ -28,7 +28,7 @@ L=0.035
 declare -a Zarray=("4")
 ## full flux, half flux, fifth flux
 declare -a NIarray=("1.25e20")
-declare -a KNarray=("Kn1e-10")
+declare -a NAMEarray=("case")
 ## Prepare data profiles.
 cd VFPdata
 python loadgrace.py
@@ -51,7 +51,7 @@ do
 # assign iterated values
 ZBAR=${Zarray[$i]}
 NI=${NIarray[$i]}
-KN=${KNarray[$i]}
+NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em 100 | tee C7E.out
@@ -60,7 +60,7 @@ cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt
 cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/Ecorrect_data/fe_pointmax_Ecorrect.txt
 # Store the output file.
-cp C7E.out $DIRanalysis$DIRout"P5_Z"$ZBAR"_"$KN".output"
+cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
 python C7_AWBS_SH_analysis.py -N $NPROC -Z $ZBAR -cl $CL -n $NI --Ecorrect --labelEcorrect 'C7' --pltshow #--vlimshow #-xp #--AWBSstar #--AWBSoriginal

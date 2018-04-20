@@ -2175,6 +2175,46 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
 \eqref{eq:fullP1hosf0}.
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 
+\begin{multline}
+  \Bigg[
+  \left(
+  \IM^1_{(\nue)} - \frac{1}{\vmag^2}\IV_{\left(\MA \cdot \tE\right)} 
+  \cdot\IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)}
+  \right) 
+  + \Delta\vmag^2 \left(\ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\right)\\ 
+  -\frac{\Delta\vmag}{\vmag}\left(
+  \IV_{\left(\MA \cdot \tE\right)}\cdot\IM^{0^{-1}}_{(\nue)}\cdot\matr{DIVE}
+  - \ID_{\left(\MA\right)} \cdot \IM^{0^{-1}}_{(\nue)} \cdot 
+  \IV^T_{\left(\tE\right)}
+  + \IM^1_{\left( \nutot \right)} + \IB_{\left( \tB \right)} 
+  \right) \Bigg] \cdot \pdv{\fone}{\vmag} \\
+  = 
+  \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \left[  
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  + \pdv{\vect{\fM}}{\vmag}
+  \right] \\  
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \fone^n
+  - \ID_{\left(\MA\right)}\cdot\vfzero^n,
+  %\label{eq:fullP1hosf1}
+  %\\
+  %\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  %- \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  %\IM^{0^{-1}}_{(\nue)} \cdot 
+  %\left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
+  %+ \Delta\vmag \matr{DIVE}
+  %\right)
+  %\cdot \pdv{\fone}{\vmag}
+  %\\
+  %+\frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  %+ \IM^1_{\left( \nutot \right)}\right) 
+  %\cdot \pdv{\fone}{\vmag} + 
+\end{multline}
+
 \begin{comment} % tmp
 \begin{figure}[tbh]
   \begin{center}
@@ -2341,14 +2381,20 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \end{center}
   \label{fig:AWBScorrection_f1}
 \end{figure}
-
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=1.0\textwidth]{../VFPdata/KIPP_q_kinetics.png} \\
       \includegraphics[width=1.0\textwidth]{../VFPdata/KIPP_j_kinetics.png}
     \end{tabular}
-  \caption{Actual $q_1$ and $j_1$ for $\Zbar=1$ obtained by Johnathan using KIPP vs AWBS.
+  \caption{KIPP (by Johnathan) vs AWBS using 
+  $\mfpei^* = \frac{\Zbar + 0.24}{\Zbar + 4.2}\mfpei, \Zbar=1, 
+  \vth = \sqrt{\frac{\kB T_e}{\me}}$ 
+  $f_1^{SH} = -\mfpei^*(v) \left(\frac{v^2}{2 \vth^2} - 4\right) 
+  \frac{\vn\cdot\nabla T_e}{T_e} \fM,\quad 
+  f_1^{KIPP} = -\mfpei^*(v) \left(\frac{3}{16}\frac{v^2}{\vth^2} - 1 
+  - \frac{3}{2}\frac{\vth^2}{v^2} \right) 
+  \frac{\vn\cdot\nabla T_e}{T_e} \fM$.
   }
   \end{center}
   \label{fig:AWBScorrection_f1}

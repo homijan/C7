@@ -215,8 +215,21 @@ int main(int argc, char *argv[])
    nth::sigma = sigma;
    nth::coulLog = coulLog; // TMP, will be moved to the eos.
    // Read input temperature profile.
-   nth::InputProfile inTemp("VFPdata/temperature.dat");
-   nth::inTemp = &inTemp;
+   nth::InputProfile inElectronTemp("VFPdata/temperature.dat");
+   // Read input density profile.
+   nth::InputProfile inElectronDens("VFPdata/ne.dat"); 
+   // Read input ionization profile.
+   nth::InputProfile inZbar("VFPdata/zbar.dat");
+   if (nth_problem == 9)
+   {
+      nth::inElectronTemp = &inElectronTemp;
+   }
+   if (nth_problem == 10)
+   {
+      nth::inElectronTemp = &inElectronTemp;
+	  nth::inElectronDens = &inElectronDens;
+      nth::inZbar = &inZbar;
+   }
 
    // Read the serial mesh from the given mesh file on all processors.
    // Refine the mesh in serial to increase the resolution.
@@ -423,6 +436,7 @@ int main(int argc, char *argv[])
       case 7: visc = true; break;
       case 8: visc = true; break;
       case 9: visc = true; break;
+      case 10: visc = true; break;
       default: MFEM_ABORT("Wrong problem specification!");
    }
 
@@ -469,29 +483,42 @@ int main(int argc, char *argv[])
                 pi = 3.14159265359; 
    const double mi = 1.0 / ni; // Expecting rho = 1.0.
    //const double mi = Zbar / ne;
-   // Define an equation of state.
-   nth::IGEOS eos(me, kB);
-   // Use a constant ionization provided by IG eos.
-   eos.SetZbar(Zbar);
-   // Use a homogeneous ion mass used within IG eos.
-   eos.SetIonMass(mi);
+   //// Define the ideal gas equation of state.
+   //nth::IGEOS eosig(me, kB);
+   //// Use a constant ionization provided by IG eos.
+   //eosig.SetZbar(Zbar);
+   //// Use a homogeneous ion mass used within IG eos.
+   //eosig.SetIonMass(mi);
+
+   // Define an external equation of state. In principle avoids hydro.
+   nth::ExtDataEOS eosext(me, kB);
+   // Use a constant electron density.
+   eosext.SetConstNe(ni * Zbar);
+   // Use a constant ionization.
+   eosext.SetConstZbar(Zbar);
+
+   //double Te_test = 1e3;
+   //cout << "eosext x(T): " << eosext.GetX(0.0, Te_test) << endl;
+
+   nth::EOS *eos = &eosext; //&eosig;
+
    // Prepare C6 physics.
    nth::ClassicalMeanStoppingPower mspei_cf(rho_gf, e_gf, v_gf, material_pcf,
-                                            &eos);
+                                            eos);
    nth::ClassicalAWBSMeanStoppingPower mspee_cf(rho_gf, e_gf, v_gf, 
-                                                material_pcf, &eos);
+                                                material_pcf, eos);
    // TMP 
    //mspee_cf.SetCorrAWBS(1.0);
    
    nth::NTHvHydroCoefficient *mspei_pcf = &mspei_cf;
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;
-   nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, &eos);
+   nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, eos);
    nth::NTHvHydroCoefficient *sourceF0_pcf = &sourceF0_cf;
 
    // Create original Lorentz zero current Efield and set input scales 
    // of the electron source and the Efield.
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
-                                       material_pcf, &eos);  
+                                       material_pcf, eos);  
    sourceF0_cf.SetScale0(F0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
    // Represent Lorentz Efield as a VectorCoefficient.
@@ -523,7 +550,7 @@ int main(int argc, char *argv[])
    // This object represents physics in AWBS Boltzmann transport model.
    nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
                                         mspee_pcf, sourceF0_pcf,
-                                        Efield_pcf, Bfield_pcf, &eos);
+                                        Efield_pcf, Bfield_pcf, eos);
 
    // Diagnostics.
    // Create the Efield correction coefficient.
@@ -1128,7 +1155,7 @@ int main(int argc, char *argv[])
          int Nelements = x_gf.FESpace()->GetNE();
          int Npoints = NpointsPerElement * Nelements;
          double x[Npoints], rho[Npoints], Te[Npoints], j[Npoints], Ex[Npoints], 
-                q[Npoints], corrE[Npoints];
+                q[Npoints], corrE[Npoints], ne[Npoints], zbar[Npoints];
          IntegrationPoint ip;
          double dip = 1. / NpointsPerElement;
          int p = 0;
@@ -1144,6 +1171,8 @@ int main(int argc, char *argv[])
                Ex[p] = Efield_gf.GetValue(elNo, ip, 1);
 			   q[p] = hflux_gf.GetValue(elNo, ip);
                corrE[p] = corrEfield_gf.GetValue(elNo, ip);
+			   ne[p] = inElectronDens.GetValue(x[p]); 
+			   zbar[p] = inZbar.GetValue(x[p]);
 			   p++;
             }
          }
@@ -1152,12 +1181,12 @@ int main(int argc, char *argv[])
                             << setfill('0') << setw(6) << myid;
          ofstream profiles_ofs(profiles_file_name.str().c_str());
          profiles_ofs.precision(8);
-         profiles_ofs << "# x  rho Te j Ex q corrE\n";
+         profiles_ofs << "# x  rho Te j Ex q corrE ne Zbar\n";
          for (int i = 0; i < Npoints; i++)
          {
             profiles_ofs << x[i] << " " << rho[i] << " " << Te[i] << " "
                          << j[i] << " " << Ex[i] << " " << q[i] << " "
-                         << corrE[i] << endl;
+                         << corrE[i] << " " << ne[i] << " " << zbar[i] << endl;
          }
          profiles_ofs.close();
 ///////////////////////////////////////////////////////////////

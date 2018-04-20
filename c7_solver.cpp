@@ -562,7 +562,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    SparseMatrix *tVE = Transpose(Efieldf0.SpMat());
    // Diffusion plus directional effect of Efield matrices.
    SparseMatrix *tDIVE = Transpose(Divf0.SpMat()); 
-   tDIVE->Add(2.0 / velocity_real / velocity_real, *tVE);
+   tDIVE->Add(-2.0 / velocity_real / velocity_real, *tVE);
+   
+   // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
+   //*tVE = 0.0;
+   //AEfieldf1.SpMat() = 0.0;
+   
    // Proceed with matrix inversions.
    SparseMatrix *invM0_tDIVE = mfem::Mult(invMf0nu.SpMat(), *tDIVE);
    SparseMatrix *invM0_tVE = mfem::Mult(invMf0nu.SpMat(), *tVE);
@@ -570,6 +575,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    SparseMatrix *DA_invM0_tVE = mfem::Mult(Divf1.SpMat(), *invM0_tVE);
    SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDIVE);
    SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
+   
+   // Check if the effect of E^2 is avoided.
+   ////Mf1nu.SpMat() = 0.0;
+   //*VAE_invM0_tVE = 0.0;
+   ////*VAE_invM0_tDIVE = 0.0;
+
    // Prepare source of electrons.
    Vector S0(VsizeL2), invM0_S0(VsizeL2);
    Mf0nu.Mult(F0source, S0);
@@ -640,6 +651,16 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invMf0nuDf0T->AddMult(F1, dF0);
    invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
+
+   // Clean the buffer.
+   delete tVE;
+   delete tDIVE; 
+   delete invM0_tDIVE;
+   delete invM0_tVE;
+   delete DA_invM0_tDIVE;
+   delete DA_invM0_tVE;
+   delete VAE_invM0_tDIVE;
+   delete VAE_invM0_tVE;
 
    /*
    // Some output.

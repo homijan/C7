@@ -36,7 +36,7 @@ double ClassicalMeanStoppingPower::Eval(ElementTransformation &T,
    double Te = Te_gf.GetValue(T.ElementNo, ip);
    double index = material_pcf->Eval(T, ip);
    double Zbar = eos->GetZbar(index, rho, Te);
-   double ni = eos->GetIonDensity(index, rho);
+   double ni = eos->GetIonDensity(index, rho, Te);
    // The ei collision frequency has standard 1/v^3 dependence, 
    // the sigma cross section given by the model sigma * ni 
    // and Zbar increases the effect of Coulomb potential in "on ion collisions".

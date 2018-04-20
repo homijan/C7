@@ -41,6 +41,7 @@ class LoadGrace:
 # If run as main program
 if __name__ == "__main__":
    from scipy.interpolate import splev, splrep
+   import matplotlib.pyplot as plt
    #import argparse
 
    #ps = argparse.ArgumentParser( description = 'Extract data from xmgrace (.agr) files')
@@ -83,6 +84,9 @@ if __name__ == "__main__":
       #print Te_fine 
       print
       np.savetxt('Te_'+legend+'.dat', np.transpose([x_fine, Te_fine]))
+      #plt.plot(x_fine, Te_fine, label=legend)
+      #plt.legend()
+      #plt.show()
    #quit()
 
    print "Loading flux data..."

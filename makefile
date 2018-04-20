@@ -115,7 +115,7 @@ LIBS = $(strip $(LAGHOS_LIBS) $(LDFLAGS))
 CCC  = $(strip $(CXX) $(LAGHOS_FLAGS))
 Ccc  = $(strip $(CC) $(CFLAGS) $(GL_OPTS))
 
-SOURCE_FILES = C7.cpp c7_solver.cpp c7_assembly.cpp $(LAGHOS_DIR)/laghos_solver.cpp $(LAGHOS_DIR)/laghos_assembly.cpp AWBSphysics.cpp ic.cpp
+SOURCE_FILES = C7.cpp c7_solver.cpp c7_assembly.cpp $(LAGHOS_DIR)/laghos_solver.cpp $(LAGHOS_DIR)/laghos_assembly.cpp eos.cpp AWBSphysics.cpp ic.cpp
 OBJECT_FILES1 = $(SOURCE_FILES:.cpp=.o)
 OBJECT_FILES = $(OBJECT_FILES1:.c=.o)
 HEADER_FILES = c7_solver.hpp c7_assembly.hpp eos.hpp AWBSphysics.hpp ic.hpp

@@ -18,6 +18,7 @@
 #define MFEM_NTH_EOS
 
 #include "mfem.hpp"
+#include <fstream>
 
 #ifdef MFEM_USE_MPI
 
@@ -43,15 +44,15 @@ public:
    // Get fundamental physical constants.
    double GetkB() {return kB; }
    double Getc() {return c; }
-   double Getkhbar() {return hbar; }
+   double Gethbar() {return hbar; }
    double GetG() {return G; }
    double Getme() {return me; }
    // Thermal velocity.
    double GetvTe(double Te) { return sqrt(kB * Te / me); }
    // Get Thermodynamic values.
-   virtual double GetIonDensity(double index, double rho) = 0;
+   virtual double GetIonDensity(double index, double rho, double Te) = 0;
    virtual double GetElectronDensity(double index, double rho, double Te)
-           { return GetZbar(index, rho, Te) * GetIonDensity(index, rho); }
+           { return GetZbar(index, rho, Te) * GetIonDensity(index, rho, Te); }
    virtual double GetZbar(double index, double rho, double Te) = 0;
    virtual double GetPe(double index, double rho, double Te) = 0;
    virtual double GetPi(double index, double rho, double Te) = 0;
@@ -79,7 +80,8 @@ public:
    IGEOS(double me_, double kB_) : EOS(me_, kB_, 1.0, 1.0, 1.0) 
    { Zbar = 1.0; mi = 1.0; }
    // Get Thermodynamic values.
-   virtual double GetIonDensity(double index, double rho) { return rho / mi; }
+   virtual double GetIonDensity(double index, double rho, double Te) 
+   { return rho / mi; }
    virtual double GetZbar(double index, double rho, double Te) { return Zbar; }
    virtual double GetPe(double index, double rho, double Te) {}
    virtual double GetPi(double index, double rho, double Te) {}
@@ -94,6 +96,54 @@ public:
    void SetZbar(double Zbar_) { Zbar = Zbar_; }
    void SetIonMass(double mi_) { mi = mi_; }
 };
+
+// Special case of EOS based on input data from outside.
+class InputProfile
+{
+protected:
+   // members
+   double const_data; 
+   // methods
+public:
+   // members
+   std::vector<double> x_data, data;
+   // methods
+   InputProfile(double _const_data);
+   InputProfile(std::string filename);
+   double GetValue(double x);
+};
+
+extern InputProfile *inElectronTemp, *inElectronDens, *inZbar;
+ 
+// A specific equation of state using external output, 
+// i.e. using a pecific "inverse" function x(rho, T).
+class ExtDataEOS : public EOS
+{
+protected:
+   // Constant values.
+   double const_ne, const_Zbar;
+public:
+   ExtDataEOS(double me_, double kB_) : EOS(me_, kB_, 1.0, 1.0, 1.0) 
+   { const_ne = 1.0; const_Zbar = 1.0; }
+   // Get Thermodynamic values.
+   virtual double GetElectronDensity(double index, double rho, double Te);
+   virtual double GetZbar(double index, double rho, double Te);
+   virtual double GetIonDensity(double index, double rho, double Te); 
+   virtual double GetPe(double index, double rho, double Te) {}
+   virtual double GetPi(double index, double rho, double Te) {}
+   virtual double GetEe(double index, double rho, double Te) {}
+   virtual double GetEi(double index, double rho, double Te) {}
+   virtual double GetdEedTe(double index, double rho, double Te) {}
+   virtual double GetdEidTi(double index, double rho, double Te) {}
+   virtual double GetdEedrho(double index, double rho, double Te) {}
+   virtual double GetdEidrho(double index, double rho, double Te) {}
+   virtual double GetSoundSpeed(double index, double rho, double Te) {}
+   // ExtDataEOS specific functions.
+   void SetConstZbar(double const_Zbar_) { const_Zbar = const_Zbar_; }
+   void SetConstNe(double const_ne_) { const_ne = const_ne_; }
+   double GetX(double ne, double Te);
+};
+ 
 
 // Generic hydro coefficient.
 class HydroCoefficient : public Coefficient
