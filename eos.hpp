@@ -108,8 +108,9 @@ public:
    // members
    std::vector<double> x_data, data;
    // methods
-   InputProfile(double _const_data);
-   InputProfile(std::string filename);
+   InputProfile();
+   void SetConst(double _const_data);
+   void SetFile(std::string filename);
    double GetValue(double x);
 };
 

@@ -29,8 +29,16 @@ namespace nth
 // Objects for input profile data reading.
 InputProfile *inElectronTemp = NULL, *inElectronDens = NULL, *inZbar = NULL;
 
-// Constant profile contructor.
-InputProfile::InputProfile(double _const_data)
+InputProfile::InputProfile()
+{
+   // Make sure that the vector data are empty.
+   x_data.resize(0);
+   data.resize(0);
+   // Store the constant value of the profile.
+   const_data = 0.0;
+}
+
+void InputProfile::SetConst(double _const_data)
 {
    // Make sure that the vector data are empty.
    x_data.resize(0);
@@ -39,7 +47,7 @@ InputProfile::InputProfile(double _const_data)
    const_data = _const_data;
 }
 
-InputProfile::InputProfile(std::string filename)
+void InputProfile::SetFile(std::string filename)
 {
    x_data.resize(0);
    data.resize(0);

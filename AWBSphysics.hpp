@@ -134,12 +134,24 @@ public:
       //Efield_scale = 1.0;
       //return;
 
-
       // Represent Efield effect overshot as weakening of E field and friction.
-	  mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
-                                  / mspee);
-      Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)
-                                   / Enorm);
+      // While introducing an isotropic part of the E field effect in terms of
+	  // collision frequency nu_E, which is consistent to introducing 
+	  // a decreased E field norm Ed. 
+	  // All this scaled by a parameter alpha in (0, 1), to avoid 
+	  // "noncollisional" plasma.
+	  // nu_e * v > alpha * E
+	  // v * (nu_e + nu_E) = Ed
+	  // v * nu_E + Ed = alpha * E
+	  double alpha = 1.0;
+	  double nu_E = (alpha * Enorm - velocity * mspee) / 2.0 / velocity;
+      double Ed = alpha * Enorm - velocity * nu_E;
+      mspE_scale = std::max(0.0 , nu_E / mspee);
+      Efield_scale = std::min(1.0, Ed / Enorm);
+	  //mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
+      //                            / mspee);
+      //Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)
+      //                             / Enorm);
       return;
    }
 }; 

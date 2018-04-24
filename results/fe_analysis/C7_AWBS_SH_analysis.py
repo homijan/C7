@@ -132,6 +132,7 @@ C7gradTe = splev(C7x, tck, der=1)
 
 ## Electron density.
 ne = ni * Zbar
+print "ni/ne: ", ni , ne
 
 #######################################
 ## Load C7 kinetic results ############
@@ -368,8 +369,8 @@ C7x_microns = np.array(C7x) * 1e4
 
 ## r=2 corresponds better
 #xmicronsSH, QWcm2SH = np.loadtxt('../../VFPdata/flux_SH.dat',  usecols=(0, 1), unpack=True)
-xmicronsVFP, QWcm2VFP = np.loadtxt('../../VFPdata/flux_VFP.dat',  usecols=(0, 1), unpack=True)
-xmicronsSNB, QWcm2SNB = np.loadtxt('../../VFPdata/flux_SNB.dat',  usecols=(0, 1), unpack=True)
+#xmicronsVFP, QWcm2VFP = np.loadtxt('../../VFPdata/flux_VFP.dat',  usecols=(0, 1), unpack=True)
+#xmicronsSNB, QWcm2SNB = np.loadtxt('../../VFPdata/flux_SNB.dat',  usecols=(0, 1), unpack=True)
 
 SHcolor = 'k'
 C7Ecolor = 'r'

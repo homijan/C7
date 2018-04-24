@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
    double L = 1.0, T_gradscale = 50.0, rho_gradscale = 50.0;
    double sigma = 8.1027575e17;
    double coulLog = 10.0;
-   double Zbar = 4.0;
+   double Zbar = 0.0; // 4.0;
    // Correct input for a Lorentz force calculation with SH Efield.
    //double EfieldS0 = 1.0;
    //double F0SourceS0 = 1.0;
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
    double F0SourceS0 = 0.2857142857142857;
    double EfieldS0 = 0.0;
    // We expect rho = 1, and so, the ion mass follows.
-   double ni = 5e19;
+   double ni = 0.0; //5e19;
    bool M1closure = false;
    // Minimum number of velocity groups.
    double MinimumGroups = 10.0;
@@ -215,11 +215,17 @@ int main(int argc, char *argv[])
    nth::sigma = sigma;
    nth::coulLog = coulLog; // TMP, will be moved to the eos.
    // Read input temperature profile.
-   nth::InputProfile inElectronTemp("VFPdata/temperature.dat");
-   // Read input density profile.
-   nth::InputProfile inElectronDens("VFPdata/ne.dat"); 
-   // Read input ionization profile.
-   nth::InputProfile inZbar("VFPdata/zbar.dat");
+   nth::InputProfile inElectronTemp;
+   inElectronTemp.SetFile("VFPdata/temperature.dat");
+   //inElectronTemp.SetConst(1000.0);
+   // Read input density profile. 
+   nth::InputProfile inElectronDens; 
+   inElectronDens.SetFile("VFPdata/ne.dat");
+   if (ni > 0.0) { inElectronDens.SetConst(ni * Zbar); }
+   // Read input ionization profile. 
+   nth::InputProfile inZbar;
+   inZbar.SetFile("VFPdata/zbar.dat");
+   if (Zbar > 0.0) { inZbar.SetConst(Zbar); }
    if (nth_problem == 9)
    {
       nth::inElectronTemp = &inElectronTemp;
@@ -905,6 +911,10 @@ int main(int argc, char *argv[])
 			elNo++;
          }
 
+         // The maximum is yet unknown, so we use xpoint values.
+		 cell_pointmax = cell_point;
+		 ip_pointmax = ip_point;
+
          // Starting value of the E field norm.
 		 double loc_Eit_norm = Efield_gf.Norml2();
          double glob_old_Eit_norm = 1.0;
@@ -964,8 +974,8 @@ int main(int argc, char *argv[])
                if (right_proc_pointmax)
 			   {
                   //cout << "cell_point: " << cell_point << endl << flush;
-			      f0_point = F0_gf.GetValue(cell_point, ip_point);
-                  F1_gf.GetVectorValue(cell_point, ip_point, f1_point);
+			      f0_point = F0_gf.GetValue(cell_pointmax, ip_pointmax);
+                  F1_gf.GetVectorValue(cell_pointmax, ip_pointmax, f1_point);
                   v_pointmax.push_back(N_x_vTmax * v);
 			      f0_v_pointmax.push_back(f0_point);
 			      // TODO extend to more dimensions.
@@ -1074,18 +1084,23 @@ int main(int argc, char *argv[])
 			if(myid == mpirank_pointmax)
             {
                double hflux_max = 0.0;
+			   IntegrationPoint loc_ip_point;
 			   for (int elNo = 0; elNo < x_gf.FESpace()->GetNE(); elNo++)
                {
                   int N = 10;
                   for (int p = 0; p < N; p++)
                   {
                      double sc = p * 1./(N-1);
-                     ip_pointmax.Set3(sc, sc, sc);
-                     double hflux = hflux_gf.GetValue(elNo, ip_pointmax);
+                     loc_ip_point.Set3(sc, sc, sc);
+                     double hflux = hflux_gf.GetValue(elNo, loc_ip_point);
 					 if (hflux > hflux_max)
                      {
                         hflux_max = hflux;
-                        xpointmax = x_gf.GetValue(elNo, ip_pointmax);
+                        // Values used to evaluate and store grid functions.
+                        cell_pointmax = elNo; 
+                        ip_pointmax = loc_ip_point;
+                        // Evaluate x coordinate.
+						xpointmax = x_gf.GetValue(elNo, ip_pointmax);
                      }
                   }
                }
