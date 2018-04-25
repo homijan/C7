@@ -29,6 +29,7 @@ import argparse
 ## Create parser object.
 parser = argparse.ArgumentParser(description='Compare the diffusive asymptotic to C7 computation.')
 ## Define input arguments.
+parser.add_argument("-s", "--sigma", help="Sigma for electro-ion cross-section.", type=float)
 parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion cross-section.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
@@ -37,13 +38,18 @@ parser.add_argument("-As", "--AWBSstar", action='store_true', help="Display the 
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
 parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
 parser.add_argument("-SH", "--kinSH", action='store_true', help="Display the SH profiles by adding -SH/--kinSH argument.")
+parser.add_argument("-E", "--Efield", action='store_true', help="Display the E field profiles by adding -E/--Efield argument.")
 parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoint computed output of distribution function instead of nonlocal heat flux maximum.")
 #parser.add_argument("-vs", "--vlimshow", action='store_true', help="vlim show by adding -vs/--vlimshow argument.")
 ## Faking arguments providing different labels than C7E and C7*.
-parser.add_argument("-lF", "--labelFluxExt", help="Use -lF/--labelFluxExt to use and label VFPdata/flux.dat.")
+parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to use and label VFPdata/flux1.dat.")
+parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to use and label VFPdata/flux2.dat.")
+parser.add_argument("-lF3", "--labelFluxExt3", help="Use -lF1/--labelFluxExt3 to use and label VFPdata/flux3.dat.")
 
 ## Parse arguments.
 args = parser.parse_args()
+if (args.sigma):
+   sigma = args.sigma
 if (args.coulLog):
    coulLog = args.coulLog
 
@@ -260,6 +266,8 @@ SHcorr = SHcorr * (3.5 - xi)
 SHQ_analytic = - SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(Te)*kB*Te*mfp_ei*gradTe/Te
 ## Standar formulation used in hydrocodes.
 SHQ_pete = - SHcorr * 1.31e10 / coulLog / Zbar * Te**2.5 * gradTe
+## Apply variation of sigma.
+SHQ_pete = SHQ_pete * 8.1027575e17 / sigma
 Kn =  mfp_tot / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 Kn_pete = SHQ_pete / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
@@ -278,6 +286,8 @@ C7Kn = C7mfp_ei * abs(C7gradTe) / (C7Te - Temin_reference)
 ## SH nu correction.
 C7SHcorr = (C7zbar + 0.24)/(C7zbar + 4.2)
 C7SHQ_analytic = - C7SHcorr * 1.31e10 / coulLog / C7zbar * C7Te**2.5 * C7gradTe
+## Apply variation of sigma.
+C7SHQ_analytic = C7SHQ_analytic * 8.1027575e17 / sigma
 #C7SHQ_analytic = - C7SHcorr * 128.0/(2.0*pi)**0.5*ne*vTh(C7Te)*kB*C7Te*(vTh(C7Te))**4.0/sigma/coulLog/ni/C7zbar/C7zbar*C7gradTe/C7Te
 C7SHE_analytic = vTh(C7Te)**2.0*(C7gradne/C7ne + xi*C7gradTe/C7Te)
 
@@ -338,8 +348,12 @@ C7x_microns = np.array(C7x) * 1e4
 #xmicronsVFP, QWcm2VFP = np.loadtxt('../../VFPdata/flux_VFP.dat',  usecols=(0, 1), unpack=True)
 #xmicronsSNB, QWcm2SNB = np.loadtxt('../../VFPdata/flux_SNB.dat',  usecols=(0, 1), unpack=True)
 
-if (args.labelFluxExt):
-   Qxmicrons, QWcm2 = np.loadtxt('../../VFPdata/flux.dat',  usecols=(0, 1), unpack=True)
+if (args.labelFluxExt1):
+   Q1xmicrons, Q1Wcm2 = np.loadtxt('../../VFPdata/flux1.dat',  usecols=(0, 1), unpack=True)
+if (args.labelFluxExt2):
+   Q2xmicrons, Q2Wcm2 = np.loadtxt('../../VFPdata/flux2.dat',  usecols=(0, 1), unpack=True)
+if (args.labelFluxExt3):
+   Q3xmicrons, Q3Wcm2 = np.loadtxt('../../VFPdata/flux3.dat',  usecols=(0, 1), unpack=True)
 
 SHcolor = 'k'
 C7Ecolor = 'r'
@@ -349,11 +363,12 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
 ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda_{th}$='+"{:.4f}".format(mfp_tot*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-if (args.labelFluxExt):
-   ax1.plot(Qxmicrons, QWcm2, 'y-', label=args.labelFluxExt)
-#ax1.plot(xmicronsSH, QWcm2SH, 'y-', label=r'SH')
-#ax1.plot(xmicronsVFP, QWcm2VFP, 'y-', label=r'$q_h^{VFP}$')
-#ax1.plot(xmicronsSNB, QWcm2SNB, 'm-', label=r'$q_h^{SNB}$')
+if (args.labelFluxExt1):
+   ax1.plot(Q1xmicrons, Q1Wcm2, 'g-', label=args.labelFluxExt1)
+if (args.labelFluxExt2):
+   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=args.labelFluxExt2)
+if (args.labelFluxExt3):
+   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=args.labelFluxExt3)
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-', label=r'$q_h^{SH}$')
@@ -364,18 +379,27 @@ C7Te_scaled = C7Te*(C7q.max() - C7q.min())/(C7Te.max() - C7Te.min())
 C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7q.max())
 ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ## Special treatment of electron density profile.
+C7ne = C7ne / 1e20
 C7ne_scaled = C7ne*(C7q.max() - C7q.min())/(C7ne.max() - C7ne.min())
 C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - C7q.max())
 ax1.plot(C7x_microns, C7ne_scaled * 1e-7, 'g:', label=r'$n_e$')
+## Special treatment of ionization profile.
+C7zbar_scaled = C7zbar*(C7q.max() - C7q.min())/(C7zbar.max() - C7zbar.min())
+C7zbar_scaled = C7zbar_scaled - (C7zbar_scaled.max() - C7q.max())
+ax1.plot(C7x_microns, C7zbar_scaled * 1e-7, 'k:', label=r'$Z$')
 ## Second Efield axis.
 ax2 = ax1.twinx()
 #if (vlimshow):
 #   ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE.min())+', '+"{:.0f}".format(C7corrE.max())+')' )
-ax2.set_ylabel(r'E [a.u.]'+r', $n_e\in$('+"{:.1e}".format(C7ne.min())+', '+"{:.1e}".format(C7ne.max())+r') [1/cm$^3$]')
-if (args.kinSH):
-   ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+'-.', label=r'E$^{SH}$')
-if (args.C7):
-   ax2.plot(C7x_microns, me/qe*C7Ex, C7Ecolor+'--', label=r'E$^{C7}$')
+if (args.Efield):
+   ax2.set_ylabel(r'E [a.u.]'+r', $n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
+else:
+   ax2.set_ylabel(r'$n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
+if (args.Efield):
+   if (args.kinSH):
+      ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+'-.', label=r'E$^{SH}$')
+   if (args.C7):
+      ax2.plot(C7x_microns, me/qe*C7Ex, C7Ecolor+'--', label=r'E$^{C7}$')
 ## Special treatment of the corrE showing the limit velocity/vTh 
 ## to be affected by E field.
 #if (vlimshow):

@@ -923,6 +923,12 @@ int main(int argc, char *argv[])
          double dEit_norm = 1e64;
          bool converging = true;
 		 int Eit = 0;
+  
+         double sign = -1.0;
+         double v_lim;
+		 if (sign < 0.0) { v_lim = vmin; }
+         else v_lim = vmax;
+
          while (Eit < Efield_consistent_iter_max && converging)
 		 { 
 		    // Actual integration of C7Operator.
@@ -933,8 +939,10 @@ int main(int argc, char *argv[])
             F0_gf = 0.0; //1e-2; 
 		    F1_gf = 0.0;
             int c7ti = 0;
-            double v = vmax;
-            double dv = -dvmin;
+            double v; 
+			if (sign < 0.0) { v = vmax; }
+			else v = vmin;
+            double dv = sign * dvmin;
             hflux_gf = 0.0;
             jC_gf = 0.0;
 		    a0_gf = 0.0;
@@ -948,7 +956,7 @@ int main(int argc, char *argv[])
             v_pointmax.resize(0); f0_v_pointmax.resize(0); 
             f1x_v_pointmax.resize(0); f0v2_v_pointmax.resize(0); 
             mehalff1xv5_v_pointmax.resize(0); mehalff0v5_v_pointmax.resize(0);
-			while (v > vmin)
+			while (sign*(v - v_lim) < 0.0)
 		    {
                c7ti++;
                c7ode_solver->Step(c7F, v, dv);
@@ -992,8 +1000,8 @@ int main(int argc, char *argv[])
                c7oper.ResetVelocityStepEstimate();
                c7oper.ResetQuadratureData();
                c7oper.SetTime(v);
-               dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-               if (v + dv < vmin) { dv = vmin - v; }
+               dv = sign * min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
+               if (sign * (v + dv - v_lim) > 0.0) { dv = v_lim - v; }
 
 			   double loc_minF0 = F0_gf.Min(), glob_minF0;
                MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
@@ -1024,12 +1032,12 @@ int main(int argc, char *argv[])
             // After the integration:
 			// Since a deceleration (int_vmax->vmin) run has been performed, 
 			// the integrated quantities needs to revert sign.
-            hflux_gf *= -1.0;
-            jC_gf *= -1.0;
+            hflux_gf *= sign;
+            jC_gf *= sign;
             // Microscopic Ohm's law / Ampere's law components too.
-			a0_gf *= -1.0;
-            b0_gf *= -1.0;
-            b1_gf *= -1.0;
+			a0_gf *= sign;
+            b0_gf *= sign;
+            b1_gf *= sign;
 
             // Consistent Efield (zero current) computation.
             Efield_gf.ProjectCoefficient(OhmEfield_cf);
