@@ -98,15 +98,21 @@
 \newcommand{\E}{\vect{E}}
 \newcommand{\B}{\vect{B}}
 \newcommand{\tE}{\vect{\tilde{E}}}
+\newcommand{\tEz}{\tilde{E}_z}
 \newcommand{\tB}{\vect{\tilde{B}}}
 \newcommand{\qe}{q_e}
 \newcommand{\me}{m_e}
 \newcommand{\kB}{k_B}
 \newcommand{\crs}{\sigma}
 \newcommand{\fM}{f_M}
+\newcommand{\tfM}{\tilde{f}_M}
+\newcommand{\tvfM}{\vect{\tilde{f}_M}}
+\newcommand{\daf}{\delta f}
 \newcommand{\fzero}{f_0}
-\newcommand{\vfzero}{\vect{f}_0}
-\newcommand{\fone}{\vect{f}_1}
+\newcommand{\dafzero}{\delta f_0}
+\newcommand{\vfzero}{\vect{f_0}}
+\newcommand{\davfzero}{\vect{\delta f_0}}
+\newcommand{\fone}{\vect{f_1}}
 \newcommand{\SM}{\vect{S}_M}
 \newcommand{\MI}{\matr{I}}
 \newcommand{\MA}{\matr{A}}
@@ -2346,6 +2352,220 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \label{fig:C7explimpl}
 \end{figure}
 
+\section{AWBS-P1 modeling of laser heated plasmas}\label{sec:OOE_AWBSP1}
+The~AWBS electron transport equation in 3D ($z, \phi, \vmag$) reads
+\begin{multline}
+  \cos(\phi) \left(\vmag\pdv{f}{z} + \tEz\pdv{f}{\vmag}\right) 
+  - \frac{\sin(\phi)^2}{\vmag} \tEz \pdv{f}{\mu}
+  =
+  \nue\vmag\pdv{}{\vmag}\left(f - f_M\right) 
+  + \frac{\nu_t}{2}
+  \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
+  \label{eq:OOE_AWBS_simple}
+\end{multline}
+where $\mu = \cos(\phi)$, $\nu_t = \nuei + \nue$, where $\nue$ is 
+the~electron-electron collision frequency, $\nuei$ is the~electron-ion 
+collision frequency, and $\nuei = \Zbar \nue$.
+
+In order to eliminate the~dimensions of the~transport problem \refeq{eq:AWBS}
+the~two moment model based on approximation 
+\begin{equation}
+  f = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \label{eq:OOE_P1approximation}
+\end{equation}
+reads
+\begin{eqnarray}
+  \nue\vmag\pdv{}{\vmag}\left(\fzero - \tfM \right) &=&
+  \vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
+  \label{eq:OOE_P1f0}\\
+  \nue\vmag\pdv{}{\vmag}\fone - \nutot\fone &=& 
+  \vmag\nabla\cdot\left(\MA\fzero\right) + 
+  \tE\cdot\pdv{\left(\MA\fzero\right)}{\vmag} + \tB\times\fone ,
+  \label{eq:OOE_P1f1}
+\end{eqnarray}
+where $\tfM = 4\pi \fM$ and the~closure matrix takes the~form
+\begin{equation}
+  \MA = \frac{1}{3}\MI .
+  \label{eq:OOE_P1closure}
+\end{equation}
+
+Since in the~laser heated plasmas the~Knudsen number 
+Kn$ = \vth/\nu_t(\vth) L \in (0, 1)$, i.e. the~collisionality in 
+the~kinetics of electrons plays always an~important effect for thermal-like 
+particles, the~electron distribution 
+function can be treated as out-of-equilibrium approximation 
+\begin{equation}
+  f = \fM + \daf ,
+  \label{eq:OOE_outofeq}
+\end{equation}  
+where the~consequent AWBS model reads
+\begin{multline}
+  \cos(\phi) \left(\vmag\pdv{\fM}{z} + \vmag\pdv{\daf}{z} 
+  + \tEz\pdv{\fM}{\vmag} + \tEz\pdv{\daf}{\vmag} \right)  
+  =\\
+  \nue\vmag\pdv{\daf}{\vmag} 
+  + \frac{\nu_t}{2}
+  \pdv{}{\mu}\left((1 - \mu^2)\pdv{\daf}{\mu}\right) 
+  + \frac{\sin(\phi)^2}{\vmag} \tEz \pdv{\daf}{\mu} ,
+  \label{eq:OOE_AWBS_simple}
+\end{multline}
+or its P1 approximation equivalent
+\begin{equation}
+  f = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \label{eq:OOE_P1outofeq}
+\end{equation}
+where the~moment model reads
+\begin{eqnarray}
+  \nue\vmag\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
+  \label{eq:OOE_P1f0}\\
+  \nue\vmag\pdv{\fone}{\vmag} - \nutot\fone &=& 
+  \frac{\vmag}{3}\nabla\dafzero + 
+  \frac{\tE}{3}\pdv{\dafzero}{\vmag} + \tB\times\fone 
+  \nonumber \\
+  & & + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} .
+  \label{eq:OOE_P1f1}
+\end{eqnarray}
+\subsection{Implicit fully-discrete scheme}
+\label{sec:OOE_impl_fullydiscrete_scheme}
+The moment P1 model \eqref{eq:OOE_P1f0}, \eqref{eq:OOE_P1f1} can be written 
+in a~semi-discrete form
+\begin{eqnarray}
+  \IM^0_{(\nue)} \cdot \pdv{\davfzero}{\vmag}  
+  &=& 
+  \left(\ID^T_{\left(\MI\right)}
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}\right) \cdot \fone
+  + \frac{1}{\vmag}\IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} ,  
+  \nonumber \label{eq:OOE_semiM1hosf0} \\
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  &=& 
+  - \ID_{\left(\MA\right)}\cdot\davfzero
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero}{\vmag}
+  + \frac{1}{\vmag}\left(
+  \IM^1_{\left( \nutot \right)} + \IB_{\left( \tB \right)}  
+  \right) \cdot \fone
+  \nonumber\\
+  & & - \ID_{\left(\MA\right)}\cdot \tvfM
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM}{\vmag} .
+  \label{eq:OOE_semiM1hosf1}
+\end{eqnarray}
+It is convenient to define
+\begin{equation}
+  \matr{DIVE} = \ID^T_{\left(\MI\right)} 
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}.
+  \nonumber
+\end{equation}
+The next step goes towards implicit Runge-Kutta method (DIRK).
+Then, a~very effective inversion in the~L2 space can be formally performed
+\begin{equation}
+  \pdv{\davfzero}{\vmag}  
+  = \frac{1}{\vmag}
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} 
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot  
+  \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right) .
+  \label{eq:OOE_fullP1hosf0}
+\end{equation}
+The~first moment equation in the DIRK framework reads
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero}{\vmag}
+  - \ID_{\left(\MA\right)}\cdot \left(\tvfM^n + \davfzero^n 
+  + \Delta\vmag\pdv{\davfzero}{\vmag}\right)\\ 
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right)
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag} .
+  \label{eq:OOE_semiM1hosf1}
+\end{multline}
+Finally, one can eliminate $\pdv{\davfzero}{\vmag}$, 
+which leads to the~final form
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = 
+  \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot 
+  \left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
+  + \Delta\vmag \matr{DIVE}
+  \right)
+  \cdot \pdv{\fone}{\vmag}
+  \\
+  +\frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \pdv{\fone}{\vmag} + 
+  \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \fone^n
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag}
+  \\ 
+  +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
+  \label{eq:OOE_fullP1hosf1}
+\end{multline}
+where the~only unknown is $\pdv{\fone}{\vmag}$. Once \eqref{eq:OOE_fullP1hosf1}
+is solved the~completion of the~solution 
+$[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
+\eqref{eq:OOE_fullP1hosf0}.
+\cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
+
+\begin{equation}
+  \vect{q}_c(\vect{x}) = \intv
+  \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , \nonumber 
+\end{equation}
+\begin{eqnarray}
+  a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\left(\tfM + \dafzero\right)}{\vmag}(\vect{x})
+  \vmag^2\, \dI\vmag , \nonumber \\
+  \vect{b}_{0}(\vect{x}) &=& \intv\left(  
+  \frac{\vmag^2}{3 \nutot}\nabla\left(\tfM(\vect{x}) + \dafzero(\vect{x})\right)
+  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}(\vect{x})
+  \right)\vmag^2\, \dI\vmag , \nonumber \\
+  \vect{b}_{1}(\vect{x}) &=& \intv
+  \frac{\vmag}{\nutot}\fone(\vect{x})
+  \vmag^2\, \dI\vmag , \nonumber
+\end{eqnarray}
+Alors, treat $a_0, \vect{b}_{0}, \vect{b}_1$ as grid functions, 
+where it is obvious to express 
+$\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
+ImplicitSolve().
+
+\begin{equation}
+  \frac{\vect{j}}{\qe} = \vect{q}_c =
+  \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\nutot}\nabla\left(\tfM + \dafzero\right) - 
+  \frac{\vmag}{3\nutot}\pdv{\left(\tfM + \dafzero\right)}{\vmag}\tE
+   + \frac{\vmag}{\nutot}\fone\times\tB\right) \vmag^2\, \dI\vmag ,
+  \label{eq:OOE_HOFcurrent}
+\end{equation}
+
+\begin{equation}
+  \vect{q}_c(\vect{x}) 
+  = -\vect{b}_{0}(\vect{x}) 
+  - a_{0}(\vect{x})\tE(\vect{x})
+   + \vect{b}_{1}(\vect{x})\times\tB(\vect{x}) ,
+  \label{eq:OOE_HOFcurrent}
+\end{equation}
+
+\begin{equation}
+  \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} 
+  - \frac{\vect{q}_c(\vect{x})}{a_{0}(\vect{x})}
+   + \frac{\vect{b}_{1}(\vect{x})}{a_{0}(\vect{x})}\times\tB(\vect{x}) ,
+  \label{eq:OOE_HOFcurrent}
+\end{equation}
+
+
 \section{Simulation results}\label{sec:results}
 \begin{figure}[tbh]
   \begin{center}
@@ -2365,10 +2585,10 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \begin{center}
     \begin{tabular}{c}
        \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/kinetics_10ps_xpointmax.png} \\ 
-      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/kinetics_10ps_xpoint_1500microns.png}
+      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/kinetics_10ps_xpoint_1605microns.png}
     \end{tabular}
   \caption{
-  Kinetics profiles for max(flux) point and 1500 microns point for the case of 10ps VFP temperature profile, ne and Z Hydra profiles. 
+  Kinetics profiles for max(flux) point and 1605 microns point for the case of 10ps VFP temperature profile, ne and Z Hydra profiles. 
   }
   \end{center}
   \label{fig:AWBScorrection_f1}

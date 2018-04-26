@@ -387,7 +387,7 @@ ax1.set_title(r'Heat flux (Z = '+str(Zbar)+r', $\lambda_{th}$='+"{:.4f}".format(
 
 ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-', label=r'$q_h^{SH}$')
 if (Ecorrect):
-   ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7E}$')
+   ax1.plot(C7x_microns, C7q_Ec * 1e-7, C7Ecolor+'-', label=r'$q_h^{C7}$')
 if (Emimic):
    ax1.plot(C7x_microns, C7q_Em * 1e-7, lsC7, label=lblC7)
 ## Special treatment of temperature profile.
@@ -402,7 +402,7 @@ else:
    ax2.set_ylabel(r'E [a.u.]')
 ax2.plot(C7x_microns, me/qe*C7SHE_analytic, SHcolor+'-.', label=r'E$^{SH}$')
 if (Ecorrect):
-   ax2.plot(C7x_microns, me/qe*C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7E}$')
+   ax2.plot(C7x_microns, me/qe*C7Ex_Ec, C7Ecolor+'--', label=r'E$^{C7}$')
 if (Emimic):
    ax2.plot(C7x_microns, me/qe*C7Ex_Em, lsC7, label=r'E$_z$ - '+lblC7)
 ## Special treatment of the corrE showing the limit velocity/vTh 
@@ -434,6 +434,10 @@ if (Ecorrect):
    p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
    p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
    p_C7Emehalff0v5 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
+   p_C7Ef0v2 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
+   ## out-of-equilibrium source
+   for i in range(len(p_C7Ev)):
+      p_C7Ef0v2[i] = fM(p_C7Ev[i], Te)*p_C7Ev[i]*p_C7Ev[i] + p_C7Emehalff0v5[i] / (4.0*pi) / me * 2.0 / p_C7Ev[i] / p_C7Ev[i] / p_C7Ev[i]
 if (Emimic):
    p_C7v = C7v[C7v < mult*vTh(Te)]
    p_C7mehalff1v5 = C7mehalff1v5[C7v < mult*vTh(Te)]
@@ -457,7 +461,7 @@ if (Ecorrect):
    if (len(C7Ev)<=pointlimit):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), 'bx', label=lblC7E+'('+"{:.2f}".format(proporC7EQ)+r'q$_{SH}$)')
    else:
-      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$')
+      ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7}$')
       #ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$'+'('+"{:.2f}".format(proporC7EQ)+r'$q_h^{SH}$)')
 if (Emimic):
    if (len(C7v)<=pointlimit):
@@ -469,7 +473,8 @@ ax2 = ax1.twinx()
 ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0^{SH}$')
 #ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (Ecorrect):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7E}$')
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Ef0v2, C7Ecolor+'--', label=r'$f_0^{C7}$')
+   #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7E}$')
    #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 if (Emimic):
    ax2.plot(p_C7v/vTh(Te), p_C7mehalff0v5 / (4.0*pi), lsC7, label=lblC7)

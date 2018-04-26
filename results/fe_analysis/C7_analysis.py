@@ -429,7 +429,10 @@ if (args.C7):
    p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
    p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
    p_C7Emehalff0v5 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
-
+   p_C7Ef0v2 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
+   ## out-of-equilibrium source
+   for i in range(len(p_C7Ev)):
+      p_C7Ef0v2[i] = fM(p_C7Ev[i], Te)*p_C7Ev[i]*p_C7Ev[i] + p_C7Emehalff0v5[i] / (4.0*pi) / me * 2.0 / p_C7Ev[i] / p_C7Ev[i] / p_C7Ev[i]
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
@@ -454,7 +457,8 @@ if (args.kinSH):
    ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0^{SH}$')
    #ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (args.C7):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7}$')
+   ax2.plot(p_C7Ev/vTh(Te), p_C7Ef0v2, C7Ecolor+'--', label=r'$f_0^{C7}$')
+   #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7}$')
    #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 ax2.set_ylabel(r'$f_0 v^2$ [a.u.]')
 #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')

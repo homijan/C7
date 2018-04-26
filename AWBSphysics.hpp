@@ -114,9 +114,9 @@ public:
                    double velocity, double mspee, 
                    double &mspE_scale, double &Efield_scale)
    {
-	  //mspE_scale = 0.0;
-	  //Efield_scale = 1.0;
-      //return;
+	  mspE_scale = 0.0;
+	  Efield_scale = 1.0;
+      return;
 
       Vector Efield(vdim); 
       Eval(Efield, T, ip);
@@ -228,18 +228,37 @@ public:
                      const IntegrationPoint &ip);
 };
 
-// AWBS source coefficient.
-class AWBSF0Source : public NTHvHydroCoefficient
+// Maxwell-Boltzmann distribution coefficient.
+class MaxwellBoltzmannCoefficient : public NTHvHydroCoefficient
 {
 protected:
    double S0;
 public:
-   AWBSF0Source(ParGridFunction &rho_, ParGridFunction &Te_,
-                ParGridFunction &v_, Coefficient *material_, EOS *eos_)
+   MaxwellBoltzmannCoefficient(ParGridFunction &rho_, ParGridFunction &Te_,
+                               ParGridFunction &v_, Coefficient *material_, 
+                               EOS *eos_)
       : NTHvHydroCoefficient(rho_, Te_, v_, material_, eos_) { S0 = 1.0; }
    double Eval(ElementTransformation &T, const IntegrationPoint &ip);
    double Eval(ElementTransformation &T, const IntegrationPoint &ip,
                double rho);
+   void SetScale0(double S0_) { S0 = S0_; }
+};
+
+// AWBS source coefficient.
+class AWBSdfMdv : public NTHvHydroCoefficient
+{
+protected:
+   double S0;
+   MaxwellBoltzmannCoefficient MaxBo_cf;
+public:
+   AWBSdfMdv(ParGridFunction &rho_, ParGridFunction &Te_,
+                ParGridFunction &v_, Coefficient *material_, EOS *eos_)
+      : NTHvHydroCoefficient(rho_, Te_, v_, material_, eos_), 
+        MaxBo_cf(rho_, Te_, v_, material_, eos_) { S0 = 1.0; }
+   double Eval(ElementTransformation &T, const IntegrationPoint &ip);
+   double Eval(ElementTransformation &T, const IntegrationPoint &ip,
+               double rho);
+   MaxwellBoltzmannCoefficient* GetMaxBo() { return &MaxBo_cf; }
    void SetScale0(double S0_) { S0 = S0_; }
 };
 
@@ -255,7 +274,7 @@ protected:
    EOS *eos;
 public:
    // members
-   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *sourceF0_pcf;
+   NTHvHydroCoefficient *mspei_pcf, *mspee_pcf, *dfMdv_pcf, *fM_pcf;
    EfieldCoefficient *Efield_pcf;
    VectorCoefficient *Bfield_pcf;
    P1a0KineticCoefficient *P1a0_pcf;
@@ -264,10 +283,11 @@ public:
    // methods
    AWBSMasterOfPhysics(int dim_, NTHvHydroCoefficient *mspei_, 
                        NTHvHydroCoefficient *mspee_,
-                       NTHvHydroCoefficient *source_, 
-                       EfieldCoefficient *Efield_,
+                       NTHvHydroCoefficient *fM_,
+                       NTHvHydroCoefficient *dfMdv_, 
+					   EfieldCoefficient *Efield_,
                        VectorCoefficient *Bfield_, EOS *eos_)
-      : mspei_pcf(mspei_),  mspee_pcf(mspee_), sourceF0_pcf(source_), 
+      : mspei_pcf(mspei_),  mspee_pcf(mspee_), fM_pcf(fM_), dfMdv_pcf(dfMdv_), 
         Efield_pcf(Efield_), Bfield_pcf(Bfield_), eos(eos_)
         { 
            P1a0_pcf = new P1a0KineticCoefficient(dim_, mspei_, mspee_); 

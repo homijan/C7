@@ -265,9 +265,9 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    const double N_x_vTmax = AWBSPhysics->GetVelocityScale();
    const double velocity_real = velocity * N_x_vTmax;
 
-   AWBSPhysics->sourceF0_pcf->SetVelocityReal(velocity_real);
-   ParGridFunction F0source(&L2FESpace);
-   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
+   AWBSPhysics->dfMdv_pcf->SetVelocityReal(velocity_real);
+   ParGridFunction dfMdv_source(&L2FESpace);
+   dfMdv_source.ProjectCoefficient(*(AWBSPhysics->dfMdv_pcf));
 
    // The monolithic BlockVector stores the unknown fields as follows:
    // - isotropic F0 (energy density)
@@ -334,7 +334,7 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    Divf0.MultTranspose(F1, F0_rhs);
    Efieldf0.AddMultTranspose(F1, F0_rhs, 
                              2.0 / velocity_real / velocity_real);
-   Mf0nu.AddMult(F0source, F0_rhs); 
+   Mf0nu.AddMult(dfMdv_source, F0_rhs); 
    // Compute dF0.
    invMf0nuE.Mult(F0_rhs, dF0);
 
@@ -419,10 +419,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Get the real velocity and velocity step.
    const double velocity_real = velocity * N_x_vTmax;
    const double dv_real = dv * N_x_vTmax; 
-
-   AWBSPhysics->sourceF0_pcf->SetVelocityReal(velocity_real);
-   ParGridFunction F0source(&L2FESpace);
-   F0source.ProjectCoefficient(*(AWBSPhysics->sourceF0_pcf));
+ 
+   ParGridFunction dfMdv_source(&L2FESpace), fM_source(&L2FESpace);
+   AWBSPhysics->dfMdv_pcf->SetVelocityReal(velocity_real);
+   dfMdv_source.ProjectCoefficient(*(AWBSPhysics->dfMdv_pcf));
+   AWBSPhysics->fM_pcf->SetVelocityReal(velocity_real);
+   fM_source.ProjectCoefficient(*(AWBSPhysics->fM_pcf)); 
 
    // The monolithic BlockVector stores the unknown fields as follows:
    // - isotropic F0 (energy density)
@@ -539,6 +541,24 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // A2 = 
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
+
+   // Fill the rhs vector.
+   Vector F1_rhs(VsizeH1);
+   //fM_source = 0.0;
+   Divf1.Mult(fM_source, F1_rhs);
+   Divf1.AddMult(F0, F1_rhs);
+   F1_rhs.Neg();
+   // Here the full Efield must be used!!!
+   AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+
+   // Get rid of the evolution of deltaF0.
+   //invMf0nu.SpMat() = 0.0;
+   // Get rid of the implicit effect of Efield.
+   Efieldf0.SpMat() = 0.0;
+   AEfieldf1.SpMat() = 0.0;
+
    /*
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
    SparseMatrix *Df0T = Transpose(Divf0.SpMat());
@@ -548,7 +568,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1), B, X;
    Divf1.Mult(F0, F1_rhs);
-   Divf1.AddMult(F0source, F1_rhs, dv_real); 
+   Divf1.AddMult(dfMdv_source, F1_rhs, dv_real); 
    Df1invMf0nuDf0T->AddMult(F1, F1_rhs, dv_real);
    F1_rhs.Neg();   
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
@@ -583,20 +603,35 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    // Prepare source of electrons.
    Vector S0(VsizeL2), invM0_S0(VsizeL2);
-   Mf0nu.Mult(F0source, S0);
+   Mf0nu.Mult(dfMdv_source, S0);
    invMf0nu.Mult(S0, invM0_S0);
+/*
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1);
    Divf1.Mult(F0, F1_rhs);
    F1_rhs.Neg();
    //Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
    //AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
-   Divf1.AddMult(F0source, F1_rhs, -1.0 * dv_real);
-   AEfieldf1.AddMult(F0source, F1_rhs, 1.0 / velocity_real); 
+   Divf1.AddMult(dfMdv_source, F1_rhs, -1.0 * dv_real);
+   AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real); 
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);  
+   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
    Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+*/   
+
+   // Fill the rhs vector.
+   //fM_source = 0.0;
+   //Divf1.Mult(fM_source, F1_rhs);
+   //Divf1.AddMult(F0, F1_rhs);
+   //F1_rhs.Neg();
+   //AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   // Here a reduced value of Efield probably needs to be used...
+   VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
+   //Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   //Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+
    // Complete the system matrix.
    implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
    implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Bfieldf1.SpMat());
@@ -613,22 +648,22 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    dF1 = 0.0;
    implMf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
    bool verbose = false;
-   HypreBoomerAMG amg(A);
-   HyprePCG pcg(A);
-   pcg.SetTol(cg_rel_tol);
-   pcg.SetMaxIter(cg_max_iter);
-   pcg.SetPrintLevel(verbose);
-   pcg.SetPreconditioner(amg);
-   amg.SetPrintLevel(verbose);
-   pcg.Mult(B, X);
+   HypreBoomerAMG amg_dF1(A);
+   HyprePCG pcg_dF1(A);
+   pcg_dF1.SetTol(cg_rel_tol);
+   pcg_dF1.SetMaxIter(cg_max_iter);
+   pcg_dF1.SetPrintLevel(verbose);
+   pcg_dF1.SetPreconditioner(amg_dF1);
+   amg_dF1.SetPrintLevel(verbose);
+   pcg_dF1.Mult(B, X);
    timer.sw_cgH1.Stop();
-   int PCGNumIter;
-   pcg.GetNumIterations(PCGNumIter);
-   timer.H1dof_iter += PCGNumIter * H1compFESpace.GlobalTrueVSize();
+   int PCGNumIter_dF1;
+   pcg_dF1.GetNumIterations(PCGNumIter_dF1);
+   timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();
    if (H1FESpace.GetParMesh()->GetMyRank() == 0)
    { 
-      cout << "HyprePCG(BoomerAMG) GetNumIterations: " 
-           <<  PCGNumIter << endl << flush;
+      cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_dF1 << endl << flush;
    }    
    implMf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
  
@@ -640,14 +675,16 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
    //dF0 = invM0_S0;
-   dF0 = F0source; 
-   invM0_tDIVE->AddMult(F1, dF0);
+   //dF0 = dfMdv_source; 
+   //dF0 = 0.0;
+   //invM0_tDIVE->AddMult(F1, dF0);
+   invM0_tDIVE->Mult(F1, dF0);
    invM0_tDIVE->AddMult(dF1, dF0, dv_real);
    invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
 
    /*
    // Hyperbolic system only.
-   dF0 = F0source;
+   dF0 = dfMdv_source;
    invMf0nuDf0T->AddMult(F1, dF0);
    invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
@@ -695,12 +732,47 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    djC_gf *= pow(velocity_real, 3.0);
 
    // Generalized Ohm's law related grid functions.
-   AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
+   //dfMdv_source = 0.0;
+   // Implicit Efield effect is turned off.
+   //dfMdv_source += dF0;
+   AWBSPhysics->P1a0_pcf->SetdF0(&dfMdv_source);
+   //AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
    AWBSPhysics->P1a0_pcf->SetVelocityReal(velocity_real); 
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
 
-   AWBSPhysics->P1b0_pcf->SetF0(&F0);
+   //fM_source = 0.0;
+   // Put together fM and delta f0.
+   fM_source += F0;
+/*
+   // Find the weak solution to 1/nut*grad(fM + delta f0).
+   ParGridFunction gradAf(&H1FESpace), gradAf_rhs(&H1FESpace);
+   Divf1.Mult(fM_source, gradAf_rhs);
+   gradAf = 0.0;
+   Mf1nu.FormLinearSystem(ess_tdofs, gradAf, gradAf_rhs, A, X, B);
+   bool verbose_gradAf = false;
+   HypreBoomerAMG amg_gradAf(A);
+   HyprePCG pcg_gradAf(A);
+   pcg_gradAf.SetTol(cg_rel_tol);
+   pcg_gradAf.SetMaxIter(cg_max_iter);
+   pcg_gradAf.SetPrintLevel(verbose_gradAf);
+   pcg_gradAf.SetPreconditioner(amg_gradAf);
+   amg_gradAf.SetPrintLevel(verbose);
+   pcg_gradAf.Mult(B, X);
+   timer.sw_cgH1.Stop();
+   int PCGNumIter_gradAf;
+   pcg_gradAf.GetNumIterations(PCGNumIter_gradAf);
+   timer.H1dof_iter += PCGNumIter_gradAf * H1compFESpace.GlobalTrueVSize();
+   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   { 
+      cout << "HyprePCG_gradAf(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_gradAf << endl << flush;
+   }    
+   Mf1nu.RecoverFEMSolution(X, gradAf_rhs, gradAf);
+*/
+   // Evaluate the P1b0 coefficient.
+   AWBSPhysics->P1b0_pcf->SetF0(&fM_source);
+   //AWBSPhysics->P1b0_pcf->SetF0(&F0);
    AWBSPhysics->P1b0_pcf->SetdF1(&dF1);
    AWBSPhysics->P1b0_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b0_cf = *(AWBSPhysics->P1b0_pcf);

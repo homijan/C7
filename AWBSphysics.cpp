@@ -216,8 +216,8 @@ void OhmEfieldCoefficient::Eval(Vector &V, ElementTransformation &T,
    }
 }
 
-double AWBSF0Source::Eval(ElementTransformation &T,
-                          const IntegrationPoint &ip, double rho)
+double MaxwellBoltzmannCoefficient::Eval(ElementTransformation &T,
+                                         const IntegrationPoint &ip, double rho)
 {
    // "velocity_real" must be set previously.
    double pi = 3.14159265359;
@@ -230,6 +230,34 @@ double AWBSF0Source::Eval(ElementTransformation &T,
    double fM = 4.0 * pi *
                ne / pow(vTe, 3.0) / pow(2.0 * pi, 1.5) *
                exp(- pow(velocity_real, 2.0) / 2.0 / pow(vTe, 2.0));
+
+   return S0 * fM;
+}
+
+double MaxwellBoltzmannCoefficient::Eval(ElementTransformation &T, 
+                                         const IntegrationPoint &ip)
+{
+   double rho = rho_gf.GetValue(T.ElementNo, ip);
+
+   return Eval(T, ip, rho);
+}
+
+double AWBSdfMdv::Eval(ElementTransformation &T,
+                          const IntegrationPoint &ip, double rho)
+{
+   // "velocity_real" must be set previously.
+   double pi = 3.14159265359;
+   double Te = max(1e-10, Te_gf.GetValue(T.ElementNo, ip));
+   double vTe = eos->GetvTe(Te);
+   //double index = material_pcf->Eval(T, ip);
+   //double ne = eos->GetElectronDensity(index, rho, Te);
+
+   // Maxwell-Boltzmann distribution fM = ne*vT^3*(2/pi)^1.5*exp(-v^2/2/vT^2)
+   //double fM = 4.0 * pi *
+   //            ne / pow(vTe, 3.0) / pow(2.0 * pi, 1.5) *
+   //            exp(- pow(velocity_real, 2.0) / 2.0 / pow(vTe, 2.0));
+   MaxBo_cf.SetVelocityReal(velocity_real); 
+   double fM = MaxBo_cf.Eval(T, ip, rho);
    double dfMdv = - velocity_real / pow(vTe, 2.0) * fM;
 
    // S0 acts as electron source scaling (scaling electron density), 
@@ -237,7 +265,7 @@ double AWBSF0Source::Eval(ElementTransformation &T,
    return S0 * dfMdv;
 }
 
-double AWBSF0Source::Eval(ElementTransformation &T, const IntegrationPoint &ip)
+double AWBSdfMdv::Eval(ElementTransformation &T, const IntegrationPoint &ip)
 {
    double rho = rho_gf.GetValue(T.ElementNo, ip);
 

@@ -518,14 +518,15 @@ int main(int argc, char *argv[])
    
    nth::NTHvHydroCoefficient *mspei_pcf = &mspei_cf;
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;
-   nth::AWBSF0Source sourceF0_cf(rho_gf, e_gf, v_gf, material_pcf, eos);
-   nth::NTHvHydroCoefficient *sourceF0_pcf = &sourceF0_cf;
+   nth::AWBSdfMdv dfMdv_cf(rho_gf, e_gf, v_gf, material_pcf, eos);
+   nth::NTHvHydroCoefficient *fM_pcf = dfMdv_cf.GetMaxBo();
+   nth::NTHvHydroCoefficient *dfMdv_pcf = &dfMdv_cf;
 
    // Create original Lorentz zero current Efield and set input scales 
    // of the electron source and the Efield.
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
                                        material_pcf, eos);  
-   sourceF0_cf.SetScale0(F0SourceS0);
+   dfMdv_cf.SetScale0(F0SourceS0);
    LorentzEfield_cf.SetScale0(EfieldS0);
    // Represent Lorentz Efield as a VectorCoefficient.
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
@@ -555,7 +556,7 @@ int main(int argc, char *argv[])
 
    // This object represents physics in AWBS Boltzmann transport model.
    nth::AWBSMasterOfPhysics AWBSPhysics(pmesh->Dimension(), mspei_pcf, 
-                                        mspee_pcf, sourceF0_pcf,
+                                        mspee_pcf, fM_pcf, dfMdv_pcf,
                                         Efield_pcf, Bfield_pcf, eos);
 
    // Diagnostics.
