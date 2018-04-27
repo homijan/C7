@@ -11,7 +11,7 @@ F0ORDER=3
 
 XPOINT=0.1605 # in cm qSH maximum
 
-#MING=2000
+#MING=1000
 MING=100
 
 # Challenge SNB ;)
@@ -48,7 +48,7 @@ cd ..
 
 
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em 200 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 3 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em 4 | tee C7E.out
 ## Run C7 10ps MING=3000 converged.
 ##mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -cl $CL -L $L -xp $XPOINT -minG $MING -s 3 -cfl 1e10 -S0 1.0 -dE 0.0000001 -Em 150 | tee C7E.out
 

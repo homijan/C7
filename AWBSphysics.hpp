@@ -114,13 +114,21 @@ public:
                    double velocity, double mspee, 
                    double &mspE_scale, double &Efield_scale)
    {
-	  mspE_scale = 0.0;
-	  Efield_scale = 1.0;
-      return;
+	  //mspE_scale = 0.0;
+	  //Efield_scale = 1.0;
+      //return;
 
       Vector Efield(vdim); 
       Eval(Efield, T, ip);
       double Enorm = std::max(1e-32, Efield.Norml2());
+      double mspE = Enorm / velocity;
+
+      // Full effect of E is converted into mspE.
+	  //double scale = 0.5;
+	  //mspE_scale = scale * mspE / mspee;
+	  // TMP, used in explicit Efield contribution.
+	  //Efield_scale = 1.0;
+      //return;
 
       // Represent Efield effect overshot as E field weakening. 
       //double sqrt3 = 1.0;
@@ -128,8 +136,7 @@ public:
 	  //Efield_scale = std::min(1.0, sqrt3 * mspee * velocity / Enorm);
 	  //return;
 
-      // Represent Efield effect overshot as friction.
-      //double mspE = Enorm / velocity;
+      // Represent Efield effect overshot as friction. 
       //mspE_scale = std::max(0.0, mspE - mspee) / mspee;
       //Efield_scale = 1.0;
       //return;
@@ -143,11 +150,14 @@ public:
 	  // nu_e * v > alpha * E
 	  // v * (nu_e + nu_E) = Ed
 	  // v * nu_E + Ed = alpha * E
-	  double alpha = 1.0;
+	  double alpha = 0.5;
 	  double nu_E = (alpha * Enorm - velocity * mspee) / 2.0 / velocity;
       double Ed = alpha * Enorm - velocity * nu_E;
       mspE_scale = std::max(0.0 , nu_E / mspee);
       Efield_scale = std::min(1.0, Ed / Enorm);
+      // TMP, used in explicit Efield contribution.
+	  Efield_scale = 1.0;
+
 	  //mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
       //                            / mspee);
       //Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)

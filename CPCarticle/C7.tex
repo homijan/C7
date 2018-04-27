@@ -2525,6 +2525,16 @@ $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \vect{q}_c(\vect{x}) = \intv
   \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , \nonumber 
 \end{equation}
+
+\begin{equation}
+  \frac{\vect{j}}{\qe} = \vect{q}_c =
+  \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\nutot}\nabla\left(\tfM + \dafzero\right) - 
+  \frac{\vmag}{3\nutot}\pdv{\left(\tfM + \dafzero\right)}{\vmag}\tE
+   + \frac{\vmag}{\nutot}\fone\times\tB\right) \vmag^2\, \dI\vmag ,
+  \label{eq:OOE_HOFcurrent}
+\end{equation}
+
 \begin{eqnarray}
   a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\left(\tfM + \dafzero\right)}{\vmag}(\vect{x})
   \vmag^2\, \dI\vmag , \nonumber \\
@@ -2540,15 +2550,6 @@ Alors, treat $a_0, \vect{b}_{0}, \vect{b}_1$ as grid functions,
 where it is obvious to express 
 $\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
 ImplicitSolve().
-
-\begin{equation}
-  \frac{\vect{j}}{\qe} = \vect{q}_c =
-  \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
-  - \frac{\vmag^2}{3\nutot}\nabla\left(\tfM + \dafzero\right) - 
-  \frac{\vmag}{3\nutot}\pdv{\left(\tfM + \dafzero\right)}{\vmag}\tE
-   + \frac{\vmag}{\nutot}\fone\times\tB\right) \vmag^2\, \dI\vmag ,
-  \label{eq:OOE_HOFcurrent}
-\end{equation}
 
 \begin{equation}
   \vect{q}_c(\vect{x}) 
@@ -2594,18 +2595,18 @@ ImplicitSolve().
   \label{fig:AWBScorrection_f1}
 \end{figure}
 
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_heatflux_6ps.png} \\ 
-      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_kinetics_6ps.png}
-    \end{tabular}
-  \caption{
-  Philippe's test 6 ps.
-  }
-  \end{center}
-  \label{fig:AWBScorrection_f1}
-\end{figure}
+%\begin{figure}[tbh]
+%  \begin{center}
+%    \begin{tabular}{c}
+%      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_heatflux_6ps.png} \\ 
+%      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_kinetics_6ps.png}
+%    \end{tabular}
+%  \caption{
+%  Philippe's test 6 ps.
+%  }
+%  \end{center}
+%  \label{fig:AWBScorrection_f1}
+%\end{figure}
 
 \begin{figure}[tbh]
   \begin{center}
@@ -2620,16 +2621,17 @@ ImplicitSolve().
   \label{fig:AWBScorrection_f1}
 \end{figure}
 
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_heatflux_Emimic_12ps.png}
-    \end{tabular}
-  \caption{Reduced electron density and $\E=0$ computation.
-  }
-  \end{center}
-  \label{fig:AWBScorrection_f1}
-\end{figure}
+%\begin{figure}[tbh]
+%  \begin{center}
+%    \begin{tabular}{c}
+%      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_heatflux_Emimic_12ps.png}
+%    \end{tabular}
+%  \caption{Reduced electron density and $\E=0$ computation.
+%  }
+%  \end{center}
+%  \label{fig:AWBScorrection_f1}
+%\end{figure}
+
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
