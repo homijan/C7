@@ -152,8 +152,8 @@ of the~electron transport cannot be modeled with
 an~explicitly local model. A~simple form of the~AWBS model opens a~way 
 to couple kinetics to hydrodynamic codes while describing the~important 
 physics correctly. Since the~electron-electron collision effect becomes 
-especially important in the~case of low ion potential, we take a~special in 
-the~case of low Z plasmas.
+especially important in the~case of low ion potential, we focus on presenting 
+results related to low Z plasmas.
 \end{abstract}
 
 \begin{keyword}
@@ -255,11 +255,14 @@ where the~moment model reads
 
 \subsection{A~consistent treatment of $\tE$ field}
 \label{sec:OOE_E_treatment}
+The~plasma conditions providing an~appropriate electric field
+are the~best expressed via the~definition of current
 \begin{equation}
   \vect{q}_c(\vect{x}) = \intv
-  \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , \nonumber 
+  \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , 
+  \nonumber 
 \end{equation}
-from \eqref{eq:OOE_P1f1}
+which can be directly expressed from \eqref{eq:OOE_P1f1} as
 \begin{equation}
   %\frac{\vect{j}}{\qe} = 
   \vect{q}_c =
@@ -269,7 +272,10 @@ from \eqref{eq:OOE_P1f1}
   \right) \vmag^2\, \dI\vmag ,
   \label{eq:OOE_P1current}
 \end{equation}
+where the $\B$ field and $\E$ field scattering effect (angular) have been 
+omitted.  
 
+Then, the~current can be easily evaluated based on
 \begin{eqnarray}
   a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\left(\tfM + \dafzero\right)}{\vmag}(\vect{x})
   \vmag^2\, \dI\vmag , \nonumber \\
@@ -282,13 +288,14 @@ from \eqref{eq:OOE_P1f1}
 %where it is obvious to express 
 %$\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
 %ImplicitSolve().
-
+as the~following generalization of the~Ohm's law
 \begin{equation}
   \vect{q}_c(\vect{x}) 
   = -\vect{b}_{0}(\vect{x}) 
   - a_{0}(\vect{x})\tE(\vect{x}) ,
   \nonumber \label{eq:OOE_HOFcurrent}
 \end{equation}
+where one needs the~actual distribution function $f$ values.
 
 %\begin{equation}
 %  \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} 
@@ -297,6 +304,8 @@ from \eqref{eq:OOE_P1f1}
 %  \nonumber \label{eq:OOE_HOFcurrent}
 %\end{equation}
 
+It is straightforward to find the~\textit{zero current} formula for 
+the~electric field
 \begin{equation}
   \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} .
   \label{eq:OOE_E_j0}
@@ -304,6 +313,7 @@ from \eqref{eq:OOE_P1f1}
 
 \subsection{AWBS model analysis}
 \label{sec:OOE_AWBS_model_analysis}
+The~AWBS transport equation can be written as the~following
 \begin{multline}
   \left(\vmag \nue - \tE\cdot\vn\right)\pdv{\daf}{\vmag} 
   %+ \frac{\tE\cdot\vect{e}_\phi 
@@ -313,7 +323,11 @@ from \eqref{eq:OOE_P1f1}
   + (\nuei + \nue) (\fM + \daf - \fzero) ,
   \label{eq:OOE_AWBS_model_analysis}
 \end{multline}
+in order to stress the~effect of force applied to electrons, i.e. the~effect
+of friction described by $\nue$ and the~Lorentz force effect via $\tE$, 
+and their competition.
 
+The~same reformulation can be written for the~moment AWBS model
 \begin{eqnarray}
   \pdv{\dafzero}{\vmag} &=&
   \frac{1}{\nue\vmag}\left(\vmag\nabla\cdot\fone + \tE\cdot
@@ -325,16 +339,16 @@ from \eqref{eq:OOE_P1f1}
   + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} ,
   \nonumber
 \end{eqnarray}
-
+and it takes the~following form
 \begin{equation}
   \left(\nue\vmag\MI - \frac{\tE\tE}{3 \nue\vmag}\right)\cdot
   \pdv{\fone}{\vmag} = 
   \frac{\vmag}{3}\nabla\dafzero + \frac{\tE}{3 \nue}\nabla\cdot\fone
   + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} 
-  + \nutot\fone,
+  + \nutot\fone ,
   \nonumber \label{eq:OOE_P1AWBS_model_analysis}
 \end{equation}
-
+which is especially instructive in 1D
 \begin{equation}
   \left(\nue\vmag - \frac{\tEz^2}{3 \nue\vmag}\right)
   \pdv{\fonez}{\vmag} = 
@@ -440,7 +454,7 @@ $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
 \end{comment} % Implicit fully-discrete scheme
 
 \section{Simulation results}\label{sec:results}
-Two cases:
+Three cases:
 \begin{itemize}
   \item constant $n_e = 5\times10^{20}$ [1/cm$^3$], constant $\Zbar = 4$, 
   $T_e$ temperature profile taken from IMPACT simulation at 12 ps, see Figure 1
@@ -448,6 +462,10 @@ Two cases:
   \item $n_e, T_e, \Zbar$ profiles taken from HYDRA simulation of Gadolinium
   hohlraum at 10 ps, see Figure 2 and Figure 3
   %\figref{fig:Gd_VFP_10ps_heatflux} and \figref{fig:Gd_VFP_10ps_kinetics} 
+  \item Detail of distribution function under diffusive conditions of hydrogen 
+  raising the~question of potentially outstanding properties of AWBS, since
+  the uncorrected AWBS result is very close to KIPP full collision operator,
+  see Figure 4 (consult Eq. (41) in Tzoufras OSHUN JCP 2011) 
 \end{itemize}
 \begin{figure}[tbh]
   \begin{center}
