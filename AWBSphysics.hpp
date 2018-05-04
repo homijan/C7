@@ -115,13 +115,26 @@ public:
                    double &mspE_scale, double &Efield_scale)
    {
 	  //mspE_scale = 0.0;
-	  //Efield_scale = 1.0;
+	  //Efield_scale = 0.0;
+	  ////Efield_scale = 1.0;
       //return;
 
       Vector Efield(vdim); 
       Eval(Efield, T, ip);
       double Enorm = std::max(1e-32, Efield.Norml2());
       double mspE = Enorm / velocity;
+
+      // Division by zero attempt.
+      //mspE_scale = 0.0;
+      //if (Enorm > 1e1 * mspee * velocity) 
+      //{
+      //   Efield_scale = 1.0;
+      //}
+      //else
+      //{
+      //   Efield_scale = 0.0;
+      //}
+      //return;
 
       // Full effect of E is converted into mspE.
 	  //double scale = 0.5;
@@ -150,13 +163,11 @@ public:
 	  // nu_e * v > alpha * E
 	  // v * (nu_e + nu_E) = Ed
 	  // v * nu_E + Ed = alpha * E
-	  double alpha = 0.5;
+	  double alpha = 1.0;
 	  double nu_E = (alpha * Enorm - velocity * mspee) / 2.0 / velocity;
       double Ed = alpha * Enorm - velocity * nu_E;
       mspE_scale = std::max(0.0 , nu_E / mspee);
       Efield_scale = std::min(1.0, Ed / Enorm);
-      // TMP, used in explicit Efield contribution.
-	  Efield_scale = 1.0;
 
 	  //mspE_scale = std::max(0.0 , (Enorm - velocity * mspee) / 2.0 / velocity
       //                            / mspee);
@@ -172,17 +183,19 @@ class GeneralKineticCoefficient : public Coefficient, public VectorCoefficient
 protected:
    double velocity_real;
    // GridFunctions related to F0 and F1, e.g. F0, F1, dF0dv, dF1dv, etc.
-   ParGridFunction *F0, *F1, *dF0, *dF1;
+   ParGridFunction *FM, *F0, *F1, *dFM, *dF0, *dF1;
    NTHvHydroCoefficient *mspei_pcf, *mspee_pcf;
    EfieldCoefficient *Efield_pcf;
 public:
    GeneralKineticCoefficient(int dim_, NTHvHydroCoefficient *mspei_pcf_,
                              NTHvHydroCoefficient *mspee_pcf_)
-      : F0(NULL), F1(NULL), VectorCoefficient(dim_), mspei_pcf(mspei_pcf_), 
-      mspee_pcf(mspee_pcf_) { }
+      : FM(NULL), F0(NULL), F1(NULL), dFM(NULL), dF0(NULL), dF1(NULL), 
+	  VectorCoefficient(dim_), mspei_pcf(mspei_pcf_), mspee_pcf(mspee_pcf_) { }
 
+   virtual void SetFM(ParGridFunction *FM_) { FM = FM_; }
    virtual void SetF0(ParGridFunction *F0_) { F0 = F0_; }
    virtual void SetF1(ParGridFunction *F1_) { F1 = F1_; }
+   virtual void SetdFM(ParGridFunction *dFM_) { dFM = dFM_; }
    virtual void SetdF0(ParGridFunction *dF0_) { dF0 = dF0_; }
    virtual void SetdF1(ParGridFunction *dF1_) { dF1 = dF1_; }
    virtual void SetEfield(EfieldCoefficient *Efield_) { Efield_pcf = Efield_; }

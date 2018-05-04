@@ -354,9 +354,109 @@ which is especially instructive in 1D
   \pdv{\fonez}{\vmag} = 
   \frac{\vmag}{3}\pdv{\dafzero}{z} + \frac{\tEz}{3 \nue}\pdv{\fonez}{z}
   + \frac{\vmag}{3}\pdv{\tfM}{z} + \frac{\tEz}{3}\pdv{\tfM}{\vmag} 
-  + \nutot\fonez .
+  + \nutot\fonez ,
   \label{eq:OOE_P1AWBS_model_1Danalysis}
 \end{equation}
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  \sqrt{3} \nue > \frac{|\tEz|}{\vmag} .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+
+\begin{equation}
+  \pdv{\fonez}{\vmag} = 
+  \frac{3 \nue\vmag}{3 (\nue\vmag)^2 - \tEz^2}
+  \left(
+  \frac{\vmag}{3}\pdv{\dafzero}{z} + \frac{\tEz}{3 \nue}\pdv{\fonez}{z}
+  + \frac{\vmag}{3}\pdv{\tfM}{z} + \frac{\tEz}{3}\pdv{\tfM}{\vmag} 
+  + \nutot\fonez\right) ,
+  \label{eq:OOE_P1AWBS_model_1Danalysis}
+\end{equation}
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  3(\nue\vmag)^2 - \tEz^2 \neq 0 ,
+  \nonumber
+\end{equation}
+or a~numerical stability formulation
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  |3(\nue\vmag)^2 - \tEz^2| > \epsilon .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+which can be obtained from
+\begin{equation}
+  \left(3(\nue\vmag)^2 - \tEz^2\right)^2 - \epsilon^2 = 0 .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+
+\subsection{\textit{"Reverse-time-like evolution"} model by splitting}
+\label{sec:OOE_stable_splitting}
+Full separation of advection and E field
+\begin{eqnarray}
+  \nue\vmag \pdv{\fone^{\nue}}{\vmag} &=& 
+  \frac{\vmag}{3}\nabla\dafzero^{\nue}
+  + \frac{\vmag}{3}\nabla\tfM + \nutot\fone^{\nue} ,
+  \nonumber \\
+  \frac{\tE\tE}{3 \nue\vmag}\cdot
+  \pdv{\fone^{\tE}}{\vmag} &=& -\frac{\tE}{3 \nue}\nabla\cdot\fone^{\tE} 
+  - \frac{\tE}{3}\pdv{\tfM}{\vmag},
+  \nonumber
+\end{eqnarray}
+or separation of stable "bulk" E field effect and implicit E field effect
+\begin{eqnarray}
+  \nue\vmag \pdv{\fone^{\nue}}{\vmag} &=& 
+  \frac{\vmag}{3}\nabla\dafzero^{\nue}
+  + \frac{\vmag}{3}\nabla\tfM + \nutot\fone^{\nue} 
+  + \frac{\tE}{3}\pdv{\tfM}{\vmag},
+  \nonumber \\
+  \frac{\tE\tE}{3 \nue\vmag}\cdot
+  \pdv{\fone^{\tE}}{\vmag} &=& -\frac{\tE}{3 \nue}\nabla\cdot\fone^{\tE} ,
+  \nonumber
+\end{eqnarray}
+and the~complete effect of diffusion in velocity space reads
+\begin{equation}
+  \pdv{\fone}{\vmag} = \pdv{\fone^{\nue}}{\vmag} + \pdv{\fone^{\tE}}{\vmag} ,
+  \nonumber
+\end{equation}
+
+\begin{comment}
+\begin{multline}
+  \IV_{\left(\MA \cdot \tE\right)} \cdot
+  \left[
+  \frac{1}{\vmag} \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} 
+  + \IM^{0^{-1}}_{(\nue)} \cdot \left( \ID^T_{\left(\MI\right)} 
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)} \right)\cdot  
+  \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right)\right] = \\
+  -\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM}{\vmag} .
+  \nonumber
+\end{multline}
+\end{comment}
+
+\subsection{\textit{"Friction"} model}
+\label{sec:OOE_stable_splitting}
+\newcommand{\nuE}{\nu_{\tE}}
+In order to obey \eqref{eq:OOE_reverse_time_condition}, an~additional friction
+$\nu_{\tE}$ can be introduced as
+\begin{eqnarray}
+  |\tE| &=& |\tE^*| + \nuE \vmag  ,
+  \nonumber \\
+  \nue + \nuE &=& \frac{|\tE^*|}{\vmag} ,
+  \nonumber
+\end{eqnarray}
+which is then applied to perturbation $\dafzero$ as
+\begin{eqnarray}
+  \left(\nue + \nuE\right) \vmag \pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE^*\cdot\pdv{\fone}{\vmag} , 
+  \nonumber\\
+  \left(\nue + \frac{\nuE}{3}\right) \vmag\pdv{\fone}{\vmag} - \nutot\fone &=& 
+  \frac{\vmag}{3}\nabla\dafzero + 
+  \frac{\tE^*}{3}\pdv{\dafzero}{\vmag}
+  + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} .
+  \nonumber
+\end{eqnarray}
 
 \begin{comment} % Implicit fully-discrete scheme
 \subsection{Implicit fully-discrete scheme}

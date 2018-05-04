@@ -116,7 +116,8 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
-   double dF0dv = dF0->GetValue(T.ElementNo, ip);
+   double dFMdv = dFM->GetValue(T.ElementNo, ip);
+   double dF0dv = dF0->GetValue(T.ElementNo, ip); 
 
    double nuE_scale, Efield_scale;
    Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee,
@@ -127,7 +128,7 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
 
    // Scattering on ions and electrons.
    //return velocity_real / 3.0 / nu_t * dF0dv * velocity_real * velocity_real;
-   return Efield_scale * velocity_real / 3.0 / nu_t * dF0dv 
+   return velocity_real / 3.0 / nu_t * (dFMdv + Efield_scale * dF0dv) 
           * velocity_real * velocity_real;
 }
 

@@ -98,7 +98,7 @@ C7Operator::C7Operator(int size,
      implMf1nu(&h1_fes), Mf1nu(&h1_fes), Mf1nut(&h1_fes), Bfieldf1(&h1_fes), 
      Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes), 
      Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes), 
-     AIEfieldf1(&l2_fes, &h1_fes),
+     AEfieldf1M(&l2_fes, &h1_fes), AIEfieldf1(&l2_fes, &h1_fes),
      MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
      Mf0_inv(l2dofs_cnt, l2dofs_cnt, nzones),
      integ_rule(IntRules.Get(h1_fes.GetMesh()->GetElementBaseGeometry(),
@@ -218,19 +218,26 @@ C7Operator::C7Operator(int size,
    Divf0.Assemble(0);
    Divf0.Finalize(0);
 
-   EfieldIntegrator *f0ei = new EfieldIntegrator(quad_data);
+   EfieldScIntegrator *f0ei = new EfieldScIntegrator(quad_data);
    f0ei->SetIntRule(&integ_rule);
    Efieldf0.AddDomainIntegrator(f0ei);
    // Make a dummy assembly to figure out the sparsity.
    Efieldf0.Assemble(0);
    Efieldf0.Finalize(0);
 
-   AEfieldIntegrator *f1aei = new AEfieldIntegrator(quad_data);
+   AEfieldScIntegrator *f1aei = new AEfieldScIntegrator(quad_data);
    f1aei->SetIntRule(&integ_rule);
    AEfieldf1.AddDomainIntegrator(f1aei);
    // Make a dummy assembly to figure out the sparsity.
    AEfieldf1.Assemble(0);
    AEfieldf1.Finalize(0);
+
+   AEfieldIntegrator *f1Maei = new AEfieldIntegrator(quad_data);
+   f1Maei->SetIntRule(&integ_rule);
+   AEfieldf1M.AddDomainIntegrator(f1Maei);
+   // Make a dummy assembly to figure out the sparsity.
+   AEfieldf1M.Assemble(0);
+   AEfieldf1M.Finalize(0);
 
    AIEfieldIntegrator *f1aiei = new AIEfieldIntegrator(quad_data);
    f1aiei->SetIntRule(&integ_rule);
@@ -477,6 +484,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Efieldf0 = 0.0;
    Divf1 = 0.0; 
    AEfieldf1 = 0.0;
+   AEfieldf1M = 0.0;
    //AIEfieldf1 = 0.0; 
 
    timer.sw_force.Start(); 
@@ -499,6 +507,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Divf1.Finalize();
    AEfieldf1.Assemble(0); 
    AEfieldf1.Finalize();
+   AEfieldf1M.Assemble(0); 
+   AEfieldf1M.Finalize();
    //AIEfieldf1.Assemble(0);
    //AIEfieldf1.Finalize(0); 
    timer.sw_force.Stop();
@@ -549,15 +559,79 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Divf1.AddMult(F0, F1_rhs);
    F1_rhs.Neg();
    // Here the full Efield must be used!!!
-   AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   AEfieldf1M.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   //AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
    Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
    Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+
+/*
+///////////////////////////////////////////////////////////////////////////////
+////// Implicit Efield by splitting ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+   // Full but directional E field effect.
+   // Fundamental matrices.
+   SparseMatrix *tVE_ = Transpose(Efieldf0.SpMat());
+   // Diffusion plus directional effect of Efield matrices.
+   SparseMatrix *tDIVE_ = Transpose(Divf0.SpMat()); 
+   tDIVE_->Add(-2.0 / velocity_real / velocity_real, *tVE_);
+   
+   // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
+   //*tVE = 0.0;
+   //AEfieldf1.SpMat() = 0.0;
+   
+   // Proceed with matrix inversions.
+   SparseMatrix *invM0_tDIVE_ = mfem::Mult(invMf0nu.SpMat(), *tDIVE_);
+   SparseMatrix *invM0_tVE_ = mfem::Mult(invMf0nu.SpMat(), *tVE_);
+   SparseMatrix *VAE_invM0_tDIVE_ = mfem::Mult(AEfieldf1.SpMat(), 
+                                               *invM0_tDIVE_);
+   SparseMatrix *VAE_invM0_tVE_ = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE_);
+
+   ParGridFunction dF1E(&H1FESpace), dF1E_rhs(&H1FESpace), F1nu(&H1FESpace);
+   // Prepare the right hand sides.
+   F1nu = F1;
+   //F1nu += dF1;
+   VAE_invM0_tDIVE_->Mult(F1nu, dF1E_rhs);
+   //AEfieldf1.AddMult(dfMdv_source, dF1E_rhs, 1.0);
+   dF1E_rhs.Neg();
+   // Prepare the system matrix.
+   Mf1nu.SpMat() = 0.0;
+   Mf1nu.SpMat().Add(dv_real, *VAE_invM0_tDIVE_);
+   Mf1nu.SpMat().Add(1.0 / velocity_real, *VAE_invM0_tVE_);
+
+   dF1E = 0.0;
+   Vector B_, X_;
+   HypreParMatrix A_;
+   Mf1nu.FormLinearSystem(ess_tdofs, dF1E, dF1E_rhs, A_, X_, B_);
+   bool verbose_dF1E = false;
+   HypreBoomerAMG amg_dF1E(A_);
+   HyprePCG pcg_dF1E(A_);
+   pcg_dF1E.SetTol(cg_rel_tol);
+   pcg_dF1E.SetMaxIter(cg_max_iter);
+   pcg_dF1E.SetPrintLevel(verbose_dF1E);
+   pcg_dF1E.SetPreconditioner(amg_dF1E);
+   amg_dF1E.SetPrintLevel(verbose_dF1E);
+   pcg_dF1E.Mult(B_, X_);
+   int PCGNumIter_dF1E;
+   pcg_dF1E.GetNumIterations(PCGNumIter_dF1E);
+   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   { 
+      cout << "HyprePCG_dF1E(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_dF1E << endl << flush;
+   }    
+   Mf1nu.RecoverFEMSolution(X_, dF1E_rhs, dF1E);
+
+   if (PCGNumIter_dF1E == cg_max_iter) { dF1E = 0.0; }
+///////////////////////////////////////////////////////////////////////////////
+////// Implicit Efield by splitting ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+*/
+
 
    // Get rid of the evolution of deltaF0.
    //invMf0nu.SpMat() = 0.0;
    // Get rid of the implicit effect of Efield.
-   Efieldf0.SpMat() = 0.0;
-   AEfieldf1.SpMat() = 0.0;
+   //Efieldf0.SpMat() = 0.0;
+   //AEfieldf1.SpMat() = 0.0;
 
    /*
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
@@ -673,6 +747,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //          + 2/v^2*M0(nu)^{-1}*VT(E)*(f1^n + dv*df1dv)                    //
    //                                                                         //
    /////////////////////////////////////////////////////////////////////////////
+
    // Full but directional E field effect.
    //dF0 = invM0_S0;
    //dF0 = dfMdv_source; 
@@ -689,6 +764,20 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
 
+/*
+///////////////////////////////////////////////////////////////////////////////
+////// Implicit Efield by splitting ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+   dF1 += dF1E;
+   invM0_tDIVE_->Mult(F1, dF0);
+   invM0_tDIVE_->AddMult(dF1, dF0, dv_real);
+   invM0_tVE_->AddMult(dF1, dF0, 1.0 / velocity_real);
+///////////////////////////////////////////////////////////////////////////////
+////// Implicit Efield by splitting ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+*/
+
+
    // Clean the buffer.
    delete tVE;
    delete tDIVE; 
@@ -698,6 +787,15 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    delete DA_invM0_tVE;
    delete VAE_invM0_tDIVE;
    delete VAE_invM0_tVE;
+
+/*
+   delete tVE_;
+   delete tDIVE_;
+   delete invM0_tDIVE_;
+   delete invM0_tVE_;
+   delete VAE_invM0_tDIVE_;
+   delete VAE_invM0_tVE_;
+*/
 
    /*
    // Some output.
@@ -735,8 +833,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    //dfMdv_source = 0.0;
    // Implicit Efield effect is turned off.
    //dfMdv_source += dF0;
-   AWBSPhysics->P1a0_pcf->SetdF0(&dfMdv_source);
-   //AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
+   AWBSPhysics->P1a0_pcf->SetdFM(&dfMdv_source);
+   AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
    AWBSPhysics->P1a0_pcf->SetVelocityReal(velocity_real); 
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
@@ -1056,7 +1154,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
                                                 mspE_scale, Efield_scale);
             mspE = mspE_scale * mspee;
-            Efield *= Efield_scale;	
+            //Efield *= Efield_scale;	
 
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
@@ -1084,13 +1182,14 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                      F0stressJiT(vd, gd);
                }
                // Extensive vector quadrature data.
-               quad_data.Einvrho(z_id*nqp + q, vd) = Efield(vd) / rho;
+               quad_data.Escaled_invrho(z_id*nqp + q, vd) = Efield_scale * 
+                                                            Efield(vd) / rho;
+               quad_data.AEscaled_invrho(z_id*nqp + q, vd) = Efield_scale *
+                                                             AEfield(vd) / rho;
                quad_data.AEinvrho(z_id*nqp + q, vd) = AEfield(vd) / rho;
-               //cout << "AE/rho: " << //Efield(0) 
-			   //  quad_data.AEinvrho(z_id*nqp + q, vd) 
-               //  << endl << flush;
-               quad_data.AIEinvrho(z_id*nqp + q, vd) = AIEfield(vd) / rho;
                quad_data.Binvrho(z_id*nqp + q, vd) = Bfield(vd) / rho;
+               // The case of M1.
+			   quad_data.AIEinvrho(z_id*nqp + q, vd) = AIEfield(vd) / rho; 
             }
 
             // Extensive scalar quadrature data.

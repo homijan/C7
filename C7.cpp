@@ -905,16 +905,16 @@ int main(int argc, char *argv[])
 				  //cout << "xpoint, xc: " << xpoint << ", " << xc << ", " 
                   //     << sL << ", " << sR << endl << flush; 
 			   } while (dx/L > tol);
+               // The maximum is yet unknown, so we use xpoint values.
+		       //cell_pointmax = cell_point;
+		       //ip_pointmax = ip_point;
+               //right_proc_pointmax = true;
             }
             //cout << "right_proc_point, elNo, x_min, x_max: " 
             //     << right_proc_point << ", " << elNo << ", " << x_min << ", " 
             //     << x_max << endl << flush;	
 			elNo++;
          }
-
-         // The maximum is yet unknown, so we use xpoint values.
-		 cell_pointmax = cell_point;
-		 ip_pointmax = ip_point;
 
          // Starting value of the E field norm.
 		 double loc_Eit_norm = Efield_gf.Norml2();

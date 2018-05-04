@@ -58,7 +58,7 @@ struct QuadratureData
 
    // The pointwise equality rho * detJ = rho0 * detJ0 is used by integrators.
    // Electric and magnetic fields. 
-   DenseMatrix Einvrho, AEinvrho, AIEinvrho, Binvrho;
+   DenseMatrix Escaled_invrho, AEscaled_invrho, AEinvrho, AIEinvrho, Binvrho;
    // Explicit zero moment "mass" integrator.
    Vector Ef1invvf0rho;
 
@@ -78,7 +78,8 @@ struct QuadratureData
         nuinvrho(nzones * quads_per_zone),
         nutinvrho(nzones * quads_per_zone),
         nuEinvrho(nzones * quads_per_zone),
-        Einvrho(nzones * quads_per_zone, dim),
+        Escaled_invrho(nzones * quads_per_zone, dim),
+        AEscaled_invrho(nzones * quads_per_zone, dim),
         AEinvrho(nzones * quads_per_zone, dim),
         AIEinvrho(nzones * quads_per_zone, dim),
         Binvrho(nzones * quads_per_zone, dim),
@@ -330,12 +331,27 @@ public:
 // Assembles element contributions to the global temperature force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
-class EfieldIntegrator : public VdotIntegrator
+class EfieldScIntegrator : public VdotIntegrator
 {
 private:
 
 public:
-   EfieldIntegrator(QuadratureData &quad_data_) : VdotIntegrator(quad_data_) { }
+   EfieldScIntegrator(QuadratureData &quad_data_) : VdotIntegrator(quad_data_) 
+   { }
+
+   double GetIntegrator(int q, int vd);
+};
+
+// Assembles element contributions to the global temperature force matrix.
+// This class is used for the full assembly case; it's not used with partial
+// assembly.
+class AEfieldScIntegrator : public VdotIntegrator
+{
+private:
+
+public:
+   AEfieldScIntegrator(QuadratureData &quad_data_) :
+      VdotIntegrator(quad_data_) { }
 
    double GetIntegrator(int q, int vd);
 };

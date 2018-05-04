@@ -94,7 +94,8 @@ protected:
    // Force matrix that combines the kinematic and thermodynamic spaces. It is
    // assembled in each time step and then it's used to compute the final
    // right-hand sides for momentum and specific internal energy.
-   mutable MixedBilinearForm Divf0, Efieldf0, Divf1, AEfieldf1, AIEfieldf1;
+   mutable MixedBilinearForm Divf0, Efieldf0, Divf1, AEfieldf1, AEfieldf1M, 
+                             AIEfieldf1;
 
    mutable TimingData timer;
 
