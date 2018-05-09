@@ -168,8 +168,9 @@ kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
 %% Start line numbering here if you want
 %%
  \linenumbers
-
+\pagebreak
 \tableofcontents
+\pagebreak
 %% main text
 %\section{}
 %\label{}
@@ -177,14 +178,78 @@ kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
 %---------------------------------------------------------------------
 \section{The~Fokker-Planck equation}
 \label{sed:FP}
-Use equation Hu (1, 2, 3) in text, (10), which puts together (4, 5, 7),
-and	write definitions (11, 12) using (5, 7, 13) and after define (6, 8)
-and to close write (31) from Tzoufras.
-\subsection{Spherical harmonics expansion}
-\label{sec:FP_spherical_harmonics}
-Write Hu (14, 15) and full (1) in spherical coordinates. Then explicitly write
-(17, 18, 23, 24, 25). Further define spherical harmonics expansion and 
-from Tzoufras (34, 35, 36, 37).
+%Use equation Hu (1, 2, 3) in text, (10), which puts together (4, 5, 7),
+%and	write definitions (11, 12) using (5, 7, 13) and after define (6, 8)
+%and to close write (31) from Tzoufras.
+\begin{equation}
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + (\tE + \vv\times\tB) \cdot\gv \ft =
+  - \gv \cdot \sum_{\pb}\vect{S}_c^{\tob} ,
+  \nonumber
+\end{equation}
+where the~collision flux of test particles (labeled $\ft$) colliding on field
+particles (labeled $\fb$) takes the~Landau-Fokker-Planck (LFP) form
+\begin{equation}
+  \vect{S}_c^{\tob} = \Gamma^{\tob}\int \gv\gv\vs \cdot \left[ 
+  \ft(\vv)\frac{m_\pt}{m_\pb}\gvb \fb(\vvb) - \fb(\vvb)\gv \ft(\vv)
+  \right]\, \dI\vvb , \nonumber 
+  %&=& \vect{F}^{\tob}(\fb)\, \ft - \matr{D}^{\tob}(\fb)\cdot\gv\ft ,
+  \nonumber
+\end{equation} 
+where $\Gamma^{\tob} = \frac{4\pi\Zbar_\pt^2\Zbar_\pb^2 q^4 \lnc}{m_\pt^2}$, $\vs = \vv - \vvb$, and 
+$\frac{\MI}{\vsmag} - \frac{\vs\vs}{\vsmag^3} = \gv\gv\vs$ was used.
+%The friction and diffusion coefficients of collision flux are then defined as
+%\begin{eqnarray}
+%  \vect{F}^{\tob}(\fb) &=& \frac{1}{m_\pb} 
+%  \int \gv\gv\vs\cdot\gvb \fb(\vvb)\,\dI\vvb = -\Gamma^{\tob}\gv 
+%  \Rh(\vv) ,
+%  \nonumber \\
+%  \matr{D}^{\tob}(\fb) &=& \frac{1}{m_\pt} 
+%  \gv\gv\int \vs \fb(\vvb)\,\dI\vvb = -\Gamma^{\tob}\gv\gv \Rg(\vv) ,
+%  \nonumber
+%\end{eqnarray}
+The~LFP integral collision model can written in the~form introduced by 
+Rosenbluth 1957
+\begin{equation}
+  \left(\pdv{\ft}{t}\right)_{\pb} = - \gv \cdot \vect{S}_c^{\tob} = 
+  - \Gamma^{\tob} \left[ \gv\cdot\left(\ft \gv\Rhb\right)
+  - \frac{\gv\gv:\left(\ft \gv\gv\Rgb \right)}{2}\right] ,
+  \label{eq:FP_Rosenbluth}
+\end{equation}
+where $\left(\pdv{\ft}{t}\right)_{\pb}$ expresses the~rate of change in 
+the~distribution function of test particles $\ft$ due to collisions with
+background field particles (distribution function $\fb$) and
+where the~complicated nature of collisions is modeled by the~Rosenbluth 
+potentials 
+\begin{equation}
+  \Rhb(\vv) = \frac{m_\pt + m_\pb}{m_\pb}
+  \int \frac{\fb(\vvb)}{|\vv - \vvb|}\, \dI\vvb ,
+  \quad \Rgb(\vv) = \int \fb(\vvb)|\vv - \vvb|\, \dI\vvb ,
+  \nonumber
+\end{equation}
+which have the following properties
+\begin{equation}
+  \gv\cdot\gv \Rhb = 
+  -4\pi \frac{m_\pt + m_\pb}{m_\pb} \Gamma^{\tob}\fb ,\quad
+  \gv\cdot\gv \Rgb = 
+  2 \frac{m_\pb}{m_\pt + m_\pb} \Rhb .
+  \nonumber
+\end{equation}
+The~Rosenbluth equation \eqref{eq:FP_Rosenbluth} can be further rewritten
+according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
+\begin{equation}
+  \left(\pdv{\ft}{t}\right)_c = \sum_{\pb} \Gamma^{\tob} 
+  \left[ 4\pi \frac{m_{\pt}}{m_\pb} \fb \ft 
+  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rhb\cdot\gv \ft 
+  + \frac{\gv\gv\Rgb : \gv\gv \ft}{2} \right] ,
+  \label{eq:FP_Longmire}
+\end{equation}
+which was also published in Shkarofsky 1966 and used in Tzoufras 2011.
+
+%\subsection{Spherical harmonics expansion}
+%\label{sec:FP_spherical_harmonics}
+%Write Hu (14, 15) and full (1) in spherical coordinates. Then explicitly write
+%(17, 18, 23, 24, 25). Further define spherical harmonics expansion and 
+%from Tzoufras (34, 35, 36, 37).
 
 \subsection{The linearized Fokker-Planck equation for low anisotropy}
 \label{sec:FP_linear}
@@ -194,6 +259,64 @@ for one-kind particles. Finally, write explicitly (41) for the case $f_1^0$
 and write set of integrals $I, J$ and constants $C_1, .., C_6$,
 which will be used to calculate FP equation solution for diffusive conditions.
 
+If we write the~distribution function as its isotropic and anisotropic parts, 
+i.e. $\ft = \ft^0 + \delta\ft$ and $\fb = \fb^0 + \delta\fb$, 
+then the~linearized LFP operator for low anisotropy reads 
+\begin{eqnarray}
+  \frac{1}{\Gamma^{\tob}} \left(\pdv{\ft^0}{t}\right)_{\pb} &=&  
+  4\pi \frac{m_{\pt}}{m_\pb} \fb^0 \ft^0 
+  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rh(\fb^0)\cdot\gv \ft \nonumber \\ 
+  &&+ \frac{\gv\gv\Rg(\fb^0) : \gv\gv \ft^0}{2} ,
+  \label{eq:FP_f0} \\ 
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\delta\ft}{t}\right)_{\pb} &=&  
+  4\pi \frac{m_{\pt}}{m_\pb} 
+  \left(\fb^0\delta\ft + \ft^0\delta\fb\right) \nonumber \\ 
+  &&+ \frac{m_\pb - m_\pt}{m_\pt + m_\pb} 
+  \left(\gv\Rh(\fb^0)\cdot\gv \delta\ft + \gv\ft^0\cdot\gv\Rh(\delta\fb)\right)
+  \nonumber \\ 
+  &&+ \frac{\gv\gv\Rg(\fb^0) : \gv\gv \delta\ft}{2} 
+  + \gv\gv \ft^0 : \frac{\gv\gv\Rg(\delta\fb)}{2} .
+  \label{eq:FP_deltaf} 
+\end{eqnarray}
+
+\begin{equation}
+  f = \sum_{l=0}^\infty\sum_{m=-l}^l f^m_l(\vmag) P_l^{|m|}(\cos \theta) 
+  \exp^{i m \phi} ,
+  \nonumber
+\end{equation}
+
+\begin{eqnarray}
+  I_j(F_l^m) &=& \frac{4\pi}{\vmag^j} \int_0^\vmag F_l^m(u) u^{j+2}\, \dI u ,
+  \nonumber \\
+  J_j(F_l^m) &=& \frac{4\pi}{\vmag^j} \int_\vmag^\infty 
+  F_l^m(u) u^{j+2}\, \dI u ,
+  \nonumber
+\end{eqnarray}
+
+\begin{multline}
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\delta f}{t}\right)_{\pb} = 
+  \frac{4\pi}{\mu} \left[F_0^0 f_l^m + f^0_0 F_l^m \right] 
+  \\
+  - \frac{\mu-1}{\mu \vmag^2} \left[ \pdv{f_0^0}{\vmag}
+  \left(\frac{l+1}{2 l+1} I_l(F_l^m) - \frac{l}{2 l +1} J_{-1-l}(F_l^m)\right) 
+  + I_0(F_0^0)\pdv{f_l^m}{\vmag}\right] 
+  \\
+  + \frac{I_2(F_0^0) + J_{-1}(F_0^0)}{3\vmag}
+  \frac{\partial^2 f_l^m}{\partial\vmag^2} + 
+  \frac{-I_2(F_0^0) + 2 J_{-1}(F_0^0) + 3 I_0(F_0^0)}{3\vmag^2}
+  \pdv{f_l^m}{\vmag}
+  \\
+  - \frac{l(l+1)}{2}
+  \frac{-I_2(F_0^0) + 2 J_{-1}(F_0^0) + 3 I_0(F_0^0)}{3\vmag^3} f_l^m 
+  \\
+  \frac{1}{2 \vmag} \frac{\partial^2 f_0^0}{\partial\vmag^2}
+  \left[C_1 I_{l+2}(F_l^m) + C_1 J_{-l-1}(F_l^m) + C_2 I_l(F_l^m) 
+  + C_2 J_{1-l}(F_l^m) \right]
+  \\
+  \frac{1}{\vmag^2} \pdv{f_0^0}{\vmag}
+  \left[C_3 I_{l+2}(F_l^m) + C_4 J_{-l-1}(F_l^m) + C_5 I_l(F_l^m) 
+  + C_6 J_{1-l}(F_l^m) \right]
+\end{multline}
 
 \section{AWBS-P1 modeling of laser heated plasmas}\label{sec:OOE_AWBSP1}
 \subsection{Model equations}
