@@ -260,63 +260,314 @@ and write set of integrals $I, J$ and constants $C_1, .., C_6$,
 which will be used to calculate FP equation solution for diffusive conditions.
 
 If we write the~distribution function as its isotropic and anisotropic parts, 
-i.e. $\ft = \ft^0 + \delta\ft$ and $\fb = \fb^0 + \delta\fb$, 
-then the~linearized LFP operator for low anisotropy reads 
+i.e. $\ft = \ft_0 + \delta\ft$ and $\fb = \fb_0 + \delta\fb$, 
+then the~linearized LFP operator for low anisotropy of order 
+$O(\delta\ft^2, \delta\fb^2)$ reads 
 \begin{eqnarray}
-  \frac{1}{\Gamma^{\tob}} \left(\pdv{\ft^0}{t}\right)_{\pb} &=&  
-  4\pi \frac{m_{\pt}}{m_\pb} \fb^0 \ft^0 
-  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rh(\fb^0)\cdot\gv \ft \nonumber \\ 
-  &&+ \frac{\gv\gv\Rg(\fb^0) : \gv\gv \ft^0}{2} ,
+  \frac{1}{\Gamma^{\tob}} \left(\pdv{\ft_0}{t}\right)_{\pb} &=&  
+  4\pi \frac{m_{\pt}}{m_\pb} \fb_0 \ft_0 
+  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rh(\fb_0)\cdot\gv \ft \nonumber \\ 
+  &&+ \frac{\gv\gv\Rg(\fb_0) : \gv\gv \ft_0}{2} ,
   \label{eq:FP_f0} \\ 
   \frac{1}{\Gamma^{\tob}}\left(\pdv{\delta\ft}{t}\right)_{\pb} &=&  
   4\pi \frac{m_{\pt}}{m_\pb} 
-  \left(\fb^0\delta\ft + \ft^0\delta\fb\right) \nonumber \\ 
+  \left(\fb_0\delta\ft + \ft_0\delta\fb\right) \nonumber \\ 
   &&+ \frac{m_\pb - m_\pt}{m_\pt + m_\pb} 
-  \left(\gv\Rh(\fb^0)\cdot\gv \delta\ft + \gv\ft^0\cdot\gv\Rh(\delta\fb)\right)
+  \left(\gv\Rh(\fb_0)\cdot\gv \delta\ft + \gv\ft_0\cdot\gv\Rh(\delta\fb)\right)
   \nonumber \\ 
-  &&+ \frac{\gv\gv\Rg(\fb^0) : \gv\gv \delta\ft}{2} 
-  + \gv\gv \ft^0 : \frac{\gv\gv\Rg(\delta\fb)}{2} .
+  &&+ \frac{\gv\gv\Rg(\fb_0) : \gv\gv \delta\ft}{2} 
+  + \gv\gv \ft_0 : \frac{\gv\gv\Rg(\delta\fb)}{2} .
   \label{eq:FP_deltaf} 
 \end{eqnarray}
 
-\begin{equation}
-  f = \sum_{l=0}^\infty\sum_{m=-l}^l f^m_l(\vmag) P_l^{|m|}(\cos \theta) 
-  \exp^{i m \phi} ,
-  \nonumber
-\end{equation}
-
 \begin{eqnarray}
-  I_j(F_l^m) &=& \frac{4\pi}{\vmag^j} \int_0^\vmag F_l^m(u) u^{j+2}\, \dI u ,
-  \nonumber \\
-  J_j(F_l^m) &=& \frac{4\pi}{\vmag^j} \int_\vmag^\infty 
-  F_l^m(u) u^{j+2}\, \dI u ,
+  \ft &=& \ft_0 + \sum_{l=1}^\infty\sum_{m=-l}^l \ft^m_l(\vmag) 
+  P_l^{|m|}(\cos \theta) \exp^{i m \phi} ,
+  \nonumber \\ 
+  \fb &=& \fb_0 + \sum_{l=1}^\infty\sum_{m=-l}^l \fb^m_l(\vmag) 
+  P_l^{|m|}(\cos \theta) \exp^{i m \phi} ,
   \nonumber
 \end{eqnarray}
 
+\begin{eqnarray}
+  I_j(\fb_l^m) &=& \frac{4\pi}{\vmag^j} \int_0^\vmag \fb_l^m(u) u^{j+2}
+  \, \dI u ,
+  \nonumber \\
+  J_j(\fb_l^m) &=& \frac{4\pi}{\vmag^j} \int_\vmag^\infty 
+  \fb_l^m(u) u^{j+2}\, \dI u ,
+  \nonumber
+\end{eqnarray}
+
+\begin{equation}
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\ft_0}{t}\right)_{\pb} =
+  \frac{1}{3\vmag^2}\pdv{}{\vmag}\left[\frac{3 m_\pt}{m_\pb} 
+  \ft_0 I_0(\fb_0) + \vmag \left( I_2(\fb_0) + J_{-1}(\fb_0)\right)
+  \pdv{\ft_0}{\vmag} \right] ,
+  \nonumber
+\end{equation}
+
 \begin{multline}
-  \frac{1}{\Gamma^{\tob}}\left(\pdv{\delta f}{t}\right)_{\pb} = 
-  \frac{4\pi}{\mu} \left[F_0^0 f_l^m + f^0_0 F_l^m \right] 
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\ft_l^m}{t}\right)_{\pb} = 
+  4\pi\frac{m_\pt}{m_\pb} \left[\fb_0 \ft_l^m + \ft_0 \fb_l^m \right] 
   \\
-  - \frac{\mu-1}{\mu \vmag^2} \left[ \pdv{f_0^0}{\vmag}
-  \left(\frac{l+1}{2 l+1} I_l(F_l^m) - \frac{l}{2 l +1} J_{-1-l}(F_l^m)\right) 
-  + I_0(F_0^0)\pdv{f_l^m}{\vmag}\right] 
+  + \frac{m_\pt-m_\pb}{m_\pb \vmag^2} \left[ \pdv{\ft_0}{\vmag}
+  \left(\frac{l+1}{2 l+1} I_l(\fb_l^m) 
+  - \frac{l}{2 l +1} J_{-1-l}(\fb_l^m)\right) 
+  + I_0(\fb_0)\pdv{\ft_l^m}{\vmag}\right] 
   \\
-  + \frac{I_2(F_0^0) + J_{-1}(F_0^0)}{3\vmag}
-  \frac{\partial^2 f_l^m}{\partial\vmag^2} + 
-  \frac{-I_2(F_0^0) + 2 J_{-1}(F_0^0) + 3 I_0(F_0^0)}{3\vmag^2}
-  \pdv{f_l^m}{\vmag}
+  + \frac{I_2(\fb_0) + J_{-1}(\fb_0)}{3\vmag}
+  \frac{\partial^2 \ft_l^m}{\partial\vmag^2} + 
+  \frac{-I_2(\fb_0) + 2 J_{-1}(\fb_0) + 3 I_0(\fb_0)}{3\vmag^2}
+  \pdv{\ft_l^m}{\vmag}
   \\
   - \frac{l(l+1)}{2}
-  \frac{-I_2(F_0^0) + 2 J_{-1}(F_0^0) + 3 I_0(F_0^0)}{3\vmag^3} f_l^m 
+  \frac{-I_2(\fb_0) + 2 J_{-1}(\fb_0) + 3 I_0(\fb_0)}{3\vmag^3} \ft_l^m 
   \\
-  \frac{1}{2 \vmag} \frac{\partial^2 f_0^0}{\partial\vmag^2}
-  \left[C_1 I_{l+2}(F_l^m) + C_1 J_{-l-1}(F_l^m) + C_2 I_l(F_l^m) 
-  + C_2 J_{1-l}(F_l^m) \right]
+  \frac{1}{2 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[C_1 I_{l+2}(\fb_l^m) + C_1 J_{-l-1}(\fb_l^m) + C_2 I_l(\fb_l^m) 
+  + C_2 J_{1-l}(\fb_l^m) \right]
   \\
-  \frac{1}{\vmag^2} \pdv{f_0^0}{\vmag}
-  \left[C_3 I_{l+2}(F_l^m) + C_4 J_{-l-1}(F_l^m) + C_5 I_l(F_l^m) 
-  + C_6 J_{1-l}(F_l^m) \right]
+  \frac{1}{\vmag^2} \pdv{\ft_0}{\vmag}
+  \left[C_3 I_{l+2}(\fb_l^m) + C_4 J_{1-l}(\fb_l^m) + C_5 J_{-l-1}(\fb_l^m) 
+  + C_6 I_l(\fb_l^m) \right]
+  \label{eq:FP_flm}
 \end{multline}
+\begin{eqnarray}
+  C_1 = \frac{(l+1)(l+2)}{(2l+1)(2l+3)}, 
+  C_2 = -\frac{(l-1)l}{(2l +1)(2l-1)},
+  C_3 = -\frac{l(l+1)/2 + (l+1)}{(2l+1)(2l+3)},
+  \nonumber \\
+  C_4 = \frac{l(l+1)/2 - l}{(2l+1)(2l-1)},
+  C_5 = \frac{(l+2) - l(l+1)/2}{(2l+1)(2l+3)}, 
+  C_6 = \frac{l(l+1)/2 + (l-1)}{(2l+1)(2l-1)}, 
+  \nonumber
+\end{eqnarray}
+
+In the~case of massive background particles $m_\pt / m_\pb << 1$ in equilibrium
+and comparable temperatures $T_\pb\approx T_\pb$, 
+i.e. slow-non-moving background, 
+the~isotropic distribution function can be approximated by 
+$\fb_0^{slow} = n_{slow} \delta(\vmag) / (4\pi\vmag^2)$, 
+and since all integrals 
+$I_j(\fb_0^{slow}), J_j(\fb_0^{slow})$ vanish except 
+$I_0(\fb_0^{slow}) = n_{slow}$, equation \eqref{eq:FP_flm} reduces to 
+\begin{equation}
+  \frac{1}{\Gamma^{\pt/slow}}\left(\pdv{\ft_l^m}{t}\right)_{slow} = 
+  - \frac{l(l+1)}{2}
+  \frac{n_{slow}}{\vmag^3} \ft_l^m 
+  \label{eq:FP_flm_slow}
+\end{equation} 
+where $n_{slow}$ is the~density of slow massive particles. Consequently, 
+the~effect of collisions on slow massive particles leads to scattering but no
+change in velocity, i.e. energy, of test particles.
+
+\subsection{Plasma Fokker-Planck equation in diffusive regime}
+\begin{equation}
+  \left(\pdv{\ft_0}{t}\right)_{e} =
+  \frac{\Gamma^{e/e}}{3\vmag^2}\pdv{}{\vmag}\left[3 
+  \ft_0 I_0(\ft_0) + \vmag \left( I_2(\ft_0) + J_{-1}(\ft_0)\right)
+  \pdv{\ft_0}{\vmag} \right] ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \left(\pdv{\ft_l^m}{t}\right)_{e} = \Gamma^{e/e} \Bigg[
+  8\pi \ft_0 \ft_l^m  
+  - \frac{l(l+1)}{2}
+  \frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^3} \ft_l^m
+  \\
+  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+  \frac{\partial^2 \ft_l^m}{\partial\vmag^2} + 
+  \frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^2}
+  \pdv{\ft_l^m}{\vmag} 
+  \\
+  + \frac{1}{2 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[C_1 I_{l+2}(\ft_l^m) + C_1 J_{-l-1}(\ft_l^m) + C_2 I_l(\ft_l^m) 
+  + C_2 J_{1-l}(\ft_l^m) \right]
+  \\
+  + \frac{1}{\vmag^2} \pdv{\ft_0}{\vmag}
+  \left[C_3 I_{l+2}(\ft_l^m) + C_4 J_{1-l}(\ft_l^m) + C_5 J_{-l-1}(\ft_l^m) 
+  + C_6 I_l(\ft_l^m) \right] \Bigg]
+\end{multline}
+
+\begin{equation}
+  C_1 = \frac{2}{5}, 
+  C_2 = 0,
+  C_3 = -\frac{1}{5},
+  C_4 = 0,
+  C_5 = \frac{2}{15}, 
+  C_6 = \frac{1}{3}, 
+  \nonumber
+\end{equation}
+
+%\begin{multline}
+%  \frac{1}{\Gamma^{e/e}}\left(\pdv{\ft_1}{t}\right)_{e} = 
+%  8\pi \ft_0 \ft_1  
+%  - \frac{-I_2(\ft_0) + 2 J_{-1}(\ft_0) + 3 I_0(\ft_0)}{3\vmag^3} \ft_1
+%  \\
+%  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+%  \frac{\partial^2 \ft_1}{\partial\vmag^2} + 
+%  \frac{-I_2(\ft_0) + 2 J_{-1}(\ft_0) + 3 I_0(\ft_0)}{3\vmag^2}
+%  \pdv{\ft_1}{\vmag} 
+%  \\
+%  + \frac{1}{5 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+%  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+%  + \frac{1}{15 \vmag^2} \pdv{\ft_0}{\vmag}
+%  \left[5 I_1(\ft_1) - 3 I_{3}(\ft_1) + 2 J_{-2}(\ft_1) 
+%  \right]
+%\end{multline}
+
+\begin{multline}
+  \left(\pdv{\ft_1}{t}\right)_{e+i} = \Gamma^{e/e}\Bigg[
+  8\pi \ft_0 \ft_1  
+  - \left[\frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^3} +
+  \frac{\Zbar n_e}{\vmag^3}\right] \ft_1
+  \\
+  +   \frac{3 I_0(\ft_0) -I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^2}
+  \pdv{\ft_1}{\vmag}
+  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+  \frac{\partial^2 \ft_1}{\partial\vmag^2} 
+  \\
+  + \frac{1}{5 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  + \frac{1}{15 \vmag^2} \pdv{\ft_0}{\vmag}
+  \left[5 I_1(\ft_1) - 3 I_{3}(\ft_1) + 2 J_{-2}(\ft_1) 
+  \right] \Bigg]
+\end{multline}
+
+\begin{equation}
+  \ft \approx \fM + \cos(\theta) \mfpei(\vmag) 
+  \left[\frac{\vmag^2}{2\vth^2} - 4 + D\left(\vmag\right) \right] \fM ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \vmag\pdv{\fM}{z} - \frac{\vmag\tEz}{\vth^2}\fM = \Gamma^{e/e}\Bigg[
+  8\pi \fM \ft_1  
+  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM) + 3 \Zbar n_e}{3\vmag^3} \ft_1
+  \\
+  +   \frac{3 I_0(\fM) -I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^2}
+  \pdv{\ft_1}{\vmag}
+  + \frac{I_2(\fM) + J_{-1}(\fM)}{3\vmag}
+  \frac{\partial^2 \ft_1}{\partial\vmag^2} 
+  \\
+  + \frac{\fM}{15 \vmag\vth^2} \left[\frac{3\vmag^2}{\vth^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  - 5 \left[I_1(\ft_1) + J_{-2}(\ft_1)\right]
+  \right] \Bigg]
+  \nonumber
+\end{multline}
+
+\begin{multline} 
+  \left[\frac{I_2(\fM) + J_{-1}(\fM)}{3\vmag}\right]
+  \frac{\partial^2 \ft_1}{\partial\vmag^2}
+  + \left[\frac{3 I_0(\fM) -I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^2}\right]
+  \pdv{\ft_1}{\vmag}
+  \\ 
+  + \left[8\pi \fM  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM) + 3 \Zbar n_e}
+  {3\vmag^3}\right] \ft_1 =
+  \\
+  \frac{1}{\Gamma^{e/e}}
+  \left[\vmag\pdv{\fM}{z} - \frac{\vmag\tEz}{\vth^2}\fM\right]
+  - \frac{\fM}{15 \vmag\vth^2} \left[\frac{3\vmag^2}{\vth^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  - 5 \left[I_1(\ft_1) + J_{-2}(\ft_1)\right]
+  \right]
+  \label{eq:FP_f1_diffusive}
+\end{multline}
+Integration of \eqref{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
+\begin{eqnarray}
+  a^{n-0.5} \frac{df^n - df^{n-1}}{ - \Delta \vmag} &=& b^{n-0.5} df^{n-1} 
+  + c^{n-0.5} \ft_1^{n-1} + d^{n-0.5} ,
+  \nonumber \\
+  \frac{\ft_1^n - \ft_1^{n-1}}{- \Delta \vmag} &=& df^{n-1} ,
+  \nonumber
+\end{eqnarray}
+\begin{eqnarray}
+  \left(\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}\right) df^{n-1} 
+  - c^{n-0.5} \ft_1^{n-1}&=&  d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n,
+  \nonumber \\
+  - df^{n-1} + \frac{1}{\Delta \vmag} \ft_1^{n-1} &=&  
+  \frac{1}{\Delta \vmag} \ft_1^n ,
+  \nonumber
+\end{eqnarray}
+
+\begin{equation}
+  \begin{bmatrix}
+    - c^{n-0.5}  &
+	\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}
+    \\
+	\frac{c^{n-0.5}}{\Delta \vmag} & -c^{n-0.5} 
+  \end{bmatrix}
+  \begin{bmatrix}
+    \ft_1^{n-1} \\
+    df^{n-1}
+  \end{bmatrix}
+  =  
+  \begin{bmatrix}
+    d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \\
+    \frac{c^{n-0.5}}{\Delta \vmag} \ft_1^n
+  \end{bmatrix}   ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \begin{bmatrix}
+    - c^{n-0.5}  &
+	\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5} 
+    \\
+	0 & 
+	\frac{1}{\Delta \vmag}
+	\left(\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}\right) - c^{n-0.5} 
+  \end{bmatrix}
+  \begin{bmatrix}
+    \ft_1^{n-1} \\
+    df^{n-1}
+  \end{bmatrix}
+  =  \\
+  \begin{bmatrix}
+    d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \\
+    \frac{1}{\Delta \vmag} \left(c^{n-0.5}\ft_1^n + 
+	d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \right) 
+  \end{bmatrix}   ,
+  \nonumber
+\end{multline}
+
+\begin{eqnarray}
+  a^n &=& \frac{I^n_2(\fM) + J^n_{-1}(\fM)}{3\vmag^n} ,
+  \nonumber \\
+  b^n &=& \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM)}{3{\vmag^n}^2} ,
+  \nonumber \\
+  c^n &=& 8\pi \fM^n  - \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM) 
+  + 3 \Zbar n_e}
+  {3{\vmag^n}^3} ,
+  \nonumber \\
+  d^n &=& \frac{1}{\Gamma^{e/e}}
+  \left[\vmag^n\pdv{\fM^n}{z} - \frac{\vmag^n\tEz}{\vth^2}\fM^n\right]
+  \nonumber \\
+  &&- \frac{\fM^n}{15 \vmag^n\vth^2} \left[\frac{3{\vmag^n}^2}{\vth^2}
+  \left[I^n_{3}(\ft_1) + J^n_{-2}(\ft_1)\right]
+  - 5 \left[I^n_1(\ft_1) + J^n_{-2}(\ft_1)\right] \right]
+  \nonumber
+\end{eqnarray}
+
+\begin{eqnarray}
+  I^n_0(g) = 4\pi \int_0^{\vmag^n} g(u) u^{2}
+  \, \dI u ,\quad
+  I^n_1(g) = \frac{4\pi}{\vmag^n} \int_0^{\vmag^n} g(u) u^{3}
+  \, \dI u ,
+  \nonumber \\
+  I^n_2(g) = \frac{4\pi}{{\vmag^n}^2} \int_0^{\vmag^n} g(u) u^{4}
+  \, \dI u ,\quad 
+  I^n_3(g) = \frac{4\pi}{{\vmag^n}^3} \int_0^{\vmag^n} g(u) u^{5}
+  \, \dI u ,
+  \nonumber \\
+  J^n_{-1}(g) = 4\pi\vmag^n \int_{\vmag^n}^\infty 
+  g(u) u\, \dI u ,\quad
+  J^n_{-2}(g) = 4\pi{\vmag^n}^2 \int_{\vmag^n}^\infty 
+  g(u) \, \dI u ,
+  \nonumber
+\end{eqnarray}
 
 \section{AWBS-P1 modeling of laser heated plasmas}\label{sec:OOE_AWBSP1}
 \subsection{Model equations}

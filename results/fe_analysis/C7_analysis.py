@@ -147,6 +147,26 @@ def vTh(T):
     return (kB*T/me)**0.5
 def fM(v, T):
     return ne/(vTh(T)**3.0*(2.0*pi)**1.5)*exp(-v**2.0/2.0/vTh(T)**2.0)
+
+###############################################################################
+#### FP equation diffusive regime #############################################
+def dfMdz(v, T, dTdz, n, dndz):
+    return fM(v, T)
+def RosenbluthPotentialsF0(vs, f0s):
+    N = len(vs) - 1
+    I0 = np.array(N)
+    I2 = np.array(N)
+    Jm1 = np.array(N)
+    return I0, I2, Jm1    
+def RosenbluthPotentialsF1(vs, f1s):
+    N = len(vs) - 1
+    I1 = np.array(N) 
+    I3 = np.array(N)
+    Jm2 = np.array(N)
+    return I1, I3, Jm2
+#### FP equation diffusive regime #############################################
+###############################################################################
+
 def solve_bweuler(v, f0, T, gradT, Z, E):
     N = len(v)
     f1 = np.zeros(N) 
