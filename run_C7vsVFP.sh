@@ -7,16 +7,26 @@ NPROC=8
 RS=6
 F1ORDER=4
 F0ORDER=3
+#F1ORDER=2
+#F0ORDER=1
 
 XPOINT=0.046775 # in cm qSH maximum
 
-MING=2000
-#MING=250
+#MING=2000
+MING=250
+
+MAXITER=100
+
+#F1ORDER=3
+#F0ORDER=2
+#MING=100
+#MAXITER=6
 
 # Challenge SNB ;)
 #MING=25
 #F1ORDER=1
 #F0ORDER=0
+
 
 DIRroot=$PWD
 DIRanalysis="results/fe_analysis/"
@@ -54,7 +64,7 @@ NI=${NIarray[$i]}
 NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em 100 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt

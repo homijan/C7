@@ -34,6 +34,9 @@ parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion 
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
 parser.add_argument("-ps", "--pltshow", action='store_true', help="Plot show() by adding -ps/--pltshow argument.")
+parser.add_argument("-pT", "--pltTe", action='store_true', help="Plot Te in fluxes figure by adding -pT/--pltTe argument.")
+parser.add_argument("-pn", "--pltne", action='store_true', help="Plot ne in fluxes figure by adding -pn/--pltne argument.")
+parser.add_argument("-pZ", "--pltZbar", action='store_true', help="Plot Zbar in fluxes figure by adding -pZ/--pltZbar argument.")
 parser.add_argument("-As", "--AWBSstar", action='store_true', help="Display the AWBS* diffusive asymptotic by adding -As/--AWBSstar argument.")
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
 parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
@@ -397,16 +400,19 @@ if (args.C7):
 ## Special treatment of temperature profile.
 C7Te_scaled = C7Te*(C7q.max() - C7q.min())/(C7Te.max() - C7Te.min())
 C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7q.max())
-ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
+if (args.pltTe):
+   ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ## Special treatment of electron density profile.
 C7ne = C7ne / 1e20
 C7ne_scaled = C7ne*(C7q.max() - C7q.min())/(C7ne.max() - C7ne.min())
 C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - C7q.max())
-ax1.plot(C7x_microns, C7ne_scaled * 1e-7, 'g:', label=r'$n_e$')
+if (args.pltne):
+   ax1.plot(C7x_microns, C7ne_scaled * 1e-7, 'g:', label=r'$n_e$')
 ## Special treatment of ionization profile.
 C7zbar_scaled = C7zbar*(C7q.max() - C7q.min())/(C7zbar.max() - C7zbar.min())
 C7zbar_scaled = C7zbar_scaled - (C7zbar_scaled.max() - C7q.max())
-ax1.plot(C7x_microns, C7zbar_scaled * 1e-7, 'k:', label=r'$Z$')
+if (args.pltZbar):
+   ax1.plot(C7x_microns, C7zbar_scaled * 1e-7, 'k:', label=r'$Z$')
 ## Second Efield axis.
 ax2 = ax1.twinx()
 #if (vlimshow):
