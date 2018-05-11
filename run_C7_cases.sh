@@ -14,8 +14,8 @@ TGRAD=180
 
 XPOINT=0.046775 # in cm qSH maximum
 
-#MING=1000
-MING=250
+MING=1000
+#MING=250
 
 # Challenge SNB ;)
 #MING=25
@@ -55,8 +55,18 @@ DIRout="C7E/"
 #declare -a NIarray=("1.428e29" "6.25e20" "1.65e20" "2.38e28" "1.6e20" "4.1e19"  "2.6e27" "2.65e19" "7.7e18" "6.8e26" "8.1e18" "2.5e18" "2.828e25" "6.0e17" "1.1e17")
 #declare -a NAMEarray=("fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF"  "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF")
 
-declare -a Zarray=("4")
-declare -a nuS0array=("0.53225")
+#declare -a Zarray=("100")
+#declare -a nuS0array=("0.55")
+#declare -a Zarray=("20")
+#declare -a nuS0array=("0.5535")
+#declare -a Zarray=("10")
+#declare -a nuS0array=("0.5485")
+#declare -a Zarray=("4")
+#declare -a nuS0array=("0.53225")
+declare -a Zarray=("2")
+declare -a nuS0array=("0.5035")
+#declare -a Zarray=("1")
+#declare -a nuS0array=("0.455")
 ## full flux, half flux, fifth flux
 declare -a NIarray=("1.428e29")
 #declare -a NIarray=("1.428e20")
