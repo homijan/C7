@@ -2,7 +2,7 @@
 SIGMA=8.1027575e17 ## Matching the SH diffusive flux.
 CL=7.09 # Coulomb logarithm.
 
-NPROC=8
+NPROC=2
 
 RS=6
 F1ORDER=4
@@ -34,28 +34,28 @@ DIRout="C7E/"
 
 # Philippe's test!
 PROBLEM=9
-#L=0.07
-#declare -a Zarray=("2")
-#declare -a NIarray=("2.5e20")
-#NUS0=0.5035
-L=0.014
-declare -a Zarray=("10")
-declare -a NIarray=("5e19")
-NUS0=0.5485
+L=0.07
+declare -a Zarray=("2")
+declare -a NIarray=("2.5e20")
+NUS0=0.5035
+#L=0.014
+#declare -a Zarray=("10")
+#declare -a NIarray=("5e19")
+#NUS0=0.5485
 
 declare -a NAMEarray=("case")
 ## Prepare data profiles.
 cd VFPdata
 cd Pascal
-#python ../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
-#python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Q_ -s
-python ../loadPhilippegrace.py -f Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
-python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Q_ -s
+python ../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
+python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Q_ -s
+#python ../loadPhilippegrace.py -f Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
+#python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Q_ -s
 cd ..
-#cp Pascal/Te_Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt temperature.dat
-#cp Pascal/Q_FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt flux1.dat
-cp Pascal/Te_Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt temperature.dat
-cp Pascal/Q_FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt flux1.dat
+cp Pascal/Te_Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt temperature.dat
+cp Pascal/Q_FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt flux1.dat
+#cp Pascal/Te_Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt temperature.dat
+#cp Pascal/Q_FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt flux1.dat
 cd ..
 
 # get length of an array

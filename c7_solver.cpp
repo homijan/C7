@@ -1139,21 +1139,22 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim); 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-            double mspE, mspE_scale, Efield_scale;
+            double mspE, mspEe_scale, mspEt_scale, Efield_scale;
 			//double Enorm = max(1e-32, Efield.Norml2());
 			// Represent Efield effect as friction.
             // mspE = Enorm / velocity_real;
             // Scale the mspE effect.
 			//mspEscale = max(0.0, mspE - mspee) / mspee;
-			//mspE_scale = max(0.0 , (Enorm - velocity_real * mspee) 
+			//mspEe_scale = max(0.0 , (Enorm - velocity_real * mspee) 
             //                       / 2.0 / velocity_real
             //                       / mspee); 
             //Efield_scale = min(1.0, (Enorm - (Enorm - velocity_real * mspee) 
             //                        / 2.0) 
             //                        / Enorm);
             AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
-                                                mspE_scale, Efield_scale);
-            mspE = mspE_scale * mspee;
+                                                mspEe_scale, mspEt_scale,
+                                                Efield_scale);
+            mspE = mspEe_scale * mspee;
             //Efield *= Efield_scale;	
 
 			// Matrix projections. 
@@ -1199,7 +1200,9 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //                                       / velocity_real / f0
             //                                       / rho;
             // Scattering on ions and electrons.
-			quad_data.nutinvrho(z_id*nqp + q) = (mspei + mspee) / rho;
+			quad_data.nutinvrho(z_id*nqp + q) = (mspei + 
+                                                (1.0 + mspEt_scale) * mspee) 
+                                                / rho;
 			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
 
             // Time step estimate at the point. Here the more relevant length

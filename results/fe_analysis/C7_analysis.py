@@ -101,7 +101,7 @@ def loadC7data(Nproc, file_base):
    return C7x, C7rho, C7Te, C7j, C7Ex, C7q, C7corrE, C7ne, C7zbar
 
 ## Load C7 data.
-C7x, C7rho, C7Te, C7j, C7Ex, C7q, C7corrE, C7ne, C7zbar = loadC7data(Nproc, 'C7_data/C7_1_profiles.')
+C7x, C7rho, C7Te, C7j, C7Ex, C7q, C7corrE, C7ne, C7zbar = loadC7data(args.Nproc, 'C7_data/C7_1_profiles.')
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################

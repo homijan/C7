@@ -3,16 +3,16 @@
 SIGMA=2.425e17 ## Matching the CHIC diffusive flux.
 CL=7.09 # Coulomb logarithm.
 
-NPROC=8
+NPROC=2
 
 RS=9
-F1ORDER=4
-F0ORDER=3
+F1ORDER=2
+F0ORDER=1
 
 XPOINT=0.1605 # in cm qSH maximum
 
 #MING=5000
-MING=100
+MING=250
 
 MAXITER=50
 
