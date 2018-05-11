@@ -14,7 +14,7 @@ TGRAD=180
 
 XPOINT=0.046775 # in cm qSH maximum
 
-#MING=2000
+#MING=1000
 MING=250
 
 # Challenge SNB ;)
@@ -55,10 +55,11 @@ DIRout="C7E/"
 #declare -a NIarray=("1.428e29" "6.25e20" "1.65e20" "2.38e28" "1.6e20" "4.1e19"  "2.6e27" "2.65e19" "7.7e18" "6.8e26" "8.1e18" "2.5e18" "2.828e25" "6.0e17" "1.1e17")
 #declare -a NAMEarray=("fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF"  "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF" "fullF" "halfF" "fifthF")
 
-declare -a Zarray=("1")
+declare -a Zarray=("4")
+declare -a nuS0array=("0.53225")
 ## full flux, half flux, fifth flux
-#declare -a NIarray=("1.428e29")
-declare -a NIarray=("1.428e20")
+declare -a NIarray=("1.428e29")
+#declare -a NIarray=("1.428e20")
 #declare -a NIarray=("1.428e21")
 declare -a NAMEarray=("test")
 
@@ -70,11 +71,12 @@ for (( i=0; i<${length}; i++ ));
 do
 # assign iterated values
 ZBAR=${Zarray[$i]}
+NUS0=${nuS0array[$i]}
 NI=${NIarray[$i]}
 NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em 100 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Tmax $TMAX -Tmin $TMIN -Tgrad $TGRAD -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em 100 | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/Ecorrect_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/Ecorrect_data/fe_point_Ecorrect.txt

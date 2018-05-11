@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
    // Appropriate value to mimic exactly the SH Efield effect on qH.
    double F0SourceS0 = 0.2857142857142857;
    double EfieldS0 = 0.0;
+   double nuS0 = -1.0; // In the case of < 0.0, use the Zbar correction of nu.
    // We expect rho = 1, and so, the ion mass follows.
    double ni = 0.0; //5e19;
    bool M1closure = false;
@@ -186,6 +187,8 @@ int main(int argc, char *argv[])
                   "Electric field scaling, i.e. E = S0*E.");
    args.AddOption(&F0SourceS0, "-S0", "--S0",
                   "Electron source scaling (via electron density), i.e. ne = S0*ne.");
+   args.AddOption(&nuS0, "-n0", "--n0",
+                  "Electron collision frequency scaling, i.e. nu_e = S0*nu_e. If negative Zbar correction is used.");
    args.AddOption(&ni, "-ni", "--ni",
                   "Ion density (conversion as ni = rho/mi).");
    args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
@@ -512,9 +515,8 @@ int main(int argc, char *argv[])
    nth::ClassicalMeanStoppingPower mspei_cf(rho_gf, e_gf, v_gf, material_pcf,
                                             eos);
    nth::ClassicalAWBSMeanStoppingPower mspee_cf(rho_gf, e_gf, v_gf, 
-                                                material_pcf, eos);
-   // TMP 
-   //mspee_cf.SetCorrAWBS(1.0);
+                                                material_pcf, eos); 
+   if (nuS0 > 0.0) { mspee_cf.SetCorrAWBS(nuS0); }
    
    nth::NTHvHydroCoefficient *mspei_pcf = &mspei_cf;
    nth::NTHvHydroCoefficient *mspee_pcf = &mspee_cf;

@@ -57,10 +57,10 @@ double ClassicalAWBSMeanStoppingPower::Eval(ElementTransformation &T,
    double nu_ee = nu_ei / Zbar;
    // AWBS correction based on comparison of diffusive asymptotic of AWBS 
    // and SH, and a resulting dependence on Zbar.
-   corrAWBS = (688.9*Zbar + 114.4) / (Zbar*Zbar + 1038.0*Zbar + 474.1);
+   //corrAWBS = (688.9*Zbar + 114.4) / (Zbar*Zbar + 1038.0*Zbar + 474.1);
    //corrAWBS = 1.0;
 
-   return corrAWBS * nu_ee;
+   return GetCorrAWBS(Zbar) * nu_ee;
 }
 
 void LorentzEfield::Eval(Vector &V, ElementTransformation &T,

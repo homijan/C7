@@ -82,10 +82,15 @@ public:
                                   Coefficient *material_,
                                   EOS *eos_)
       : ClassicalMeanStoppingPower(rho_, Te_, v_, material_, eos_) 
-      { corrAWBS = 1.0; }
+      { corrAWBS = -1.0; } // Default is the Zbar correction.
    virtual double Eval(ElementTransformation &T, const IntegrationPoint &ip,
                        double rho);
    virtual void SetCorrAWBS(double corrAWBS_) { corrAWBS = corrAWBS_; }
+   virtual double GetCorrAWBS(double Zbar) 
+      { if (corrAWBS < 0.0) 
+        { return (688.9*Zbar + 114.4) / (Zbar*Zbar + 1038.0*Zbar + 474.1); } 
+		else { return corrAWBS; } 
+      }
 };
 
 // Classical Lorentz approximation E field coefficient.

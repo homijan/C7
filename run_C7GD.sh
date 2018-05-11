@@ -14,7 +14,7 @@ XPOINT=0.1605 # in cm qSH maximum
 #MING=5000
 MING=100
 
-MAXITER=100
+MAXITER=50
 
 # Challenge SNB ;)
 #MING=25
