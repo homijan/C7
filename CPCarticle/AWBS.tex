@@ -464,8 +464,8 @@ change in velocity, i.e. energy, of test particles.
   + \left[\frac{3 I_0(\fM) -I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^2}\right]
   \pdv{\ft_1}{\vmag}
   \\ 
-  + \left[8\pi \fM  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM) + 3 \Zbar n_e}
-  {3\vmag^3}\right] \ft_1 =
+  + \left[8\pi \fM  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^3}
+  - \frac{\Zbar n_e}{\vmag^3} \right] \ft_1 =
   \\
   \frac{1}{\Gamma^{e/e}}
   \left[\vmag\pdv{\fM}{z} - \frac{\vmag\tEz}{\vth^2}\fM\right]
@@ -475,6 +475,13 @@ change in velocity, i.e. energy, of test particles.
   \right]
   \label{eq:FP_f1_diffusive}
 \end{multline}
+
+\begin{equation} 
+  a \frac{\partial^2 \ft_1}{\partial\vmag^2} + b \pdv{\ft_1}{\vmag} + c \ft_1 
+  = d
+  \nonumber
+\end{equation}
+
 Integration of \eqref{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
 \begin{eqnarray}
   a^{n-0.5} \frac{df^n - df^{n-1}}{ - \Delta \vmag} &=& b^{n-0.5} df^{n-1} 
@@ -538,9 +545,8 @@ Integration of \eqref{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
   \nonumber \\
   b^n &=& \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM)}{3{\vmag^n}^2} ,
   \nonumber \\
-  c^n &=& 8\pi \fM^n  - \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM) 
-  + 3 \Zbar n_e}
-  {3{\vmag^n}^3} ,
+  c^n &=& 8\pi \fM^n  - \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM)}
+  {3{\vmag^n}^3} - \frac{\Zbar n_e}{{\vmag^n}^3},
   \nonumber \\
   d^n &=& \frac{1}{\Gamma^{e/e}}
   \left[\vmag^n\pdv{\fM^n}{z} - \frac{\vmag^n\tEz}{\vth^2}\fM^n\right]
