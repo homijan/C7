@@ -1,6 +1,8 @@
 import numpy as np
 from math import pi
 from math import exp
+import matplotlib.pyplot as plt
+import matplotlib
 
 ## Fundamental physical constants in cgs. 
 kB = 1.6022e-12
@@ -23,11 +25,11 @@ coulLog = 7.09
 
 
 ## Some default values.
-ne = 1.0e22
+ne = 1.0e23
 Te = 100.0
 dTedz = -1e0
 dnedz = 0.0
-Zbar = 100.0
+Zbar = 1000.0
 
 ## Full electron-electron cross section.
 Gamma_ee = sigma * coulLog
@@ -90,6 +92,7 @@ def RosenbluthPotentialsF0(vs, f0s):
     I2 = 4.0 * pi * I2
     Jm1 = 4.0 * pi * Jm1        
     return I0, I2, Jm1 
+
 def RosenbluthPotentialsF1(vs, f1s):
     ## Find number of cells and use equidistant velocity step.
     N = len(vs)
@@ -122,8 +125,67 @@ def RosenbluthPotentialsF1(vs, f1s):
     Jm2 = 4.0 * pi * Jm2        
     return I1, I3, Jm2
 
+def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
+    ## Solving equation a*dfdv2 + b*dfdv + c*f = d
+    ## omega = sqrt(a / c), theta = b / 2 / sqrt(a * c)
+    ## Create discretization of f.
+    omega = (a / c)**0.5
+    theta = b / 2.0 / (a * c)**0.5
+    ## Find number of cells and use equidistant velocity step.
+    N = len(vs)
+    dv =  (max(vs) - min(vs)) / (N - 1)
+    print "omega, theta, omega/dv: ", omega[0], theta[0], omega[0] / dv
+    ## Define the unknowns.
+    f = np.zeros(N)
+    df = np.zeros(N)
+    ### Set initial conditions for 0->infinity integration.
+    #f[0] = f0
+    #df[0] = df0
+    ## Perform backward Euler integration.
+    #for i in range(N-1):
+    #    aa = (a[i] + a[i+1]) / 2.0
+    #    bb = (b[i] + b[i+1]) / 2.0
+    #    cc = (c[i] + c[i+1]) / 2.0
+    #    dd = (d[i] + d[i+1]) / 2.0
+    #    df[i+1] = (dv * dd + aa * df[i] - dv * cc * f[i]) / (dv**2.0 * cc + aa + dv * bb)
+    #    f[i+1] = (dv * dd + aa * df[i] - (aa + dv * bb) * df[i+1]) / dv / cc
+    ## Set initial conditions for infinity->0 integration.
+    f[N-1] = f0
+    df[N-1] = df0
+    # Perform backward Euler integration.   
+    for i in range(N-2, -1, -1):
+        aa = (a[i] + a[i+1]) / 2.0
+        bb = (b[i] + b[i+1]) / 2.0
+        cc = (c[i] + c[i+1]) / 2.0
+        dd = (d[i] + d[i+1]) / 2.0
+        df[i] = (dv * dd + aa * df[i+1] - dv * cc * f[i+1]) / (dv**2.0 * cc + aa + dv * bb)
+        f[i] = (dv * dd + aa * df[i+1] - (aa + dv * bb) * df[i]) / dv / cc 
+    return f, df
+
+## Test of the oscillator equation.
+if (1):
+    N = 10000
+    v = np.linspace(0.0, 10.0, N)
+    ## Prepare coefficients.
+    a = np.ones(N)
+    b = np.ones(N)
+    c = np.ones(N)
+    d = np.ones(N)
+    a = a*1e1
+    b = b*1e0
+    c = c*1e1
+    d = d*0.0
+    ## ICs.
+    f0 = 1.0
+    df0 = 0.0
+    ## Solve second order ODE.
+    f, df = ad2f_bdf_cf_equals_d(v, a, b, c, d, f0, df0)
+    # Plot the result.
+    plt.plot(v, f)
+    plt.show()
+
 ## Number of cells in velocity magnitude.
-N = 25
+N = 2000
 ## Multiple of thermal velocity for min(v).
 min_x_vTh = 0.1
 ## Multiple of thermal velocity for max(v).
@@ -145,27 +207,16 @@ for i in range(0, N):
 ## Lorentz gas E field.
 Ez = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
 
-from scipy.interpolate import splev, splrep
-smooth = 0 # lower less smoothing
-## Find a spline for the f1 Lorentz data.
-f1Ltck = splrep(vs, f1s, s=smooth)
-df1Ldv = splev(vs, f1Ltck, der=1)
-d2f1Ldv2 = splev(vs, f1Ltck, der=2)
-## Find a spline for the fM data.
-fMtck = splrep(vs, fMs, s=smooth)
-dfMdv = splev(vs, fMtck, der=1)
-d2fMdv2 = splev(vs, fMtck, der=2)
-
 ## Integrate the f0-Rosenbluth potentials. 
 ## These remain constant during the f1 iteration/convergence.
 I0, I2, Jm1 = RosenbluthPotentialsF0(vs, fMs)
 
 I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s)
 
-print "fMs"
-print fMs
-print "f1s"
-print f1s
+#print "fMs"
+#print fMs
+#print "f1s"
+#print f1s
 
 #print "I0"
 #print I0
@@ -193,8 +244,6 @@ d_fM = 1.0 / Gamma_ee * (vs * dfMdzs - vs * Ez / vTh(Te)**2.0 * fMs)
 
 d_f1 = - fMs * 1.0 / 15.0 / vs / vTh(Te)**2.0 * (3.0 * vs**2.0 / vTh(Te)**2.0 * (I3 + Jm2) - 5.0 * (I1 + Jm2))
 
-d_f10 = - (1.0 / 5.0 / vs * (I3 + Jm2) * d2fMdv2 + 1.0 / 15.0 / vs**2.0 * (5.0 * I1 - 3.0 * I3 + 2.0 * Jm2) * dfMdv)
-
 #print "a_fM"
 #print a_fM
 #print "b_fM"
@@ -203,21 +252,55 @@ d_f10 = - (1.0 / 5.0 / vs * (I3 + Jm2) * d2fMdv2 + 1.0 / 15.0 / vs**2.0 * (5.0 *
 #print ce_fM
 #print "ci"
 #print ci
-print "d_fM"
-print d_fM
-print "d_f1"
-print d_f1
+#print "d_fM"
+#print d_fM
+#print "d_f1"
+#print d_f1
 #print "d_f10"
 #print d_f10
 
-print "a_fM * d2f1Ldv2"
-print a_fM * d2f1Ldv2
-print "b_fM * df1Ldv"
-print b_fM * df1Ldv
-print "ce_fM * f1"
-print ce_fM * f1s
-print "ci * f1"
-print ci * f1s
+#from scipy.interpolate import splev, splrep
+#smooth = 0 # lower less smoothing
+### Find a spline for the f1 Lorentz data.
+#f1Ltck = splrep(vs, f1s, s=smooth)
+#df1Ldv = splev(vs, f1Ltck, der=1)
+#d2f1Ldv2 = splev(vs, f1Ltck, der=2)
+### Find a spline for the fM data.
+#fMtck = splrep(vs, fMs, s=smooth)
+#dfMdv = splev(vs, fMtck, der=1)
+#d2fMdv2 = splev(vs, fMtck, der=2)
+#
+# Numerical check of d_f1.
+#d_f10 = - (1.0 / 5.0 / vs * (I3 + Jm2) * d2fMdv2 + 1.0 / 15.0 / vs**2.0 * (5.0 * I1 - 3.0 * I3 + 2.0 * Jm2) * dfMdv)
+#
+#print "a_fM * d2f1Ldv2"
+#print a_fM * d2f1Ldv2
+#print "b_fM * df1Ldv"
+#print b_fM * df1Ldv
+#print "ce_fM * f1"
+#print ce_fM * f1s
+#print "ci * f1"
+#print ci * f1s
+
+## Global setting of plotting.
+font = {'family' : 'Sans',
+        #'weight' : 'bold',
+        'size'   : 18}
+figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
+matplotlib.rc('font', **font)
+matplotlib.rc('figure', **figure)
+
+plt.plot(vs, fMs, label='fM')
+plt.plot(vs, f1s, label='f1')
+plt.legend()
+plt.title('Zbar '+str(Zbar))
+plt.show()
+
+plt.plot(vs, d_f1, label='d_f1')
+plt.plot(vs, d_fM, label='d_fM')
+plt.legend()
+plt.title('Zbar '+str(Zbar))
+plt.show()
 
 #### FP equation diffusive regime #############################################
 ###############################################################################
