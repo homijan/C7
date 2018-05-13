@@ -1,8 +1,20 @@
 import numpy as np
+## Math formulas.
 from math import pi
 from math import exp
+## Interpolation.
+from scipy.interpolate import splev, splrep
+## Graphics.
 import matplotlib.pyplot as plt
 import matplotlib
+
+## Global setting of plotting.
+font = {'family' : 'Sans',
+        #'weight' : 'bold',
+        'size'   : 18}
+figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
+matplotlib.rc('font', **font)
+matplotlib.rc('figure', **figure)
 
 ## Fundamental physical constants in cgs. 
 kB = 1.6022e-12
@@ -44,6 +56,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Compare the diffusive asymptotic to C7 computation.')
 ## Define input arguments.
 parser.add_argument("-s", "--sigma", help="Sigma for electro-ion cross-section.", type=float)
+parser.add_argument("-z", "--Zbar", help="Zbar for the ion charge.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 ## A no value argument solution.
 parser.add_argument("-ps", "--pltshow", action='store_true', help="Plot show() by adding -ps/--pltshow argument.")
@@ -52,9 +65,10 @@ parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to
 
 ## Parse arguments.
 args = parser.parse_args()
-#if (args.sigma):
-#   sigma = args.sigma
-
+if (args.sigma):
+   sigma = args.sigma
+if (args.Zbar):
+   Zbar = args.Zbar
 ###############################################################################
 ########### Analysis of diffusive asymptotic of AWBS model #################### 
 ###############################################################################
@@ -125,6 +139,67 @@ def RosenbluthPotentialsF1(vs, f1s):
     Jm2 = 4.0 * pi * Jm2        
     return I1, I3, Jm2
 
+def FPcoefficientsF0(vs, f0s):
+    ## Compute Rosenbluth potentials using f0.
+    I0, I2, Jm1 = RosenbluthPotentialsF0(vs, f0s)
+    ## Fill the collision operator C_ee coefficients using f0.
+    C_d2fdv2 = (I2 + Jm1) / 3.0 / vs
+    C_dfdv = (3.0 * I0 - I2 + 2.0 * Jm1) / 3.0 / vs**2.0
+    Ce_f = 8.0*pi*fMs - (3.0 * I0 - I2 + 2.0 * Jm1) / 3.0 / vs**3.0
+    ## Fill the collision operator C_ei coefficient using delta_i.
+    Ci_f = - Zbar * ne / vs**3.0
+    return C_d2fdv2, C_dfdv, Ce_f, Ci_f
+
+def d2fdv2_dfdv(vs, fs):
+    ## Compute the first and second derivatives from data interpolation.
+    smooth = 0 # lower less smoothing
+    ## Find a spline for the f0 data.
+    ftck = splrep(vs, fs, s=smooth)
+    dfdv = splev(vs, ftck, der=1)
+    d2fdv2 = splev(vs, ftck, der=2)
+    return d2fdv2, dfdv
+
+def FPtermsF0F1(vs, f0s, f1s, df0dzs, Ez, Gamma):
+    ## Compute Rosenbluth potentials using f1.
+    I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s)
+    ## Compute the first and second derivative of f0.
+    d2f0dv2, df0dv = d2fdv2_dfdv(vs, f0s)
+    ## Compute the explicit term of FP using f0 and f1.
+    d2f0dv2If1_df0dvIf1 = - (1.0 / 5.0 / vs * (I3 + Jm2) * d2f0dv2 + 1.0 / 15.0 / vs**2.0 * (5.0 * I1 - 3.0 * I3 + 2.0 * Jm2) * df0dv)
+    # Advection part of FP using f0.
+    df0dz_Edf0dv = 1.0 / Gamma * (vs * df0dzs + Ez * df0dv)
+    return d2f0dv2If1_df0dvIf1, df0dz_Edf0dv
+
+def FPtermsFMF1(vs, fMs, f1s, df0dzs, Ez, T, Gamma):
+    ## Compute Rosenbluth potentials using f1.
+    I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s) 
+    ## Compute the explicit term of FP using fM and f1.
+    d2fMdv2If1_dfMdvIf1 = - fMs * 1.0 / 15.0 / vs / vTh(T)**2.0 * (3.0 * vs**2.0 / vTh(T)**2.0 * (I3 + Jm2) - 5.0 * (I1 + Jm2))
+    # Advection part of FP using fM.
+    dfMdz_EdfMdv = 1.0 / Gamma * (vs * dfMdzs - vs * Ez / vTh(T)**2.0 * fMs)
+    return d2fMdv2If1_dfMdvIf1, dfMdz_EdfMdv
+
+def AllFokkerPlanckEquationTerms(vs, f0s, f1s, df0dzs, Ez, Gamma):
+    ## The Fokker-Planck equation for electrons in diffusive regime
+    ## can be written as
+    ##
+    ## C2(f0) d2f1dv2 + C1(f0) * df1dv + (C0e(f0) + Ci) * f1 = 
+    ## B2(f1) * d2f0dv2 + B1(f1) * df0dv + v * df0dz + Ez * df0dv
+    ##
+    ## Compute the coefficients of f1 terms.
+    C2, C1, C0e, C0i = FPcoefficientsF0(vs, f0s)
+    ## Compute the first and second derivative of f1.
+    d2f1dv2s, df1dvs = d2fdv2_dfdv(vs, f1s)
+    ## Assemble the f1 terms.
+    C2d2f1dv2 = C2 * d2f1dv2s
+    C1df1dv = C1 * df1dvs
+    C0f1 = (C0e + C0i) * f1s
+    ## Compute the f0 terms.
+    B2d2f0dv2If1_B1df0dvIf1, df0dz_Edf0dv = FPtermsF0F1(vs, f0s, f1s, df0dzs, Ez, Gamma)
+    ## Assemble the f0 terms.
+    B2d2f0dv2_B1df0dv_df0dz_Edf0dv = B2d2f0dv2If1_B1df0dvIf1 + df0dz_Edf0dv
+    return C2d2f1dv2, C1df1dv, C0f1, B2d2f0dv2_B1df0dv_df0dz_Edf0dv
+
 def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
     ## Solving equation a*dfdv2 + b*dfdv + c*f = d
     ## omega = sqrt(a / c), theta = b / 2 / sqrt(a * c)
@@ -163,7 +238,7 @@ def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
     return f, df
 
 ## Test of the oscillator equation.
-if (1):
+if (0):
     N = 10000
     v = np.linspace(0.0, 10.0, N)
     ## Prepare coefficients.
@@ -185,7 +260,7 @@ if (1):
     plt.show()
 
 ## Number of cells in velocity magnitude.
-N = 2000
+N = 200
 ## Multiple of thermal velocity for min(v).
 min_x_vTh = 0.1
 ## Multiple of thermal velocity for max(v).
@@ -196,6 +271,7 @@ vs = np.linspace(min_x_vTh * vTh(Te), max_x_vTh * vTh(Te), N)
 fMs = np.zeros(N)
 dfMdzs = np.zeros(N)
 f1s = np.zeros(N)
+fSH1s = np.zeros(N)
 ## Fill the Maxwell-Boltzmann distribution discretizations.
 for i in range(0, N):
     fMs[i] = fM(ne, Te, vs[i])
@@ -203,14 +279,70 @@ for i in range(0, N):
 ## Fill f1 with Lorentz gas approximation as a starting value.
 for i in range(0, N):
     mfpei = vs[i]**4.0 / Gamma_ee / ne / (Zbar + 1.0)
-    f1s[i] = - mfpei * (0.5*vs[i]**2.0 / vTh(Te)**2.0 - 4.0) * fM(ne, Te, vs[i]) * dTedz / Te
+    fSH1s[i] = - mfpei * (0.5*vs[i]**2.0 / vTh(Te)**2.0 - 4.0) * fM(ne, Te, vs[i]) * dTedz / Te
 ## Lorentz gas E field.
 Ez = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
 
-## Integrate the f0-Rosenbluth potentials. 
-## These remain constant during the f1 iteration/convergence.
-I0, I2, Jm1 = RosenbluthPotentialsF0(vs, fMs)
+vs_norm = vs / vTh(Te)
+fig, ax1 = plt.subplots()
+ax1.set_title('Zbar '+str(Zbar))
+ax1.plot(vs_norm, fMs, 'r', label='fM')
+ax1.legend(loc='upper left')
+ax2 = ax1.twinx()
+ax2.plot(vs_norm, fSH1s, 'b', label='fSH1')
+ax2.legend(loc='upper right')
+plt.show()
 
+## In order to start the iteration of f1, set fSH1 as initial state.
+f1s = fSH1s
+
+## The diffusive electron Fokker-Planck equation coefficients for f1.
+## These remain fixed during the iteration/convergence of f1.
+a, b, ce, ci = FPcoefficientsF0(vs, fMs)
+c = ce + ci
+## See the scattering dominance of on ions with respect to Zbar.
+vs_norm = vs / vTh(Te)
+fig, ax1 = plt.subplots()
+ax1.plot(vs_norm, ci, 'r', label='ci')
+ax1.plot(vs_norm, ce + ci, 'r--', label='ci + ce')
+ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+ax1.set_title('Zbar '+str(Zbar))
+plt.show()
+
+## Right hand side of the diffusive electron Fokker-Planck equation. 
+d2f0dv2If1_df0dvIf1, df0dz_Edf0dv = FPtermsF0F1(vs, fMs, f1s, dfMdzs, Ez, Gamma_ee)
+d = d2f0dv2If1_df0dvIf1 + df0dz_Edf0dv
+
+## Analytic RHS computed directly from fM function properties. Sanity check.
+d2fMdv2If1_dfMdvIf1, dfMdz_EdfMdv = FPtermsFMF1(vs, fMs, f1s, dfMdzs, Ez, Te, Gamma_ee)
+d = d2fMdv2If1_dfMdvIf1 + dfMdz_EdfMdv
+
+## All the terms of the diffusive electron Fokker-Planck equation in order to
+## analyze the importance of the derivatives of f1 with respect to v, 
+## which are usually omitted in FP codes.
+ad2fdv2, bdfdv, cf, d = AllFokkerPlanckEquationTerms(vs, fMs, f1s, dfMdzs, Ez, Gamma_ee)
+
+vs_norm = vs / vTh(Te)
+fig, ax1 = plt.subplots()
+ax1.plot(vs_norm, d, 'r', label='rhs')
+ax1.plot(vs_norm, df0dz_Edf0dv, 'r--', label='df0dz_Edf0dv')
+ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+ax1.set_title('Zbar '+str(Zbar))
+plt.show()
+
+#fig, ax1 = plt.subplots()
+#ax1.plot(vs_norm, dfMdz_EdfMdv, 'r', label='dfMdz_EdfMdv')
+#ax1.plot(vs_norm, df0dz_Edf0dv, 'r--', label='df0dz_Edf0dv')
+#ax1.plot(vs_norm, d, 'r-.', label='d')
+#ax2 = ax1.twinx()
+#ax2.plot(vs_norm, d2fMdv2If1_dfMdvIf1, 'b', label='d2fMdv2If1_dfMdvIf1')
+#ax2.plot(vs_norm, d2f0dv2If1_df0dvIf1, 'b--', label='d2f0dv2If1_df0dvIf1')
+#ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+#ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
+#ax1.set_title('Zbar '+str(Zbar))
+#plt.show()
+
+"""
 I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s)
 
 #print "fMs"
@@ -232,16 +364,9 @@ I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s)
 #print "Jm2"
 #print Jm2
 
-a_fM = (I2 + Jm1) / 3.0 / vs
 
-b_fM = (3.0 * I0 - I2 + 2.0 * Jm1) / 3.0 / vs**2.0
-
-ce_fM = 8.0*pi*fMs - (3.0 * I0 - I2 + 2.0 * Jm1) / 3.0 / vs**3.0
-
-ci = - Zbar * ne / vs**3.0
 
 d_fM = 1.0 / Gamma_ee * (vs * dfMdzs - vs * Ez / vTh(Te)**2.0 * fMs)
-
 d_f1 = - fMs * 1.0 / 15.0 / vs / vTh(Te)**2.0 * (3.0 * vs**2.0 / vTh(Te)**2.0 * (I3 + Jm2) - 5.0 * (I1 + Jm2))
 
 #print "a_fM"
@@ -269,7 +394,6 @@ d_f1 = - fMs * 1.0 / 15.0 / vs / vTh(Te)**2.0 * (3.0 * vs**2.0 / vTh(Te)**2.0 * 
 #fMtck = splrep(vs, fMs, s=smooth)
 #dfMdv = splev(vs, fMtck, der=1)
 #d2fMdv2 = splev(vs, fMtck, der=2)
-#
 # Numerical check of d_f1.
 #d_f10 = - (1.0 / 5.0 / vs * (I3 + Jm2) * d2fMdv2 + 1.0 / 15.0 / vs**2.0 * (5.0 * I1 - 3.0 * I3 + 2.0 * Jm2) * dfMdv)
 #
@@ -280,27 +404,8 @@ d_f1 = - fMs * 1.0 / 15.0 / vs / vTh(Te)**2.0 * (3.0 * vs**2.0 / vTh(Te)**2.0 * 
 #print "ce_fM * f1"
 #print ce_fM * f1s
 #print "ci * f1"
-#print ci * f1s
-
-## Global setting of plotting.
-font = {'family' : 'Sans',
-        #'weight' : 'bold',
-        'size'   : 18}
-figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
-matplotlib.rc('font', **font)
-matplotlib.rc('figure', **figure)
-
-plt.plot(vs, fMs, label='fM')
-plt.plot(vs, f1s, label='f1')
-plt.legend()
-plt.title('Zbar '+str(Zbar))
-plt.show()
-
-plt.plot(vs, d_f1, label='d_f1')
-plt.plot(vs, d_fM, label='d_fM')
-plt.legend()
-plt.title('Zbar '+str(Zbar))
-plt.show()
+#print ci * f1s 
+"""
 
 #### FP equation diffusive regime #############################################
 ###############################################################################
