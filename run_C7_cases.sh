@@ -14,8 +14,8 @@ TGRAD=180
 
 XPOINT=0.046775 # in cm qSH maximum
 
-MING=1000
-#MING=250
+#MING=1000
+MING=250
 
 # Challenge SNB ;)
 #MING=25
@@ -63,15 +63,17 @@ DIRout="C7E/"
 #declare -a nuS0array=("0.5485")
 #declare -a Zarray=("4")
 #declare -a nuS0array=("0.53225")
-declare -a Zarray=("2")
-declare -a nuS0array=("0.5035")
-#declare -a Zarray=("1")
+#declare -a Zarray=("2")
+#declare -a nuS0array=("0.5035")
+declare -a Zarray=("1")
 #declare -a nuS0array=("0.455")
 ## full flux, half flux, fifth flux
 declare -a NIarray=("1.428e29")
 #declare -a NIarray=("1.428e20")
 #declare -a NIarray=("1.428e21")
 declare -a NAMEarray=("test")
+
+declare -a nuS0array=("0.5")
 
 # get length of an array
 length=${#Zarray[@]}

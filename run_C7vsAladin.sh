@@ -34,29 +34,72 @@ DIRout="C7E/"
 
 # Philippe's test!
 PROBLEM=9
-L=0.07
-declare -a Zarray=("2")
-declare -a NIarray=("2.5e20")
-NUS0=0.5035
-#L=0.014
-#declare -a Zarray=("10")
-#declare -a NIarray=("5e19")
-#NUS0=0.5485
+
+# Universal value.
+NUS0=0.5
 
 declare -a NAMEarray=("case")
 ## Prepare data profiles.
-cd VFPdata
-cd Pascal
-python ../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
-python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Q_ -s
-#python ../loadPhilippegrace.py -f Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Te_ -x -m 1e3 -s
-#python ../loadPhilippegrace.py -f FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt -o Q_ -s
-cd ..
-cp Pascal/Te_Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt temperature.dat
-cp Pascal/Q_FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt flux1.dat
-#cp Pascal/Te_Te_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt temperature.dat
-#cp Pascal/Q_FluxX_Aladin_tanh_10mic_Zeq10_B0_1.20e-11.txt.txt flux1.dat
-cd ..
+
+### CASE 1 ###
+L=0.07
+declare -a Zarray=("2")
+declare -a NIarray=("2.5e20") # ne = 5e20
+cd VFPdata/Pascal/tanh_50mic_Zeq2_B0
+python ../../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Te_ -x -m 1e3 #-s
+python ../../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o Q_ #-s
+python ../../loadPhilippegrace.py -f ElecX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt -o E_ #-m 0.33333334e-4 -s
+## Copy the input data files to dedicated directory. 
+cp Te_Te_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+cp Q_FluxX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+cp E_ElecX_Aladin_tanh_50mic_Zeq2_B0_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+cp F0F1x_Aladin_tanh_50mic_Zeq2_B0_2.00e-11-4.txt $DIRroot/VFPdata/distribution1.dat
+cd $DIRroot
+
+### CASE 2 ###
+#L=0.07
+#declare -a Zarray=("2")
+#declare -a NIarray=("2.5e19") # ne = 5e19
+#cd VFPdata/Pascal/tanh_50mic_Zeq2_5e19_B0
+#python ../../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt -o Te_ -x -m 1e3 #-s
+#python ../../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt -o Q_ #-s
+#python ../../loadPhilippegrace.py -f ElecX_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt -o E_ #-m 0.33333334e-4 -s
+### Copy the input data files to dedicated directory. 
+#cp Te_Te_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+#cp Q_FluxX_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+#cp E_ElecX_Aladin_tanh_50mic_Zeq2_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+#cp F0F1x_Aladin_tanh_50mic_Zeq2_5e19_B0_4.40e-12-4.txt $DIRroot/VFPdata/distribution1.dat
+#cd $DIRroot
+
+### CASE 3 ###
+#L=0.07
+#declare -a Zarray=("10")
+#declare -a NIarray=("5e19") # ne = 5e20
+#cd VFPdata/Pascal/tanh_50mic_Zeq10_B0
+#python ../../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt -o Te_ -x -m 1e3 #-s
+#python ../../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt -o Q_ #-s
+#python ../../loadPhilippegrace.py -f ElecX_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt -o E_ #-m 0.33333334e-4 -s
+### Copy the input data files to dedicated directory. 
+#cp Te_Te_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+#cp Q_FluxX_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+#cp E_ElecX_Aladin_tanh_50mic_Zeq10_B0_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+#cp F0F1x_Aladin_tanh_50mic_Zeq10_1.80e-12-4.txt $DIRroot/VFPdata/distribution1.dat
+#cd $DIRroot
+
+### CASE 4 ###
+#L=0.07
+#declare -a Zarray=("10")
+#declare -a NIarray=("5e18") # ne = 5e19
+#cd VFPdata/Pascal/tanh_50mic_Zeq10_5e19_B0
+#python ../../loadPhilippegrace.py -f Te_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt -o Te_ -x -m 1e3 #-s
+#python ../../loadPhilippegrace.py -f FluxX_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt -o Q_ #-s
+#python ../../loadPhilippegrace.py -f ElecX_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt -o E_ #-m 0.33333334e-4 -s
+### Copy the input data files to dedicated directory. 
+#cp Te_Te_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+#cp Q_FluxX_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+#cp E_ElecX_Aladin_tanh_50mic_Zeq10_5e19_B0_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+#cp F0F1x_Aladin_tanh_50mic_Zeq10_5e19_3.40e-12-4.txt $DIRroot/VFPdata/distribution1.dat
+#cd $DIRroot
 
 # get length of an array
 length=${#Zarray[@]}
@@ -80,11 +123,21 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -C7 --labelFluxExt1 Aladin --pltshow -SH --pltTe
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -C7 --labelFluxExt1 Aladin --pltshow -SH --pltTe -lD1 Aladin --Efield --labelEfieldExt1 Aladin
 
 # Safe figs.
-## 12ps.
-#cp heatflux.png $DIRroot/VFPdata/C7_heatflux_12ps.png
-#cp kinetics.png $DIRroot/VFPdata/C7_kinetics_12ps.png
+### CASE 1 ###
+cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case1_heatflux.png
+cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case1_kinetics.png
+### CASE 2 ###
+#cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case2_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case2_kinetics.png
+### CASE 3 ###
+#cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case3_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_kinetics.png
+### CASE 4 ###
+#cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case4_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case4_kinetics.png
+
 cd $DIRroot
 done

@@ -1152,7 +1152,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //                        / 2.0) 
             //                        / Enorm);
             AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
-                                                mspEe_scale, mspEt_scale,
+                                                mspei, mspEe_scale, mspEt_scale,
                                                 Efield_scale);
             mspE = mspEe_scale * mspee;
             //Efield *= Efield_scale;	
