@@ -73,7 +73,7 @@
 \newcommand{\figref}[1]{FIG.~\ref{#1}}
 \newcommand{\refeq}[1]{(\ref{#1})}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
-
+\newcommand{\figscale}{0.5}
 
 %% This list environment is used for the references in the
 %% Program Summary
@@ -120,7 +120,7 @@
 %% \address{Address\fnref{label3}}
 %% \fntext[label3]{}
 
-\title{An~efficient kinetic modeling in hydrodynamics using the AWBS transport equation}
+\title{An~efficient kinetic modeling in plasmas by using the~AWBS transport equation}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{<author name>}
@@ -176,6 +176,433 @@ kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
 %\label{}
 %---------------------------------------------------------------------
 %---------------------------------------------------------------------
+
+\section{Introduction}
+\label{sec:Intro}
+
+\section{The~AWBS nonlocal transport model}
+\label{sec:AWBSmodel}
+\cite{Fish_RMP1987}
+
+\section{BGK, AWBS, and Fokker-Planck models in diffusive regime}
+\label{sec:DiffusiveKinetics}
+
+We can try to find an~approximate solution while using the~first term of
+expansion in $\mfpe$ and $mu$as
+\begin{equation}
+  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei\mu .
+  \label{eq:f_approximation}
+\end{equation}
+
+
+\subsection{The~BGK diffusive electron transport}
+\label{sec:BGKDiffusiveRegime}
+
+\begin{multline}
+  \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
+  {\vmag\sin(\phi)}\pdv{f}{\theta} \right] 
+  =\\
+  \frac{\left(\fM - f\right)}{\lambda^e} 
+  + \frac{1}{2 \lambda^{ei}} 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right) ,
+  \label{eq:BGK_spherical}
+\end{multline}
+where $\mu = \cos(\phi)$, $\mfpe$ is the~electron-electron mean free path, and
+$\mfpei$ is the~electron-ion mean free path. We also approximate
+$\mfpe = \Zbar \mfpei$.
+
+%We can try to find an~approximate solution while using the~first term of
+%expansion in $\mfp$, $\cos(\phi)$, $\sin(\phi)$, $\sin(\theta)$, and $\fM$ as
+%\begin{equation}
+%  f = f^0 + f^1 \mfp\fM\cos(\phi) + f^2 \mfp\fM\sin(\phi)\sin(\theta),
+%  \label{eq:f_approximation}
+%\end{equation}
+Clearly, $\pdv{\tilde{f}}{\theta} = 0$, and if $\tB = \tilde{B}_z\vect{e}_z$, 
+there is no effect of magnetic field. We also assume, that 
+$\nabla f = \pdv{f}{z}\vect{e}_z$ and appropriately 
+$\tE = \tilde{E}_z\vect{e}_z$.
+From the~orientation of the~Cartesian basis vectors and spherical 
+basis vectors, one can find $\tE\cdot\vn = \tilde{E}_z \cos(\phi) = \mu$ and
+$\tE\cdot\vect{e}_\phi = -\tilde{E}_z\sin(\phi)$. As a~result, the~analyzed
+BGK equation reads
+\begin{multline}
+  \mu\pdv{}{z}\left( f^0 + f^1 \mfpei\mu \right) 
+  + \frac{1}{\vmag} \left[ \tilde{E}_z\mu \pdv{}{\vmag} 
+  \left( f^0 + f^1 \mfpei\mu \right) 
+  - \frac{\tilde{E}_z\sin(\phi)}{\vmag}\pdv{}{\phi} 
+  \left( f^0 + f^1 \mfpei\mu \right)
+  \right] 
+  =\\
+  \frac{\left(\fM - \left( f^0 + f^1 \mfpei\mu \right) \right)}{\mfpe} 
+  + \frac{1}{2 \mfpei}\pdv{}{\mu}\left((1 - \mu^2)
+  \pdv{}{\mu}\left( f^0 + f^1 \mfpei\mu \right) \right) ,
+  \label{eq:BGK_spherical}
+\end{multline}
+
+\begin{multline}
+  \mu\pdv{f^0}{z} + \mu^2 \pdv{}{z}\left(f^1 \mfpei \right)
+  + \frac{\tilde{E}_z}{\vmag} \left[ \mu \pdv{f^0}{\vmag} 
+  + \mu^2 \pdv{}{\vmag} \left( f^1 \mfpei \right) 
+  + \frac{1 - \mu^2}{\vmag}f^1 \mfpei
+  \right] 
+  =\\
+  \frac{\fM - f^0}{\Zbar\mfpei} - \mu \frac{1}{\Zbar}f^1
+  - \mu f^1 ,
+  \label{eq:BGK_spherical}
+\end{multline}
+consequently, we have the~following anisotropy expansion 
+$\mu^0, \mu^1, \mu^2, ...$ equations
+\begin{eqnarray}
+  \frac{\fM - f^0}{\Zbar\mfpei} &=& \frac{1}{\vmag}f^1 \mfpei , 
+  \nonumber \\
+  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} &=& 
+  - \frac{1}{\Zbar}f^1 - f^1 , 
+  \nonumber \\ 
+  \pdv{}{z}\left(f^1 \mfpei \right) 
+  + \frac{\tilde{E}_z}{\vmag} \left[\pdv{}{\vmag} \left( f^1 \mfpei \right)
+  - \frac{1}{\vmag}f^1 \mfpei \right] &=& 0 , \nonumber
+\end{eqnarray}
+which lead to the~definitions
+\begin{eqnarray}
+  f^0 &=& \fM + \frac{1}{\vmag}f^1 \Zbar\mfpei^2 ,
+  \label{eq:BGK_f0} \\
+  f^1 &=& - \frac{\Zbar}{\Zbar+1}
+  \left[ \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} \right] 
+  \nonumber \\
+  &=& - \frac{\Zbar}{\Zbar+1}
+  \left[\frac{1}{\rho}\pdv{\rho}{z} + 
+  \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
+  \frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2} \right]\fM 
+  %\nonumber \\
+  %&=& - \frac{\Zbar}{\Zbar+1}
+  %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2} - \alpha\right)
+  %\frac{1}{T}\pdv{T}{z}\fM ,
+  \label{eq:BGK_f1}
+\end{eqnarray}
+
+In order to ensure the~plasma to be quasi-neutral, the~zero-current condition
+\begin{equation}
+  \vect{j} = \int_0^{\infty}\int_{4\pi} \qe \vmag \vn f 
+  \, \dI\vn~\vmag^2~\dI\vmag 
+  = \vect{0} ,
+  \label{eq:zero_current}
+\end{equation}
+can be achieved by providing a~consistent electric field in 
+\eqref{eq:f_approximation}, i.e.
+\begin{equation}
+  \tE = \frac{\vth^2~\int_{4\pi} \vn\otimes\vn\cdot \int_0^{\infty} \vmag  
+  \fM \frac{\mfp}{\alpha}\left(\frac{\nabla\rho}{\rho} + 
+  \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right) 
+  \frac{\nabla T}{T}\right)
+  \vmag^2\, \dI\vmag\, \dI\vn}
+  {\int_{4\pi} \vn\otimes\vn\cdot \int_0^{\infty} \vmag  
+  \fM \frac{\mfp}{\alpha}\vmag^2\, \dI\vmag\, \dI\vn} ,
+\end{equation}
+which may be further simplified as
+\begin{equation}
+  \tE = \frac{\int_0^{\infty} \fM
+  \frac{1}{2}\frac{\nabla T}{T}\vmag^9\, \dI\vmag}
+  {\int_0^{\infty} \fM \vmag^7\, \dI\vmag} + 
+  \vth^2\left(\frac{\nabla\rho}{\rho} - \frac{3}{2}\frac{\nabla T}{T} \right)
+  = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
+  \right) ,
+\end{equation}
+where it is worth mentioning, that the~part 
+$\fM + \frac{\vmag\mfp}{\alpha} \pdv{f_1}{\vmag}$ of the~distribution
+does not contribute to the~current since it is isotropic.
+One can write the~quasi-neutral distribution function explicitly 
+distinguishing between original part (blue color) and E field correction
+(red color) as
+\begin{equation}
+  f \approx \fM \left(1 - \frac{\mfp}{\alpha}\vn\cdot\left( 
+  \textcolor{blue}{
+  \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}
+  }
+  \textcolor{red}{
+  - \frac{5}{2}
+  }
+  \right) \frac{\nabla T}{T} \right) 
+  + \frac{\vmag\mfp}{\alpha} \pdv{f_1}{\vmag} .
+  \label{eq:f_localized_quasineutral}
+\end{equation}
+which leads to the~resulting heat flux
+\begin{equation}
+  \vect{q}_H = \int_{4\pi}\int_0^{\infty} \frac{\me \vmag^2}{2} \vmag \vn f 
+  \vmag^2\, \dI\vmag\, \dI\vn = \frac{4\pi}{3}\frac{\me}{2}
+  \frac{1}{\alpha \crs\rho}
+  \int_0^{\infty} \left( 
+  \textcolor{blue}{
+  \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}
+  }
+  \textcolor{red}{
+  - \frac{5}{2}
+  }
+  \right) \vmag^9 \fM\, \dI\vmag \frac{\nabla T}{T} .
+  \nonumber
+\end{equation} 
+Based on the~Gauss integral formula
+\begin{equation}
+  \int \vmag^{2s+1} \exp\left(-\frac{\vmag^2}{2\vth^2}\right)\, \dI\vmag = 
+  \frac{s!~(2 \vth^2)^{s+1}}{2}
+  \nonumber 
+\end{equation}
+and Maxwell-Boltzmann distribution \eqref{eq:MBdistribution} the~heat flux can 
+be written as
+\begin{equation}
+  \vect{q}_H = \frac{4\pi}{3}\frac{\me}{2}\frac{1}{\alpha \crs\rho}
+  \frac{\rho}{\vth^3 \left( 2 \pi \right)^{3/2}}
+  \frac{4!~2^4 \vth^{10}}{T} \left( 
+  \textcolor{blue}{
+  5 - \frac{3}{2}
+  }
+  \textcolor{red}{
+  - \frac{5}{2}
+  }
+  \right) \nabla T 
+  = \frac{\me}{\alpha \crs}\frac{128}{\sqrt{2 \pi}}
+  \left(\frac{\kB}{\me}\right)^{\frac{7}{2}}T^{\frac{5}{2}} \nabla T .
+  \label{eq:Lorentz_flux}
+\end{equation} 
+In conclusion, equation \eqref{eq:Lorentz_flux} provides nothing else than
+the~well known Lorentz approximation heat flux and its nonlinearity $2.5$
+in temperature. What is worth mentioning is the~effect of E field 
+(quasi-neutrality), which reduces the~flux of about	71.4$\%$ 
+(also assuming constant density).
+
+
+Finally, one can find the~approximate solution
+\begin{equation}
+  \tilde{f} = \fM - \mfpei\frac{\Zbar}{\Zbar+1}
+  \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2} - \alpha\right)
+  \frac{\vn\cdot\nabla T}{T}\fM .
+  \label{eq:BGK_approximate_solution}
+\end{equation}
+
+
+\subsection{The~AWBS diffusive electron transport}
+\label{sec:AWBSDiffusiveRegime}
+
+The~AWBS electron transport equation in 6D reads
+\begin{multline}
+  \vn\cdot\nabla f + \frac{1}{\vmag} \left[ \tE\cdot\vn \pdv{f}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  + \frac{\tE\cdot\vect{e}_\theta + \vmag\tB\cdot\vect{e}_\phi}
+  {\vmag\sin(\phi)}\pdv{f}{\theta} \right] 
+  =\\
+  \frac{\vmag}{\lambda^e}\pdv{}{\vmag}\left(f - f_M\right) 
+  + \left(\frac{1}{\mfpei} + \frac{1}{\mfpe} \right) \frac{1}{2}
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right) ,
+  \label{eq:AWBS_spherical}
+\end{multline}
+where $\mu = \cos(\phi)$, $\mfpe$ is the~electron-electron mean free path, and
+$\mfpei$ is the~electron-ion mean free path, and $\mfpe = \Zbar \mfpei$.
+
+We can try to find an~approximate solution while using the~first term of
+expansion in $\mfpe$ and $\mu$ as
+\begin{equation}
+  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei\mu .
+  \label{eq:f_approximation}
+\end{equation}
+Clearly, $\pdv{\tilde{f}}{\theta} = 0$, and if $\tB = \tilde{B}_z\vect{e}_z$, 
+there is no effect of magnetic field. We also assume, that 
+$\nabla f = \pdv{f}{z}\vect{e}_z$ and appropriately 
+$\tE = \tilde{E}_z\vect{e}_z$.
+From the~orientation of the~Cartesian basis vectors and spherical 
+basis vectors, one can find $\tE\cdot\vn = \tilde{E}_z \cos(\phi) = \mu$ and
+$\tE\cdot\vect{e}_\phi = -\tilde{E}_z\sin(\phi)$. As a~result, the~analyzed
+AWBS equation reads
+\begin{multline}
+  \mu\pdv{}{z}\left( f^0 + f^1 \mfpei\mu \right) 
+  + \frac{1}{\vmag} \left[ \tilde{E}_z\mu \pdv{}{\vmag} 
+  \left( f^0 + f^1 \mfpei\mu \right) 
+  - \frac{\tilde{E}_z\sin(\phi)}{\vmag}\pdv{}{\phi} 
+  \left( f^0 + f^1 \mfpei\mu \right)
+  \right] 
+  =\\
+  \frac{\vmag}{\mfpe}\pdv{}{\vmag}
+  \left(\left( f^0 + f^1 \mfpei\mu \right) -\fM\right)
+  + \frac{\Zbar +1}{2 \mfpei \Zbar}\pdv{}{\mu}\left((1 - \mu^2)
+  \pdv{}{\mu}\left( f^0 + f^1 \mfpei\mu \right) \right) ,
+  \label{eq:AWBS_spherical}
+\end{multline}
+
+\begin{multline}
+  \mu\pdv{f^0}{z} + \mu^2 \pdv{}{z}\left(f^1 \mfpei \right)
+  + \frac{\tilde{E}_z}{\vmag} \left[ \mu \pdv{f^0}{\vmag} 
+  + \mu^2 \pdv{}{\vmag} \left( f^1 \mfpei \right) 
+  + \frac{1 - \mu^2}{\vmag}f^1 \mfpei
+  \right] 
+  =\\
+  \frac{\vmag}{\Zbar\mfpei}\pdv{}{\vmag}
+  \left( f^0 -\fM\right)
+  + \mu\frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag} 
+  - \mu \frac{\Zbar + 1}{\Zbar}f^1 ,
+  \label{eq:AWBS_spherical}
+\end{multline}
+consequently, we have the~following anisotropy expansion 
+$\mu^0, \mu^1, \mu^2, ...$ equations
+\begin{eqnarray}
+  \frac{\vmag}{\Zbar\mfpei}\pdv{}{\vmag}
+  \left( f^0 -\fM\right) &=& \frac{1}{\vmag}f^1 \mfpei , 
+  \nonumber \\
+  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} &=& 
+  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
+  - \frac{\Zbar + 1}{\Zbar} f^1 , 
+  \nonumber \\ 
+  \pdv{}{z}\left(f^1 \mfpei \right) 
+  + \frac{\tilde{E}_z}{\vmag} \left[\pdv{}{\vmag} \left( f^1 \mfpei \right)
+  - \frac{1}{\vmag}f^1 \mfpei \right] &=& 0 , \nonumber
+\end{eqnarray}
+which lead to the~definitions
+\begin{eqnarray}
+  \pdv{}{\vmag}\left( f^0 -\fM\right) &=& \frac{1}{\vmag^2}f^1 \Zbar\mfpei^2 ,
+  \label{eq:AWBS_f0} \\
+  \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
+  - \frac{\Zbar + 1}{\Zbar} f^1 &=&
+  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
+  \nonumber \\  
+  \frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
+  - \frac{\Zbar + 1}{\Zbar} f^1 &=&
+  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
+  \nonumber \\
+  \pdv{f^1}{\vmag} + \frac{1}{\vmag}(3-\Zbar)f^1
+  &=&
+  \frac{\Zbar}{\vmag}\left(\frac{1}{\rho}\pdv{\rho}{z} + 
+  \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
+  \frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2}\right)\fM .
+  \label{eq:AWBS_f1}
+\end{eqnarray}
+
+
+\subsection{The~Fokker-Planck diffusive electron transport}
+\label{sec:FPDiffusiveRegime}
+
+\cite{Rosenbluth_PR1957}, \cite{Longmire_1963}, \cite{Shkarofsky_1966}
+
+\subsection{Summary of BGK, AWBS, and Fokker-Planck diffusion}
+\label{sec:SummaryDiffusiveKinetics}
+
+\section{Benchmarking the~AWBS nonlocal transport model}
+\label{sec:BenchmarkingAWBS}
+
+\subsection{Review of simulation codes}
+\label{sec:ReviewOfCodes}
+
+\subsubsection{C7}
+\label{sec:C7code}
+
+\subsubsection{ALADIN}
+\label{sec:ALADINcode}
+
+\subsubsection{IMPACT}
+\label{sec:IMPACTcode}
+
+\subsubsection{CALDER}
+\label{sec:CALDERcode}
+
+\subsection{Simulation results}
+\label{sec:SimulationResults}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Impact_case1_heatflux.png} &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Impact_case1_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Left: correct steady solution. Right: correct comparison to kinetic profiles by IMPACT.}
+  \end{center}
+  \label{fig:C7_Aladin_case1}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case1_heatflux.png} &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case1_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Left: correct steady solution. Right: time and point to be precised by ALADIN.}
+  \end{center}
+  \label{fig:C7_Aladin_case1}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case2_heatflux.png} &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case2_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Left: Does not look as steady solution. Right: time and point to be precised by ALADIN.
+  }
+  \end{center}
+  \label{fig:C7_Aladin_case2}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_heatflux.png} &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Left: correct steady solution. Right: time and point to be precised by ALADIN.
+  }
+  \end{center}
+  \label{fig:C7_Aladin_case3}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case4_heatflux.png} & 
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case4_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Left: Does not look as steady solution. Right: time and point to be precised by ALADIN.
+  }
+  \end{center}
+  \label{fig:C7_Aladin_case4}
+\end{figure}
+
+\clearpage
+
+\section{Conclusions}
+\label{sec:Conclusions}
+
+\bibliographystyle{elsarticle-num}
+%\bibliography{NTH}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use elsarticle-num.bst.
+
+%% References without bibTeX database:
+
+\begin{thebibliography}{00}
+
+%% \bibitem must have the following form:
+\bibitem{Fish_RMP1987}{Nathaniel J. Fisch. Theory of current drive in plasmas. Rev. Mod. Phys., 59(1):175–234, Jan 1987.}
+\bibitem{Rosenbluth_PR1957}{Marshall N. Rosenbluth, William M. MacDonald, and David L. Judd. Fokker-planck equation for an inverse-square force. Phys.
+Rev., 107(1):1–6, Jul 1957.}
+\bibitem{Longmire_1963}{Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963.}
+\bibitem{Shkarofsky_1966}{I.P. Shkarofsky, T.W. Johnston, T.W. Bachynski, The Particle Kinetics of Plasmas, Addison-Wesley, Reading, MA, 1966.}
+
+\end{thebibliography}
+
+\clearpage
+
+\end{document}
+
+%% Old stuff goes to appendix 
+\appendix
 \section{The~Fokker-Planck equation}
 \label{sed:FP}
 %Use equation Hu (1, 2, 3) in text, (10), which puts together (4, 5, 7),

@@ -116,8 +116,9 @@ protected:
 public:
    EfieldCoefficient(GridFunction *gf_) : VectorGridFunctionCoefficient(gf_) { }
    void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
-                   double velocity, double mspee, double &mspEe_scale, 
-                   double &mspEt_scale, double &Efield_scale)
+                   double velocity, double mspee, double mspei, 
+                   double &mspEe_scale, double &mspEt_scale, 
+                   double &Efield_scale)
    {
 	  //mspE_scale = 0.0;
 	  //Efield_scale = 0.0;
@@ -172,7 +173,8 @@ public:
 	  // nu_e * v > Eb 
 	  // v * (nu_e + nu_Ee) = Ed
 	  // v * nu_Ee + Ed = alpha * Eb 
-	  double beta = 1.0;
+          //double Eb = Enorm * mspee / (mspee + mspei);
+	  double beta = 1000.0;
 	  double Eb = std::min(velocity * (1.0 + beta) * mspee, Enorm);
 	  mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
 	  double alpha = 1.0;
