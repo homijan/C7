@@ -47,21 +47,29 @@ if __name__ == "__main__":
    ps = argparse.ArgumentParser( description = 'Extract data from xmgrace (.agr) files')
    ps.add_argument( '-f', '--filename', type = str, help = 'xmgrace file' )
    ps.add_argument( '-o', '--outname', type = str, help = 'output file name' )
-   ps.add_argument( '-m', '--multiply', type = float, help = 'output file name' )
+   ps.add_argument( '-c', '--column', type = int, help = 'column to load' ) 
+   ps.add_argument( '-r', '--row', type = int, help = 'row to load' )
+   ps.add_argument( '-mx', '--xmultiply', type = float, help = 'multiply x axis' )
+   ps.add_argument( '-my', '--ymultiply', type = float, help = 'multiply y axis' )
    ## A no value argument solution.
-   ps.add_argument("-g", "--grace", action='store_true', help="Load grace file by adding -g/--grace argument.")
+   ps.add_argument("-gf", "--GraceFile", action='store_true', help="Load grace file by adding -g/--grace argument.")
+   ps.add_argument( '-mom', '--moment', type = int, help = 'moment to apply', default=0)
    ps.add_argument("-s", "--pltshow", action='store_true', help="Show plot by adding -s/--pltshow argument.")
-   ps.add_argument("-x", "--xmicrons2cm", action='store_true', help="Convert from microns to cm by adding -x/--xcm argument.")
-   ps.add_argument("-T", "--TkeV2eV", action='store_true', help="Convert from keV to eV by adding -T/--temperature argument.")
 
-
+   ## Default value of the column to be loaded.
+   column = 1
+   row = 1
    args = ps.parse_args()
+   if (args.column):
+      column = args.column
+   if (args.row):
+      row = args.row
 
    legends = []
    xs = []
    ys = []
 
-   if (args.grace):
+   if (args.GraceFile):
       print "Loading grace data..."
       d = LoadGrace( args.filename )
       for i in range(0, len(d)):
@@ -77,6 +85,12 @@ if __name__ == "__main__":
             y.append(row[1])
          x = np.array(x)
          y = np.array(y)
+         ## Multiply x.
+         if (args.xmultiply):
+            x = x * args.xmultiply
+         ## Multiply y.
+         if (args.ymultiply):
+            y = y * args.ymultiply
          print '# legend='
          print legend 
          print
@@ -85,7 +99,22 @@ if __name__ == "__main__":
          xs.append(x)
          ys.append(y)
    else:
-      x, y = np.loadtxt(args.filename,  usecols=(0, 1), unpack=True)
+      if (args.row):
+         data = np.array(np.loadtxt(args.filename))
+         print "data.shape: ", data.shape
+         x = data[0, :]
+         y = data[row, :]
+      else:
+         x, y = np.loadtxt(args.filename,  usecols=(0, column), unpack=True)
+      ## Multiply x.
+      if (args.xmultiply):
+         x = x * args.xmultiply
+      ## Multiply y.
+      if (args.ymultiply):
+         y = y * args.ymultiply
+      ## Apply moment on the data.
+      for i in range(args.moment):
+         y *= x
       # Append data.
       legends.append(args.filename)
       xs.append(x)
@@ -105,16 +134,9 @@ if __name__ == "__main__":
       y_fine = splev(x_fine, tck, der=0)
       #grady_fine = splev(x, tck, der=1)
       ## x in [cm]
-      if (args.xmicrons2cm):
-         x_fine = x_fine * 1e-4
-      ## Temperature in [eV]
-      if (args.TkeV2eV):
-         y_fine = y_fine * 1e3 
-      ## Multiply y.
-      if (args.multiply):
-         y_fine = y_fine * args.multiply
       ## Store fine data
-      np.savetxt(args.outname+legend+'.txt', np.transpose([x_fine, y_fine]))
+      if (args.outname):
+         np.savetxt(args.outname+legend+'.txt', np.transpose([x_fine, y_fine]))
       if (args.pltshow):
          plt.plot(x_fine, y_fine, label=legend)
          plt.legend()

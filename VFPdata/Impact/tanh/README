@@ -1,0 +1,6 @@
+All these data files refer to simulations starting from an initial temperature profile:
+Te / keV = 425 + 575*tanh( (x-x0)/L)
+Where the half ramp length is given by L, and the ramp centre x0 does not affect the phyics and differs simulation to simulation.
+For all simulations there are no (frozen) hydrodynamics, electron density is 5x10^20 / cm^3 and log Lambda is 7.09433.
+All simulations were performed with either the IMPACT or K2 VFP codes.
+The SNB and Spitzer-Harm heat flow profiles were obtained by postprocessing the temperature profiles given by the VFP code at the specified snapshot.

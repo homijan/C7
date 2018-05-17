@@ -393,6 +393,9 @@ if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
 ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda_{th}$='+"{:.4f}".format(mfp_ei*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+if (args.C7):
+   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+'C7')
+
 if (args.labelFluxExt1):
    ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1)
 if (args.labelFluxExt2):
@@ -402,8 +405,6 @@ if (args.labelFluxExt3):
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+'SH')
-if (args.C7):
-   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+'C7')
 ## Special treatment of temperature profile.
 C7Te_scaled = C7Te*(C7q.max() - C7q.min())/(C7Te.max() - C7Te.min())
 C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7q.max())
@@ -426,20 +427,21 @@ ax2 = ax1.twinx()
 #   ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE.min())+', '+"{:.0f}".format(C7corrE.max())+')' )
 if (args.Efield):
    if (args.pltne):
-      ax2.set_ylabel(r'$E$ [V/cm]'+r', $n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
+      ax2.set_ylabel(r'$E$ [V/m]'+r', $n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
    else:
-      ax2.set_ylabel(r'$E$ [V/cm]')
+      ax2.set_ylabel(r'$E$ [V/m]')
 else:
    if (args.pltne):
       ax2.set_ylabel(r'$n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
 if (args.Efield):
-   if (args.kinSH):
-      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+':', label=r'$E-$'+'SH')
    if (args.C7):
       ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'--', label=r'$E-$'+'C7')
    if (args.labelEfieldExt1):
       E1xmicrons, E1values = np.loadtxt('../../VFPdata/Efield1.dat',  usecols=(0, 1), unpack=True)
       ax2.plot(E1xmicrons, -E1values, Ext1color+'--', label='$E-$'+args.labelEfieldExt1)
+
+   if (args.kinSH):
+      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+':', label=r'$E-$'+'SH')
 ## Special treatment of the corrE showing the limit velocity/vTh 
 ## to be affected by E field.
 #if (vlimshow):
@@ -460,7 +462,9 @@ if (args.pltshow):
 ###############################################################################
 ## Shrink the x axis appropriately.
 if (args.labelDistributionExt1):
-   D1v, D1_f0, D1_f1x = np.loadtxt('../../VFPdata/distribution1.dat',  usecols=(0, 1, 2), unpack=True)
+   D1v, D1_f0 = np.loadtxt('../../VFPdata/F0distribution1.dat',  usecols=(0, 1), unpack=True)
+   D1v, D1_f1x = np.loadtxt('../../VFPdata/F1distribution1.dat',  usecols=(0, 1), unpack=True)  
+   #D1v, D1_f0, D1_f1x = np.loadtxt('../../VFPdata/distribution1.dat',  usecols=(0, 1, 2), unpack=True)
 
 mult = 8
 p_v = v[v < mult*vTh(Te)]
@@ -491,6 +495,10 @@ print "ne: ", ne
 print "Kn_ei: ", Kn_ei
 ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+', Kn='+"{:.1e}".format(Kn_ei)+')')
 ## Plot kinetic analysis.
+if (args.C7):
+   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+'C7')
+if (args.labelDistributionExt1):
+   ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1)
 if (args.kinSH):
    ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1-$'+'SH')
 if (AWBSoriginal):
@@ -498,23 +506,16 @@ if (AWBSoriginal):
 if (AWBSstar):
    ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0), "g--", label=r'$q_1^{KIPP}$')
    #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
-if (args.C7):
-   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+'C7')
-   #ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1^{C7E}$'+'('+"{:.2f}".format(proporC7EQ)+r'$q_h^{SH}$)')
+
 ## q0 axis
-if (args.labelDistributionExt1):
-   ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1)
 ax2 = ax1.twinx()
-if (args.kinSH):
-   ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0-$'+'SH')
-   #ax2.plot(p_v/vTh(Te), me / 2.0 * p_v * p_v * p_v * p_fM_analytic, SHcolor+':', label=r'$q_0^{SH}$')
 if (args.C7):
    ax2.plot(p_C7Ev/vTh(Te), p_C7Ef0v2, C7Ecolor+'--', label=r'$f_0-$'+'C7')
-   #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi) / me * 2.0 / p_C7Ev / p_C7Ev / p_C7Ev, C7Ecolor+'--', label=r'$f_0^{C7}$')
-   #ax2.plot(p_C7Ev/vTh(Te), p_C7Emehalff0v5 / (4.0*pi), C7Ecolor+'--', label=r'$q_0^{C7E}$')
 if (args.labelDistributionExt1):
    ax2.plot(p_D1v/vTh(Te), p_D1_f0, Ext1color+'--', label=r'$f_0-$'+args.labelDistributionExt1 )
-ax2.set_ylabel(r'$f_0 v^2$ [a.u.]')
+if (args.kinSH):
+   ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0-$'+'SH')
+ax2.set_ylabel(r'$f_0 v^2$ [s/cm$^4$]')
 #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
