@@ -101,7 +101,6 @@ if __name__ == "__main__":
    else:
       if (args.row):
          data = np.array(np.loadtxt(args.filename))
-         print "data.shape: ", data.shape
          x = data[0, :]
          y = data[row, :]
       else:

@@ -174,7 +174,7 @@ public:
 	  // v * (nu_e + nu_Ee) = Ed
 	  // v * nu_Ee + Ed = alpha * Eb 
           //double Eb = Enorm * mspee / (mspee + mspei);
-	  double beta = 1000.0;
+	  double beta = 10000000000.0;
 	  double Eb = std::min(velocity * (1.0 + beta) * mspee, Enorm);
 	  mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
 	  double alpha = 1.0;
