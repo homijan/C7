@@ -1,0 +1,6 @@
+# ElecX max au cours du temps
+# simu : /Volumes/MERCURE/JOBS/4milan_5e20_Z2/GNU/ElecX@y-c.set
+# col 0 : temps (s)
+# col 1 : ElecX (V/m)
+0.000000000000000e+00	0.000000
+1.200000000000016e-11	14318057.079061

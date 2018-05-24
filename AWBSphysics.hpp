@@ -113,8 +113,10 @@ public:
 class EfieldCoefficient : public VectorGridFunctionCoefficient
 {
 protected:
+   double times_nue;
 public:
-   EfieldCoefficient(GridFunction *gf_) : VectorGridFunctionCoefficient(gf_) { }
+   EfieldCoefficient(GridFunction *gf_) : VectorGridFunctionCoefficient(gf_) 
+   { times_nue = 1.0; }
    void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
                    double velocity, double mspee, double mspei, 
                    double &mspEe_scale, double &mspEt_scale, 
@@ -174,7 +176,7 @@ public:
 	  // v * (nu_e + nu_Ee) = Ed
 	  // v * nu_Ee + Ed = alpha * Eb 
           //double Eb = Enorm * mspee / (mspee + mspei);
-	  double beta = 10000000000.0;
+	  double beta = times_nue; //10000000000.0;
 	  double Eb = std::min(velocity * (1.0 + beta) * mspee, Enorm);
 	  mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
 	  double alpha = 1.0;
@@ -189,6 +191,7 @@ public:
       //                             / Enorm);
       return;
    }
+   void SetTimesNue(double _times_nue) { times_nue = _times_nue; }
 }; 
 
 // General entity operating on kinetic distribution function.

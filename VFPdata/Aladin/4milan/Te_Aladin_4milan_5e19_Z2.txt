@@ -1,0 +1,6 @@
+# Te max au cours du temps
+# simu : /Volumes/MERCURE/JOBS/4milan_5e19_Z2/GNU/Te@y-c.set
+# col 0 : temps (s)
+# col 1 : Te (keV)
+0.000000000000000e+00	1.000000
+2.000999999999940e-11	0.950814
