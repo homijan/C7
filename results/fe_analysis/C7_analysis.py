@@ -399,9 +399,9 @@ if (args.C7):
 if (args.labelFluxExt1):
    ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1)
 if (args.labelFluxExt2):
-   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h$-'+args.labelFluxExt2)
+   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2)
 if (args.labelFluxExt3):
-   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h$-'+args.labelFluxExt3)
+   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3)
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+'SH')
@@ -514,7 +514,7 @@ if (args.C7):
 if (args.labelDistributionExt1):
    ax2.plot(p_D1v/vTh(Te), p_D1_f0, Ext1color+'--', label=r'$f_0-$'+args.labelDistributionExt1 )
 if (args.kinSH):
-   ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_0-$'+'SH')
+   ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_M$')
 ax2.set_ylabel(r'$f_0 v^2$ [s/cm$^4$]')
 #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)

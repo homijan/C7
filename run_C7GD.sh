@@ -3,7 +3,7 @@
 SIGMA=2.425e17 ## Matching the CHIC diffusive flux.
 CL=7.09 # Coulomb logarithm.
 
-NPROC=8
+NPROC=2
 
 RS=9
 F1ORDER=2
@@ -11,10 +11,10 @@ F0ORDER=1
 
 XPOINT=0.1605 # in cm qSH maximum
 
-MING=1000
-#MING=250
+#MING=2500
+MING=250
 
-MAXITER=30
+MAXITER=10
 
 # Challenge SNB ;)
 #MING=25
@@ -33,12 +33,12 @@ L=0.188175
 cd VFPdata
 cd GD_Hohlraum
 #python ../loadPhilippegrace.py -f gdhohlraum_xmic_ne1e20cm3_interp -o ne_ -x -s -m 2e18 #-m 2e24
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_ne1e20cm3_interp -o ne_ -mx 1e-4 -my 1e20 -s
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_Z_interp -o Zbar_ -mx 1e-4 -s
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_10ps_TekeV_interp -o Te_ -mx 1e-4 -my 1e3 -s
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_10ps_IMPACTWcm2 -o Q_ -s
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_10ps_separatedsnbWcm2 -o Q_ -s
-python ../loadPhilippegrace.py -f gdhohlraum_xmic_10ps_LocalWcm2 -o Q_ -s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_ne1e20cm3_interp -o ne_ -x -m 1e20 #-s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_Z_interp -o Zbar_ -x #-s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_10ps_TekeV_interp -o Te_ -x -m 1e3 #-s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_10ps_IMPACTWcm2 -o Q_ #-s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_10ps_separatedsnbWcm2 -o Q_ #-s
+python ../old_loadPhilippegrace.py -f gdhohlraum_xmic_10ps_LocalWcm2 -o Q_ #-s
 cd ..
 cp GD_Hohlraum/Te_gdhohlraum_xmic_10ps_TekeV_interp.txt temperature.dat
 cp GD_Hohlraum/ne_gdhohlraum_xmic_ne1e20cm3_interp.txt ne.dat

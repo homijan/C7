@@ -585,6 +585,36 @@ $\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
 
 \subsubsection{C7}
 \label{sec:C7code}
+Since in the~laser heated plasmas the~Knudsen number 
+Kn$ = \frac{\vth}{\nu_t(\vth) L} \in (0, 1)$, i.e. the~collisionality in 
+the~kinetics of electrons plays always an~important effect for thermal-like 
+particles, the~electron distribution 
+function can be treated as out-of-equilibrium approximation 
+\begin{equation}
+  f = \fM + \daf ,
+  \label{eq:OOE_outofeq}
+\end{equation}  
+where the~consequent AWBS model reads
+\begin{multline}
+  \vmag\vn\cdot\nabla (\fM + \daf) + \tE\cdot\vn \left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tE\cdot\vect{e}_\theta}{\vmag}\pdv{\daf}{\theta}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - \fM - \daf) ,
+  \label{eq:OOE_AWBS_model}
+\end{multline}
+or its 1D version
+\begin{multline}
+  \vmag\mu\pdv{}{z}(\fM + \daf) + \tE\mu\left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\pdv{\daf}{\mu}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - \fM - \daf) ,
+  \label{eq:OOE_AWBS_model_1D}
+\end{multline}
+where $\tE\cdot\vect{e}_\theta = \tEz\sin(\theta)$ and $\pdv{}{\theta} = \sin(\theta)\pdv{}{\mu}$, $\mu = \cos(\theta)$.
 
 \subsubsection{ALADIN}
 \label{sec:ALADINcode}
