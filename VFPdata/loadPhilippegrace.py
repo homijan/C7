@@ -52,7 +52,8 @@ if __name__ == "__main__":
    ps.add_argument( '-mx', '--xmultiply', type = float, help = 'multiply x axis' )
    ps.add_argument( '-my', '--ymultiply', type = float, help = 'multiply y axis' )
    ## A no value argument solution.
-   ps.add_argument("-gf", "--GraceFile", action='store_true', help="Load grace file by adding -g/--grace argument.")
+   ps.add_argument("-gf", "--GraceFile", action='store_true', help="Load grace file by adding -gf/--GraceFile argument.")
+   ps.add_argument("-cf", "--CalderFile", type = float, help="Load Calder file by adding -cf/--CalderFile argument followed by thickness of the domain in microns.")
    ps.add_argument( '-mom', '--moment', type = int, help = 'moment to apply', default=0)
    ps.add_argument("-s", "--pltshow", action='store_true', help="Show plot by adding -s/--pltshow argument.")
 
@@ -99,12 +100,20 @@ if __name__ == "__main__":
          xs.append(x)
          ys.append(y)
    else:
-      if (args.row):
-         data = np.array(np.loadtxt(args.filename))
-         x = data[0, :]
-         y = data[row, :]
+      if (args.CalderFile):
+         ## Calder file keeps only y data.
+         y = np.loadtxt(args.filename)
+         ## x data must be generated according to input.
+         x = np.linspace(0, args.CalderFile, len(y))
       else:
-         x, y = np.loadtxt(args.filename,  usecols=(0, column), unpack=True)
+         if (args.row):
+            ## The case of data stored in rows.
+            data = np.array(np.loadtxt(args.filename))
+            x = data[0, :]
+            y = data[row, :]
+         else:
+            ## The case of data stored in columns. Standard.
+            x, y = np.loadtxt(args.filename,  usecols=(0, column), unpack=True)
       ## Multiply x.
       if (args.xmultiply):
          x = x * args.xmultiply
