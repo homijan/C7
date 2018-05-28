@@ -50,18 +50,18 @@ cd ..
 
 
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 | tee C7E.out
+#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 | tee C7E.out
 ## Run C7 10ps MING=3000 converged.
 ##mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -cl $CL -L $L -xp $XPOINT -minG $MING -s 3 -cfl 1e10 -S0 1.0 -dE 0.0000001 -Em 150 | tee C7E.out
 
-cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
-cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
-cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.txt
+#cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
+#cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
+#cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.txt
 # Store the output file.
 #cp C7E.out $DIRanalysis$DIRout"P10_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -C7 --labelFluxExt1 IMPACT --labelFluxExt2 SNBs --labelFluxExt3 local --pltshow -SH -pn -pZ -pT #-xp #--Efield #-xp #--vlimshow #--AWBSstar #--AWBSoriginal
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -C7 --labelFluxExt1 IMPACT --labelFluxExt2 SNBs --labelFluxExt3 local --pltshow -pn -pZ -pT #-SH #-xp #--Efield #--vlimshow #--AWBSstar #--AWBSoriginal
 
 # Safe figs.
 

@@ -384,6 +384,9 @@ if (args.labelFluxExt3):
 SHcolor = 'k'
 C7Ecolor = 'r'
 Ext1color = 'g'
+labelC7 = 'AWBS-P1'
+labelL = r'Lorentz$^*$'
+labelSH = 'SH'
 
 ## Set labels.
 fig, ax1 = plt.subplots()
@@ -394,7 +397,7 @@ if (args.pltTe):
 ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda_{th}$='+"{:.4f}".format(mfp_ei*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.C7):
-   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+'C7')
+   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7)
 
 if (args.labelFluxExt1):
    ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1)
@@ -404,7 +407,7 @@ if (args.labelFluxExt3):
    ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3)
 
 if (args.kinSH):
-   ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+'SH')
+   ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
 ## Special treatment of temperature profile.
 C7Te_scaled = C7Te*(C7q.max() - C7q.min())/(C7Te.max() - C7Te.min())
 C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7q.max())
@@ -435,13 +438,13 @@ else:
       ax2.set_ylabel(r'$n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
 if (args.Efield):
    if (args.C7):
-      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'--', label=r'$E-$'+'C7')
+      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'--', label=r'$E-$'+labelC7)
    if (args.labelEfieldExt1):
       E1xmicrons, E1values = np.loadtxt('../../VFPdata/Efield1.dat',  usecols=(0, 1), unpack=True)
       ax2.plot(E1xmicrons, -E1values, Ext1color+'--', label='$E-$'+args.labelEfieldExt1)
 
    if (args.kinSH):
-      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+':', label=r'$E-$'+'SH')
+      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+':', label=r'$E-$'+labelL)
 ## Special treatment of the corrE showing the limit velocity/vTh 
 ## to be affected by E field.
 #if (vlimshow):
@@ -466,27 +469,38 @@ if (args.labelDistributionExt1):
    D1v, D1_f1x = np.loadtxt('../../VFPdata/F1distribution1.dat',  usecols=(0, 1), unpack=True)  
    #D1v, D1_f0, D1_f1x = np.loadtxt('../../VFPdata/distribution1.dat',  usecols=(0, 1, 2), unpack=True)
 
-mult = 8
-p_v = v[v < mult*vTh(Te)]
-p_fM_analytic = fM_analytic[v < mult*vTh(Te)]
-p_SHq = SHq[v < mult*vTh(Te)]
-p_AWBSq_corr = AWBSq_corr[v < mult*vTh(Te)]
-p_AWBSq = AWBSq[v < mult*vTh(Te)]
+mult_min = 0
+mult_max = 6
+mask_v = (mult_min*vTh(Te) < v) & (v < mult_max*vTh(Te))
+p_v = v[mask_v]
+p_fM_analytic = fM_analytic[mask_v]
+p_SHq = SHq[mask_v]
+p_AWBSq_corr = AWBSq_corr[mask_v]
+p_AWBSq = AWBSq[mask_v]
 
 if (args.C7):
-   p_C7Ev = C7Ev[C7Ev < mult*vTh(Te)]
-   p_C7Emehalff1v5 = C7Emehalff1v5[C7Ev < mult*vTh(Te)]
-   p_C7Emehalff0v5 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
-   p_C7Ef0v2 = C7Emehalff0v5[C7Ev < mult*vTh(Te)]
+   mask_C7Ev = (mult_min*vTh(Te) < C7Ev) & (C7Ev < mult_max*vTh(Te))
+   p_C7Ev = C7Ev[mask_C7Ev]
+   p_C7Emehalff1v5 = C7Emehalff1v5[mask_C7Ev]
+   p_C7Emehalff0v5 = C7Emehalff0v5[mask_C7Ev]
+   p_C7Ef0v2 = C7Emehalff0v5[mask_C7Ev]
+   p_C7EfMv2 = C7Emehalff0v5[mask_C7Ev]
    ## out-of-equilibrium source
    for i in range(len(p_C7Ev)):
       p_C7Ef0v2[i] = fM(p_C7Ev[i], Te)*p_C7Ev[i]*p_C7Ev[i] + p_C7Emehalff0v5[i] / (4.0*pi) / me * 2.0 / p_C7Ev[i] / p_C7Ev[i] / p_C7Ev[i]
+      ## Subtract Maxwellian.
+      p_C7EfMv2[i] = fM(p_C7Ev[i], Te)*p_C7Ev[i]*p_C7Ev[i]
 
 if (args.labelDistributionExt1):
-   p_D1v = D1v[D1v < mult*vTh(Te)]
-   p_D1_f0 = D1_f0[D1v < mult*vTh(Te)]
-   p_D1_f1x = D1_f1x[D1v < mult*vTh(Te)]
-
+   mask_D1v = (mult_min*vTh(Te) < D1v) & (D1v < mult_max*vTh(Te))
+   p_D1v = D1v[mask_D1v]
+   p_D1_f0 = D1_f0[mask_D1v]
+   p_D1_f1x = D1_f1x[mask_D1v]
+   p_D1_fMv2 = D1_f0[mask_D1v]
+   ## out-of-equilibrium source
+   for i in range(len(p_D1v)):
+      ## Subtract Maxwellian.
+      p_D1_fMv2[i] = fM(p_D1v[i], Te)*p_D1v[i]*p_D1v[i]
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
@@ -496,28 +510,40 @@ print "Kn_ei: ", Kn_ei
 ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+', Kn='+"{:.1e}".format(Kn_ei)+')')
 ## Plot kinetic analysis.
 if (args.C7):
-   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+'C7')
+   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7)
 if (args.labelDistributionExt1):
    ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1)
 if (args.kinSH):
-   ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1-$'+'SH')
+   ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1-$'+labelL)
 if (AWBSoriginal):
    ax1.plot(p_v/vTh(Te), p_AWBSq, "b-.", label=r'$q_1^{AWBS}$')
 if (AWBSstar):
    ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0), "g--", label=r'$q_1^{KIPP}$')
    #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
+ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
 
 ## q0 axis
 ax2 = ax1.twinx()
+log_min = -3.0
+data_max = -1e64
+data_min = 1e64
 if (args.C7):
-   ax2.plot(p_C7Ev/vTh(Te), p_C7Ef0v2, C7Ecolor+'--', label=r'$f_0-$'+'C7')
+   data = np.log10(abs(p_C7Ef0v2 - p_C7EfMv2) / p_C7EfMv2)
+   data[data < log_min] = log_min
+   data_max = max([max(data), data_max])
+   data_min = min([min(data), data_min])
+   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0 / f_M-$'+labelC7)
 if (args.labelDistributionExt1):
-   ax2.plot(p_D1v/vTh(Te), p_D1_f0, Ext1color+'--', label=r'$f_0-$'+args.labelDistributionExt1 )
-if (args.kinSH):
-   ax2.plot(p_v/vTh(Te), p_fM_analytic, SHcolor+':', label=r'$f_M$')
-ax2.set_ylabel(r'$f_0 v^2$ [s/cm$^4$]')
+   data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
+   data[data < log_min] = log_min
+   data_max = max([max(data), data_max])
+   data_min = min([min(data), data_min])
+   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0 / f_M-$'+args.labelDistributionExt1 )
+ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
+ax2.set_ylabel(r'$\log_{10}(\delta f_0 / f_M)$ [a.u.]')
+#ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')
 #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
-ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:
    print("saving kinetics.%s" % (ext,))
