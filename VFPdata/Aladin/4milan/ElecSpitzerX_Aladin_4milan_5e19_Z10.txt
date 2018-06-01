@@ -1,0 +1,6 @@
+# ElecSpitzerX max au cours du temps
+# simu : /Volumes/MERCURE/JOBS/4milan_5e19_Z10/GNU/ElecSpitzerX@y-c.set
+# col 0 : temps (s)
+# col 1 : ElecSpitzerX (V/m)
+0.000000000000000e+00	0.000000
+2.000999999999940e-11	9775754.794588

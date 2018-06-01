@@ -119,6 +119,9 @@ int main(int argc, char *argv[])
    // Number of consistent Efield iterations.
    double dEit_norm_limit = 1e-2;
    int Efield_consistent_iter_max = 100;
+   // Efield effect needs to be divided into a directional and an artificial 
+   // frictional parts.
+   double times_nue = 1.0;
 
    OptionsParser args(argc, argv);
    args.AddOption(&mesh_file, "-m", "--mesh",
@@ -189,6 +192,8 @@ int main(int argc, char *argv[])
                   "Electron source scaling (via electron density), i.e. ne = S0*ne.");
    args.AddOption(&nuS0, "-n0", "--n0",
                   "Electron collision frequency scaling, i.e. nu_e = S0*nu_e. If negative Zbar correction is used.");
+   args.AddOption(&times_nue, "-xn", "--xnue",
+                  "Electric field effect division, maximum friction part as times the nue.");
    args.AddOption(&ni, "-ni", "--ni",
                   "Ion density (conversion as ni = rho/mi).");
    args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
@@ -539,6 +544,7 @@ int main(int argc, char *argv[])
 
    // Represent Efield by a vector coefficient.
    nth::EfieldCoefficient Efield_gfcf(&Efield_gf);
+   Efield_gfcf.SetTimesNue(times_nue);
    nth::EfieldCoefficient *Efield_pcf = &Efield_gfcf;
 
    // TMP Prepare a fake Bfield vector coefficient.

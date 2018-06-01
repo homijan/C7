@@ -1,0 +1,6 @@
+# FluxX max au cours du temps
+# simu : /Volumes/MERCURE/JOBS/4milan_5e19_Z10/GNU/FluxX@y-c.set
+# col 0 : temps (s)
+# col 1 : FluxX (W/cm2)
+0.000000000000000e+00	0.000000
+2.000999999999940e-11	1362443691832.265869

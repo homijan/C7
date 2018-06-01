@@ -71,7 +71,7 @@
 \include{C7_commands}
 
 \newcommand{\figref}[1]{FIG.~\ref{#1}}
-\newcommand{\refeq}[1]{(\ref{#1})}
+\newcommand{\refeq}[1]{\eqref{#1}}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
 \newcommand{\figscale}{0.5}
 
@@ -182,6 +182,14 @@ kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
 
 \section{The~AWBS nonlocal transport model}
 \label{sec:AWBSmodel}
+\begin{equation}
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + \tE \cdot\gv \ft =
+  \vmag \frac{\nue}{2}\pdv{}{\vmag}\left(\ft - \fM\right) 
+  + \frac{\nuei + \frac{\nue}{2}}{2} \frac{\partial^2 \ft}{\partial \vn^2}
+  %\left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  %+ \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)  
+  , \label{eq:AWBS_model}
+\end{equation}
 \cite{Fish_RMP1987}
 
 \section{BGK, AWBS, and Fokker-Planck models in diffusive regime}
@@ -257,7 +265,7 @@ BGK equation reads
 consequently, we have the~following anisotropy expansion 
 $\mu^0, \mu^1, \mu^2, ...$ equations
 \begin{eqnarray}
-  \frac{\fM - f^0}{\Zbar\mfpei} &=& \frac{1}{\vmag}f^1 \mfpei , 
+  \frac{\fM - f^0}{\Zbar\mfpei} &=& \frac{\tEz}{\vmag^2}f^1 \mfpei , 
   \nonumber \\
   \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} &=& 
   - \frac{1}{\Zbar}f^1 - f^1 , 
@@ -292,7 +300,7 @@ In order to ensure the~plasma to be quasi-neutral, the~zero-current condition
   \label{eq:zero_current}
 \end{equation}
 can be achieved by providing a~consistent electric field in 
-\eqref{eq:f_approximation}, i.e.
+\refeq{eq:f_approximation}, i.e.
 \begin{equation}
   \tE = \frac{\vth^2~\int_{4\pi} \vn\otimes\vn\cdot \int_0^{\infty} \vmag  
   \fM \frac{\mfp}{\alpha}\left(\frac{\nabla\rho}{\rho} + 
@@ -350,7 +358,7 @@ Based on the~Gauss integral formula
   \frac{s!~(2 \vth^2)^{s+1}}{2}
   \nonumber 
 \end{equation}
-and Maxwell-Boltzmann distribution \eqref{eq:MBdistribution} the~heat flux can 
+and Maxwell-Boltzmann distribution \refeq{eq:MBdistribution} the~heat flux can 
 be written as
 \begin{equation}
   \vect{q}_H = \frac{4\pi}{3}\frac{\me}{2}\frac{1}{\alpha \crs\rho}
@@ -367,7 +375,7 @@ be written as
   \left(\frac{\kB}{\me}\right)^{\frac{7}{2}}T^{\frac{5}{2}} \nabla T .
   \label{eq:Lorentz_flux}
 \end{equation} 
-In conclusion, equation \eqref{eq:Lorentz_flux} provides nothing else than
+In conclusion, equation \refeq{eq:Lorentz_flux} provides nothing else than
 the~well known Lorentz approximation heat flux and its nonlinearity $2.5$
 in temperature. What is worth mentioning is the~effect of E field 
 (quasi-neutrality), which reduces the~flux of about	71.4$\%$ 
@@ -449,7 +457,7 @@ consequently, we have the~following anisotropy expansion
 $\mu^0, \mu^1, \mu^2, ...$ equations
 \begin{eqnarray}
   \frac{\vmag}{\Zbar\mfpei}\pdv{}{\vmag}
-  \left( f^0 -\fM\right) &=& \frac{1}{\vmag}f^1 \mfpei , 
+  \left( f^0 -\fM\right) &=& \frac{\tEz}{\vmag^2}f^1 \mfpei , 
   \nonumber \\
   \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} &=& 
   \frac{\vmag}{\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
@@ -482,11 +490,93 @@ which lead to the~definitions
 
 \subsection{The~Fokker-Planck diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
+\begin{equation}
+  \vtwoh = \sqrt{\frac{2 \kB T}{\me}} = 1 / j,
+  \nonumber
+\end{equation}
+\begin{eqnarray}
+  A &=& -\frac{\me^2 \vtwoh^2 \tE}{2 \pi e^4 n_e \lnc} = - \frac{m E}{2\pi j^2 e^3 n_e \lnc}
+  , \nonumber \\
+  B &=& \frac{\me^2 \vtwoh^4 |\nabla T|}{2 \pi e^4 n_e \lnc T} = \frac{2 \kB^2 T |\nabla T|}{\pi e^4 n_e \lnc}
+  , \nonumber
+\end{eqnarray}
+\begin{equation}
+  \frac{A}{B} = - \frac{|\tE| T}{\vtwoh^2 |\nabla T|} ,
+  \nonumber
+\end{equation}
+\begin{equation}
+  \tE = -\frac{3}{2}\frac{\vtwoh^2}{2}\frac{\gamma_T}{\gamma_E}
+  \frac{\nabla T}{T} ,
+  \nonumber
+\end{equation}
+From Eq. (24) CSR, we can write the~form of $f_1$ including both $\nabla T$ 
+and $\tE$ effects as
+\begin{equation}
+  f_1(\vmag, \theta) = \cos(\theta) \frac{B}{\Zbar}\left( d_T(\vmag/\vtwoh) 
+  + \frac{A}{B} d_E(\vmag/\vtwoh) \right) \fM(\vmag)  ,
+  \nonumber
+\end{equation}
+where in the~case of vanishing current one gets
+\begin{equation}
+  \frac{A}{B} = \frac{3}{2}\frac{\gamma_T}{2 \gamma_E} ,
+  \nonumber
+\end{equation}
+i.e.
+\begin{equation}
+  f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
+  \frac{\vtwoh^4}{\Zbar}\left( 2 d_T(\vmag/\vtwoh) 
+  + \frac{3}{2}\frac{\gamma_T}{\gamma_E} d_E(\vmag/\vtwoh) \right) 
+  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
+  \label{eq:f1_SH}
+\end{equation}
+where $d_T(x) = \Zbar D_{T}(x) / B$ and $d_E(x) = \Zbar D_{E}(x) / A$ 
+are represented by numerical values in TABLE I and TABLE II in 
+\cite{SH_PR1953}, respectively. 
+In the~case of high $\Zbar$ limit, $\gamma_T \rightarrow 1$,
+$\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
+\cite{SH_PR1953}, which leads to the~standard Lorentz gas model
+\begin{equation}
+   f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
+  \frac{\vmag^4}{\Zbar}\left( 4 - \frac{\vmag^2}{\vtwoh^2} \right) 
+  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
+  \label{eq:f1_Lorentz} 
+\end{equation}
 
 \cite{Rosenbluth_PR1957}, \cite{Longmire_1963}, \cite{Shkarofsky_1966}
 
 \subsection{Summary of BGK, AWBS, and Fokker-Planck diffusion}
 \label{sec:SummaryDiffusiveKinetics}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=0.8\textwidth]{q1s.png}
+    \end{tabular}
+  \caption{  
+  The~flux velocity moment of the~anisotropic part of the~electron distribution 
+  function in low $Z=1$ and high $Z=116$ plasmas in diffusive regime.}
+  \end{center}
+  \label{fig:q1s_summary}
+\end{figure}
+
+\begin{table}
+\begin{center}
+  \begin{tabular}{c|ccccc}
+    \hline\hline\\
+    %$\Zbar$ & $1$ & $2$ & $4$ & $16$ & $\infty$ \\\\
+    & $\,\Zbar=1\,$ & $\,\Zbar=2\,$ & $\,\Zbar=4\,$ & $\,\Zbar=16\,$ & $\,\Zbar=116\,$ \\\\
+    \hline\\
+    $error(\vect{q}_{AWBS})$ & 0.057 & 0.004 & 0.038 & 0.049 & 0.004 \\\\
+    \hline\hline
+  \end{tabular}
+  \caption{
+  Relative $error(\vect{q}_{AWBS}) = |\vect{q}_{AWBS} - \vect{q}_{SH}| / \vect{q}_{SH}$ of the~AWBS
+  kinetic model equation \refeq{eq:AWBS_model} showing the~discrepancy 
+  (maximum around 5$\%$) with respect to the~original solution of 
+  the~heat flux given by Spitzer and Harm \cite{SH_PR1953}.
+  }
+\end{center}
+\end{table}
 
 \section{Benchmarking the~AWBS nonlocal transport model}
 \label{sec:BenchmarkingAWBS}
@@ -496,6 +586,72 @@ which lead to the~definitions
 
 \subsubsection{C7}
 \label{sec:C7code}
+Since in the~laser heated plasmas the~Knudsen number 
+Kn$ = \frac{\vth}{\nu_t(\vth) L} \in (0, 1)$, i.e. the~collisionality in 
+the~kinetics of electrons plays always an~important effect for thermal-like 
+particles, the~electron distribution 
+function can be treated as out-of-equilibrium approximation 
+\begin{equation}
+  f = \fM + \daf ,
+  \label{eq:OOE_outofeq}
+\end{equation}  
+where the~consequent AWBS model reads
+\begin{multline}
+  \vmag\vn\cdot\nabla (\fM + \daf) + \tE\cdot\vn \left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tE\cdot\vect{e}_\theta}{\vmag}\pdv{\daf}{\theta}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf)) ,
+  \label{eq:OOE_AWBS_model}
+\end{multline}
+or its 1D version
+\begin{multline}
+  \vmag\mu\pdv{}{z}(\fM + \daf) + \tEz\mu\left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\pdv{\daf}{\mu}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf)) ,
+  \label{eq:OOE_AWBS_model_1D}
+\end{multline}
+where $\tE\cdot\vect{e}_\theta = \tEz\sin(\theta)$ and $\pdv{}{\theta} = \sin(\theta)\pdv{}{\mu}$, $\mu = \cos(\theta)$.
+\begin{multline}
+  \left(\vmag \frac{\nue}{2} - \tEz\mu\right) \pdv{\daf}{\vmag} = 
+  \vmag\mu\pdv{\daf}{z} + \vmag\mu\pdv{\fM}{z} + \tEz\mu\pdv{\fM}{\vmag} \\ 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\pdv{\daf}{\mu}
+  - \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf))
+  ,
+  \nonumber
+\end{multline}
+we adopt $\daf(\vmag, \mu) = \dafzero(\vmag) + \mu\dafone(\vmag)$, 
+which leads to
+\begin{multline}
+  \left(\vmag \frac{\nue}{2} - \tEz\mu\right) \pdv{}{\vmag}
+  (\dafzero + \mu\dafone) = 
+  \vmag\mu\pdv{}{z}(\dafzero + \mu\dafone) + \vmag\mu\pdv{\fM}{z} 
+  + \tEz\mu\pdv{\fM}{\vmag} \\ 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\dafone
+  + \left(\nuei + \frac{\nue}{2}\right) \mu\dafone
+  ,
+  \nonumber
+\end{multline}
+\begin{eqnarray}
+  \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag}
+  - \tEz\mu^2 \pdv{\dafone}{\vmag}
+  &=& 
+  \vmag\mu^2\pdv{\dafone}{z}
+  + \frac{\tEz(1-\mu^2)}{\vmag}\dafone
+  , \nonumber \\
+  \mu\vmag \frac{\nue}{2}\pdv{\dafone}{\vmag} - \tEz\mu \pdv{\dafzero}{\vmag}
+  &=& 
+  \vmag\mu\pdv{\dafzero}{z}
+  + \vmag\mu\pdv{\fM}{z} + \tEz\mu\pdv{\fM}{\vmag}  
+  + \left(\nuei + \frac{\nue}{2}\right) \mu\dafone
+  ,
+  \nonumber
+\end{eqnarray}
+
 
 \subsubsection{ALADIN}
 \label{sec:ALADINcode}
@@ -516,9 +672,9 @@ which lead to the~definitions
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Impact_case1_kinetics.png}
     \end{tabular}
   \caption{  
-  Left: correct steady solution. Right: correct comparison to kinetic profiles by IMPACT.}
+  Snapshot 12 ps. Left: correct steady solution. Right: correct comparison to kinetic profiles at point 437 $\mu$m by IMPACT.}
   \end{center}
-  \label{fig:C7_Aladin_case1}
+  \label{fig:C7_IMPACT_case1}
 \end{figure}
 
 \begin{figure}[tbh]
@@ -528,9 +684,22 @@ which lead to the~definitions
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case1_kinetics.png}
     \end{tabular}
   \caption{  
-  Left: correct steady solution. Right: time and point to be precised by ALADIN.}
+  Snapshot 12 ps. Left: correct steady solution. Right: correct comparison to kinetic profiles at point 442 $\mu$m by ALADIN.}
   \end{center}
-  \label{fig:C7_Aladin_case1}
+  \label{fig:C7_ALADIN_case1}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_heatflux.png} & 
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_kinetics.png}
+    \end{tabular}
+  \caption{  
+  Snapshot 11 ps. Left: correct steady solution. Right: Kinetic profiles at point of maximum flux by C7. Kinetics profiles by CALDER to be added.
+  }
+  \end{center}
+  \label{fig:C7_CALDER_case1}
 \end{figure}
 
 \begin{figure}[tbh]
@@ -540,10 +709,10 @@ which lead to the~definitions
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case2_kinetics.png}
     \end{tabular}
   \caption{  
-  Left: Does not look as steady solution. Right: time and point to be precised by ALADIN.
+  Snapshot 12 ps. Left: correct steady solution. Right: correct comparison to kinetic profiles at point 480 $\mu$m  by ALADIN.
   }
   \end{center}
-  \label{fig:C7_Aladin_case2}
+  \label{fig:C7_ALADIN_case2}
 \end{figure}
 
 \begin{figure}[tbh]
@@ -553,10 +722,10 @@ which lead to the~definitions
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_kinetics.png}
     \end{tabular}
   \caption{  
-  Left: correct steady solution. Right: time and point to be precised by ALADIN.
+  Snapshot 12 ps. Left: correct steady solution. Right: correct comparison to kinetic profiles at point 442 $\mu$m by ALADIN.
   }
   \end{center}
-  \label{fig:C7_Aladin_case3}
+  \label{fig:C7_ALADIN_case3}
 \end{figure}
 
 \begin{figure}[tbh]
@@ -566,13 +735,24 @@ which lead to the~definitions
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case4_kinetics.png}
     \end{tabular}
   \caption{  
-  Left: Does not look as steady solution. Right: time and point to be precised by ALADIN.
+  Snapshot 12 ps. Left: correct steady solution. Right: correct comparison to kinetic profiles at point 480 $\mu$m by ALADIN.
   }
   \end{center}
-  \label{fig:C7_Aladin_case4}
+  \label{fig:C7_ALADIN_case4}
 \end{figure}
 
 \clearpage
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
+    \end{tabular}
+  \caption{
+  }
+  \end{center}
+  \label{fig:Gd_VFP_10ps_heatflux}
+\end{figure}
 
 \section{Conclusions}
 \label{sec:Conclusions}
@@ -594,6 +774,7 @@ which lead to the~definitions
 Rev., 107(1):1–6, Jul 1957.}
 \bibitem{Longmire_1963}{Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963.}
 \bibitem{Shkarofsky_1966}{I.P. Shkarofsky, T.W. Johnston, T.W. Bachynski, The Particle Kinetics of Plasmas, Addison-Wesley, Reading, MA, 1966.}
+\bibitem{SH_PR1953}{SH 1953.}
 
 \end{thebibliography}
 
@@ -661,7 +842,7 @@ which have the following properties
   2 \frac{m_\pb}{m_\pt + m_\pb} \Rhb .
   \nonumber
 \end{equation}
-The~Rosenbluth equation \eqref{eq:FP_Rosenbluth} can be further rewritten
+The~Rosenbluth equation \refeq{eq:FP_Rosenbluth} can be further rewritten
 according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
 \begin{equation}
   \left(\pdv{\ft}{t}\right)_c = \sum_{\pb} \Gamma^{\tob} 
@@ -777,7 +958,7 @@ the~isotropic distribution function can be approximated by
 $\fb_0^{slow} = n_{slow} \delta(\vmag) / (4\pi\vmag^2)$, 
 and since all integrals 
 $I_j(\fb_0^{slow}), J_j(\fb_0^{slow})$ vanish except 
-$I_0(\fb_0^{slow}) = n_{slow}$, equation \eqref{eq:FP_flm} reduces to 
+$I_0(\fb_0^{slow}) = n_{slow}$, equation \refeq{eq:FP_flm} reduces to 
 \begin{equation}
   \frac{1}{\Gamma^{\pt/slow}}\left(\pdv{\ft_l^m}{t}\right)_{slow} = 
   - \frac{l(l+1)}{2}
@@ -909,7 +1090,7 @@ change in velocity, i.e. energy, of test particles.
   \nonumber
 \end{equation}
 
-Integration of \eqref{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
+Integration of \refeq{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
 \begin{eqnarray}
   a^{n-0.5} \frac{df^n - df^{n-1}}{ - \Delta \vmag} &=& b^{n-0.5} df^{n-1} 
   + c^{n-0.5} \ft_1^{n-1} + d^{n-0.5} ,
@@ -1088,7 +1269,7 @@ are the~best expressed via the~definition of current
   \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , 
   \nonumber 
 \end{equation}
-which can be directly expressed from \eqref{eq:OOE_P1f1} as
+which can be directly expressed from \refeq{eq:OOE_P1f1} as
 \begin{equation}
   %\frac{\vect{j}}{\qe} = 
   \vect{q}_c =
@@ -1264,7 +1445,7 @@ and the~complete effect of diffusion in velocity space reads
 \subsection{\textit{"Friction"} model}
 \label{sec:OOE_stable_splitting}
 \newcommand{\nuE}{\nu_{\tE}}
-In order to obey \eqref{eq:OOE_reverse_time_condition}, an~additional friction
+In order to obey \refeq{eq:OOE_reverse_time_condition}, an~additional friction
 $\nu_{\tE}$ can be introduced as
 \begin{eqnarray}
   |\tE| &=& |\tE^*| + \nuE \vmag  ,
@@ -1287,7 +1468,7 @@ which is then applied to perturbation $\dafzero$ as
 \begin{comment} % Implicit fully-discrete scheme
 \subsection{Implicit fully-discrete scheme}
 \label{sec:OOE_impl_fullydiscrete_scheme}
-The moment P1 model \eqref{eq:OOE_P1f0}, \eqref{eq:OOE_P1f1} can be written 
+The moment P1 model \refeq{eq:OOE_P1f0}, \refeq{eq:OOE_P1f1} can be written 
 in a~semi-discrete form
 \begin{eqnarray}
   \IM^0_{(\nue)} \cdot \pdv{\davfzero}{\vmag}  
@@ -1372,10 +1553,10 @@ which leads to the~final form
   - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
   \label{eq:OOE_fullP1hosf1}
 \end{multline}
-where the~only unknown is $\pdv{\fone}{\vmag}$. Once \eqref{eq:OOE_fullP1hosf1}
+where the~only unknown is $\pdv{\fone}{\vmag}$. Once \refeq{eq:OOE_fullP1hosf1}
 is solved the~completion of the~solution 
 $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
-\eqref{eq:OOE_fullP1hosf0}.
+\refeq{eq:OOE_fullP1hosf0}.
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 \end{comment} % Implicit fully-discrete scheme
 
