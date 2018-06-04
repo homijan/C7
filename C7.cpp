@@ -222,18 +222,32 @@ int main(int argc, char *argv[])
    nth::rho_gradscale = rho_gradscale;
    nth::sigma = sigma;
    nth::coulLog = coulLog; // TMP, will be moved to the eos.
+
    // Read input temperature profile.
    nth::InputProfile inElectronTemp;
-   inElectronTemp.SetFile("VFPdata/temperature.dat");
+   inElectronTemp.SetFile("VFPdata/temperature.dat"); 
    //inElectronTemp.SetConst(1000.0);
    // Read input density profile. 
-   nth::InputProfile inElectronDens; 
-   inElectronDens.SetFile("VFPdata/ne.dat");
-   if (ni > 0.0) { inElectronDens.SetConst(ni * Zbar); }
+   nth::InputProfile inElectronDens;  
+   cout << "ni: " << ni << endl;
+   if (ni > 0.0) 
+   { 
+      inElectronDens.SetConst(ni * Zbar); 
+   }
+   else 
+   { 
+      inElectronDens.SetFile("VFPdata/ne.dat"); 
+   }
    // Read input ionization profile. 
-   nth::InputProfile inZbar;
-   inZbar.SetFile("VFPdata/zbar.dat");
-   if (Zbar > 0.0) { inZbar.SetConst(Zbar); }
+   nth::InputProfile inZbar; 
+   if (Zbar > 0.0) 
+   { 
+      inZbar.SetConst(Zbar); 
+   }
+   else 
+   { 
+      inZbar.SetFile("VFPdata/zbar.dat"); 
+   }
    if (nth_problem == 9)
    {
       nth::inElectronTemp = &inElectronTemp;
