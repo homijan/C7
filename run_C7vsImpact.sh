@@ -82,7 +82,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -C7 --labelFluxExt1 IMPACT --pltshow -SH --pltTe --Efield --labelEfieldExt1 IMPACT -lD1 IMPACT -xp
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL --labelUseC7 C7 --labelFluxExt1 Impact --pltshow -SH --pltTe --Efield --labelEfieldExt1 Impact -lD1 Impact -xp
 
 # Safe figs.
 ### CASE 1 ###

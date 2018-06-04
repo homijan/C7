@@ -89,9 +89,6 @@ if __name__ == "__main__":
          ## Multiply x.
          if (args.xmultiply):
             x = x * args.xmultiply
-         ## Multiply y.
-         if (args.ymultiply):
-            y = y * args.ymultiply
          print '# legend='
          print legend 
          print
@@ -114,12 +111,9 @@ if __name__ == "__main__":
          else:
             ## The case of data stored in columns. Standard.
             x, y = np.loadtxt(args.filename,  usecols=(0, column), unpack=True)
-      ## Multiply x.
+      ### Multiply x.
       if (args.xmultiply):
          x = x * args.xmultiply
-      ## Multiply y.
-      if (args.ymultiply):
-         y = y * args.ymultiply
       ## Apply moment on the data.
       for i in range(args.moment):
          y *= x
@@ -142,6 +136,9 @@ if __name__ == "__main__":
       y_fine = splev(x_fine, tck, der=0)
       #grady_fine = splev(x, tck, der=1)
       ## x in [cm]
+      ## Multiply y.
+      if (args.ymultiply):
+         y_fine = y_fine * args.ymultiply
       ## Store fine data
       if (args.outname):
          np.savetxt(args.outname+legend+'.txt', np.transpose([x_fine, y_fine]))

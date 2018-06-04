@@ -39,12 +39,13 @@ parser.add_argument("-pn", "--pltne", action='store_true', help="Plot ne in flux
 parser.add_argument("-pZ", "--pltZbar", action='store_true', help="Plot Zbar in fluxes figure by adding -pZ/--pltZbar argument.")
 parser.add_argument("-As", "--AWBSstar", action='store_true', help="Display the AWBS* diffusive asymptotic by adding -As/--AWBSstar argument.")
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
-parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
 parser.add_argument("-SH", "--kinSH", action='store_true', help="Display the SH profiles by adding -SH/--kinSH argument.")
 parser.add_argument("-E", "--Efield", action='store_true', help="Display the E field profiles by adding -E/--Efield argument.")
 parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoint computed output of distribution function instead of nonlocal heat flux maximum.")
 #parser.add_argument("-vs", "--vlimshow", action='store_true', help="vlim show by adding -vs/--vlimshow argument.")
 ## Faking arguments providing different labels than C7E and C7*.
+#parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
+parser.add_argument("-C7", "--labelUseC7", help="Use -C7/--labelUseC7 to use and label the C7 calculated data.")
 parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to use and label VFPdata/flux1.dat.")
 parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to use and label VFPdata/flux2.dat.")
 parser.add_argument("-lF3", "--labelFluxExt3", help="Use -lF1/--labelFluxExt3 to use and label VFPdata/flux3.dat.")
@@ -384,7 +385,7 @@ if (args.labelFluxExt3):
 SHcolor = 'k'
 C7Ecolor = 'r'
 Ext1color = 'g'
-labelC7 = 'AWBS-P1'
+labelC7 = args.labelUseC7 #'AWBS-P1'
 labelL = r'Lorentz$^*$'
 labelSH = 'SH'
 
@@ -396,7 +397,7 @@ if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
 ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda_{th}$='+"{:.4f}".format(mfp_ei*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-if (args.C7):
+if (args.labelUseC7):
    ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7)
 
 if (args.labelFluxExt1):
@@ -437,7 +438,7 @@ else:
    if (args.pltne):
       ax2.set_ylabel(r'$n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
 if (args.Efield):
-   if (args.C7):
+   if (args.labelUseC7):
       ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'--', label=r'$E-$'+labelC7)
    if (args.labelEfieldExt1):
       E1xmicrons, E1values = np.loadtxt('../../VFPdata/Efield1.dat',  usecols=(0, 1), unpack=True)
@@ -478,7 +479,7 @@ p_SHq = SHq[mask_v]
 p_AWBSq_corr = AWBSq_corr[mask_v]
 p_AWBSq = AWBSq[mask_v]
 
-if (args.C7):
+if (args.labelUseC7):
    mask_C7Ev = (mult_min*vTh(Te) < C7Ev) & (C7Ev < mult_max*vTh(Te))
    p_C7Ev = C7Ev[mask_C7Ev]
    p_C7Emehalff1v5 = C7Emehalff1v5[mask_C7Ev]
@@ -509,7 +510,7 @@ print "ne: ", ne
 print "Kn_ei: ", Kn_ei
 ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+', Kn='+"{:.1e}".format(Kn_ei)+')')
 ## Plot kinetic analysis.
-if (args.C7):
+if (args.labelUseC7):
    ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7)
 if (args.labelDistributionExt1):
    ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1)
@@ -527,7 +528,7 @@ ax2 = ax1.twinx()
 log_min = -3.0
 data_max = -1e64
 data_min = 1e64
-if (args.C7):
+if (args.labelUseC7):
    data = np.log10(abs(p_C7Ef0v2 - p_C7EfMv2) / p_C7EfMv2)
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
@@ -562,7 +563,7 @@ if (0):
       ax1.plot(p_v/vTh(Te), p_AWBSq / p_v / p_v / me * qe, "b-.", label=r'$j_1^{AWBS}$')
    if (AWBSstar):
       ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0) / p_v / p_v / me * qe, "g--", label=r'$j_1^{KIPP}$')
-   if (args.C7):
+   if (args.labelUseC7):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0) / p_C7Ev / p_C7Ev / me * qe, C7Ecolor+'-', label=r'$j_1^{C7}$')
    ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
    for ext in ["png", "pdf", "eps"]:
