@@ -151,13 +151,16 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    //double nu_t = nu_ei + nu_ee + nu_E;
 
    T.SetIntPoint(&ip);
-   F0->GetGradient(T, V); 
-   // Scattering on ions and electrons.
-   V *= 1.0 / 3.0 / nu_t;
+   //F0->GetGradient(T, V); 
+   //// Scattering on ions and electrons.
+   //V *= 1.0 / 3.0 / nu_t;
    
    for (int d = 0; d < vdim; d++)
    { 
-      // Scattering on ions and electrons.
+	  // Gradient of A(fM + df0) divided by nu_t contribution 
+	  // It is stored in F1 pointer.
+	  V(d) = F1->GetValue(T.ElementNo, ip, d);
+	  // Scattering on ions and electrons.
       V(d) -= (nu_ee + nu_E) / nu_t * dF1->GetValue(T.ElementNo, ip, d);
       //V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
    }

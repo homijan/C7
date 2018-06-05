@@ -599,6 +599,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Mf1nu.SpMat().Add(1.0 / velocity_real, *VAE_invM0_tVE_);
 
    dF1E = 0.0;
+   // START HERE
    Vector B_, X_;
    HypreParMatrix A_;
    Mf1nu.FormLinearSystem(ess_tdofs, dF1E, dF1E_rhs, A_, X_, B_);
@@ -839,37 +840,48 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Coefficient &P1a0_cf = *(AWBSPhysics->P1a0_pcf);
    da0_gf.ProjectCoefficient(P1a0_cf);
 
-   //fM_source = 0.0;
-   // Put together fM and delta f0.
-   fM_source += F0;
-/*
-   // Find the weak solution to 1/nut*grad(fM + delta f0).
-   ParGridFunction gradAf(&H1FESpace), gradAf_rhs(&H1FESpace);
-   Divf1.Mult(fM_source, gradAf_rhs);
-   gradAf = 0.0;
-   Mf1nu.FormLinearSystem(ess_tdofs, gradAf, gradAf_rhs, A, X, B);
-   bool verbose_gradAf = false;
-   HypreBoomerAMG amg_gradAf(A);
-   HyprePCG pcg_gradAf(A);
-   pcg_gradAf.SetTol(cg_rel_tol);
-   pcg_gradAf.SetMaxIter(cg_max_iter);
-   pcg_gradAf.SetPrintLevel(verbose_gradAf);
-   pcg_gradAf.SetPreconditioner(amg_gradAf);
-   amg_gradAf.SetPrintLevel(verbose);
-   pcg_gradAf.Mult(B, X);
+   ////////////////////////////////////////////////////////////////////////////
+   ///// The weak solution to 1/nut*grad(fM + delta f0) ///////////////////////
+   ////////////////////////////////////////////////////////////////////////////
+   ParGridFunction gradAf0(&H1FESpace), gradAf0_rhs(&H1FESpace);
+   // Weak derivative.
+   Divf1.Mult(fM_source, gradAf0_rhs);
+   Divf1.AddMult(F0, gradAf0_rhs);
+   gradAf0_rhs.Neg();
+   // Initialize unknown vector.
+   gradAf0 = 0.0;
+   Vector B_, X_;
+   HypreParMatrix A_;
+   Mf1nut.FormLinearSystem(ess_tdofs, gradAf0, gradAf0_rhs, A_, X_, B_);
+   bool verbose_gradAf0 = false;
+   HypreBoomerAMG amg_gradAf0(A_);
+   HyprePCG pcg_gradAf0(A_);
+   pcg_gradAf0.SetTol(cg_rel_tol);
+   pcg_gradAf0.SetMaxIter(cg_max_iter);
+   pcg_gradAf0.SetPrintLevel(verbose_gradAf0);
+   pcg_gradAf0.SetPreconditioner(amg_gradAf0);
+   amg_gradAf0.SetPrintLevel(verbose);
+   pcg_gradAf0.Mult(B_, X_);
    timer.sw_cgH1.Stop();
-   int PCGNumIter_gradAf;
-   pcg_gradAf.GetNumIterations(PCGNumIter_gradAf);
-   timer.H1dof_iter += PCGNumIter_gradAf * H1compFESpace.GlobalTrueVSize();
+   int PCGNumIter_gradAf0;
+   pcg_gradAf0.GetNumIterations(PCGNumIter_gradAf0);
+   timer.H1dof_iter += PCGNumIter_gradAf0 * H1compFESpace.GlobalTrueVSize();
    if (H1FESpace.GetParMesh()->GetMyRank() == 0)
    { 
-      cout << "HyprePCG_gradAf(BoomerAMG) GetNumIterations: " 
-           <<  PCGNumIter_gradAf << endl << flush;
+      cout << "HyprePCG_gradAf0(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_gradAf0 << endl << flush;
    }    
-   Mf1nu.RecoverFEMSolution(X, gradAf_rhs, gradAf);
-*/
+   Mf1nut.RecoverFEMSolution(X_, gradAf0_rhs, gradAf0);
+   ////////////////////////////////////////////////////////////////////////////
+   ///// The weak solution to 1/nut*grad(fM + delta f0) ///////////////////////
+   ////////////////////////////////////////////////////////////////////////////
+
    // Evaluate the P1b0 coefficient.
-   AWBSPhysics->P1b0_pcf->SetF0(&fM_source);
+   AWBSPhysics->P1b0_pcf->SetF1(&gradAf0);
+   //fM_source = 0.0;
+   // Put together fM and delta f0.
+   //fM_source += F0;
+   //AWBSPhysics->P1b0_pcf->SetF0(&fM_source);
    //AWBSPhysics->P1b0_pcf->SetF0(&F0);
    AWBSPhysics->P1b0_pcf->SetdF1(&dF1);
    AWBSPhysics->P1b0_pcf->SetVelocityReal(velocity_real);
@@ -1078,7 +1090,8 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                   double M = min(f1norm / f0norm, 1.0);
                   double Msquare = M * M;
                   double c = Msquare / 2.0 * (1.0 + Msquare);
-				  cout << "c: " << c << endl << flush;
+				  cout << "(f1/f0)^2 / 2.0 * (1.0 + (f1/f0)^2): " << c << endl 
+				       << flush;
                   // Shotr version for 1D.
                   AM1_b[z](q) = P1;
                   AM1_b[z](q) *= 1.0 + 2.0 * c;
