@@ -32,6 +32,7 @@ parser = argparse.ArgumentParser(description='Compare the diffusive asymptotic t
 parser.add_argument("-s", "--sigma", help="Sigma for electro-ion cross-section.", type=float)
 parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion cross-section.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
+parser.add_argument("-fs", "--FontSize", help="Font size.", type=int)
 ## A no value argument solution.
 parser.add_argument("-ps", "--pltshow", action='store_true', help="Plot show() by adding -ps/--pltshow argument.")
 parser.add_argument("-pT", "--pltTe", action='store_true', help="Plot Te in fluxes figure by adding -pT/--pltTe argument.")
@@ -344,7 +345,7 @@ import matplotlib
 ## Global setting of plotting.
 font = {'family' : 'Sans',
         #'weight' : 'bold',
-        'size'   : 18}
+        'size'   : args.FontSize}
 figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
 matplotlib.rc('font', **font)
 matplotlib.rc('figure', **figure)
@@ -533,13 +534,13 @@ if (args.labelUseC7):
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$|\delta f_0| / f_M-$'+labelC7)
+   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta \tilde{f_0}-$'+labelC7)
 if (args.labelDistributionExt1):
    data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$|\delta f_0| / f_M-$'+args.labelDistributionExt1 )
+   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta \tilde{f_0}-$'+args.labelDistributionExt1 )
 ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
 ax2.set_ylabel(r'$\log_{10}(|\delta f_0| / f_M)$ [a.u.]')
 #ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')

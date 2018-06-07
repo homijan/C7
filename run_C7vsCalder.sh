@@ -5,10 +5,10 @@ CL=7.09 # Coulomb logarithm.
 NPROC=2
 
 RS=6
-#F1ORDER=4
-#F0ORDER=3
-F1ORDER=2
-F0ORDER=1
+F1ORDER=4
+F0ORDER=3
+#F1ORDER=1
+#F0ORDER=0
 
 XPOINT=0.0480 # in cm qSH maximum
 
@@ -85,7 +85,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL --labelUseC7 C7 --labelFluxExt1 Calder --pltshow --pltTe #-SH -lD1 Calder --Efield --labelEfieldExt1 Calder
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --labelFluxExt1 Calder --pltshow --pltTe #-SH -lD1 Calder --Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###

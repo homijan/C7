@@ -5,10 +5,10 @@ CL=7.09 # Coulomb logarithm.
 NPROC=2
 
 RS=6
-#F1ORDER=4
-#F0ORDER=3
-F1ORDER=2
-F0ORDER=1
+F1ORDER=4
+F0ORDER=3
+#F1ORDER=1
+#F0ORDER=0
 
 XPOINT=0.0480 # in cm qSH maximum
 
@@ -71,7 +71,7 @@ cd $DIRroot
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e19_Z2_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e19_Z2_2.00e-11-0.txt -o _F0_ #-s
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e19_Z2_2.00e-11-0.txt -o _F1_ --column 2 #-s
-### Copy the input data files to dedicated directory. 
+## Copy the input data files to dedicated directory. 
 #cp _Te_Te_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/temperature.dat
 #cp _Q_FluxX_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/flux1.dat
 #cp _E_ElecX_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
@@ -139,8 +139,8 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL --labelUseC7 C7 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp -SH #--Efield --labelEfieldExt1 Aladin  
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL --labelUseC7 C7 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp --Efield --labelEfieldExt1 Aladin #-SH 
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp -SH #--Efield --labelEfieldExt1 Aladin  
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp --Efield --labelEfieldExt1 Aladin #-SH 
 
 # Safe figs.
 ### CASE 1 ###
