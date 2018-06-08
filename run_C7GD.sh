@@ -15,7 +15,7 @@ XPOINT=0.1605 # in cm qSH maximum
 MING=250
 
 #MAXITER=500
-MAXITER=3
+MAXITER=10
 
 # Challenge SNB ;)
 #MING=25
@@ -61,7 +61,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P10_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL --labelUseC7 C7 --labelFluxExt1 Impact --labelFluxExt2 SNBs --labelFluxExt3 local --pltshow -pn -pZ -pT #-SH #-xp #--Efield #--vlimshow #--AWBSstar #--AWBSoriginal
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 C7 --labelFluxExt1 Impact --labelFluxExt2 SNBs --labelFluxExt3 local --pltshow -pn -pZ -pT #-SH #-xp #--Efield #--vlimshow #--AWBSstar #--AWBSoriginal
 
 # Safe figs.
 

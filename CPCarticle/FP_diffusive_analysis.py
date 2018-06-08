@@ -11,7 +11,7 @@ import matplotlib
 ## Global setting of plotting.
 font = {'family' : 'Sans',
         #'weight' : 'bold',
-        'size'   : 18}
+        'size'   : 19}
 figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
 matplotlib.rc('font', **font)
 matplotlib.rc('figure', **figure)
@@ -453,6 +453,55 @@ for ext in ["png", "pdf", "eps"]:
    print("saving q1s.%s" % (ext,))
    plt.savefig("q1s.%s" % (ext,), bbox_inches="tight")
 plt.show()
+
+###############################################################################
+########### AWBS kinetic numerical experiments results ########################
+
+## marker size.
+ms = 8
+
+Kn_AladinZ2 = np.array([2e-2, 1.4e-1])
+q_AladinZ2 = np.array([1.023e13, 2.13e12])
+qSH_AladinZ2 = np.array([1.828e13, 8.98e12])
+qC7_AladinZ2 = np.array([9.11e12, 8.45e11])
+
+plt.plot(np.log10(Kn_AladinZ2), qC7_AladinZ2 / qSH_AladinZ2, 'b*', markersize=ms, label=r'$q^{Z=2}$C7')
+plt.plot(np.log10(Kn_AladinZ2), q_AladinZ2 / qSH_AladinZ2, 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
+
+Kn_Impact = np.array([2.4e-2, 1.9e-2, 9.3e-3, 6.4e-4])
+q_Impact = np.array([1.14e13, 9.8e12, 6.45e12, 6.98e11])
+qSH_Impact = np.array([2.11e13, 1.72e13, 8.93e12, 7.05e11])
+qC7_Impact = np.array([9.78e12, 8.82e12, 6.25e12, 6.88e11])
+
+plt.plot(np.log10(Kn_Impact), q_Impact / qSH_Impact, 'go', markersize=ms, label=r'$q^{Z=2}$Impact')
+plt.plot(np.log10(Kn_Impact), qC7_Impact / qSH_Impact, 'b*', markersize=ms)
+
+Kn_Calder = np.array([1.8e-2])
+q_Calder = np.array([1.08e13])
+qSH_Calder = np.array([1.79e13])
+qC7_Calder = np.array([9.18e12])
+
+plt.plot(np.log10(Kn_Calder), q_Calder / qSH_Calder, 'ks', markersize=ms, label=r'$q^{Z=2}$Calder')
+plt.plot(np.log10(Kn_Calder), qC7_Calder / qSH_Calder, 'b*', markersize=ms)
+
+Kn_AladinZ10 = np.array([5.1e-3, 3.5e-2])
+q_AladinZ10 = np.array([5.63e12, 1.36e12])
+qSH_AladinZ10 = np.array([9.23e12, 5.06e12])
+qC7_AladinZ10 = np.array([5.19e12, 6.97e11])
+
+#plt.plot(np.log10(Kn_AladinZ10), q_AladinZ10 / qSH_AladinZ10, 'rx', markersize=ms, label=r'$q^{Z=10}$Aladin')
+#plt.plot(np.log10(Kn_AladinZ10), qC7_AladinZ10 / qSH_AladinZ10, 'bx', markersize=ms, label=r'$q^{Z=10}$C7')
+
+plt.xlabel(r'$\log_{10}$(Kn)')
+plt.ylabel(r'$q/q_{SH}$')
+plt.legend(loc='lower left', fancybox=True, framealpha=0.8)
+for ext in ["png", "pdf", "eps"]:
+   print("saving Kn_results.%s" % (ext,))
+   plt.savefig("Kn_results.%s" % (ext,), bbox_inches="tight")
+plt.show()
+
+########### AWBS kinetic numerical experiments results ########################
+###############################################################################
 
 quit()
 

@@ -162,8 +162,8 @@ python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --label
 
 # Safe figs.
 ### CASE 1 ###
-cp heatflux.png $DIRroot/VFPdata/C7_Impact_case1_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Impact_case1_kinetics.png
+#cp heatflux.png $DIRroot/VFPdata/C7_Impact_case1_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Impact_case1_kinetics.png
 ### CASE 2 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Impact_case2_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Impact_case2_kinetics.png

@@ -45,7 +45,7 @@ declare -a NAMEarray=("case")
 XPOINT=0.0442 # in cm qSH maximum
 L=0.07
 declare -a Zarray=("2")
-declare -a NIarray=("2.5e20") # ne = 5e20
+declare -a NIarray=("2.5e20") # ne = 5e20 
 cd VFPdata/Aladin/4milan
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_4milan_5e20_Z2_1.20e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z2_1.20e-11.txt -o _Q_ #-s
@@ -71,7 +71,7 @@ cd $DIRroot
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e19_Z2_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e19_Z2_2.00e-11-0.txt -o _F0_ #-s
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e19_Z2_2.00e-11-0.txt -o _F1_ --column 2 #-s
-## Copy the input data files to dedicated directory. 
+### Copy the input data files to dedicated directory. 
 #cp _Te_Te_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/temperature.dat
 #cp _Q_FluxX_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/flux1.dat
 #cp _E_ElecX_Aladin_4milan_5e19_Z2_2.00e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
@@ -129,7 +129,7 @@ NI=${NIarray[$i]}
 NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 1 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 0 | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
@@ -144,8 +144,8 @@ python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --label
 
 # Safe figs.
 ### CASE 1 ###
-cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case1_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case1_kinetics.png
+#cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case1_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case1_kinetics.png
 ### CASE 2 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case2_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case2_kinetics.png

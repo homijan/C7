@@ -125,6 +125,8 @@ C7gradne = splev(C7x, netck, der=1)
 zbartck = splrep(C7x, C7zbar, s=smooth)
 ## Assign a whole ionization profile.
 C7zbar = splev(C7x, zbartck, der=0)
+## Find a spline for the Efield data.
+Etck = splrep(C7x, C7Ex, s=smooth)
 
 #######################################
 ## Load C7 kinetic results ############
@@ -197,6 +199,7 @@ Te = splev(xp, Tetck, der=0)
 gradTe = splev(xp, Tetck, der=1)
 ne = splev(xp, netck, der=0)
 Zbar = splev(xp, zbartck, der=0)
+Ex_point = splev(xp, Etck, der=0)
 ## Ion density.
 ni = ne / Zbar
 print "ni/ne: ", ni , ne
@@ -204,7 +207,9 @@ print "ni/ne: ", ni , ne
 mfp_ei = vTh(Te)**4.0/sigma/coulLog/ni/Zbar/Zbar
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
-print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe
+## Evaluate the v limit due to Ex value.
+vlim_vTh = (3.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te) 
+print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh
 
 ## Multiples of thermal velocity setting the velocity space range.
 ml_max = 10.0

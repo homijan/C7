@@ -576,6 +576,7 @@ $\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
   the~heat flux given by Spitzer and Harm \cite{SH_PR1953}.
   }
 \end{center}
+\label{tab:qAWBS}
 \end{table}
 
 \section{Benchmarking the~AWBS nonlocal transport model}
@@ -584,7 +585,7 @@ $\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
 \subsection{Review of simulation codes}
 \label{sec:ReviewOfCodes}
 
-\subsubsection{C7}
+\subsection{C7}
 \label{sec:C7code}
 Since in the~laser heated plasmas the~Knudsen number 
 Kn$ = \frac{\vth}{\nu_t(\vth) L} \in (0, 1)$, i.e. the~collisionality in 
@@ -652,8 +653,60 @@ which leads to
   \nonumber
 \end{eqnarray}
 
+\subsubsection{Nonlocal electric field treatment}
+\label{sec:Efield}
 
-\subsubsection{Aladin}
+\begin{table}
+\begin{center}
+  \begin{tabular}{c|ccccc}
+    \hline\hline\\
+    Kn & $\,\,10^{-3}\,\,$ & $\,\,5\times10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,5\times10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ \\\\
+    \hline\\
+    $v_{lim}^{Z=2}$ & 27.5 & 12.7 & 9.3 & 5.3 & 4.9 \\\\
+    \hline\\
+    $v_{lim}^{Z=10}$ & 12.5 & 6.3 & 4.9 & 3.0 & 2.4 \\\\
+    \hline\hline
+  \end{tabular}
+  \caption{
+  .
+  }
+\end{center}
+\label{tab:vlim}
+\end{table}
+
+\begin{equation}
+  |\vect{E}_{red}| = \vmag \nue + \alpha^E \vmag \nue ,
+  \label{eq:reducedEfield}
+\end{equation}
+
+\begin{eqnarray}
+  |\vect{E}_{red}| &=& |\vect{E}_{d}| + |\vect{E}_{iso}| ,
+  \nonumber \\
+  \vmag \nue + |\vect{E}_{iso}| &=& |\vect{E}_{d}| ,
+  \nonumber 
+\end{eqnarray}
+where we define the~isotropic effect of E field as
+$|\vect{E}_{iso}| = \vmag \nue^E$ by introducing the~effective collisional 
+frequency $\nue^E$.
+
+Since the~effect of the~original E field $\tE$ has been reduced in 
+\eqref{eq:reducedEfield}, an~additional collision term
+\begin{equation}
+  \vmag \nutot^E = |\tE| - |\vect{\bar{E}}| ,
+  \nonumber
+\end{equation}
+is added to scattering on ions. The~improved collision AWBS operator then takes 
+the~following form
+\begin{equation}
+  C_{AWBS} = \vmag \left(\frac{1}{2} + \alpha^E\right)\nue \pdv{}{\vmag}
+  \left(f - \fM \right) 
+  + \left(\nuei + \nutot^E + \frac{\nue}{2}\right) (\fzero - f) ,
+  \nonumber
+\end{equation}
+where both $\alpha^E$ and $\nutot^E$ apply only if $|\tE| > \vmag \nue$ and are
+set to zero otherwise.
+
+\subsection{Aladin}
 \label{sec:Aladincode}
 
 \begin{figure}[tbh]
@@ -709,7 +762,7 @@ which leads to
 
 \clearpage
 
-\subsubsection{Impact}
+\subsection{Impact}
 \label{sec:Impactcode}
 
 \begin{figure}[tbh]
@@ -774,7 +827,7 @@ which leads to
 
 \clearpage
 
-\subsubsection{CALDER}
+\subsection{CALDER}
 \label{sec:CALDERcode}
 
 \begin{figure}[tbh]
@@ -794,6 +847,17 @@ which leads to
 
 \subsection{Simulation results}
 \label{sec:SimulationResults}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{Kn_results.png}
+    \end{tabular}
+  \caption{  
+  .}
+  \end{center}
+  \label{fig:q1s_summary}
+\end{figure}
 
 \begin{figure}[tbh]
   \begin{center}

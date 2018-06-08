@@ -166,22 +166,24 @@ public:
       // While introducing an isotropic part of the E field effect in terms of
 	  // collision frequency nu_E, which is consistent to introducing 
 	  // a decreased E field norm Ed. 
-      // The E field effect on dfdv to be of order of nu_e, i.e. beta (0,1)
-	  // Eb = min(v * (1 + beta) nu_e, E)
-      // The rest of E field goes to scattering collisions
+      // The E field effect on dfdv to be of order of nu_e, i.e. alpha (0,1)
+	  // Eb = min(v * (1 + alpha) nu_e, E)
+	  // Here we introduce an effective collisional frequency nu_Ee
+	  // representing a part of the E field, i.e. the effect of E field 
+	  // approximated by isotropic friction.
+      // v * (nu_e + nu_Ee) = Ed
+ 	  // Ed = Eb - v * nu_Ee  
+      // The rest of E field goes to scattering collisions, i.e.
+	  // v * nu_Ee + Ed + v * nu_Et = Enorm
+      // nu_Et = (Enorm - Ed - v * nu_Ee) / v
+	  // which can be better represented by
       // v * nu_Et = max(0, E - Eb)
-	  // All this scaled by a parameter alpha in (0, 1), to avoid 
-	  // "noncollisional" plasma.
-	  // nu_e * v > Eb 
-	  // v * (nu_e + nu_Ee) = Ed
-	  // v * nu_Ee + Ed = alpha * Eb 
-          //double Eb = Enorm * mspee / (mspee + mspei);
-	  double beta = times_nue; //10000000000.0;
-	  double Eb = std::min(velocity * (1.0 + beta) * mspee, Enorm);
+      //double Eb = Enorm * mspee / (mspee + mspei);
+	  double alpha = times_nue; //10000000000.0;
+	  double Eb = std::min(velocity * (1.0 + alpha) * mspee, Enorm);
 	  mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
-	  double alpha = 1.0;
-	  double nu_E = (alpha * Eb - velocity * mspee) / 2.0 / velocity;
-      double Ed = alpha * Eb - velocity * nu_E;
+	  double nu_E = (Eb - velocity * mspee) / 2.0 / velocity;
+      double Ed = Eb - velocity * nu_E;
       mspEe_scale = std::max(0.0 , nu_E / mspee);
       Efield_scale = std::min(1.0, Ed / Enorm);
 
