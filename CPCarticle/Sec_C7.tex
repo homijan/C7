@@ -1,0 +1,225 @@
+\subsection{C7}
+\label{sec:C7code}
+In order to eliminate the~dimensions of the~above transport problem 
+the~first-two-moment model based on approximation 
+\begin{equation}
+  f = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \nonumber \label{eq:OOE_P1approximation}
+\end{equation}
+can be adopted and reads
+\begin{eqnarray}
+  \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - 4\pi\fM \right) &=&
+  \vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
+  \nonumber \label{eq:OOE_P1f0}\\
+  \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
+  - \left(\nuei + \frac{\nue}{2}\right)\fone &=& 
+  \frac{\vmag}{3}\nabla\fzero + 
+  \frac{\tE}{3}\pdv{\fzero}{\vmag} ,
+  \nonumber \label{eq:OOE_P1f1}
+\end{eqnarray}
+\begin{equation}
+  %\frac{\vect{j}}{\qe} = 
+  \vect{q}_c \equiv
+  \qe \intv \left(\frac{\nue\vmag^2}{\nuei + \frac{\nue}{2}}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\left(\nuei + \frac{\nue}{2}\right)}
+  \nabla\fzero - 
+  \frac{\vmag}{3\left(\nuei + \frac{\nue}{2}\right)}\pdv{\fzero}{\vmag}\tE
+  \right) \vmag^2\, \dI\vmag = 0
+  , \nonumber
+\end{equation}
+\subsubsection{Nonlocal electric field treatment}
+\label{sec:Efield}
+
+%\begin{eqnarray}
+%  \pdv{\fzero}{\vmag} &=&
+%  \frac{2}{\nue}\pdv{\fonez}{z} + \frac{2\tEz}{\vmag\nue} \pdv{\fonez}{\vmag} 
+%  + \frac{4}{\vmag^2\nue}\tEz\fonez 
+%  + 4\pi\pdv{\fM}{\vmag}
+%  , \nonumber\\
+%  \vmag\frac{\nue}{2}\pdv{\fonez}{\vmag} 
+%  &=&  
+%  \frac{\tEz}{3}\pdv{\fzero}{\vmag} + \frac{\vmag}{3}\pdv{\fzero}{z} 
+%  + \left(\nuei + \frac{\nue}{2}\right)\fonez
+%  , \nonumber \label{eq:OOE_P1f1}
+%\end{eqnarray}
+
+\begin{multline}
+  %\frac{2}{3\vmag\nue} 
+  %\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \tEz^2\right)  
+  \left(\vmag\frac{\nue}{2} - \frac{2\tEz^2}{3\vmag\nue}\right) 
+  \pdv{\fonez}{\vmag} 
+  =\\
+  \frac{2\tEz}{3\nue}\pdv{\fonez}{z}  
+  + \frac{4\pi\tEz}{3}\pdv{\fM}{\vmag}
+  + \frac{\vmag}{3}\pdv{\fzero}{z} 
+  + \left(\frac{4\tEz^2}{3\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez
+  , \nonumber
+\end{multline}
+
+%\begin{multline}
+%  \frac{2}{3\vmag\nue} 
+%  \left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \tEz^2\right)
+%  \frac{\fonez^{n+1} - \fonez^n}{\Delta\vmag} 
+%  =\\
+%  \frac{2\tEz}{3\nue}\pdv{\fonez^{n+1}}{z}  
+%  + \frac{4\pi\tEz}{3}\pdv{\fM^{n+1}}{\vmag}
+%  + \frac{\vmag}{3}\pdv{\fzero^{n+1}}{z} 
+%  + \left(\frac{4\tEz^2}{3\vmag^2\nue}
+%  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez^{n+1}
+%  , \nonumber
+%\end{multline}
+
+\begin{table}
+\begin{center}
+  \begin{tabular}{c|ccccc}
+    \hline\hline\\
+    Kn & $\,\,10^{-3}\,\,$ & $\,\,5\times10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,5\times10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ \\\\
+    \hline\\
+    $\vmag_{lim}^{Z=2} / \vth$ & 14.8 & 6.8 & 5.0 & 2.8 & 2.6 \\\\
+    \hline\\
+    $\vmag_{lim}^{Z=10} / \vth$ & 6.7 & 3.4 & 2.6 & 1.6 & 1.3 \\\\
+    \hline\hline
+  \end{tabular}
+  \caption{
+  $\sqrt{3}\vmag\frac{\nue}{2} > \tEz$.
+  }
+\end{center}
+\label{tab:vlim}
+\end{table}
+
+\begin{equation}
+  |\tE_{red}| = \vmag \nue + \alpha^E \vmag \nue ,
+  \label{eq:reducedEfield}
+\end{equation}
+
+\begin{eqnarray}
+  |\tE_{red}| &=& |\tE_{d}| + |\tE_{iso}| ,
+  \nonumber \\
+  \vmag \nue + |\tE_{iso}| &=& |\tE_{d}| ,
+  \nonumber 
+\end{eqnarray}
+where we define the~isotropic effect of E field as
+$|\vect{E}_{iso}| = \vmag \nue^E$ by introducing the~effective collisional 
+frequency $\nue^E$.
+
+Since the~effect of the~original E field $\tE$ has been reduced in 
+\eqref{eq:reducedEfield}, an~additional collision term
+\begin{equation}
+  \vmag \nuei^E = |\tE| - |\tE_{red}| ,
+  \nonumber
+\end{equation}
+is added to scattering on ions. The~improved collision AWBS operator then takes 
+the~following form
+\begin{equation}
+  C_{AWBS} = \vmag \left(\frac{1}{2} + \alpha^E\right)\nue \pdv{}{\vmag}
+  \left(f - \fM \right) 
+  + \left(\nuei + \nuei^E + \frac{\nue}{2}\right) (\fzero - f) ,
+  \nonumber
+\end{equation}
+where both $\alpha^E$ and $\nuei^E$ apply only if 
+$|\tE| > \sqrt{3} \vmag \frac{\nue}{2}$ 
+and are set to zero otherwise.
+
+\begin{comment} % directional E field condition
+Since in the~laser heated plasmas the~Knudsen number 
+Kn$ = \frac{\vth}{\nu_t(\vth) L} \in (0, 1)$, i.e. the~collisionality in 
+the~kinetics of electrons plays always an~important effect for thermal-like 
+particles, the~electron distribution 
+function can be treated as out-of-equilibrium approximation 
+\begin{equation}
+  f = \fM + \daf ,
+  \label{eq:OOE_outofeq}
+\end{equation}  
+where the~consequent AWBS model reads
+\begin{multline}
+  \vmag\vn\cdot\nabla (\fM + \daf) + \tE\cdot\vn \left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tE\cdot\vect{e}_\theta}{\vmag}\pdv{\daf}{\theta}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf)) ,
+  \label{eq:OOE_AWBS_model}
+\end{multline}
+or its 1D version
+\begin{multline}
+  \vmag\mu\pdv{}{z}(\fM + \daf) + \tEz\mu\left(\pdv{\fM}{\vmag} 
+  + \pdv{\daf}{\vmag}\right) 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\pdv{\daf}{\mu}
+  = \\
+  \vmag \frac{\nue}{2} \pdv{\daf}{\vmag} 
+  + \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf)) ,
+  \label{eq:OOE_AWBS_model_1D}
+\end{multline}
+where $\tE\cdot\vect{e}_\theta = \tEz\sin(\theta)$ and $\pdv{}{\theta} = \sin(\theta)\pdv{}{\mu}$, $\mu = \cos(\theta)$.
+\begin{multline}
+  \left(\vmag \frac{\nue}{2} - \tEz\mu\right) \pdv{\daf}{\vmag} = 
+  \vmag\mu\pdv{\daf}{z} + \vmag\mu\pdv{\fM}{z} + \tEz\mu\pdv{\fM}{\vmag} \\ 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\pdv{\daf}{\mu}
+  - \left(\nuei + \frac{\nue}{2}\right) (\fzero - (\fM + \daf))
+  ,
+  \nonumber
+\end{multline}
+we adopt $\daf(\vmag, \mu) = \dafzero(\vmag) + \mu\dafone(\vmag)$, 
+which leads to
+\begin{multline}
+  \left(\vmag \frac{\nue}{2} - \tEz\mu\right) \pdv{}{\vmag}
+  (\dafzero + \mu\dafone) = 
+  \vmag\mu\pdv{}{z}(\dafzero + \mu\dafone) + \vmag\mu\pdv{\fM}{z} 
+  + \tEz\mu\pdv{\fM}{\vmag} \\ 
+  + \frac{\tEz(1-\mu^2)}{\vmag}\dafone
+  + \left(\nuei + \frac{\nue}{2}\right) \mu\dafone
+  ,
+  \nonumber
+\end{multline}
+\begin{eqnarray}
+  \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag}
+  - \tEz\mu^2 \pdv{\dafone}{\vmag}
+  &=& 
+  \vmag\mu^2\pdv{\dafone}{z}
+  + \frac{\tEz(1-\mu^2)}{\vmag}\dafone
+  , \nonumber \\
+  \mu\vmag \frac{\nue}{2}\pdv{\dafone}{\vmag} - \tEz\mu \pdv{\dafzero}{\vmag}
+  &=& 
+  \vmag\mu\pdv{\dafzero}{z}
+  + \vmag\mu\pdv{\fM}{z} + \tEz\mu\pdv{\fM}{\vmag}  
+  + \left(\nuei + \frac{\nue}{2}\right) \mu\dafone
+  ,
+  \nonumber
+\end{eqnarray}
+\end{comment} % directional E field condition
+P1 approximation equivalent
+\begin{equation}
+  f = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \label{eq:OOE_P1outofeq}
+\end{equation}
+where the~moment model reads
+\begin{eqnarray}
+  \vmag \left(\frac{1}{2} + \alpha^E\right)\nue\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE\cdot\left(\omega_d \pdv{\fone}{\vmag} 
+  + \frac{2}{\vmag}\fone\right) , 
+  \nonumber\\
+  \vmag \left(\frac{1}{2} + \alpha^E\right)\nue\pdv{\fone}{\vmag} 
+  &=& \left(\nuei + \nuei^E + \frac{\nue}{2}\right)\fone 
+  + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
+  \nonumber \\
+  && 
+  + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} + \omega_d \pdv{\dafzero}{\vmag} 
+  \right) ,
+  \nonumber
+\end{eqnarray}
+
+\begin{equation}
+  \tE =
+  \frac{\intv \left(\frac{\left(\frac{1}{2} + \alpha^E\right)\nue\vmag^2}
+  {\nuei + \nuei^E + \frac{\nue}{2}}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
+  \nabla\left(4\pi\fM + \dafzero\right)\right) \vmag^2\, \dI\vmag}
+  {\intv \frac{\vmag}
+  {3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
+  \left(4\pi\pdv{\fM}{\vmag} + \omega_d \pdv{\dafzero}{\vmag}\right)
+  \vmag^2\, \dI\vmag} ,
+  \nonumber
+\end{equation}
+where $\omega_d(\vmag) = |\tE_d(\vmag)| / |\tE|$.

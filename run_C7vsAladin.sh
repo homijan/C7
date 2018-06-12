@@ -52,7 +52,7 @@ python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z2_1.20
 python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e20_Z2_1.20e-11.txt -o _E_ #-m 0.33333334e-4 -s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z2_1.20e-11-0.txt -o _F0_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z2_1.20e-11-0.txt -o _F1_ --column 2 #-s
-# Copy the input data files to dedicated directory. 
+## Copy the input data files to dedicated directory. 
 cp _Te_Te_Aladin_4milan_5e20_Z2_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
 cp _Q_FluxX_Aladin_4milan_5e20_Z2_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
 cp _E_ElecX_Aladin_4milan_5e20_Z2_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
@@ -129,7 +129,7 @@ NI=${NIarray[$i]}
 NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 0 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 1.0 | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt

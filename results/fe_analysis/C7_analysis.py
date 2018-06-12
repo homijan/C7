@@ -208,7 +208,7 @@ mfp_ei = vTh(Te)**4.0/sigma/coulLog/ni/Zbar/Zbar
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
 ## Evaluate the v limit due to Ex value.
-vlim_vTh = (3.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te) 
+vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te) 
 print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh
 
 ## Multiples of thermal velocity setting the velocity space range.
@@ -539,13 +539,13 @@ if (args.labelUseC7):
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta \tilde{f_0}-$'+labelC7)
+   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0-$'+labelC7)
 if (args.labelDistributionExt1):
    data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta \tilde{f_0}-$'+args.labelDistributionExt1 )
+   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0-$'+args.labelDistributionExt1 )
 ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
 ax2.set_ylabel(r'$\log_{10}(|\delta f_0| / f_M)$ [a.u.]')
 #ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')
