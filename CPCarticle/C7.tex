@@ -530,7 +530,11 @@ important result (A3.70) is obtained
   \christ{\lambda}{\alpha}{\beta} ,
   \label{eq:Christ_result}
 \end{equation}
-where $\christ{i}{j}{k}$ is the~Christoffel symbol of second kind.
+where $\christ{i}{j}{k}$ is the~Christoffel symbol of second kind defined as
+\begin{equation}
+  \christ{i}{j}{k} = g^{il} \frac{1}{2}(g_{jl,k} + g_{kl,j} - g_{jk,l}) .
+  \label{eq:Christ_definition}
+\end{equation}
 
 If we differentiate the~\textit{covariant} vector
 \begin{equation}
@@ -609,6 +613,15 @@ explicit formulas of tensors of various ranks are presented
 \end{eqnarray} 
 where $f$ is a~scalar function, $\vect{u}$ is a~vector field, and
 $\matr{A}$ is a~second rank tensor field.
+It is also interesting to show some "chaining" of the~above relations, e.g.
+\begin{eqnarray}
+  f_{;i} &=& (\nabla f)_i = f_{,i} , \nonumber\\
+  f_{;i;j} &=& (\nabla\nabla f)_{ij} = f_{,i,j} - \christ{k}{j}{i} f_{,k} , 
+  \label{eq:cd_gradgrad}
+\end{eqnarray} 
+representing a~general curvilinear grad grad operation on a~scalar function $f$
+based on vector components \eqref{eq:cd_scalar} inserted in 
+\eqref{eq:cd_covector}.
 
 \subsection{General form of Gradient, Divergence, Laplace, and Curl}
 Covariant generalization of operations with the~\textit{del operator} $\nabla$
@@ -733,9 +746,35 @@ tensor (diagonal for orthogonal basis) as
                  1 & 0 & 0 \\
 			     0 & r^2 & 0 \\
 			     0 & 0 & r^2\sin^2(\phi)
-			   \end{bmatrix} .
+			   \end{bmatrix} ,
   \label{eq:spher_metric_tensor}		   
 \end{equation}
+and it is useful to write the~Christoffel symbol of second kind according to
+\eqref{eq:Christ_definition} as
+\begin{eqnarray}
+  \matr{\Gamma}^r &=& 
+    \begin{bmatrix}
+	  0 & 0 & 0 \\
+	  0 & -r & 0 \\
+	  0 & 0 & -r \sin^2(\phi)
+    \end{bmatrix} ,
+  \nonumber \\
+  \matr{\Gamma}^\phi &=& 
+    \begin{bmatrix}
+	  0 & \frac{1}{r} & 0 \\
+	  \frac{1}{r} & 0 & 0 \\
+	  0 & 0 & -\sin(\phi)\cos(\phi)
+    \end{bmatrix} ,
+  \label{eq:Christ_spherical}\\
+  \matr{\Gamma}^\theta &=& 
+    \begin{bmatrix}
+	  0 & 0& \frac{1}{r} \\
+	  0 & 0 & \cot{\phi} \\
+	  \frac{1}{r} & \cot{\phi} & 0
+    \end{bmatrix} .
+  \nonumber
+\end{eqnarray}
+
 From \eqref{eq:basis_vectors_alignement} it is obvious, 
 that in general contravariant basis vectors are aligned with covariant basis 
 vectors, and are inverse in magnitude.
@@ -933,7 +972,7 @@ and its Cartesian inverse
 \end{equation}
 we can write the~cylindrical curvilinear transformation
 \begin{equation}
-  \matr{T}_{s} = \begin{bmatrix}
+  \matr{T}_{c} = \begin{bmatrix}
         \pdv{x}{r} & \pdv{x}{\theta} & \pdv{x}{z} \\
         \pdv{y}{r} & \pdv{y}{\theta} & \pdv{y}{z} \\
         \pdv{z}{r} & \pdv{z}{\theta} & \pdv{z}{z} 
@@ -947,13 +986,13 @@ we can write the~cylindrical curvilinear transformation
 \end{equation}
 which is well defined \eqref{eq:transformation}
 \begin{equation}
-  J = |\matr{T}_{s}| = r = g_c^{1/2}.
+  J = |\matr{T}_{c}| = r = g_c^{1/2}.
   \label{eq:cyl_J}
 \end{equation}
 Then according to \eqref{eq:metric_tensor_explicit} we can express the~metric
 tensor (diagonal for orthogonal basis) as
 \begin{equation}
-  \matr{g}_s = \begin{bmatrix}
+  \matr{g}_c = \begin{bmatrix}
                  g_{rr} & 0 & 0 \\
 			     0 & g_{\theta\theta} & 0 \\
 			     0 & 0 & g_{zz}
@@ -965,6 +1004,32 @@ tensor (diagonal for orthogonal basis) as
 			   \end{bmatrix} .
   \label{eq:cyl_metric_tensor}		   
 \end{equation}
+and it is useful to write the~Christoffel symbol of second kind according to
+\eqref{eq:Christ_definition} as
+\begin{eqnarray}
+  \matr{\Gamma}^r &=& 
+    \begin{bmatrix}
+	  0 & 0 & 0 \\
+	  0 & -r & 0 \\
+	  0 & 0 & 0
+    \end{bmatrix} ,
+  \nonumber \\
+  \matr{\Gamma}^\theta &=& 
+    \begin{bmatrix}
+      0 & \frac{1}{r} & 0 \\
+      \frac{1}{r} & 0 & 0 \\ 
+	  0 & 0 & 0
+    \end{bmatrix} ,
+  \label{eq:Christ_cylindr}\\
+  \matr{\Gamma}^z &=& 
+    \begin{bmatrix}
+	  0 & 0& 0 \\
+	  0 & 0 & 0 \\
+	  0 & 0 & 0
+    \end{bmatrix} .
+  \nonumber
+\end{eqnarray}
+
 From \eqref{eq:basis_vectors_alignement} it is obvious, 
 that in general contravariant basis vectors are aligned with covariant basis 
 vectors, and are inverse in magnitude.
@@ -1314,6 +1379,211 @@ is defined in order to make the~algebraic operations easier to follow.
   \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
   + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right) ,
   \label{eq:Lorentz_spherical}
+\end{multline}
+
+\subsubsection{Fokker-Planck collision operator}\label{sec:FP_cop}
+We can try to find an~approximate solution while using the~first term of
+expansion in $\mfpe$ and $mu$as
+\begin{equation}
+  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei\mu .
+  \label{eq:f_low_approximation}
+\end{equation}
+
+\newcommand{\gt}{g}
+\begin{multline}
+  \mu\left(\pdv{f}{z} + \frac{\tEz}{\vmag}\pdv{f}{\vmag}\right) 
+  + \frac{\tEz(1-\mu^2)}{\vmag^2}\pdv{f}{\mu}
+  = \\ 
+  \frac{\Gamma^{ee}}{\vmag} \left(4\pi f^2 
+  + \frac{\gv\gv \ft : \gv\gv \gt}{2}\right)
+  + \frac{1}{\mfpei}\pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} ,
+  \nonumber
+\end{multline}
+where $g(\vv) = \int |\vv - \vv^*| f(\vv^*)\, \dI\vv^*$ is 
+the~Rosenbluth potential \cite{Rosenbluth}. Since we are interested in 
+the~approximate solution in the~diffusive regime, it is convenient to
+use a~low anisotropy approximation 
+$\tilde{\gt} = \gt^0(f^0) + \gt^1(f^1) \mfpei(\vmag) \mu$, which arises from 
+Eq. 45 in \cite{Rosenbluth}.
+
+The~tensor formulation of the~e-e collision operator can be written explicitly
+in spherical coordinates based on \eqref{eq:cd_gradgrad} as 
+\begin{multline}
+  \gv\gv \ft : \gv\gv \gt = 
+  g_s^{ik}g_s^{jl}\left(f_{,i,j} - \christ{m}{j}{i} f_{,m}\right) 
+  \left(g_{,k,l} - \christ{m}{l}{k} g_{,m} \right) \\
+  = g_s^{rr}(g_s^{rr} (\gv\gv \ft)_{rr} (\gv\gv \gt)_{rr} 
+    + g_s^{\phi\phi} (\gv\gv \ft)_{r\phi} (\gv\gv \gt)_{r\phi} ) \\ 
+  + g_s^{\phi\phi}(g_s^{rr} (\gv\gv \ft)_{\phi r} (\gv\gv \gt)_{\phi r} 
+    + g_s^{\phi\phi} (\gv\gv \ft)_{\phi\phi} (\gv\gv \gt)_{\phi\phi} ) \\
+  + g_s^{\theta\theta}g_s^{\theta\theta} (\gv\gv \ft)_{\theta\theta}
+  (\gv\gv \gt)_{\theta\theta} = 
+  \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2} \\
+  + \frac{2}{\vmag^2}
+  \left(\ppdv{\ft}{\vmag}{\phi} - \frac{1}{\vmag}\pdv{\ft}{\phi} \right)
+  \left(\ppdv{\gt}{\vmag}{\phi} - \frac{1}{\vmag}\pdv{\gt}{\phi} \right) 
+  + \frac{1}{\vmag^4}
+  \left(\frac{\partial^2 \ft}{\partial \phi^2} + \vmag\pdv{\ft}{r}\right)
+  \left(\frac{\partial^2 \gt}{\partial \phi^2} + \vmag\pdv{\gt}{r}\right)\\
+  + \frac{1}{\vmag^4\sin^4(\phi)}
+  \left(
+  \vmag\sin^2(\phi)\pdv{\ft}{\vmag} + \sin(\phi)\cos(\phi)\pdv{\ft}{\phi}
+  \right)
+  \left(
+  \vmag\sin^2(\phi)\pdv{\gt}{\vmag} + \sin(\phi)\cos(\phi)\pdv{\gt}{\phi}
+  \right) \\
+  = \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft}{\vmag}\pdv{\gt}{\vmag} 
+  + \frac{2(1-\mu^2)}{\vmag^2}
+  \left(\ppdv{\ft}{\vmag}{\mu} - \frac{1}{\vmag}\pdv{\ft}{\mu} \right)
+  \left(\ppdv{\gt}{\vmag}{\mu} - \frac{1}{\vmag}\pdv{\gt}{\mu} \right) \\
+  - \frac{1}{\vmag^4}\left(
+  \vmag\pdv{\ft}{\vmag}\pdv{}{\phi}\sin(\phi)\pdv{\gt}{\mu} 
+  + \vmag\pdv{\gt}{\vmag}\pdv{}{\phi}\sin(\phi)\pdv{\ft}{\mu}
+  - \pdv{}{\phi}\sin(\phi)\pdv{\ft}{\mu}\pdv{}{\phi}\sin(\phi)\pdv{\gt}{\mu}
+  \right) \\
+  - \frac{1}{\vmag^4(1-\mu^2)^2}
+  \left(
+  \vmag\mu(1-\mu^2)\left(\pdv{\ft}{\vmag}\pdv{\gt}{\mu} 
+  + \pdv{\gt}{\vmag}\pdv{\ft}{\mu}\right) - \mu^2\pdv{\ft}{\mu}\pdv{\gt}{\mu}
+  \right)
+  \nonumber
+\end{multline}
+\begin{multline}
+  \gv\gv \ft : \gv\gv \gt = \\
+  \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft}{\vmag}\pdv{\gt}{\vmag} 
+  + \frac{2}{\vmag^2}
+  \left(\ppdv{\ft}{\vmag}{\mu} - \frac{1}{\vmag}\pdv{\ft}{\mu} \right)
+  \left(\ppdv{\gt}{\vmag}{\mu} - \frac{1}{\vmag}\pdv{\gt}{\mu} \right) \\
+  - \frac{1}{\vmag^4}\left(
+  \vmag\pdv{\ft}{\vmag}\pdv{}{\phi}\sin(\phi)\pdv{\gt}{\mu} 
+  + \vmag\pdv{\gt}{\vmag}\pdv{}{\phi}\sin(\phi)\pdv{\ft}{\mu}
+  - \pdv{}{\phi}\sin(\phi)\pdv{\ft}{\mu}\pdv{}{\phi}\sin(\phi)\pdv{\gt}{\mu}
+  \right) \\
+  - \frac{1}{\vmag^4}
+  \left(
+  \vmag\mu\left(\pdv{\ft}{\vmag}\pdv{\gt}{\mu} 
+  + \pdv{\gt}{\vmag}\pdv{\ft}{\mu}\right)
+  \right) \\
+  =   \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft}{\vmag}\pdv{\gt}{\vmag} 
+  + \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right) \\
+  - \frac{1}{\vmag^4}\left(
+  \vmag\pdv{\ft}{\vmag}\pdv{}{\phi}\sin(\phi)\gt^1\mfpei 
+  + \vmag\pdv{\gt}{\vmag}\pdv{}{\phi}\sin(\phi)\ft^1\mfpei
+  - \pdv{}{\phi}\sin(\phi)\ft^1\mfpei\pdv{}{\phi}\sin(\phi)\gt^1\mfpei
+  \right) \\
+  - \frac{1}{\vmag^4}
+  \left(
+  \vmag\mu\left(\pdv{\ft}{\vmag}\gt^1\mfpei 
+  + \pdv{\gt}{\vmag}\ft^1\mfpei\right)
+  \right) \\
+  =   \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft}{\vmag}\pdv{\gt}{\vmag} 
+  + \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right) \\
+  - \frac{1}{\vmag^4}\left(
+  \vmag\pdv{\ft}{\vmag}\mu\gt^1\mfpei 
+  + \vmag\pdv{\gt}{\vmag}\mu\ft^1\mfpei
+  - \mu\ft^1\mfpei\mu\gt^1\mfpei
+  \right) \\
+  - \frac{1}{\vmag^4}
+  \left(
+  \vmag\mu\left(\pdv{\ft}{\vmag}\gt^1\mfpei 
+  + \pdv{\gt}{\vmag}\ft^1\mfpei\right)
+  \right) \\
+  =   \frac{\partial^2 \ft}{\partial \vmag^2}
+  \frac{\partial^2 \gt}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft}{\vmag}\pdv{\gt}{\vmag} 
+  - \mu\frac{2}{\vmag^3}\left(
+  \pdv{\ft}{\vmag}\gt^1\mfpei 
+  + \pdv{\gt}{\vmag}\ft^1\mfpei\right) \\
+  + \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right) \\
+  %= \frac{\partial^2 \ft^0 + \ft^1\mfpei\mu}{\partial \vmag^2}
+  %\frac{\partial^2 \gt^0 + \gt^1\mfpei\mu}{\partial \vmag^2}
+  %+ \frac{2}{\vmag^2}\pdv{\ft^0 + \ft^1\mfpei\mu}{\vmag}
+  %\pdv{\gt^0 + \gt^1\mfpei\mu}{\vmag} \\
+  %- \mu\frac{2}{\vmag^3}\left(
+  %\pdv{\ft^0 + \ft^1\mfpei\mu}{\vmag}\gt^1\mfpei 
+  %+ \pdv{\gt^0 + \gt^1\mfpei\mu}{\vmag}\ft^1\mfpei\right)\\
+  %+ \frac{2}{\vmag^2}
+  %\left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  %\left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right) \\
+  = \frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}
+  + \frac{2}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} 
+  + \mu\Bigg[\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^1\mfpei}{\partial \vmag^2}
+  + \frac{\partial^2 \ft^1\mfpei}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}\right) \\ 
+  + \frac{2}{\vmag^2}\left(\pdv{\ft^0}{\vmag}
+  \pdv{\gt^1\mfpei}{\vmag}
+  + \pdv{\ft^1\mfpei}{\vmag}
+  \pdv{\gt^0}{\vmag}\right)
+  - \frac{2}{\vmag^3}\left(
+  \pdv{\ft^0}{\vmag}\gt^1\mfpei 
+  + \pdv{\gt^0}{\vmag}\ft^1\mfpei\right) \Bigg]\\
+  + \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right) \\
+  \nonumber
+\end{multline}
+
+The~low order approximation \eqref{eq:f_low_approximation} provide a~simplified
+form of the~Fokker-Planck collisional operator
+\begin{multline}
+  \Gamma^{ee} \left(4\pi f^2 
+  + \frac{\gv\gv \ft : \gv\gv \gt}{2}\right) = 
+  \Gamma^{ee}\left(4\pi{\ft^0}^2 + 
+  \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}
+  + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} \right)
+  \\
+  + \Gamma^{ee}\mu\Bigg[8\pi \ft^0 \ft^1\mfpei + 
+  \frac{1}{2}\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^1\mfpei}{\partial \vmag^2}
+  + \frac{\partial^2 \ft^1\mfpei}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}\right) \\ 
+  + \frac{1}{\vmag^2}\left(\pdv{\ft^0}{\vmag}
+  \pdv{\gt^1\mfpei}{\vmag}
+  + \pdv{\ft^1\mfpei}{\vmag}
+  \pdv{\gt^0}{\vmag}\right)
+  - \frac{1}{\vmag^3}\left(
+  \pdv{\ft^0}{\vmag}\gt^1\mfpei 
+  + \pdv{\gt^0}{\vmag}\ft^1\mfpei\right) \Bigg]
+  \nonumber
+\end{multline}
+\begin{multline}
+  \Gamma^{ee} \left(4\pi f^2 
+  + \frac{\gv\gv \ft : \gv\gv \gt}{2}\right) = 
+  \Gamma^{ee}\left(4\pi{\ft^0}^2 + 
+  \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}
+  + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} \right)
+  \\
+  + \mu\Bigg[8\pi \ft^0 \ft^1\vmag^4 + 
+  \frac{1}{2}\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 (\gt^1\vmag^4)}{\partial \vmag^2}
+  + \frac{\partial^2 \gt^0}{\partial \vmag^2} 
+  \frac{\partial^2 (\ft^1\vmag^4)}{\partial \vmag^2}
+  \right) \\ 
+  + \frac{1}{\vmag^2}\left(\pdv{\ft^0}{\vmag}
+  \pdv{(\gt^1\vmag^4)}{\vmag}
+  + \pdv{\gt^0}{\vmag}\pdv{(\ft^1\vmag^4)}{\vmag}\right)
+  - \vmag\left(\pdv{\ft^0}{\vmag}\gt^1 
+  + \pdv{\gt^0}{\vmag}\ft^1\right) \Bigg]
+  \nonumber
 \end{multline}
 
 \subsubsection{BGK collision operator}\label{sec:BGK_cop}

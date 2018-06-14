@@ -89,15 +89,16 @@ can be adopted and reads
 \label{tab:vlim}
 \end{table}
 
+\begin{comment} % too complicated
 \begin{equation}
-  |\tE_{red}| = \vmag \nue + \alpha^E \vmag \nue ,
+  |\tE_{red}| = (1 + \alpha^E) \vmag \frac{\nue}{2} ,
   \label{eq:reducedEfield}
 \end{equation}
 
 \begin{eqnarray}
   |\tE_{red}| &=& |\tE_{d}| + |\tE_{iso}| ,
   \nonumber \\
-  \vmag \nue + |\tE_{iso}| &=& |\tE_{d}| ,
+  \vmag \frac{\nue}{2} + |\tE_{iso}| &=& |\tE_{d}| ,
   \nonumber 
 \end{eqnarray}
 where we define the~isotropic effect of E field as
@@ -121,6 +122,7 @@ the~following form
 where both $\alpha^E$ and $\nuei^E$ apply only if 
 $|\tE| > \sqrt{3} \vmag \frac{\nue}{2}$ 
 and are set to zero otherwise.
+\end{comment} % too comlicated
 
 \begin{comment} % directional E field condition
 Since in the~laser heated plasmas the~Knudsen number 
@@ -189,6 +191,15 @@ which leads to
   \nonumber
 \end{eqnarray}
 \end{comment} % directional E field condition
+
+\begin{eqnarray}
+  |\tE_{red}| &=& \vmag\frac{\nue}{2} ,
+  \nonumber \\
+  \nuei^E &=& \frac{|\tE| - |\tE_{red}|}{\vmag} ,
+  \nonumber
+\end{eqnarray}
+where $\omega_{red} = |\tE_{red}| / |\tE|$.
+
 P1 approximation equivalent
 \begin{equation}
   f = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
@@ -196,30 +207,30 @@ P1 approximation equivalent
 \end{equation}
 where the~moment model reads
 \begin{eqnarray}
-  \vmag \left(\frac{1}{2} + \alpha^E\right)\nue\pdv{\dafzero}{\vmag} &=&
-  \vmag\nabla\cdot\fone + \tE\cdot\left(\omega_d \pdv{\fone}{\vmag} 
+  \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE\cdot\left(\omega_{red} \pdv{\fone}{\vmag} 
   + \frac{2}{\vmag}\fone\right) , 
   \nonumber\\
-  \vmag \left(\frac{1}{2} + \alpha^E\right)\nue\pdv{\fone}{\vmag} 
+  \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} 
   &=& \left(\nuei + \nuei^E + \frac{\nue}{2}\right)\fone 
   + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
   \nonumber \\
   && 
-  + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} + \omega_d \pdv{\dafzero}{\vmag} 
+  + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag} 
   \right) ,
   \nonumber
 \end{eqnarray}
 
 \begin{equation}
   \tE =
-  \frac{\intv \left(\frac{\left(\frac{1}{2} + \alpha^E\right)\nue\vmag^2}
+  \frac{\intv \left(\frac{\frac{\nue}{2}\vmag^2}
   {\nuei + \nuei^E + \frac{\nue}{2}}\pdv{\fone}{\vmag}
   - \frac{\vmag^2}{3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
   \nabla\left(4\pi\fM + \dafzero\right)\right) \vmag^2\, \dI\vmag}
   {\intv \frac{\vmag}
   {3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
-  \left(4\pi\pdv{\fM}{\vmag} + \omega_d \pdv{\dafzero}{\vmag}\right)
+  \left(4\pi\pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag}\right)
   \vmag^2\, \dI\vmag} ,
   \nonumber
 \end{equation}
-where $\omega_d(\vmag) = |\tE_d(\vmag)| / |\tE|$.
+

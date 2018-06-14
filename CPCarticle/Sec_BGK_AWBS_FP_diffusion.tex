@@ -2,7 +2,7 @@
 \label{sec:DiffusiveKinetics}
 
 We can try to find an~approximate solution while using the~first term of
-expansion in $\mfpe$ and $mu$as
+expansion in $\mfpei$ and $\mu$ as
 \begin{equation}
   \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei(\vmag)\mu .
   \label{eq:f_approximation}
@@ -12,15 +12,15 @@ expansion in $\mfpe$ and $mu$as
 \subsection{The~BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
 
-\begin{multline}
+\begin{equation}
   \mu\left(\pdv{f}{z} + \frac{\tEz}{\vmag}\pdv{f}{\vmag}\right) 
   + \frac{\tEz(1-\mu^2)}{\vmag^2}\pdv{f}{\mu}
-  = \\ 
+  = 
   \frac{f - \fM}{\mfpe}
-  + \frac{1}{2}\left(\frac{1}{\mfpei} + \frac{1}{2\mfpe}\right)
+  + \frac{1}{2 \mfpei}
   \pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} ,
   \label{eq:OOE_AWBS_model_1D}
-\end{multline}
+\end{equation}
 
 \begin{eqnarray}
   f^0 &=& \fM + \frac{1}{\vmag}f^1 \Zbar\mfpei^2 ,
@@ -36,14 +36,13 @@ expansion in $\mfpe$ and $mu$as
   \frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2} \right]\fM \mfpei \mu , 
   \nonumber
 \end{equation}
-\begin{equation}
-  \vect{j} \equiv \qe \int_0^{\infty}\int_{4\pi} \vmag \vn f 
-  \, \dI\vn~\vmag^2~\dI\vmag 
-  = \vect{0}  \longrightarrow
-  \tE = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
-  \right) ,
-  \label{eq:zero_current}
-\end{equation}
+and when holds 
+%\begin{equation}
+$\vect{j} \equiv \qe \int \vv f \, \dI\vv = \vect{0}  \rightarrow
+\tE = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
+\right)$
+%\end{equation}
+, i.e. the~electric field $\tEz$ obeying the~zero current condition leads to
 \begin{equation}
   f = \fM - \frac{\Zbar}{\Zbar+1}
   \left( \frac{\vmag^2}{2 \vth^2} - 4\right)
@@ -369,6 +368,102 @@ which lead to the~definitions
 
 \subsection{The~Fokker-Planck diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
+\newcommand{\gt}{g}
+\newcommand{\gM}{\gt_M}
+
+\begin{multline}
+  \mu\left(\pdv{f}{z} + \frac{\tEz}{\vmag}\pdv{f}{\vmag}\right) 
+  + \frac{\tEz(1-\mu^2)}{\vmag^2}\pdv{f}{\mu}
+  = \\ 
+  \frac{\Gamma^{ee}}{\vmag} \left(4\pi f^2 
+  + \frac{\gv\gv \ft : \gv\gv \gt}{2}\right)
+  + \frac{1}{\mfpei}\pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} ,
+  \nonumber
+\end{multline}
+where $g(\vv) = \int |\vv - \vv^*| f(\vv^*)\, \dI\vv^*$ is 
+the~Rosenbluth potential \cite{Rosenbluth_PR1957}. Since we are interested in 
+the~approximate solution in the~diffusive regime, it is convenient to
+use a~low anisotropy approximation 
+$\tilde{\gt} = \gt^0(f^0) + \gt^1(f^1) \mfpei(\vmag) \mu$, which arises from 
+Eq. 45 in \cite{Rosenbluth_PR1957}.
+
+\begin{multline}
+  \Gamma^{ee} \left(4\pi \tilde{f}^2 
+  + \frac{\gv\gv \tilde{\ft} : \gv\gv \tilde{\gt}}{2}\right) = 
+  \Gamma^{ee}\left(4\pi{\ft^0}^2 + 
+  \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}
+  + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} \right)
+  \\
+  + \mu\Bigg[8\pi \ft^0 \ft^1\vmag^4 - \vmag\left(\pdv{\ft^0}{\vmag}\gt^1 
+  + \pdv{\gt^0}{\vmag}\ft^1\right) 
+  + \frac{1}{\vmag^2}\left(\pdv{\ft^0}{\vmag}
+  \pdv{(\gt^1\vmag^4)}{\vmag}
+  + \pdv{\gt^0}{\vmag}\pdv{(\ft^1\vmag^4)}{\vmag}\right) \\
+  + \frac{1}{2}\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 (\gt^1\vmag^4)}{\partial \vmag^2}
+  + \frac{\partial^2 \gt^0}{\partial \vmag^2} 
+  \frac{\partial^2 (\ft^1\vmag^4)}{\partial \vmag^2}
+  \right) \Bigg] + O(\mfpei^2, \mu^2)
+  \nonumber
+\end{multline}
+
+\begin{equation}
+  \Gamma^{ee}\left(4\pi{\ft^0}^2 + 
+  \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
+  \frac{\partial^2 \gt^0}{\partial \vmag^2}
+  + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} \right) = \frac{1}{\vmag^2}f^1 \Zbar\mfpei^2 ,
+  \label{eq:FP_f0} 
+\end{equation}
+%\begin{multline}
+%  \frac{1}{2}\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
+%  \frac{\partial^2 (\gt^1\vmag^4)}{\partial \vmag^2}
+%  + \frac{\partial^2 \gt^0}{\partial \vmag^2} 
+%  \frac{\partial^2 (\ft^1\vmag^4)}{\partial \vmag^2}
+%  \right) 
+%  + \frac{1}{\vmag^2}\left(\pdv{\ft^0}{\vmag} \pdv{(\gt^1\vmag^4)}{\vmag} 
+%  + \pdv{\gt^0}{\vmag}\pdv{(\ft^1\vmag^4)}{\vmag}\right) \\
+%  - \vmag\left(\pdv{\ft^0}{\vmag}\gt^1 
+%  + \pdv{\gt^0}{\vmag}\ft^1\right)
+%  + 8\pi \ft^0 \ft^1\vmag^4 
+%  - \vmag \ft^1
+%  = 
+%  \vmag\pdv{f^0}{z} + \tilde{E}_z\pdv{f^0}{\vmag}
+%  ,
+%  \label{eq:FP_f1}
+%\end{multline}
+
+\begin{multline}
+  \frac{1}{2}\left(\frac{\partial^2 \fM}{\partial \vmag^2}
+  \frac{\partial^2 (\gt^1\vmag^4)}{\partial \vmag^2}
+  + \frac{\partial^2 \gM}{\partial \vmag^2} 
+  \frac{\partial^2 (\ft^1\vmag^4)}{\partial \vmag^2}
+  \right) 
+  + \frac{1}{\vmag^2}\left(\pdv{\fM}{\vmag} \pdv{(\gt^1\vmag^4)}{\vmag} 
+  + \pdv{\gM}{\vmag}\pdv{(\ft^1\vmag^4)}{\vmag}\right) \\
+  - \vmag\left(\pdv{\fM}{\vmag}\gt^1 
+  + \pdv{\gM}{\vmag}\ft^1\right)
+  + 8\pi \fM \ft^1\vmag^4 
+  - \vmag \ft^1
+  = 
+  %\vmag\left(\frac{1}{\rho}\pdv{\rho}{z} + 
+  %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
+  %\frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2}\right)\fM
+  \vmag\pdv{\fM}{z} + \tilde{E}_z\pdv{\fM}{\vmag}
+  ,
+  \label{eq:FP_f1_equation}
+\end{multline}
+
+%The~Rosenbluth equation \refeq{eq:FP_Rosenbluth} can be further rewritten
+%according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
+%\begin{equation}
+%  \left(\pdv{\ft}{t}\right)_c = \Gamma^{ee} 4\pi f^2 
+%  + \frac{\gv\gv\Rgb : \gv\gv \ft}{2} ,
+%  \label{eq:FP_Longmire}
+%\end{equation}
+%which was also published in Shkarofsky 1966 and used in Tzoufras 2011.
+
+\begin{comment} % FP appendix
 \begin{equation}
   \vtwoh = \sqrt{\frac{2 \kB T}{\me}} = 1 / j,
   \nonumber
@@ -401,8 +496,9 @@ where in the~case of vanishing current one gets
   \nonumber
 \end{equation}
 i.e.
+\end{comment} % FP appendix
 \begin{equation}
-  f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
+  f_1(\vmag, \mu) = \mu \frac{\me^2}{4 \pi e^4\lnc} 
   \frac{\vtwoh^4}{\Zbar}\left( 2 d_T(\vmag/\vtwoh) 
   + \frac{3}{2}\frac{\gamma_T}{\gamma_E} d_E(\vmag/\vtwoh) \right) 
   \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
@@ -411,15 +507,16 @@ i.e.
 where $d_T(x) = \Zbar D_{T}(x) / B$ and $d_E(x) = \Zbar D_{E}(x) / A$ 
 are represented by numerical values in TABLE I and TABLE II in 
 \cite{SH_PR1953}, respectively. 
-In the~case of high $\Zbar$ limit, $\gamma_T \rightarrow 1$,
-$\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
-\cite{SH_PR1953}, which leads to the~standard Lorentz gas model
-\begin{equation}
-   f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
-  \frac{\vmag^4}{\Zbar}\left( 4 - \frac{\vmag^2}{\vtwoh^2} \right) 
-  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
-  \label{eq:f1_Lorentz} 
-\end{equation}
+
+%In the~case of high $\Zbar$ limit, $\gamma_T \rightarrow 1$,
+%$\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
+%\cite{SH_PR1953}, which leads to the~standard Lorentz gas model
+%\begin{equation}
+%   f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
+%  \frac{\vmag^4}{\Zbar}\left( 4 - \frac{\vmag^2}{\vtwoh^2} \right) 
+%  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
+%  \label{eq:f1_Lorentz} 
+%\end{equation}
 
 \cite{Rosenbluth_PR1957}, \cite{Longmire_1963}, \cite{Shkarofsky_1966}
 
