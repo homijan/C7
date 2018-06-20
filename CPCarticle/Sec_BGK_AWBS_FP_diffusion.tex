@@ -4,10 +4,10 @@
 We can try to find an~approximate solution while using the~first term of
 expansion in $\mfpei$ and $\mu$ as
 \begin{equation}
-  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei(\vmag)\mu .
+  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei\mu ,
   \label{eq:f_approximation}
 \end{equation}
-
+where $\mfpei = \frac{\vmag^4}{\Zbar n_e \Gamma^{ee}}$.
 
 \subsection{The~BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
@@ -395,7 +395,8 @@ Eq. 45 in \cite{Rosenbluth_PR1957}.
   \frac{\partial^2 \gt^0}{\partial \vmag^2}
   + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} \right)
   \\
-  + \mu\Bigg[8\pi \ft^0 \ft^1\vmag^4 - \vmag\left(\pdv{\ft^0}{\vmag}\gt^1 
+  + \frac{\mu}{n_e}
+  \Bigg[8\pi \ft^0 \ft^1\vmag^4 - \vmag\left(\pdv{\ft^0}{\vmag}\gt^1 
   + \pdv{\gt^0}{\vmag}\ft^1\right) 
   + \frac{1}{\vmag^2}\left(\pdv{\ft^0}{\vmag}
   \pdv{(\gt^1\vmag^4)}{\vmag}
@@ -444,12 +445,12 @@ Eq. 45 in \cite{Rosenbluth_PR1957}.
   - \vmag\left(\pdv{\fM}{\vmag}\gt^1 
   + \pdv{\gM}{\vmag}\ft^1\right)
   + 8\pi \fM \ft^1\vmag^4 
-  - \vmag \ft^1
+  - n_e \vmag \ft^1
   = 
   %\vmag\left(\frac{1}{\rho}\pdv{\rho}{z} + 
   %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   %\frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2}\right)\fM
-  \vmag\pdv{\fM}{z} + \tilde{E}_z\pdv{\fM}{\vmag}
+  n_e \vmag\pdv{\fM}{z} + n_e \tilde{E}_z\pdv{\fM}{\vmag}
   ,
   \label{eq:FP_f1_equation}
 \end{multline}

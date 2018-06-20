@@ -460,10 +460,10 @@ plt.show()
 ## marker size.
 ms = 8
 
-Kn_AladinZ2 = np.array([2e-2, 1.4e-1])
-q_AladinZ2 = np.array([1.023e13, 2.13e12])
-qSH_AladinZ2 = np.array([1.828e13, 8.98e12])
-qC7_AladinZ2 = np.array([9.11e12, 8.45e11])
+Kn_AladinZ2 = np.array([2e-4, 3.5e-3, 2e-2, 4.6e-2, 8.6e-2, 1.4e-1, 3.3e-1])
+q_AladinZ2 = np.array([3.25e13, 1.99e13, 1.023e13, 4.35e12, 2.79e12, 2.13e12, 7.5e11])
+qSH_AladinZ2 = np.array([3.26e13, 2.2e13, 1.828e13, 1.13e13, 9.82e12, 8.98e12, 7.15e12])
+qC7_AladinZ2 = np.array([3.2e13, 1.97e13, 9.11e12, 3.05e12, 1.33e12, 8.45e11, 1.2e11])
 
 plt.plot(np.log10(Kn_AladinZ2), qC7_AladinZ2 / qSH_AladinZ2, 'b*', markersize=ms, label=r'$q^{Z=2}$C7')
 plt.plot(np.log10(Kn_AladinZ2), q_AladinZ2 / qSH_AladinZ2, 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
