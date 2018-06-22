@@ -1,4 +1,4 @@
-\subsection{C7}
+\subsection{AP1 implementation}
 \label{sec:C7code}
 In order to eliminate the~dimensions of the~above transport problem 
 the~first-two-moment model based on approximation 
@@ -13,21 +13,33 @@ can be adopted and reads
   \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
   \nonumber \label{eq:OOE_P1f0}\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
-  - \left(\nuei + \frac{\nue}{2}\right)\fone &=& 
+  - \nuscat\fone &=& 
   \frac{\vmag}{3}\nabla\fzero + 
   \frac{\tE}{3}\pdv{\fzero}{\vmag} ,
   \nonumber \label{eq:OOE_P1f1}
 \end{eqnarray}
+where $\nuscat = \nuei + \frac{\nue}{2}$.
+%\begin{multline}
+%  %\frac{\vect{j}}{\qe} = 
+%  \vect{q}_c \equiv
+%  \qe \intv \Bigg[\frac{\frac{\nue}{2}\vmag^2}{\nuei + \frac{\nue}{2}}
+%  \pdv{\fone}{\vmag} 
+%  - \frac{\vmag^2}{3\left(\nuei + \frac{\nue}{2}\right)}
+%  \nabla\fzero \\
+%  - \frac{\vmag}{3\left(\nuei + \frac{\nue}{2}\right)}\pdv{\fzero}{\vmag}\tE
+%  \Bigg] \vmag^2\, \dI\vmag = 0
+%  , \nonumber
+%\end{multline}
 \begin{equation}
-  %\frac{\vect{j}}{\qe} = 
-  \vect{q}_c \equiv
-  \qe \intv \left(\frac{\nue\vmag^2}{\nuei + \frac{\nue}{2}}\pdv{\fone}{\vmag}
-  - \frac{\vmag^2}{3\left(\nuei + \frac{\nue}{2}\right)}
-  \nabla\fzero - 
-  \frac{\vmag}{3\left(\nuei + \frac{\nue}{2}\right)}\pdv{\fzero}{\vmag}\tE
+  \intv \left(\frac{\frac{\nue}{2}\vmag^2}{\nuscat}
+  \pdv{\fone}{\vmag} 
+  - \frac{\vmag^2}{3\nuscat}
+  \nabla\fzero 
+  - \frac{\vmag}{3\nuscat}\pdv{\fzero}{\vmag}\tE
   \right) \vmag^2\, \dI\vmag = 0
   , \nonumber
 \end{equation}
+
 \subsubsection{Nonlocal electric field treatment}
 \label{sec:Efield}
 
@@ -71,17 +83,34 @@ can be adopted and reads
 %  , \nonumber
 %\end{multline}
 
+%\begin{table}
+%\begin{center}
+%  \begin{tabular}{c|ccccc}
+%    \hline\hline\\
+%    Kn$^e$ & $\,\,10^{-3}\,\,$ & $\,\,5\times10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,5\times10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ \\\\
+%    \hline\\
+%    $\vmag_{lim}^{Z=1} / \vth$ & 21.6 & 9.8 & 7.0 & 3.8 & 3.1 \\\\
+%    \hline\\
+%    $\vmag_{lim}^{Z=2} / \vth$ & 14.8 & 6.8 & 5.0 & 3.1 & 2.6 \\\\
+%    \hline\\
+%    $\vmag_{lim}^{Z=10} / \vth$ & 6.7 & 3.4 & 2.6 & 1.6 & 1.3 \\\\
+%    \hline\hline
+%  \end{tabular}
+%  \caption{
+%  $\sqrt{3}\vmag\frac{\nue}{2} > |\tE|$.
+%  }
+%\end{center}
+%\label{tab:vlim}
+%\end{table}
+
 \begin{table}
 \begin{center}
   \begin{tabular}{c|ccccc}
     \hline\hline\\
-    Kn & $\,\,10^{-3}\,\,$ & $\,\,5\times10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,5\times10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ \\\\
+    %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
+    Kn$^e$ & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
     \hline\\
-    $\vmag_{lim}^{Z=1} / \vth$ & 21.6 & 9.8 & 7.0 & 3.8 & 3.1 \\\\
-    \hline\\
-    %$\vmag_{lim}^{Z=2} / \vth$ & 14.8 & 6.8 & 5.0 & 3.1 & 2.6 \\\\
-    %\hline\\
-    $\vmag_{lim}^{Z=10} / \vth$ & 6.7 & 3.4 & 2.6 & 1.6 & 1.3 \\\\
+    $\vmag_{lim} / \vth$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
     \hline\hline
   \end{tabular}
   \caption{
@@ -197,7 +226,7 @@ which leads to
 \begin{eqnarray}
   |\tE_{red}| &=& \vmag\frac{\nue}{2} ,
   \nonumber \\
-  \nuei^E &=& \frac{|\tE| - |\tE_{red}|}{\vmag} ,
+  \nuscat^E &=& \frac{|\tE| - |\tE_{red}|}{\vmag} ,
   \nonumber
 \end{eqnarray}
 where $\omega_{red} = |\tE_{red}| / |\tE|$.
@@ -214,23 +243,23 @@ where the~moment model reads
   + \frac{2}{\vmag}\fone\right) , 
   \nonumber\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} 
-  &=& \left(\nuei + \nuei^E + \frac{\nue}{2}\right)\fone 
+  &=& \tnuscat\fone 
   + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
   \nonumber \\
   && 
-  + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag} 
+  + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} 
+  + \omega_{red} \pdv{\dafzero}{\vmag} 
   \right) ,
   \nonumber
 \end{eqnarray}
-
+where $\tnuscat = \nuei + \nuscat^E + \frac{\nue}{2}$.
 \begin{equation}
   \tE =
-  \frac{\intv \left(\frac{\frac{\nue}{2}\vmag^2}
-  {\nuei + \nuei^E + \frac{\nue}{2}}\pdv{\fone}{\vmag}
-  - \frac{\vmag^2}{3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
+  \frac{\intv \left(\frac{\nue}{2\tnuscat}\vmag^2\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\tnuscat}
   \nabla\left(4\pi\fM + \dafzero\right)\right) \vmag^2\, \dI\vmag}
   {\intv \frac{\vmag}
-  {3\left(\nuei + \nuei^E + \frac{\nue}{2}\right)}
+  {3\tnuscat}
   \left(4\pi\pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag}\right)
   \vmag^2\, \dI\vmag} ,
   \nonumber

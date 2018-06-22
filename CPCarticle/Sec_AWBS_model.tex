@@ -1,11 +1,44 @@
-\section{The~AWBS nonlocal transport model}
+\section{The~AWBS kinetic model}
 \label{sec:AWBSmodel}
+
 \begin{equation}
-  \pdv{\ft}{t} + \vv\cdot\gx \ft + \tE \cdot\gv \ft =
-  \vmag \frac{\nue}{2}\pdv{}{\vmag}\left(\ft - \fM\right) 
-  + \frac{\nuei + \frac{\nue}{2}}{2} \frac{\partial^2 \ft}{\partial \vn^2}
-  %\left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
-  %+ \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)  
-  , \label{eq:AWBS_model}
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + \tE \cdot\gv \ft = C_{ee}(f) + C_{ei}(f) ,
+  \nonumber
 \end{equation}
-\cite{Fish_RMP1987}
+
+\begin{equation}
+  C_{FP}(f) =
+  \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
+  \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb ,
+  \nonumber
+\end{equation}
+where $\Gamma = \frac{\qe^4\lnc}{4\pi\epsilon^2\me^2}$.
+
+Fish high-velocity limit collision operator \cite{Fish_RMP1987}
+AWBS \cite{AWBS_PRL1986}
+Sorbo \cite{Sorbo_2015, Sorbo_2016}
+
+\begin{multline}
+  C_{H} = \vmag \nue \pdv{}{\vmag}\left(\ft + 
+  \frac{\vth^2}{\vmag}\pdv{f}{\vmag}\right) \\
+  + \frac{\nue}{2}\left( 1 - \frac{\vth^2}{2\vmag^2}\right) 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)
+  , \label{eq:HighVelocity_model}
+\end{multline}
+The~Maxwell-Boltzmann averaged e-e scattering in 
+\eqref{eq:HighVelocity_model} can be approximated as 
+$\nue \int\left(1 - \frac{\vth^2}{2\vmag^2}\right)\fM 4\pi\vmag^2\, \dI\vmag = 
+\frac{\nue}{2}$.
+
+A~simplified kinetic formulation to the~Fokker-Planck collision operator 
+for electrons combining \cite{Fish_RMP1987} and  \cite{AWBS_PRL1986}
+was introduced in \cite{Sorbo_2015}.
+
+\begin{multline}
+  C_{AWBS} = \vmag \frac{\nue}{2}\pdv{}{\vmag}\left(\ft - \fM\right) \\
+  + \frac{\nuei + \frac{\nue}{2}}{2} 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)
+  , \label{eq:AWBS_model}
+\end{multline}

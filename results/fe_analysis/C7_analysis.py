@@ -284,6 +284,7 @@ for i in range(N):
 ## Analytical formula from AWBShos.pdf, providing the Lorentz gas approximation
 ## further multiplied by SH low Z factor.
 mfp_ei = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/Zbar
+mfp_ee = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar
 ## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
 mfp_tot = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)
 ## Classical length scale definition.
@@ -301,7 +302,8 @@ SHQ_pete = - SHcorr * 1.31e10 / coulLog / Zbar * Te**2.5 * gradTe
 ## Apply variation of sigma.
 SHQ_pete = SHQ_pete * 8.1027575e17 / sigma
 Kn_ei =  mfp_ei / L
-Kn =  mfp_tot / L
+Kn_ee =  mfp_ee / L
+Kn_tot =  mfp_tot / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 Kn_pete = SHQ_pete / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
@@ -328,7 +330,8 @@ C7SHE_analytic = vTh(C7Te)**2.0*(C7gradne/C7ne + xi*C7gradTe/C7Te)
 ## Print comparison results ###########
 #######################################
 ## Show the Knudsen number
-print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
+print 'Kn_tot: ', Kn_tot, 'mfp_tot[microns]: ', mfp_tot*1e4
+#print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
 print 'Kn_flux, Kn_pete: ', Kn_flux, Kn_pete
 ## Print integrated values
 print "SHQ[erg/s/cm2]:              ", SHQ
@@ -401,7 +404,7 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
 if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
-ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda_{th}$='+"{:.4f}".format(mfp_ei*1e4)+r'[$\mu$m])')
+ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.labelUseC7):
    ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7)
@@ -416,19 +419,22 @@ if (args.labelFluxExt3):
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
 ## Special treatment of temperature profile.
-C7Te_scaled = C7Te*(C7q.max() - C7q.min())/(C7Te.max() - C7Te.min())
-C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - C7q.max())
+q_ref = C7q
+if (args.kinSH):
+   q_ref = C7SHQ_analytic
+C7Te_scaled = C7Te*(q_ref.max() - q_ref.min())/(C7Te.max() - C7Te.min())
+C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - q_ref.max())
 if (args.pltTe):
    ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
 ## Special treatment of electron density profile.
 C7ne = C7ne / 1e20
-C7ne_scaled = C7ne*(C7q.max() - C7q.min())/(C7ne.max() - C7ne.min())
-C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - C7q.max())
+C7ne_scaled = C7ne*(q_ref.max() - q_ref.min())/(C7ne.max() - C7ne.min())
+C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - q_ref.max())
 if (args.pltne):
    ax1.plot(C7x_microns, C7ne_scaled * 1e-7, 'g:', label=r'$n_e$')
 ## Special treatment of ionization profile.
-C7zbar_scaled = C7zbar*(C7q.max() - C7q.min())/(C7zbar.max() - C7zbar.min())
-C7zbar_scaled = C7zbar_scaled - (C7zbar_scaled.max() - C7q.max())
+C7zbar_scaled = C7zbar*(q_ref.max() - q_ref.min())/(C7zbar.max() - C7zbar.min())
+C7zbar_scaled = C7zbar_scaled - (C7zbar_scaled.max() - q_ref.max())
 if (args.pltZbar):
    ax1.plot(C7x_microns, C7zbar_scaled * 1e-7, 'k:', label=r'$Z$')
 ## Second Efield axis.
@@ -513,8 +519,9 @@ fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 ax1.set_xlabel('v/vT')
 print "ne: ", ne
+print "Kn_ee: ", Kn_ee
 print "Kn_ei: ", Kn_ei
-ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+', Kn='+"{:.1e}".format(Kn_ei)+')')
+ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_ee)+')')
 ## Plot kinetic analysis.
 if (args.labelUseC7):
    ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7)

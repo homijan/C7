@@ -42,23 +42,23 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
-XPOINT=2.1115 # in cm qSH maximum
-L=3.495
-declare -a Zarray=("2")
-declare -a NIarray=("2.5e20") # ne = 5e20
-cd VFPdata/Impact/tanh/z2/NoB/2500mic_ramp/241.3ps
-python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_TkeV -o _Te_ -mx 1e-4 -my 1e3 #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_QxWcm2 -o _Q_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_ExkVpermm -o _E_ -my 1e6 #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f0_near_qmax_21125.0mic -o _F0_ --row 1 -mx 1e2 -mom 2 -my 1e-12 #-s # s^-3 / cm^-6
-python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f1x_at_qmax_21100.0mic -o _F1_ --row 1 -mx 1e2 -mom 5 -my 4.5547e-40 #-s # me/2 * s^-3 / cm^-6
-## Copy the input data files to dedicated directory. 
-cp _Te_IMPACT_xmic_TkeV.txt $DIRroot/VFPdata/temperature.dat
-cp _Q_IMPACT_xmic_QxWcm2.txt $DIRroot/VFPdata/flux1.dat
-cp _E_IMPACT_xmic_ExkVpermm.txt $DIRroot/VFPdata/Efield1.dat
-cp _F0_IMPACT_v_f0_near_qmax_21125.0mic.txt $DIRroot/VFPdata/F0distribution1.dat
-cp _F1_IMPACT_v_f1x_at_qmax_21100.0mic.txt $DIRroot/VFPdata/F1distribution1.dat
-cd $DIRroot
+#XPOINT=2.1115 # in cm qSH maximum
+#L=3.495
+#declare -a Zarray=("2")
+#declare -a NIarray=("2.5e20") # ne = 5e20
+#cd VFPdata/Impact/tanh/z2/NoB/2500mic_ramp/241.3ps
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_TkeV -o _Te_ -mx 1e-4 -my 1e3 #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_QxWcm2 -o _Q_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_ExkVpermm -o _E_ -my 1e6 #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f0_near_qmax_21125.0mic -o _F0_ --row 1 -mx 1e2 -mom 2 -my 1e-12 #-s # s^-3 / cm^-6
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f1x_at_qmax_21100.0mic -o _F1_ --row 1 -mx 1e2 -mom 5 -my 4.5547e-40 #-s # me/2 * s^-3 / cm^-6
+### Copy the input data files to dedicated directory. 
+#cp _Te_IMPACT_xmic_TkeV.txt $DIRroot/VFPdata/temperature.dat
+#cp _Q_IMPACT_xmic_QxWcm2.txt $DIRroot/VFPdata/flux1.dat
+#cp _E_IMPACT_xmic_ExkVpermm.txt $DIRroot/VFPdata/Efield1.dat
+#cp _F0_IMPACT_v_f0_near_qmax_21125.0mic.txt $DIRroot/VFPdata/F0distribution1.dat
+#cp _F1_IMPACT_v_f1x_at_qmax_21100.0mic.txt $DIRroot/VFPdata/F1distribution1.dat
+#cd $DIRroot
 
 ### CASE 2 ###
 #XPOINT=0.1081 # in cm qSH maximum
@@ -80,23 +80,23 @@ cd $DIRroot
 #cd $DIRroot
 
 ### CASE 3 ###
-#XPOINT=0.0437 # in cm qSH maximum
-#L=0.07
-#declare -a Zarray=("2")
-#declare -a NIarray=("2.5e20") # ne = 5e20
-#cd VFPdata/Impact/tanh/z2/NoB/50mic_ramp/12.1ps
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_TkeV -o _Te_ -mx 1e-4 -my 1e3 #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_QxWcm2 -o _Q_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_ExkVpermm -o _E_ -my 1e6 #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f0_near_qmax_437.5mic -o _F0_ --row 1 -mx 1e2 -mom 2 -my 1e-12 #-s # s^-3 / cm^-6
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f1x_at_qmax_437.0mic -o _F1_ --row 1 -mx 1e2 -mom 5 -my 4.5547e-40 #-s # me/2 * s^-3 / cm^-6
-### Copy the input data files to dedicated directory. 
-#cp _Te_IMPACT_xmic_TkeV.txt $DIRroot/VFPdata/temperature.dat
-#cp _Q_IMPACT_xmic_QxWcm2.txt $DIRroot/VFPdata/flux1.dat
-#cp _E_IMPACT_xmic_ExkVpermm.txt $DIRroot/VFPdata/Efield1.dat
-#cp _F0_IMPACT_v_f0_near_qmax_437.5mic.txt $DIRroot/VFPdata/F0distribution1.dat
-#cp _F1_IMPACT_v_f1x_at_qmax_437.0mic.txt $DIRroot/VFPdata/F1distribution1.dat
-#cd $DIRroot
+XPOINT=0.0437 # in cm qSH maximum
+L=0.07
+declare -a Zarray=("2")
+declare -a NIarray=("2.5e20") # ne = 5e20
+cd VFPdata/Impact/tanh/z2/NoB/50mic_ramp/12.1ps
+python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_TkeV -o _Te_ -mx 1e-4 -my 1e3 #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_QxWcm2 -o _Q_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_xmic_ExkVpermm -o _E_ -my 1e6 #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f0_near_qmax_437.5mic -o _F0_ --row 1 -mx 1e2 -mom 2 -my 1e-12 #-s # s^-3 / cm^-6
+python $DIRroot/VFPdata/loadPhilippegrace.py -f IMPACT_v_f1x_at_qmax_437.0mic -o _F1_ --row 1 -mx 1e2 -mom 5 -my 4.5547e-40 #-s # me/2 * s^-3 / cm^-6
+## Copy the input data files to dedicated directory. 
+cp _Te_IMPACT_xmic_TkeV.txt $DIRroot/VFPdata/temperature.dat
+cp _Q_IMPACT_xmic_QxWcm2.txt $DIRroot/VFPdata/flux1.dat
+cp _E_IMPACT_xmic_ExkVpermm.txt $DIRroot/VFPdata/Efield1.dat
+cp _F0_IMPACT_v_f0_near_qmax_437.5mic.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_IMPACT_v_f1x_at_qmax_437.0mic.txt $DIRroot/VFPdata/F1distribution1.dat
+cd $DIRroot
 
 ### CASE 4 ###
 #XPOINT=0.04457 # in cm qSH maximum
@@ -158,7 +158,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --labelFluxExt1 Impact --pltshow -SH --pltTe --Efield --labelEfieldExt1 Impact -lD1 Impact -xp
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 AP1 --labelFluxExt1 Impact --pltshow -SH --pltTe --Efield --labelEfieldExt1 Impact -lD1 Impact -xp
 
 # Safe figs.
 ### CASE 1 ###
