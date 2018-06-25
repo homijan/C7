@@ -47,10 +47,10 @@ and when holds
 \begin{multline}
 \vect{j} \equiv \qe \int \vv f^1 \, \dI\vv = \vect{0}  \rightarrow
 \tE = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
-\right)
+\right) ,
 \nonumber
 \end{multline}
-, i.e. the~electric field $\tEz$ obeying the~zero current condition leads to
+i.e. the~electric field $\tEz$ obeying the~zero current condition leads to
 \begin{equation}
   \tilde{f} = \fM - \frac{\Zbar}{\Zbar+1}
   \left( \frac{\vmag^2}{2 \vth^2} - 4\right)
@@ -135,15 +135,21 @@ Eq. 45 in \cite{Rosenbluth_PR1957}.
   \right) \Bigg] + O(\mfpei^2, \mu^2) ,
   \nonumber
 \end{multline}
+where the~isotropic contribution $O(\mfpei^2) = \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right)$.
 
-\begin{equation}
+\begin{multline}
   4\pi{\ft^0}^2 + 
   \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
   \frac{\partial^2 \gt^0}{\partial \vmag^2}
   + \frac{1}{\vmag^2}\pdv{\ft^0}{\vmag}\pdv{\gt^0}{\vmag} = 
-  \frac{\tEz}{\vmag^5}f^1 \Zbar n_e\mfpei^2 ,
+  \frac{\tEz}{\vmag^5}f^1 \Zbar n_e\mfpei^2 \\
+  - \frac{2}{\vmag^2}
+  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right),
   \label{eq:FP_f0} 
-\end{equation}
+\end{multline}
 where the~fundamental property of the~Fokker-Planck collision operator
 is to tend to Maxwell-Boltzmann distribution \cite{Longmire_1963}, i.e.
 $f^0 = \fM$.

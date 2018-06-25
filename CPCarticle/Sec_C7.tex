@@ -3,7 +3,7 @@
 In order to eliminate the~dimensions of the~above transport problem 
 the~first-two-moment model based on approximation 
 \begin{equation}
-  f = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \tilde{f} = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
   \nonumber \label{eq:OOE_P1approximation}
 \end{equation}
 can be adopted and reads
@@ -19,6 +19,10 @@ can be adopted and reads
   \nonumber \label{eq:OOE_P1f1}
 \end{eqnarray}
 where $\nuscat = \nuei + \frac{\nue}{2}$.
+
+\subsubsection{Nonlocal electric field treatment}
+\label{sec:Efield}
+
 %\begin{multline}
 %  %\frac{\vect{j}}{\qe} = 
 %  \vect{q}_c \equiv
@@ -39,9 +43,6 @@ where $\nuscat = \nuei + \frac{\nue}{2}$.
   \right) \vmag^2\, \dI\vmag = 0
   , \nonumber
 \end{equation}
-
-\subsubsection{Nonlocal electric field treatment}
-\label{sec:Efield}
 
 %\begin{eqnarray}
 %  \pdv{\fzero}{\vmag} &=&
@@ -224,7 +225,7 @@ which leads to
 \end{comment} % directional E field condition
 
 \begin{eqnarray}
-  |\tE_{red}| &=& \vmag\frac{\nue}{2} ,
+  |\tE_{red}| &=& \sqrt{3} \vmag\frac{\nue}{2} ,
   \nonumber \\
   \nuscat^E &=& \frac{|\tE| - |\tE_{red}|}{\vmag} ,
   \nonumber
@@ -233,7 +234,7 @@ where $\omega_{red} = |\tE_{red}| / |\tE|$.
 
 P1 approximation equivalent
 \begin{equation}
-  f = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \tilde{f} = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
   \label{eq:OOE_P1outofeq}
 \end{equation}
 where the~moment model reads

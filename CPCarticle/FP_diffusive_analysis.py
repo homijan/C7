@@ -461,12 +461,14 @@ plt.show()
 ms = 8
 
 Kn_AladinZ2 = np.array([2e-4, 3.5e-3, 4.1e-2, 9.2e-2, 1.7e-1, 2.8e-1, 5.6e-1])
-q_AladinZ2 = np.array([3.25e13, 1.99e13, 1.023e13, 4.35e12, 2.79e12, 2.13e12, 7.5e11])
+q_AladinZ2 = np.array([3.25e13, 1.99e13, 1.023e13, 4.35e12, 2.79e12, 2.13e12, 10.4e11])
 qSH_AladinZ2 = np.array([3.26e13, 2.2e13, 1.828e13, 1.13e13, 9.82e12, 8.98e12, 7.15e12])
 qC7_AladinZ2 = np.array([3.2e13, 1.97e13, 9.11e12, 3.22e12, 1.69e12, 8.46e11, 1.32e11])
 
 plt.plot(np.log10(Kn_AladinZ2), qC7_AladinZ2 / qSH_AladinZ2, 'b*', markersize=ms, label=r'$q^{Z=2}$AP1')
 plt.plot(np.log10(Kn_AladinZ2), q_AladinZ2 / qSH_AladinZ2, 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
+#plt.plot(np.log10(Kn_AladinZ2), np.log10(qC7_AladinZ2 / qSH_AladinZ2), 'b*', markersize=ms, label=r'$q^{Z=2}$AP1')
+#plt.plot(np.log10(Kn_AladinZ2), np.log10(q_AladinZ2 / qSH_AladinZ2), 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
 
 Kn_Impact = np.array([4.9e-2, 3.8e-2, 1.9e-2, 1.3e-3])
 q_Impact = np.array([1.104e13, 9.8e12, 6.45e12, 6.98e11])
@@ -475,6 +477,8 @@ qC7_Impact = np.array([9.78e12, 8.82e12, 6.25e12, 6.88e11])
 
 plt.plot(np.log10(Kn_Impact), q_Impact / qSH_Impact, 'go', markersize=ms, label=r'$q^{Z=2}$Impact')
 plt.plot(np.log10(Kn_Impact), qC7_Impact / qSH_Impact, 'b*', markersize=ms)
+#plt.plot(np.log10(Kn_Impact), np.log10(q_Impact / qSH_Impact), 'go', markersize=ms, label=r'$q^{Z=2}$Impact')
+#plt.plot(np.log10(Kn_Impact), np.log10(qC7_Impact / qSH_Impact), 'b*', markersize=ms)
 
 Kn_Calder = np.array([3.5e-2])
 q_Calder = np.array([1.06e13])
@@ -483,6 +487,8 @@ qC7_Calder = np.array([9.2e12])
 
 plt.plot(np.log10(Kn_Calder), q_Calder / qSH_Calder, 'ks', markersize=ms, label=r'$q^{Z=2}$Calder')
 plt.plot(np.log10(Kn_Calder), qC7_Calder / qSH_Calder, 'b*', markersize=ms)
+#plt.plot(np.log10(Kn_Calder), np.log10(q_Calder / qSH_Calder), 'ks', markersize=ms, label=r'$q^{Z=2}$Calder')
+#plt.plot(np.log10(Kn_Calder), np.log10(qC7_Calder / qSH_Calder), 'b*', markersize=ms)
 
 Kn_AladinZ10 = np.array([5.1e-3, 3.5e-2])
 q_AladinZ10 = np.array([5.63e12, 1.36e12])
@@ -494,6 +500,7 @@ qC7_AladinZ10 = np.array([5.19e12, 6.97e11])
 
 plt.xlabel(r'$\log_{10}$(Kn$^e$)')
 plt.ylabel(r'$q/q_{SH}$')
+#plt.ylabel(r'$\log_{10}(q/q_{SH})$')
 plt.legend(loc='lower left', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:
    print("saving Kn_results.%s" % (ext,))

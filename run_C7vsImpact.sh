@@ -148,7 +148,7 @@ NI=${NIarray[$i]}
 NAME=${NAMEarray[$i]}
 echo "ZBAR: " $ZBAR " NI: " $NI
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 1 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 0.0 | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
@@ -168,8 +168,8 @@ python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 AP1 --labe
 #cp heatflux.png $DIRroot/VFPdata/C7_Impact_case2_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Impact_case2_kinetics.png
 ### CASE 3 ###
-#cp heatflux.png $DIRroot/VFPdata/C7_Impact_case3_heatflux.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Impact_case3_kinetics.png
+cp heatflux.png $DIRroot/VFPdata/C7_Impact_case3_heatflux.png
+cp kinetics.png $DIRroot/VFPdata/C7_Impact_case3_kinetics.png
 ### CASE 4 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Impact_case4_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Impact_case4_kinetics.png
