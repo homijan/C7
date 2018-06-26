@@ -1,41 +1,77 @@
 \section{BGK, AWBS, and Fokker-Planck models in local diffusive regime}
 \label{sec:DiffusiveKinetics}
 
-We can try to find an~approximate solution while using the~first term of
-expansion in $\mfpei$ and $\mu$ as
+In a~broad analysis of the~electron transport, any qualitative information
+about its properties are highly welcome. Even better, if one can extract some 
+qualitative information, which provides comparative and reliable results in 
+a~clear way, the~confidence of using a~transport model, 
+e.g. \eqref{eq:AWBS_model}, can lead to efficient yet relatively
+cheap computation cost predictions of real physics.
+
+In this paper, we can try to find an~approximate solution to the~so-called
+\textit{local diffusive regime} of electro transport, 
+where the~\textit{diffusive regime}, in general, refers to a~low anisotropy 
+in angle given by $\mu$, and \textit{local} means that the~mean free path of 
+electrons $\mfpei$ is rather restricted compared to the~plasma spatial scale. 
+In the~words of mathematics this corresponds to the~first 
+order expansion in $\mfpei$ and $\mu$ of the~distribution function as
 \begin{equation}
-  \tilde{f}(z, \vmag, \mu) = f^0(z, \vmag) + f^1(z, \vmag) \mfpei\mu ,
+  \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \ft^1(z, \vmag) \mfpei\mu ,
   \label{eq:f_approximation}
 \end{equation}
-where $\mfpei = \frac{\vmag}{\nuei} = \frac{\vmag^4}{\Zbar n_e \Gamma}$.
+where $z$ is the~spatial coordinate along the~axis $z$, $\vmag$ the~magnitude 
+of transport velocity, and 
+$\mfpei = \frac{\vmag}{\nuei} = \frac{\vmag^4}{\Zbar n_e \Gamma}$.
+In other words, one can say that by evaluating numerically $\tilde{\ft}$
+in \eqref{eq:f_approximation}, we accept some error of the~order 
+$O(\mfpei^2) + O(\mu^2)$.
 
+In order to start, we express the~left hand side of \eqref{eq:kinetic_equation}
+in 1D and insert the~approximation \eqref{eq:f_approximation}, which leads to
 \begin{multline}
   \mu\left(\pdv{\tilde{f}}{z} + \frac{\tEz}{\vmag}\pdv{\tilde{f}}{\vmag}\right) 
   + \frac{\tEz(1-\mu^2)}{\vmag^2}\pdv{\tilde{f}}{\mu} = \\
   \mu\left(\pdv{f^0}{z} + \frac{\tEz}{\vmag}\pdv{f^0}{\vmag}\right) 
   + \frac{\tEz\mfpei}{\vmag^2} f^1 + O(\mu^2) ,
-  \nonumber
+  \label{eq:LHS_kinetic_equation}
 \end{multline}
+and is truncated for low anisotropy, i.e. with error $O(\mu^2)$.
 
 \subsection{The~BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
 
+Even though the~BGK plasma collisional operator \cite{BGK_1954}
 \begin{equation}
-  \frac{1}{\vmag}C_{BGK}(f)
+  \frac{1}{\vmag}C_{BGK}(\tilde{\ft})
   =
-  \frac{f - \fM}{\mfpe}
+  \frac{\tilde{\ft} - \fM}{\mfpe}
   + \frac{1}{2 \mfpei}
-  \pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} ,
-  \label{eq:OOE_AWBS_model_1D}
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} ,
+  \label{eq:BGK_model_1D}
 \end{equation}
+where $\mfpe = \Zbar \mfpei$, 
+is not actually used in our nonlocal transport simulations, we consider it 
+useful to include this~simplest form of the~Boltzmann transport collision 
+operator, because of two reasons: a) it can be treated analytically in 
+the~local diffusive regime; and b) it represents the~so-called phenomenological
+collision operator by explicitly using the~Maxwell-Boltzmann equilibrium 
+distribution $\fM$, which proves to be very useful in coupling of the~nonlocal 
+electron transport to hydrodynamics.
 
+If one applies the~action of the~right hand side, i.e. of 
+\eqref{eq:BGK_model_1D}, 
+on the~approximation \eqref{eq:f_approximation} and sets the~result to be equal 
+to the~left hand side \eqref{eq:LHS_kinetic_equation}, the~corresponding terms
+in $\mu$ are governed by the~following equations
 \begin{eqnarray}
-  f^0 &=& \fM + \frac{\tEz}{\vmag^2}f^1 \Zbar\mfpei^2 ,
+  \ft^0 &=& \fM + \frac{\tEz}{\vmag^2}f^1 \Zbar\mfpei^2 ,
   \label{eq:BGK_f0} \\
-  f^1 &=& - \frac{\Zbar}{\Zbar+1}
-  \left( \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} \right) , 
+  \ft^1 &=& - \frac{\Zbar}{\Zbar+1}
+  \left( \pdv{\ft^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{\ft^0}{\vmag} \right) , 
   \label{eq:BGK_f1}
 \end{eqnarray}
+i.e. $\ft^0 = \fM + O(\mfpei^2)$ and $\ft^1 = - \frac{\Zbar}{\Zbar+1}
+  \left( \pdv{\fM}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{\fM}{\vmag} \right)$.
 %\begin{equation}
 %  \tilde{f} = \fM - \frac{\Zbar}{\Zbar+1}
 %  \left(\frac{1}{\rho}\pdv{\rho}{z} + 
@@ -43,77 +79,104 @@ where $\mfpei = \frac{\vmag}{\nuei} = \frac{\vmag^4}{\Zbar n_e \Gamma}$.
 %  \frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2} \right)\fM \mfpei \mu , 
 %  \nonumber
 %\end{equation}
-and when holds 
+Now the~electric current expressing the~contribution of every electron 
+naturally tends to zero, i.e. the~\textit{quasi-neutrality} constraint, 
+which lead to an~analytic formula of the~self-consistent electric field
 \begin{multline}
 \vect{j} \equiv \qe \int \vv f^1 \, \dI\vv = \vect{0}  \rightarrow
 \tE = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
-\right) ,
-\nonumber
+\right) .
+\label{eq:BGK_Efield}
 \end{multline}
-i.e. the~electric field $\tEz$ obeying the~zero current condition leads to
+Consequently, based on \eqref{eq:BGK_f0}, \eqref{eq:BGK_f1}, 
+and \eqref{eq:BGK_Efield}, the~analytic formula \eqref{eq:f_approximation}
+of the~electron distribution function reads 
 \begin{equation}
   \tilde{f} = \fM - \frac{\Zbar}{\Zbar+1}
   \left( \frac{\vmag^2}{2 \vth^2} - 4\right)
   \frac{1}{T}\pdv{T}{z}\fM \mfpei \mu , 
-  \nonumber
+  \label{eq:BGK_approximation}
 \end{equation}
+which is nothing else than the~famous Lorentz electron-ion collision gas model 
+\cite{Lorentz_1905} scaled by a~constant depending on $\Zbar$, 
+naturally arising from the~BGK model \eqref{eq:BGK_model_1D}.
 
-\subsection{The~AWBS diffusive electron transport}
+\subsection{The~AWBS local diffusive electron transport}
 \label{sec:AWBSDiffusiveRegime}
-
+The~main object of this work presented in Sec~\ref{sec:AWBSmodel} simplifies
+in 1D to a~relatively simple form of the~Boltzmann transport collision operator
+(compared to \eqref{eq:LFP_model})
 \begin{multline}
   \frac{1}{\vmag}C_{AWBS}(f)
   = 
   \frac{\vmag}{2\mfpe} \pdv{}{\vmag}\left(f - \fM\right) \\
   + \frac{1}{2}\left(\frac{1}{\mfpei} + \frac{1}{2\mfpe}\right)
-  \pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} ,
-  \label{eq:OOE_AWBS_model_1D}
+  \pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} .
+  \label{eq:AWBS_model_1D}
 \end{multline}
+Similarly to the~BGK model, AWBS \ref{eq:AWBS_model_1D} 
+is also referred to as a~phenomenological model, since it explicitly uses 
+the~Maxwell-Boltzmann equilibrium distribution $\fM$, and also, 
+makes it a~very attractive model of the~nonlocal electron
+transport to be coupled to hydrodynamics via the~plasma electron temperature 
+and density.
 
+A~qualitative information about the~AWBS model is obtained while repeating
+the~action on \eqref{eq:f_approximation} by the~left hand side 
+\eqref{eq:LHS_kinetic_equation} and by the~right hand side 
+\eqref{eq:AWBS_model_1D} and setting the~equality. The~corresponding terms
+in $\mu$ are then governed by the~following equations
 \begin{eqnarray}
   \pdv{}{\vmag}\left( f^0 -\fM\right) &=& 
   \frac{\tEz}{\vmag^3}f^1 2\Zbar\mfpei^2 ,
   \label{eq:AWBS_f0} \\
   \frac{\vmag}{2\Zbar\mfpei}\pdv{\left(f^1 \mfpei\right)}{\vmag}  
   - \frac{2\Zbar + 1}{2\Zbar} f^1 &=&
-  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
-  \nonumber 
+  \pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag} ,
+  \label{eq:AWBS_f1} 
   %\\  
   %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
   %- \frac{\Zbar + 1}{\Zbar} f^1 &=&
   %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   %\nonumber
 \end{eqnarray}
-
+i.e. $\ft^0 = \fM + O(\mfpei^2)$, however, the~$\ft^1$ does not have 
+a~straightforward analytic formula. In reality, $\ft^1$ arises from 
+the~ordinary differential equation 
+(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
   \pdv{f^1}{\vmag} + \frac{1}{\vmag}(3-2\Zbar)f^1
   = \\
   \frac{2\Zbar}{\vmag}\left(\frac{1}{\rho}\pdv{\rho}{z} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   \frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2}\right)\fM .
-  \label{eq:AWBS_f1}
+  \label{eq:AWBS_f1_ODE}
 \end{multline}
+We will stick with a~numerical solution of \eqref{eq:AWBS_f1_ODE}, where
+the~details about the~resulting distribution function can be found in 
+Section~\ref{sec:SummaryDiffusiveKinetics}. 
 
-\subsection{The~Fokker-Planck diffusive electron transport}
+\subsection{The~Fokker-Planck local diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
 \newcommand{\gt}{g}
 \newcommand{\gM}{\gt_M}
 
-The~Fokker-Plank collision operator can be written as 
+The~Fokker-Plank \eqref{eq:LFP_model} collision operator can be also written as 
 \cite{Shkarofsky_Particle_Kinetics_book_1966_24}
 \begin{equation}
   \frac{1}{\vmag}C_{FP}(f) =  
   \frac{\Gamma}{\vmag} \left(4\pi f^2 
   + \frac{\gv\gv \ft : \gv\gv \gt}{2}\right) ,
-  \nonumber
+  \label{eq:FP_model_1D}
 \end{equation}
 where $g(\vv) = \int |\vv - \vvb| f(\vvb)\, \dI\vvb$ is 
 the~Rosenbluth potential \cite{Rosenbluth_PR1957}. Since we are interested in 
-the~approximate solution in the~diffusive regime, it is convenient to
+the~approximate solution in the~local diffusive regime, it is convenient to
 use a~low anisotropy approximation 
-$\tilde{\gt} = \gt^0(f^0) + \gt^1(f^1) \mfpei \mu$, which arises from 
-Eq. 45 in \cite{Rosenbluth_PR1957}.
+$\tilde{\gt} = \gt^0(f^0) + \gt^1(f^1) \mfpei \mu$, which arises based on 
+Eq. 45 of \cite{Rosenbluth_PR1957}.
 
+For a~better clarity we present the~action of \eqref{eq:FP_model_1D} in 1D
 \begin{multline}
   C_{FP}(\tilde{f}) = 
   \Gamma\left(4\pi{\ft^0}^2 + 
@@ -133,12 +196,18 @@ Eq. 45 in \cite{Rosenbluth_PR1957}.
   + \frac{\partial^2 \gt^0}{\partial \vmag^2} 
   \frac{\partial^2 (\ft^1\vmag^4)}{\partial \vmag^2}
   \right) \Bigg] + O(\mfpei^2, \mu^2) ,
-  \nonumber
+  \label{eq:FP_truncation}
 \end{multline}
-where the~isotropic contribution $O(\mfpei^2) = \frac{2}{\vmag^2}
-  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
-  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right)$.
+truncated by the~quadratic terms in the~angular anisotropy and the~transport 
+localization.
+%where the~isotropic contribution $O(\mfpei^2) = \frac{2}{\vmag^2}
+%  \left(\pdv{\ft^1\mfpei}{\vmag} - \frac{\ft^1\mfpei}{\vmag} \right)
+%  \left(\pdv{\gt^1\mfpei}{\vmag} - \frac{\gt^1\mfpei}{\vmag} \right)$.
 
+If once more repeated the~action on \eqref{eq:f_approximation} by the~left 
+hand side \eqref{eq:LHS_kinetic_equation} and by the~right hand side 
+\eqref{eq:FP_model_1D} and setting the~equality, the~equation governing
+$\ft^0$ corresponding to $\mu^0$ takes the~form
 \begin{multline}
   4\pi{\ft^0}^2 + 
   \frac{1}{2}\frac{\partial^2 \ft^0}{\partial \vmag^2}
@@ -151,8 +220,10 @@ where the~isotropic contribution $O(\mfpei^2) = \frac{2}{\vmag^2}
   \label{eq:FP_f0} 
 \end{multline}
 where the~fundamental property of the~Fokker-Planck collision operator
-is to tend to Maxwell-Boltzmann distribution \cite{Longmire_1963}, i.e.
-$f^0 = \fM$.
+tending to the~Maxwell-Boltzmann distribution $\fM$ \cite{Longmire_1963}, leads
+to $\ft^0 = \fM + O(\mfpei^2)$, where we write an~explicit form of 
+the~quadratic term $O(\mfpei^2)$ obtained from the~truncation 
+\eqref{eq:FP_truncation}.
 %\begin{multline}
 %  \frac{1}{2}\left(\frac{\partial^2 \ft^0}{\partial \vmag^2}
 %  \frac{\partial^2 (\gt^1\vmag^4)}{\partial \vmag^2}
@@ -170,7 +241,7 @@ $f^0 = \fM$.
 %  ,
 %  \label{eq:FP_f1}
 %\end{multline}
-
+The~equality corresponding to $\mu$ takes the~form
 \begin{multline}
   \frac{1}{\Zbar n_e}\Bigg[
   \frac{1}{2}\left(\frac{\partial^2 \fM}{\partial \vmag^2}
@@ -188,11 +259,16 @@ $f^0 = \fM$.
   %\vmag\left(\frac{1}{\rho}\pdv{\rho}{z} + 
   %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   %\frac{1}{T}\pdv{T}{z} - \frac{\tilde{E}_z}{\vth^2}\right)\fM
-  \vmag\pdv{\fM}{z} + \tilde{E}_z\pdv{\fM}{\vmag}
-  ,
-  \label{eq:FP_f1_equation}
+  \vmag\pdv{\fM}{z} + \tilde{E}_z\pdv{\fM}{\vmag} ,
+  \label{eq:FP_f1_ODE}
 \end{multline}
+which is the~equation governing the~unknown $\ft^1$.
 
+In principle, the~solution to the~equation \eqref{eq:FP_f1_ODE}
+is very ambitious, as demonstrated in 
+\cite{Chandrasekhar_RMP1943, CSR_1950, Rosenbluth_PR1957}, fortunately, one 
+can use the~explicit evaluation of the~electron distribution function
+published in \cite{SpitzerHarm_PR1953}, which takes the~following form
 %The~Rosenbluth equation \refeq{eq:FP_Rosenbluth} can be further rewritten
 %according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
 %\begin{equation}
@@ -201,7 +277,6 @@ $f^0 = \fM$.
 %  \label{eq:FP_Longmire}
 %\end{equation}
 %which was also published in Shkarofsky 1966 and used in Tzoufras 2011.
-
 \begin{comment} % FP appendix
 \begin{equation}
   \vtwoh = \sqrt{\frac{2 \kB T}{\me}} = 1 / j,
@@ -236,19 +311,20 @@ where in the~case of vanishing current one gets
 \end{equation}
 i.e.
 \end{comment} % FP appendix
-
 \begin{multline}
-  f_1(\vmag, \mu) = \mu \frac{\me^2}{4 \pi e^4\lnc} 
+  %\ft^1(\vmag, \mu) 
+  \ft^1(z, \vmag) = \frac{1}{\mfpei}\frac{\me^2}{4 \pi \qe^4\lnc} 
   \frac{\vtwoh^4}{\Zbar}
   \\
   \left( 2 d_T(\vmag/\vtwoh) 
   + \frac{3}{2}\frac{\gamma_T}{\gamma_E} d_E(\vmag/\vtwoh) \right) 
-  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
+  \frac{\fM}{n_e}\frac{1}{T}\pdv{T_e}{z}  ,
   \label{eq:f1_SH}
 \end{multline}
-where $d_T(x) = \Zbar D_{T}(x) / B$ and $d_E(x) = \Zbar D_{E}(x) / A$ 
-are represented by numerical values in TABLE I and TABLE II in 
-\cite{SpitzerHarm_PR1953}, respectively. 
+where $d_T(x) = \Zbar D_{T}(x) / B$, $d_E(x) = \Zbar D_{E}(x) / A$, $\gamma_T$,
+and $\gamma_E$ are represented by numerical values in TABLE~I, TABLE~II, and
+TABLE~III in \cite{SpitzerHarm_PR1953}, and 
+$\vtwoh = \sqrt{\frac{\kB T_e}{2\me}}$.
 
 %In the~case of high $\Zbar$ limit, $\gamma_T \rightarrow 1$,
 %$\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
@@ -260,7 +336,8 @@ are represented by numerical values in TABLE I and TABLE II in
 %  \label{eq:f1_Lorentz} 
 %\end{equation} 
 
-\subsection{Summary of BGK, AWBS, and Fokker-Planck diffusion}
+\subsection{Summary of the~BGK, AWBS, and Fokker-Planck local diffusive 
+transport}
 \label{sec:SummaryDiffusiveKinetics}
 
 \begin{figure}[tbh]
@@ -271,8 +348,8 @@ are represented by numerical values in TABLE I and TABLE II in
   \caption{  
   The~flux velocity moment of the~anisotropic part of the~electron distribution 
   function in low $Z=1$ and high $Z=116$ plasmas in diffusive regime.}
-  \end{center}
   \label{fig:q1s_summary}
+  \end{center} 
 \end{figure}
 
 \begin{table}
@@ -293,7 +370,19 @@ are represented by numerical values in TABLE I and TABLE II in
   the~heat flux given by numerical solution in Spitzer and Harm 
   \cite{SpitzerHarm_PR1953}.
   }
-\end{center}
 \label{tab:qAWBS}
+\end{center}
 \end{table}
+
+\begin{itemize}
+  \item Rescale BGK according to Lorentz to match SH heat flux.
+  \item Emphasize the~outstanding match between our modified $\frac{\nue}{2}$
+        AWBS model and the~SH profiles of $q_1$ (define) in 
+		TABLE~\ref{tab:qAWBS}.
+  \item Stress the~visual results of AWBS compared to FP presented in 
+        \figref{fig:q1s_summary}. 
+  \item Raise a~discussion about the~structure of $\ft^1$ equations
+        \eqref{eq:BGK_f1}, \eqref{eq:AWBS_f1_ODE}, and 
+        \eqref{eq:FP_f1_ODE}.
+\end{itemize}
 

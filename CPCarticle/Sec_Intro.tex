@@ -10,29 +10,64 @@
 %expands the collision integrand of the Boltzmann change per
 %equation in powers of the momentum collision.
 
-A more generally valid approach to the problem of
-treating changes in a distribution function resulting
-each of which from frequently occurring "events",
-produces a small change in the momentum of a particle,
-is to use the Fokker-Planck equation \cite{Planck_1917}, 
-which has been discussed by Spitzer and collaborators 
-\cite{CSR_1950, SpitzerHarm_PR1953} . They used the formalism 
-of this equation to evaluate the collision terms of the~Boltzmann equation 
-under the assumptions that 
-(a) the events producing changes in particle momenta
-are two-body interactions described by the associated
-differential scattering cross sections, and 
-(b) that the~distribution 
-function is of the form $f^0+\mu f^1$, where $f^0$ and $f^1$ are isotropic
-and $\mu$, is the direction cosine between the particle trajectory 
-and some preferred direction in space, and is assumed to be small.
+The~first attempts of modern kinetic modeling of plasma can be tracked back 
+to the~fifties, when Cohen, Spitzer, and Routly (CSR) \cite{CSR_1950} 
+in detail demonstrated the~fact, that in the~ionized gas the~effect of 
+Coulomb collisions between electrons and ions predominantly results 
+from frequently occurring events of cumulative small deflections 
+rather than occasional close encounters. This effect was originally described
+in \cite{Jeans_BOOK1929} and Chandrasekhar \cite{Chandrasekhar_RMP1943} 
+proposed to use the~diffusion equation model of the~Fokker-Planck type (FP) 
+\cite{Planck_1917}.
 
-It is the purpose of this paper to present the mechanics 
-of two-body collisions in a somewhat simplified
-form, and to derive the Fokker-Planck equation for an function. 
-From this general arbitrary distribution equation such special cases 
-as those of Chandrasekhar and Spitzer may easily be obtained. 
-For more complex situations the equation is suitable for integration by an
-electronic computer \cite{Rosenbluth_PR1957}.
+%A more generally valid approach to the problem of
+%treating changes in a distribution function resulting
+%each of which from frequently occurring "events",
+%produces a small change in the momentum of a particle,
+%is to use the Fokker-Planck equation \cite{Planck_1917}, 
+%which has been discussed by Spitzer and collaborators 
+%\cite{SpitzerHarm_PR1953} . 
+As a~result, a~classical paper by Spitzer and Harm (SH) 
+\cite{SpitzerHarm_PR1953} provides the~computed electron distribution function
+spanning from low to high Z plasmas, and more importantly, the~current and 
+heat flux formulas, which are widely used in almost every plasma hydrodynamic
+code nowadays.
+%used the formalism of the FP equation to evaluate the collision terms of 
+%the~Boltzmann equation under the assumptions that 
+%(a) the events producing changes in particle momenta
+%are two-body interactions described by the associated
+%differential scattering cross sections, and 
+%(b) that 
+The~distribution function is of the form $f^0+\mu f^1$, where $f^0$ and $f^1$ 
+are isotropic and $\mu$, is the direction cosine between the particle 
+trajectory and some preferred direction in space. It should be emphasized that
+the~SH solution expresses a~small perturbation of equilibrium, i.e. that 
+$f^0$ is the~Maxwell-Boltzmann distribution and $\mu f^1$ represents 
+a~very small deviation.
 
-AWBS \cite{AWBS_PRL1986} 
+%It is the purpose of this paper to present the mechanics 
+%of two-body collisions in a somewhat simplified
+%form, and to derive the Fokker-Planck equation for an function. 
+%From this general arbitrary distribution equation such special cases 
+%as those of Chandrasekhar and Spitzer may easily be obtained. 
+%For more complex situations the equation is suitable for integration by an
+%electronic computer \cite{Rosenbluth_PR1957}.
+
+The~actual cornerstone of the~modern FP simulations was set in place
+by Rosenbluth \cite{Rosenbluth_PR1957}, when he derived a~simplified form 
+of the~FP equation for a~finite expansion of the~distribution function,
+where all the~terms are computed according to plasma conditions, including
+$f^0$, which of course needs to tend to the~Maxwell-Boltzmann distribution.
+
+In is the~purpose of this paper to present an~efficient alternative 
+to FP model based on the~Albritton-Williams-Bernstein-Swartz 
+collision operator (AWBS) \cite{AWBS_PRL1986}.
+In Section \ref{sec:AWBSmodel} we propose a~modified form of 
+the~AWBS collision operator, where its important properties are further
+presented in Section \ref{sec:DiffusiveKinetics} with the~emphasis on its
+comparison to the~full FP solution in local diffusive regime. 
+Section \ref{sec:BenchmarkingAWBS} focuses on the~performance of the~AWBS 
+transport equation model compared to modern kinetic codes including FP codes
+Aladin and Impact, and PIC code Calder, where the~cases related to real
+laser generated plasma conditions are studied. Finally, the~most important
+outcomes of our research are concluded in Section \ref{sec:Conclusions}. 

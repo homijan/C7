@@ -1,44 +1,80 @@
 \section{The~AWBS kinetic model}
 \label{sec:AWBSmodel}
 
+The~electrons in plasma can be modeled by the~deterministic model of charged
+particles
 \begin{equation}
   \pdv{\ft}{t} + \vv\cdot\gx \ft + \tE \cdot\gv \ft = C_{ee}(f) + C_{ei}(f) ,
-  \nonumber
+  \label{eq:kinetic_equation}
 \end{equation}
+where $\ft(t, \vect{x}, \vect{v})$ represents the~density function of electrons
+at time $t$, spatial point $\vect{x}$, and velocity $\vv$, and 
+$\tE = \frac{\qe}{\me}\E$ is the~existing electric field in plasma.
 
+The~generally accepted form of the~electron-electron collision operator 
+$C_{ee}$ is the~Fokker-Planck form published by Landau \cite{Landau_1936}
 \begin{equation}
-  C_{FP}(f) =
+  C_{FP}(\ft) =
   \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
   \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb ,
-  \nonumber
+  \label{eq:LFP_model}
 \end{equation}
-where $\Gamma = \frac{\qe^4\lnc}{4\pi\epsilon^2\me^2}$.
+where $\Gamma = \frac{\qe^4\lnc}{4\pi\epsilon^2\me^2}$ and 
+$\lnc$ is the~Coulomb logarithm.
+In principal, the~electron-ion collision operator $C_{ei}$ could be expressed
+in the~form similar to \eqref{eq:LFP_model}, but since ions are considered 
+to be motionless compared to electrons, the~scattering operator, i.e.
+no change in the~velocity magnitude, expressed in spherical coordinates
+is widely accepted
+\begin{equation}
+  C_{ei}(\ft) = \frac{\nuei}{2}
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{\ft}{\mu}\right)
+  + \frac{1}{\sin^2(\phi)}\frac{\partial^2 \ft}{\partial\theta^2} \right) ,
+  \label{eq:ei_scattering}
+\end{equation}
+where $\mu = \cos(\phi)$, $\phi$ and $\theta$ are the~polar and azimuthal 
+angles, and $\nuei = \frac{\Zbar n_e \Gamma}{\vmag^3}$ is the~electron-ion
+collision frequency.
 
-Fish high-velocity limit collision operator \cite{Fish_RMP1987}
-AWBS \cite{AWBS_PRL1986}
-Sorbo \cite{Sorbo_2015, Sorbo_2016}
-
+Fish introduced an~alternative form of $C_{ee}$ in \cite{Fish_RMP1987} 
+referred to as high-velocity limit electron collision operator
 \begin{multline}
-  C_{H} = \vmag \nue \pdv{}{\vmag}\left(\ft + 
+  C_{H}(\ft) = \vmag \nue \pdv{}{\vmag}\left(\ft + 
   \frac{\vth^2}{\vmag}\pdv{f}{\vmag}\right) \\
   + \frac{\nue}{2}\left( 1 - \frac{\vth^2}{2\vmag^2}\right) 
   \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
   + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)
   , \label{eq:HighVelocity_model}
 \end{multline}
-The~Maxwell-Boltzmann averaged e-e scattering in 
-\eqref{eq:HighVelocity_model} can be approximated as 
-$\nue \int\left(1 - \frac{\vth^2}{2\vmag^2}\right)\fM 4\pi\vmag^2\, \dI\vmag = 
-\frac{\nue}{2}$.
+where $\nue = \frac{n_e \Gamma}{\vmag^3}$ is the~electron-electron collision 
+frequency and $\vth = \sqrt{\frac{\kB T_e}{\me}}$ is the~electron thermal 
+velocity.
+The~linear form of $C_{H}$ arises from an~assumption that the~fast electrons 
+predominantly interact with the~thermal (slow) electrons, 
+which simplifies importantly the~nonlinear form \eqref{eq:LFP_model}.
 
-A~simplified kinetic formulation to the~Fokker-Planck collision operator 
-for electrons combining \cite{Fish_RMP1987} and  \cite{AWBS_PRL1986}
-was introduced in \cite{Sorbo_2015}.
-
+The~aim of this work is to use a~yet simpler form of 
+the~electron-electron collision operator, i.e. the~AWBS formulation 
+\cite{AWBS_PRL1986}, where we propose the~following form
 \begin{multline}
-  C_{AWBS} = \vmag \frac{\nue}{2}\pdv{}{\vmag}\left(\ft - \fM\right) \\
+  C_{AWBS}(\ft) = \vmag \frac{\nue}{2}\pdv{}{\vmag}\left(\ft - \fM\right) \\
   + \frac{\nuei + \frac{\nue}{2}}{2} 
   \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
   + \frac{1}{\sin^2(\phi)}\frac{\partial^2f}{\partial\theta^2} \right)
   , \label{eq:AWBS_model}
 \end{multline}
+where $\fM$ is the~Maxwell-Boltzmann equilibrium distribution.
+$C_{AWBS}$ represents the~complete $C_{ee} + C_{ei}$ collision operator in 
+\eqref{eq:kinetic_equation}.
+
+The~complete form of collision operator \eqref{eq:AWBS_model} 
+was previously introduced in \cite{Sorbo_2015, Sorbo_2016}, nevertheless, 
+we intentionally use a~half of the~electron-electron collisional frequency
+modification $\frac{\nue}{2}$, because this formulation provides very 
+promising results compared to the~full FP operator as emphasized in Section 
+\ref{sec:DiffusiveKinetics}.
+
+The~Maxwell-Boltzmann averaged e-e scattering in 
+\eqref{eq:HighVelocity_model} can be approximated as 
+$\nue \int\left(1 - \frac{\vth^2}{2\vmag^2}\right)\fM 4\pi\vmag^2\, \dI\vmag = 
+\frac{\nue}{2}$.
