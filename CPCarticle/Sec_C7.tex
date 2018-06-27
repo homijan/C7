@@ -1,24 +1,37 @@
 \subsection{AP1 implementation}
 \label{sec:C7code}
-In order to eliminate the~dimensions of the~above transport problem 
-the~first-two-moment model based on approximation 
+
+AP1 represents the~abbreviation AWBS-P1, i.e. the~use of collision operator 
+\eqref{eq:AWBS_model} and the~P1 angular discretization, i.e. the~lowest order 
+anisotropy approximation. AP1 in general belongs to the~so-called angular 
+moments method and the~electron distribution function takes the~form
 \begin{equation}
-  \tilde{f} = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
-  \nonumber \label{eq:OOE_P1approximation}
+  \tilde{\ft} = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \nonumber \label{eq:P1approximation}
 \end{equation}
-can be adopted and reads
+which consists of the~isotropic part $\fzero = \int_{4\pi} \tilde{\ft} \dI\vn$ 
+and the~directional part $\fone = \int_{4\pi} \vn
+\tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction (the~solid angle).
+
+The~first two angular moments applied to \eqref{eq:kinetic_equation}
+with collision operator \eqref{eq:AWBS_model} lead to the~AP1 model equations
 \begin{eqnarray}
   \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - 4\pi\fM \right) &=&
   \vmag\nabla\cdot\fone + \tE\cdot
   \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
-  \nonumber \label{eq:OOE_P1f0}\\
+  \label{eq:P1f0}\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
   - \nuscat\fone &=& 
   \frac{\vmag}{3}\nabla\fzero + 
   \frac{\tE}{3}\pdv{\fzero}{\vmag} ,
-  \nonumber \label{eq:OOE_P1f1}
+  \label{eq:P1f1}
 \end{eqnarray}
-where $\nuscat = \nuei + \frac{\nue}{2}$.
+where $\nuscat = \nuei + \frac{\nue}{2}$. The~strategy of solving 
+\eqref{eq:P1f0} and \eqref{eq:P1f1} resides in integrating $\pdv{\fzero}{\vmag}$
+and $\pdv{\fone}{\vmag}$ in velocity magnitude while starting the~integration
+from infinite velocity to zero velocity, which corresponds to decelerating 
+electrons. It should be noted, that in practice we start the~integration from
+$\vmag = 7 \vth$, which represents a~sufficiently high velocity.
 
 \subsubsection{Nonlocal electric field treatment}
 \label{sec:Efield}
@@ -34,16 +47,26 @@ where $\nuscat = \nuei + \frac{\nue}{2}$.
 %  \Bigg] \vmag^2\, \dI\vmag = 0
 %  , \nonumber
 %\end{multline}
+Similarly to \eqref{eq:BGK_Efield}, one can obtain the~model equation of 
+the~electric field $\tE$ by evaluating the~zero current condition 
+(a~velocity integration of \eqref{eq:P1f1})
 \begin{equation}
   \intv \left(\frac{\frac{\nue}{2}\vmag^2}{\nuscat}
   \pdv{\fone}{\vmag} 
   - \frac{\vmag^2}{3\nuscat}
   \nabla\fzero 
   - \frac{\vmag}{3\nuscat}\pdv{\fzero}{\vmag}\tE
-  \right) \vmag^2\, \dI\vmag = 0
-  , \nonumber
+  \right) \vmag^2\, \dI\vmag = 0 ,
+  \label{eq:AP1_Efield}
 \end{equation}
-
+from which it is easy to express $\tE$ once $\fzero$ and $\fone$ are known, or
+in other words, the~integral-differential model equations need to be solved 
+simultaneously, which is achieved by $k$-iteration of 
+$\fzero^k(\tE^k), \fone^k(\tE^k)$, i.e. \eqref{eq:P1f0}, \eqref{eq:P1f1}, and 
+$\tE^{k+1}(\fzero^k, \fone^k)$, i.e.  \eqref{eq:AP1_Efield}, until 
+the~current evaluation \eqref{eq:AP1_Efield} converges to zero. In particular,
+the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:P1f0} and 
+\eqref{eq:P1f1}.
 %\begin{eqnarray}
 %  \pdv{\fzero}{\vmag} &=&
 %  \frac{2}{\nue}\pdv{\fonez}{z} + \frac{2\tEz}{\vmag\nue} \pdv{\fonez}{\vmag} 
@@ -224,13 +247,15 @@ which leads to
 \end{eqnarray}
 \end{comment} % directional E field condition
 
-\begin{eqnarray}
-  |\tE_{red}| &=& \sqrt{3} \vmag\frac{\nue}{2} ,
-  \nonumber \\
-  \nuscat^E &=& \frac{|\tE| - |\tE_{red}|}{\vmag} ,
+\begin{equation}
+  |\tE_{red}| = \sqrt{3} \vmag\frac{\nue}{2} ,
+  \label{eq:Elimit}
+\end{equation}
+\begin{equation}
+  \omega_{red} = |\tE_{red}| / |\tE| ,\quad 
+  \nuscat^E = \frac{|\tE| - |\tE_{red}|}{\vmag} .
   \nonumber
-\end{eqnarray}
-where $\omega_{red} = |\tE_{red}| / |\tE|$.
+\end{equation}
 
 P1 approximation equivalent
 \begin{equation}
