@@ -13,21 +13,23 @@ which consists of the~isotropic part $\fzero = \int_{4\pi} \tilde{\ft} \dI\vn$
 and the~directional part $\fone = \int_{4\pi} \vn
 \tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction (the~solid angle).
 
-The~first two angular moments applied to \eqref{eq:kinetic_equation}
-with collision operator \eqref{eq:AWBS_model} lead to the~AP1 model equations
+The~first two angular moments applied to the~steady form of 
+\eqref{eq:kinetic_equation} with collision operator \eqref{eq:AWBS_model} 
+lead to the~AP1 model equations
 \begin{eqnarray}
   \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - 4\pi\fM \right) &=&
   \vmag\nabla\cdot\fone + \tE\cdot
   \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
-  \label{eq:P1f0}\\
+  \label{eq:AP1f0}\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
   - \nuscat\fone &=& 
   \frac{\vmag}{3}\nabla\fzero + 
   \frac{\tE}{3}\pdv{\fzero}{\vmag} ,
-  \label{eq:P1f1}
+  \label{eq:AP1f1}
 \end{eqnarray}
 where $\nuscat = \nuei + \frac{\nue}{2}$. The~strategy of solving 
-\eqref{eq:P1f0} and \eqref{eq:P1f1} resides in integrating $\pdv{\fzero}{\vmag}$
+\eqref{eq:AP1f0} and \eqref{eq:AP1f1} resides in integrating 
+$\pdv{\fzero}{\vmag}$
 and $\pdv{\fone}{\vmag}$ in velocity magnitude while starting the~integration
 from infinite velocity to zero velocity, which corresponds to decelerating 
 electrons. It should be noted, that in practice we start the~integration from
@@ -49,7 +51,7 @@ $\vmag = 7 \vth$, which represents a~sufficiently high velocity.
 %\end{multline}
 Similarly to \eqref{eq:BGK_Efield}, one can obtain the~model equation of 
 the~electric field $\tE$ by evaluating the~zero current condition 
-(a~velocity integration of \eqref{eq:P1f1})
+(a~velocity integration of \eqref{eq:AP1f1})
 \begin{equation}
   \intv \left(\frac{\frac{\nue}{2}\vmag^2}{\nuscat}
   \pdv{\fone}{\vmag} 
@@ -62,11 +64,11 @@ the~electric field $\tE$ by evaluating the~zero current condition
 from which it is easy to express $\tE$ once $\fzero$ and $\fone$ are known, or
 in other words, the~integral-differential model equations need to be solved 
 simultaneously, which is achieved by $k$-iteration of 
-$\fzero^k(\tE^k), \fone^k(\tE^k)$, i.e. \eqref{eq:P1f0}, \eqref{eq:P1f1}, and 
+$\fzero^k(\tE^k), \fone^k(\tE^k)$, i.e. \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, and 
 $\tE^{k+1}(\fzero^k, \fone^k)$, i.e.  \eqref{eq:AP1_Efield}, until 
 the~current evaluation \eqref{eq:AP1_Efield} converges to zero. In particular,
-the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:P1f0} and 
-\eqref{eq:P1f1}.
+the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:AP1f0} and 
+\eqref{eq:AP1f1}.
 %\begin{eqnarray}
 %  \pdv{\fzero}{\vmag} &=&
 %  \frac{2}{\nue}\pdv{\fonez}{z} + \frac{2\tEz}{\vmag\nue} \pdv{\fonez}{\vmag} 
@@ -80,20 +82,40 @@ the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:P1f0} and
 %  , \nonumber \label{eq:OOE_P1f1}
 %\end{eqnarray}
 
+Interestingly, we have encountered a~very specific property of the~AP1 model
+with respect to the~electric field magnitude. The~easiest way how to 
+demonstrate this is to write the~model equations \eqref{eq:AP1f0} and 
+\eqref{eq:AP1f1} in 1D and eliminate one of the~partial derivatives with 
+respect to $\vmag$. In the~case of elimination of $\pdv{\fzero}{\vmag}$ 
+one obtains the~following equation
 \begin{multline}
   %\frac{2}{3\vmag\nue} 
   %\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \tEz^2\right)  
   \left(\vmag\frac{\nue}{2} - \frac{2\tEz^2}{3\vmag\nue}\right) 
   \pdv{\fonez}{\vmag} 
-  =\\
+  =
   \frac{2\tEz}{3\nue}\pdv{\fonez}{z}  
-  + \frac{4\pi\tEz}{3}\pdv{\fM}{\vmag}
+  + \frac{4\pi\tEz}{3}\pdv{\fM}{\vmag} \\
   + \frac{\vmag}{3}\pdv{\fzero}{z} 
   + \left(\frac{4\tEz^2}{3\vmag^2\nue}
-  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez
-  , \nonumber
+  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez .
+  \label{eq:AP1_model_1D}
 \end{multline}
+It is convenient to write the~left hand side of \eqref{eq:AP1_model_1D} as
+$\frac{2}{3\vmag\nue} 
+\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \tEz^2\right)$
+from where it is clear that the~bracket is negative if 
+$\sqrt{3}\vmag\frac{\nue}{2} =  \sqrt{3}\frac{n_e \Gamma}{2\vmag^2} < |\tE|$, 
+i.e. there is a~velocity limit for a~given magnitude $|\tE|$, 
+when the~collisions are no more fully dominant and the~electric field 
+introduces a~comparable effect to friction in the~electron transport.
 
+Since the~last term on the~right hand side of \eqref{eq:AP1_model_1D} 
+is dominant, the~solution behaves as 
+$\fone \sim \exp\left(-\left(\frac{4\tEz^2}{3\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right) \right)/
+\left(\vmag\frac{\nue}{2} - \frac{2\tEz^2}{3\vmag\nue}\right)\, \vmag\right)$, 
+which becomes ill-posed for velocities above the~limit.
 %\begin{multline}
 %  \frac{2}{3\vmag\nue} 
 %  \left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \tEz^2\right)
@@ -140,8 +162,8 @@ the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:P1f0} and
   \caption{
   $\sqrt{3}\vmag\frac{\nue}{2} > |\tE|$.
   }
-\end{center}
 \label{tab:vlim}
+\end{center}
 \end{table}
 
 \begin{comment} % too complicated
@@ -247,27 +269,39 @@ which leads to
 \end{eqnarray}
 \end{comment} % directional E field condition
 
+In order to provide a~stable model, we introduce a~reduced electric field
 \begin{equation}
   |\tE_{red}| = \sqrt{3} \vmag\frac{\nue}{2} ,
   \label{eq:Elimit}
 \end{equation}
+ensuring that the~bracket on the~left hand side of \eqref{eq:AP1_model_1D}
+remains positive. Further more we define two quantities
 \begin{equation}
-  \omega_{red} = |\tE_{red}| / |\tE| ,\quad 
+  \omega_{red} = \frac{|\tE_{red}|}{|\tE|} ,\quad 
   \nuscat^E = \frac{|\tE| - |\tE_{red}|}{\vmag} .
   \nonumber
 \end{equation}
-
-P1 approximation equivalent
+introducing the~reduction factor of the~electric field to be applied 
+$\omega_{red}$ and the~compensation of the~electric field effect in terms of
+scattering $\nuscat^E$. Consequently, the~AP1 model \eqref{eq:AP1f0}, 
+\eqref{eq:AP1f1}, and \eqref{eq:AP1_Efield} can be formulated as well posed 
+with the~help of $\omega_{red}$ and $\nuscat^E$. However, before doing so,
+we introduce a~slightly different approximation to the~electron distribution 
+function as
 \begin{equation}
   \tilde{f} = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
-  \label{eq:OOE_P1outofeq}
+  \label{eq:P1_OOE}
 \end{equation}
-where the~moment model reads
+where $\dafzero$ represents the~departure of isotropic part from 
+the~Maxwell-Boltzmann equilibrium distribution $\fM$, which we keep 
+intentionally in the~distribution function approximation.
+
+Then, the~stable AP1 model reads
 \begin{eqnarray}
   \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag} &=&
   \vmag\nabla\cdot\fone + \tE\cdot\left(\omega_{red} \pdv{\fone}{\vmag} 
   + \frac{2}{\vmag}\fone\right) , 
-  \nonumber\\
+  \label{eq:AP1f0_stable}\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} 
   &=& \tnuscat\fone 
   + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
@@ -276,9 +310,17 @@ where the~moment model reads
   + \frac{\tE}{3}\left(4\pi \pdv{\fM}{\vmag} 
   + \omega_{red} \pdv{\dafzero}{\vmag} 
   \right) ,
-  \nonumber
+  \label{eq:AP1f1_stable}
 \end{eqnarray}
 where $\tnuscat = \nuei + \nuscat^E + \frac{\nue}{2}$.
+The~reason for keeping $\fM$ in the~distribution function approximation
+\eqref{eq:P1_OOE} can be seen in the~last term on the~right hand side of 
+\eqref{eq:AP1f1_stable}, which provides the~effect of electric field on
+directional quantities as current or heat flux. In principle, the~explicit use
+of $\fM$ ensures the~proper effect of $\tE$ if $\dafzero \ll \fM$, i.e.
+no matter what the~reduction $\omega_{red}$ is. Apart from its stability,
+it also exhibits much better convergence of the~electric field, which is now
+given by the~zero current condition of \eqref{eq:AP1f1_stable} as
 \begin{equation}
   \tE =
   \frac{\intv \left(\frac{\nue}{2\tnuscat}\vmag^2\pdv{\fone}{\vmag}
@@ -287,7 +329,12 @@ where $\tnuscat = \nuei + \nuscat^E + \frac{\nue}{2}$.
   {\intv \frac{\vmag}
   {3\tnuscat}
   \left(4\pi\pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag}\right)
-  \vmag^2\, \dI\vmag} ,
-  \nonumber
+  \vmag^2\, \dI\vmag} .
+  \label{eq:AP1_Efield_stable}
 \end{equation}
 
+For practical reasons we present in \tabref{tab:vlim} 
+some explicit values of velocity limit corresponding to varying transport 
+conditions expressed in terms of Knudsen number 
+$\text{Kn}^e = \frac{\mfpe |\nabla T_e|}{T_e}$, 
+where $\frac{T_e}{|\nabla T_e|}$ stands for the~length scale of plasma.

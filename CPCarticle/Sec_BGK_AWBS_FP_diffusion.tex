@@ -24,9 +24,13 @@ of transport velocity, and
 $\mfpei = \frac{\vmag}{\nuei} = \frac{\vmag^4}{\Zbar n_e \Gamma}$.
 In other words, one can say that by evaluating numerically $\tilde{\ft}$
 in \eqref{eq:f_approximation}, we accept some error of the~order 
-$O(\mfpei^2) + O(\mu^2)$.
+$O(\mfpei^2) + O(\mu^2)$. The~expansion in a~small parameter $\mfpei$ is also
+coherent with a~time-steady approximation due to the~relation between the~mean
+free path and collision frequency, where the~higher the~collision frequency 
+the~more steady the~solution. 
 
-In order to start, we express the~left hand side of \eqref{eq:kinetic_equation}
+In order to start, we express the~time-steady left hand side of 
+\eqref{eq:kinetic_equation}
 in 1D and insert the~approximation \eqref{eq:f_approximation}, which leads to
 \begin{multline}
   \mu\left(\pdv{\tilde{f}}{z} + \frac{\tEz}{\vmag}\pdv{\tilde{f}}{\vmag}\right) 
