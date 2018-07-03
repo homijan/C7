@@ -87,7 +87,7 @@ Now the~electric current expressing the~contribution of every electron
 naturally tends to zero, i.e. the~\textit{quasi-neutrality} constraint, 
 which lead to an~analytic formula of the~self-consistent electric field
 \begin{multline}
-\vect{j} \equiv \qe \int \vv f^1 \, \dI\vv = \vect{0}  \rightarrow
+\vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0}  \rightarrow
 \tE = \vth^2\left(\frac{\nabla\rho}{\rho} + \frac{5}{2}\frac{\nabla T}{T} 
 \right) .
 \label{eq:BGK_Efield}
@@ -344,17 +344,40 @@ $\vtwoh = \sqrt{\frac{\kB T_e}{2\me}}$.
 transport}
 \label{sec:SummaryDiffusiveKinetics}
 
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=0.5\textwidth]{q1s.png}
-    \end{tabular}
-  \caption{  
-  The~flux velocity moment of the~anisotropic part of the~electron distribution 
-  function in low $Z=1$ and high $Z=116$ plasmas in diffusive regime.}
-  \label{fig:q1s_summary}
-  \end{center} 
-\end{figure}
+Ever since the~SH paper \cite{SpitzerHarm_PR1953}, the~effect of microscopic
+electron transport on the~current $\int \qe \vv \tilde{\ft} \, \dI\vv$ 
+and the~heat flux $\int \frac{\me |\vv|^2}{2} \vv \tilde{\ft} \, \dI\vv$ 
+in plasmas
+under local diffusive conditions has been understood. By overcoming some 
+delicate aspects of the~numerical solution to \eqref{eq:FP_f1_ODE} presented 
+in the~CSR paper \cite{CSR_1950}, the~effect of electron-electron collisions
+was properly quantified and the~correct dependence on $\Zbar$ of the~heat flux
+$\vect{q}$ was approximated as 
+\begin{equation}
+  \vect{q} = \frac{\Zbar + 0.24}{\Zbar + 4.2} \vect{q}_L ,
+  \label{eq:qSH_approximation}
+\end{equation}
+where $\vect{q}_L = \kappa T_e^{\frac{5}{2}}\nabla T_e$ is the~heat flux given 
+by Lorentz \cite{Lorentz_1905}.
+In order to follow the~SH $\Zbar$-dependence of heat flux, the~BGK operator 
+needs to be scaled as
+\begin{equation}
+  %C_{BGK}(\tilde{\ft})
+  %=
+  \frac{\Zbar + 4.2}{\Zbar + 0.24}
+  \frac{\Zbar}{\Zbar+1}\left[\nue\left(\tilde{\ft} - \fM\right)
+  + \frac{\nuei}{2}
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}\right] ,
+  \nonumber
+\end{equation}
+which leads to a~scaled Lorentz$^*$ distribution function
+\begin{equation}
+  \tilde{f} = \fM - \frac{\Zbar+0.24}{\Zbar+4.2}
+  \left( \frac{\vmag^2}{2 \vth^2} - 4\right)
+  \frac{1}{T}\pdv{T}{z}\fM \mfpei \mu ,
+  \label{eq:Scaled_Lorentz}
+\end{equation}
+which obeys the~$\Zbar$-dependence \eqref{eq:qSH_approximation}.
 
 \begin{table}
 \begin{center}
@@ -378,16 +401,60 @@ transport}
 \end{center}
 \end{table}
 
-\begin{itemize}
-  \item Rescale BGK according to Lorentz to match SH heat flux.
-  \item Emphasize the~outstanding match between our modified $\frac{\nue}{2}$
-        AWBS model and the~SH profiles of $q_1$ (define) in 
-		TABLE~\ref{tab:qAWBS}.
-  \item Stress the~visual results of AWBS compared to FP presented in 
-        \figref{fig:q1s_summary}. 
-  \item Raise a~discussion about the~structure of $\ft^1$ equations
-        \eqref{eq:BGK_f1}, \eqref{eq:AWBS_f1_ODE}, and 
-        \eqref{eq:FP_f1_ODE}.
-  \item Point out the~behavior of the~maximum velocity of $q_1$.
-\end{itemize}
+On the~contrary, the~modified form of the~AWBS collision operator 
+\eqref{eq:AWBS_model} provides a~very precise heat flux $\Zbar$-dependence
+without introducing any scaling. Indeed, \tabref{tab:qAWBS} shows the~relative
+error (maximum around 5$\%$) of the~heat flux modeled by 
+\eqref{eq:AWBS_model} vs. SH results represented by 
+\eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
+with respect to original values presented in TABLE~III in 
+\cite{SpitzerHarm_PR1953}.
+
+Nevertheless, the~electron-electron collisions effect represented by 
+\eqref{eq:qSH_approximation} provides only an~integrated information about
+the~heat flux magnitude. If one takes a~closure look at the~distribution
+function itself, the~conformity of the~modified AWBS collision operator
+is even more emphasize as can be seen in \figref{fig:q1s_summary}.
+\begin{equation}
+  HERE DEFINE q1.
+  \nonumber
+\end{equation}
+In the~case of the~high $\Zbar$ Livermorium plasma ($\Zbar = 116$), 
+AWBS exactly aligns with the~Lorentz gas limit. In the~opposite case of the~low
+$\Zbar$ Hydrogen plasma ($\Zbar = 1$), the~AWBS distribution function 
+approaches significantly the~numerical SH solution. Overall BGK behavior is 
+consistent with the~scaled Lorentz$^*$ distribution function 
+\eqref{eq:Scaled_Lorentz} for any $\Zbar$.  
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=0.5\textwidth]{q1s.png}
+    \end{tabular}
+  \caption{  
+  The~flux velocity moment of the~anisotropic part of the~electron distribution 
+  function in low $Z=1$ and high $Z=116$ plasmas in diffusive regime.}
+  \label{fig:q1s_summary}
+  \end{center} 
+\end{figure}
+
+If one observes the~$\ft^1$ equations of each of the~model, i.e.
+\eqref{eq:BGK_f1}, \eqref{eq:AWBS_f1_ODE}, and \eqref{eq:FP_f1_ODE}, it turns
+out to be clear that the~terms containing derivatives with respect to $\vmag$ 
+address important physical mechanisms of electron-electron collisions in plasma.
+In other words, even a~simple linear first derivative term in the~modified
+AWBS collision operator \eqref{eq:AWBS_model} (red dashed line) provides 
+a~significant model improvement with respect to the~SH (Fokker-Planck) solution
+(solid black line) and compared to the~simplest BGK model
+(dashed-dot blue line) in \figref{fig:q1s_summary}.
+
+At last, we provide a~qualitative information with respect to the~dominant 
+velocity of electrons contributing to the~heat flux. In the~high $\Zbar$ case
+all the~models give 3.7$\times \vth$, while SH solution gives 3.5$\times \vth$
+and AWBS 3.4$\times \vth$ in the~case of low $\Zbar$ plasmas, thus showing 
+the~right tendency of the~maximum velocity shift modeled by the~modified AWBS
+collision operator \eqref{eq:AWBS_model}.
+%\begin{itemize} 
+%  \item Point out the~behavior of the~maximum velocity of $q_1$, Lorentz 3.71, SHZ1 3.53, AWBSZ1 3.39.
+%\end{itemize}
 
