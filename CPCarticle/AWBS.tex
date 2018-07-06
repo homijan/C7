@@ -157,14 +157,14 @@ preprint,%
 \newcommand{\refeq}[1]{\eqref{#1}}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
 \newcommand{\tabref}[1]{TABLE~\ref{#1}}
-\newcommand{\figscale}{0.5}
+\newcommand{\figscale}{0.48}
 
 
 \begin{document}
 
 \preprint{AIP/123-QED}
 
-\title[An~efficient kinetic modeling in plasmas by using the~AWBS transport equation]{An~efficient kinetic modeling in plasmas by using the~AWBS transport equation}% Force line breaks with \\
+\title[An~efficient kinetic modeling in plasmas relevant to inertial confinement fusion by using the~AWBS transport equation]{An~efficient kinetic modeling in plasmas relevant to inertial confinement fusion by using the~AWBS transport equation}% Force line breaks with \\
 %\thanks{Footnote to title of article.}
 
 \author{Authors}
@@ -221,19 +221,30 @@ Text of abstract.
 \input{Sec_AWBS_model}
 \input{Sec_BGK_AWBS_FP_diffusion}
 
-\section{Benchmarking the~AWBS nonlocal transport model}
-\label{sec:BenchmarkingAWBS}
+%\section{Benchmarking the~AWBS nonlocal transport model}
+%\label{sec:BenchmarkingAWBS}
+%After having shown several encouraging properties of the~AWBS transport 
+%equation defined by \eqref{eq:AWBS_model} under local diffusive conditions
+%in \secref{sec:DiffusiveKinetics}, this section provides a~broader analysis
+%of the~electron transport and focuses on analysis its behavior under variety of
+%conditions in plasmas. In principle, this is characterized by allowing that
+%electron mean free path can be arbitrarily long, which leads to so-called 
+%nonlocal electron transport extensively investigated in numerous publications 
+%\cite{Malone_1975_15, Colombant_PoP2005, Bell_1981_83, LMV_1983_7, Brantov_Nonlocal_electron_transport_1998, schurtz2000, Sorbo_2015}, where the~Fokker-Planck
+%modeling of electrons in plasma represents the~essential tool. Being so, 
+%we introduce our implementation of the~AWBS transport equation called AP1,
+%where its results are further benchmarked against simulation results
+%provided by Aladin, Impact FP codes, and Calder a~collisional Particle-In-Cell
+%code. Their description follows in the~next section.
+\input{Sec_Benchmarking}
 
-%\subsection{Review of simulation codes}
-%\label{sec:ReviewOfCodes}
-
-\input{Sec_C7}
-\input{Sec_AladinImpactCalder}
-%\input{Sec_Aladin}
-%\input{Sec_Impact}
-%\input{Sec_Calder}
-\input{Sec_SimulationResults}
+%\input{Sec_C7}
+%\input{Sec_AladinImpactCalder}
+%\input{Sec_SimulationResults}
 \input{Sec_Conclusions}
+
+\begin{acknowledgments}
+\end{acknowledgments}
 
 \bibliographystyle{elsarticle-num}
 \bibliography{NTH}

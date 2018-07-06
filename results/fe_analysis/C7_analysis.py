@@ -354,7 +354,8 @@ import matplotlib
 font = {'family' : 'Sans',
         #'weight' : 'bold',
         'size'   : args.FontSize}
-figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
+figure = {'figsize' : '10, 6'} # a tuple in inches
+#figure = {'figsize' : '10.5, 6.5'} # a tuple in inches
 matplotlib.rc('font', **font)
 matplotlib.rc('figure', **figure)
 
@@ -546,14 +547,14 @@ if (args.labelUseC7):
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0-$'+labelC7)
+   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0/f_M-$'+labelC7)
 if (args.labelDistributionExt1):
    data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
    data[data < log_min] = log_min
    data_max = max([max(data), data_max])
    data_min = min([min(data), data_min])
-   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0-$'+args.labelDistributionExt1 )
-ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
+   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0/f_M-$'+args.labelDistributionExt1 )
+#ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
 ax2.set_ylabel(r'$\log_{10}(|\delta f_0| / f_M)$ [a.u.]')
 #ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')
 #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')

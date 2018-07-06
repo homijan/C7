@@ -66,9 +66,12 @@ in other words, the~integral-differential model equations need to be solved
 simultaneously, which is achieved by $k$-iteration of 
 $\fzero^k(\tE^k), \fone^k(\tE^k)$, i.e. \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, and 
 $\tE^{k+1}(\fzero^k, \fone^k)$, i.e.  \eqref{eq:AP1_Efield}, until 
-the~current evaluation \eqref{eq:AP1_Efield} converges to zero. In particular,
-the~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:AP1f0} and 
-\eqref{eq:AP1f1}.
+the~current evaluation \eqref{eq:AP1_Efield} converges to zero. In principle,
+our concept of $k$-iteration resembles to the~embedded nonlinear iteration
+of the~implicit E field introduced in \cite{Kingham_JCP2004}.
+The~first iteration starts with $\tE=\vect{0}$ in \eqref{eq:AP1f0} and 
+\eqref{eq:AP1f1} and usually less than 10 iterations is sufficient to obey
+the~quasi-neutrality constraint.
 %\begin{eqnarray}
 %  \pdv{\fzero}{\vmag} &=&
 %  \frac{2}{\nue}\pdv{\fonez}{z} + \frac{2\tEz}{\vmag\nue} \pdv{\fonez}{\vmag} 
@@ -281,7 +284,7 @@ remains positive. Further more we define two quantities
   \nuscat^E = \frac{|\tE| - |\tE_{red}|}{\vmag} .
   \nonumber
 \end{equation}
-introducing the~reduction factor of the~electric field to be applied 
+introducing the~reduction factor of the~electric field
 $\omega_{red}$ and the~compensation of the~electric field effect in terms of
 scattering $\nuscat^E$. Consequently, the~AP1 model \eqref{eq:AP1f0}, 
 \eqref{eq:AP1f1}, and \eqref{eq:AP1_Efield} can be formulated as well posed 
@@ -293,9 +296,9 @@ function as
   \label{eq:P1_OOE}
 \end{equation}
 where $\dafzero$ represents the~departure of isotropic part from 
-the~Maxwell-Boltzmann equilibrium distribution $\fM$, which we keep 
-intentionally in the~distribution function approximation.
-
+the~Maxwell-Boltzmann equilibrium distribution $\fM$. 
+%which we keep 
+%intentionally in the~distribution function approximation.
 Then, the~stable AP1 model reads
 \begin{eqnarray}
   \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag} &=&
