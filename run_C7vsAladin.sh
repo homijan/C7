@@ -14,6 +14,7 @@ XPOINT=0.0480 # in cm qSH maximum
 
 #MING=2000
 MING=250
+#MING=35
 
 MAXITER=100
 
@@ -80,24 +81,25 @@ declare -a NAMEarray=("case")
 #cd $DIRroot
 
 ### CASE 3 ###
-XPOINT=0.0442 # in cm qSH maximum
-L=0.07
-declare -a Zarray=("10")
-##declare -a NIarray=("4.5e19") # ne = 4.5e20 Kn test
-declare -a NIarray=("5e19") # ne = 5e20
-cd VFPdata/Aladin/4milan
-python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Q_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _E_ #-m 0.33333334e-4 #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt -o _F0_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt -o _F1_ --column 2 #-s
-## Copy the input data files to dedicated directory. 
-cp _Te_Te_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
-cp _Q_FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
-cp _E_ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
-cp _F0_F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-cp _F1_F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt.txt $DIRroot/VFPdata/F1distribution1.dat
-cd $DIRroot
+##XPOINT=0.055 # in cm q nonlocal
+#XPOINT=0.0442 # in cm qSH maximum
+#L=0.07
+#declare -a Zarray=("10")
+###declare -a NIarray=("4.5e19") # ne = 4.5e20 Kn test
+#declare -a NIarray=("5e19") # ne = 5e20
+#cd VFPdata/Aladin/4milan
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Q_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _E_ #-m 0.33333334e-4 #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt -o _F0_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt -o _F1_ --column 2 #-s
+### Copy the input data files to dedicated directory. 
+#cp _Te_Te_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+#cp _Q_FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+#cp _E_ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+#cp _F0_F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+#cp _F1_F0F1x_Aladin_4milan_5e20_Z10_1.20e-11-0.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+#cd $DIRroot
 
 ### CASE 4 ###
 #XPOINT=0.0480 # in cm qSH maximum
@@ -119,22 +121,23 @@ cd $DIRroot
 #cd $DIRroot
 
 ### CASE 5 ###
+XPOINT=0.058 # in cm q nonlocal
 #XPOINT=0.0438 # in cm qSH maximum
-#L=0.07
-#declare -a Zarray=("1") 
-#declare -a NIarray=("5e20") # ne = 5e20
-#cd VFPdata/Aladin/Kn_span/Zeq1_tanh_50mic_5e20_B0_20ps
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Q_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt -o _F0_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt -o _F1_ --column 2 #-s
-#cp _Te_Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/temperature.dat
-#cp _Q_FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/flux1.dat
-#cp _E_ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
-#cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-#cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
-#cd $DIRroot
+L=0.07
+declare -a Zarray=("1") 
+declare -a NIarray=("5e20") # ne = 5e20
+cd VFPdata/Aladin/Kn_span/Zeq1_tanh_50mic_5e20_B0_20ps
+python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Q_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt -o _F1_ --column 2 #-s
+cp _Te_Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/temperature.dat
+cp _Q_FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/flux1.dat
+cp _E_ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
+cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_f0f1_2.00e-11_438mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+cd $DIRroot
 
 ### CASE 6 ###
 #XPOINT=0.0439 # in cm qSH maximum
@@ -206,7 +209,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp -SH --Efield --labelEfieldExt1 Aladin  
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin  --plotmultvTh 12 #-lD1 Aladin
 #python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 C7 --labelFluxExt1 Aladin --pltshow --pltTe -lD1 Aladin -xp --Efield --labelEfieldExt1 Aladin #-SH 
 
 # Safe figs.
@@ -217,14 +220,15 @@ python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labe
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case2_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case2_kinetics.png
 ### CASE 3 ###
-cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case3_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_kinetics.png
+#cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case3_heatflux.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_kinetics.png
 ### CASE 4 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case4_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case4_kinetics.png
 ### CASE 5 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case5_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png
+cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
 ### CASE 6 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case6_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case6_kinetics.png

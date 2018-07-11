@@ -42,7 +42,7 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
-XPOINT=0.0442 # in cm qSH maximum
+XPOINT=0.075 # in cm qSH maximum
 L=0.095 #0.07
 declare -a Zarray=("2")
 declare -a NIarray=("2.5e20") # ne = 5e20
@@ -85,7 +85,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe #-SH #-lD1 Calder --Efield --labelEfieldExt1 Calder
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --plotmultvTh 12 --pltshow --pltTe -xp #-SH #-lD1 Calder --Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###

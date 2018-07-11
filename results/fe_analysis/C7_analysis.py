@@ -24,6 +24,7 @@ AWBSstar=False
 AWBSoriginal=False
 usexpoint=False
 vlimshow=False
+plotmultvTh = 6
 
 import argparse
 ## Create parser object.
@@ -31,6 +32,7 @@ parser = argparse.ArgumentParser(description='Compare the diffusive asymptotic t
 ## Define input arguments.
 parser.add_argument("-s", "--sigma", help="Sigma for electro-ion cross-section.", type=float)
 parser.add_argument("-cl", "--coulLog", help="Coulomb logarithm for electro-ion cross-section.", type=float)
+parser.add_argument("-mv", "--plotmultvTh", help="Plot kinetics up to mult vTh.", type=float)
 parser.add_argument("-Np", "--Nproc", help="Number of processors used to compute the data.", type=int)
 parser.add_argument("-fs", "--FontSize", help="Font size.", type=int)
 ## A no value argument solution.
@@ -59,6 +61,8 @@ if (args.sigma):
    sigma = args.sigma
 if (args.coulLog):
    coulLog = args.coulLog
+if (args.plotmultvTh):
+   plotmultvTh = args.plotmultvTh
 
 ###############################################################################
 ########### Loading of results of parallel C7 code ############################
@@ -212,7 +216,7 @@ vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
 print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh
 
 ## Multiples of thermal velocity setting the velocity space range.
-ml_max = 10.0
+ml_max = 12.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
 ## qH = me/Zbar/sigma/coulLog*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
@@ -484,7 +488,7 @@ if (args.labelDistributionExt1):
    #D1v, D1_f0, D1_f1x = np.loadtxt('../../VFPdata/distribution1.dat',  usecols=(0, 1, 2), unpack=True)
 
 mult_min = 0
-mult_max = 6
+mult_max = plotmultvTh
 mask_v = (mult_min*vTh(Te) < v) & (v < mult_max*vTh(Te))
 p_v = v[mask_v]
 p_fM_analytic = fM_analytic[mask_v]
