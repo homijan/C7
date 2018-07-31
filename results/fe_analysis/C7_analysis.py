@@ -161,6 +161,15 @@ def vTh(T):
 def fM(v, T):
     return ne/(vTh(T)**3.0*(2.0*pi)**1.5)*exp(-v**2.0/2.0/vTh(T)**2.0)
 
+## Out of space check for LULI proposal
+sigma_LULI = 8.1027575e17
+coulLog_LULI = 7.0
+Te_LULI = 30.0
+ne_LULI = 1e20
+Zbar_LULI = 2.5
+mfp_LULI = (vTh(Te_LULI))**4.0/sigma_LULI/coulLog_LULI/ne_LULI/(Zbar_LULI+1.)**0.5
+print "mfp_LULI[microns] - vTh, 4*vTh: ", mfp_LULI * 1e4, mfp_LULI * 4.**4. * 1e4
+
 ###############################################################################
 #### FP equation diffusive regime #############################################
 def dfMdz(v, T, dTdz, n, dndz):
@@ -291,6 +300,7 @@ mfp_ei = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/Zbar
 mfp_ee = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar
 ## We add one to Zbar (i.e. Zbar+1.) in order to include the ee collisions.
 mfp_tot = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)
+mfp_LMV = (vTh(Te))**4.0/sigma/coulLog/ni/Zbar/(Zbar+1.)**0.5
 ## Classical length scale definition.
 ##L = Te / abs(gradTe)
 ## More accurate length scale definition.
@@ -308,6 +318,7 @@ SHQ_pete = SHQ_pete * 8.1027575e17 / sigma
 Kn_ei =  mfp_ei / L
 Kn_ee =  mfp_ee / L
 Kn_tot =  mfp_tot / L
+Kn_LMV =  mfp_LMV / L
 Kn_flux = SHQ_analytic / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 Kn_pete = SHQ_pete / (SHcorr * 128.0/(2.0*pi)**0.5 * ne * vTh(Te) * kB * Te)
 ## Express flux proportionality with respect to SHQ_analytic.
@@ -526,7 +537,8 @@ ax1.set_xlabel('v/vT')
 print "ne: ", ne
 print "Kn_ee: ", Kn_ee
 print "Kn_ei: ", Kn_ei
-ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_ee)+')')
+print "Kn_LMV: ", Kn_LMV
+ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_LMV)+')')
 ## Plot kinetic analysis.
 if (args.labelUseC7):
    ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7)
