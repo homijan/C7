@@ -10,8 +10,8 @@
 
 An~approximate solution to the~so-called \textit{local diffusive regime} 
 of electron transport can be found, since the~\textit{diffusive regime}
-refers to a~low anisotropy given by the~projection $\mu$, i.e.
-modeled by a~simple form of EDF  
+refers to a~low anisotropy given by the~projection $\mu$. i.e.
+modeled by a~simple P1 form of EDF  
 \begin{equation}
   \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \mu \ft^1(z, \vmag),
   \label{eq:f_approximation}
@@ -40,10 +40,10 @@ The~approximate transport solution is then obtained when analyzing
 the~action of the~time-steady form of \eqref{eq:kinetic_equation} in 1D 
 on the~approximation \eqref{eq:f_approximation} as
 \begin{equation}
-  \mu\left(\pdv{\tilde{f}}{z} + \frac{\tEz}{\vmag}\pdv{\tilde{f}}{\vmag}\right) 
-  + \frac{\qe\tEz}{\me}\frac{(1-\mu^2)}{\vmag^2}\pdv{\tilde{f}}{\mu}
-  %\mu\left(\pdv{f^0}{z} + \frac{\tEz}{\vmag}\pdv{f^0}{\vmag}\right) 
-  %+ \frac{\tEz\mfpei}{\vmag^2} f^1 
+  \mu\left(\pdv{\tilde{f}}{z} + \frac{\Ez}{\vmag}\pdv{\tilde{f}}{\vmag}\right) 
+  + \frac{\qe\Ez}{\me}\frac{(1-\mu^2)}{\vmag^2}\pdv{\tilde{f}}{\mu}
+  %\mu\left(\pdv{f^0}{z} + \frac{\Ez}{\vmag}\pdv{f^0}{\vmag}\right) 
+  %+ \frac{\Ez\mfpei}{\vmag^2} f^1 
   = \frac{1}{\vmag}C(\tilde{\ft}) ,
   \label{eq:1D_kinetic_equation}
 \end{equation}
@@ -98,17 +98,17 @@ the~BGK isotropic and anisotropic terms of \eqref{eq:f_approximation} to be
   \ft^0 &=& \fM + Kn \frac{\vth^2}{\vmag^2}f^1 ,
   \label{eq:BGK_f0} \\
   \ft^1 &=& - \frac{\mfpe}{\Zbar}
-  \left( \pdv{\ft^0}{z} + \frac{\qe\tEz}{\me\vmag}\pdv{\ft^0}{\vmag} \right) , 
+  \left( \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right) , 
   \label{eq:BGK_f1}
 \end{eqnarray}
 where 
-$Kn = \mfpe \left(\frac{1}{L_{n_e}} + \frac{5}{2}\frac{1}{L_{T_e}} \right)$
+$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$
 and a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 %derives from the~electric field \eqref{app_eq:BGK_Efield}.
 Equation~\eqref{eq:BGK_f0} states that $\ft^0\rightarrow\fM$ when $Kn\ll1$, and 
 accordingly, $\ft^1 \rightarrow - \frac{\mfpe}{\Zbar}
-\left( \pdv{\fM}{z} + \frac{\qe\tEz}{\me\vmag}\pdv{\fM}{\vmag} \right)$.
+\left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right)$.
 %\begin{equation}
 %  \tilde{f} = \fM - \frac{\Zbar}{\Zbar+1}
 %  \left(\frac{1}{\rho}\pdv{\rho}{z} + 
@@ -182,7 +182,7 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   \label{eq:AWBS_f0} \\
   \pdv{f^1}{\vmag}  
   - \frac{\Zbar + 1}{\vmag} f^1 &=& \frac{\mfpe}{\vmag}
-  \left(\pdv{f^0}{z} + \frac{\qe\tEz}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
+  \left(\pdv{f^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
   \label{eq:AWBS_f1} 
   %\\  
   %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
@@ -190,8 +190,8 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   %\nonumber
 \end{eqnarray}
-where 
-$Kn = \mfpe \left(\frac{1}{L_{n_e}} + \frac{5}{2}\frac{1}{L_{T_e}} \right)$.
+%where 
+%$Kn = \mfpe \left(\frac{1}{L_{n_e}} + \frac{5}{2}\frac{1}{L_{T_e}} \right)$.
 A~detailed derivation of \eqref{eq:AWBS_f0} and \eqref{eq:AWBS_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 One observes that $\ft^0$ goes to Maxwellian when the~local regime of transport 
@@ -209,20 +209,20 @@ in local diffusive regime to be
   = \\
   \frac{\mfpe}{\vmag}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
-  \frac{1}{L_{T_e}} - \frac{\qe\tEz}{\me\vth^2}\right)\fM .
+  \frac{1}{L_{T_e}} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   %\frac{\mfpe}{\vmag}\left(\frac{1}{n_e}\pdv{n_e}{z} + 
   %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
-  %\frac{1}{T}\pdv{T}{z} - \frac{\qe\tEz}{\me\vth^2}\right)\fM .
+  %\frac{1}{T}\pdv{T}{z} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   \label{eq:AWBS_f1_ODE}
 \end{multline}
 
 Since there is no simple analytical formula for $\ft^1$ solving 
 \eqref{eq:AWBS_f1_ODE}, we adopt the~implicit Euler numerical integration
 with $\Delta v < 0$, i.e. we integrate from high electron velocity 
-($v_{max} = 8\vth$) to the~velocity equal to zero (using 10$^4$ steps). 
+($v_{max} = 7\vth$) to the~velocity equal to zero (using 10$^4$ steps). 
 This mimics a~particle deceleration due to collisions. The~correct numerical
 solution of \eqref{eq:AWBS_f1_ODE} corresponds to an~appropriate value of 
-$\tEz$ leading to a~zero current. Interestingly, this numerical value matches
+$\Ez$ leading to a~zero current. Interestingly, this numerical value matches
 precisely the~Spitzer electric field \eqref{app_eq:BGK_Efield}.
 
 As in the~BGK case, the~numerical solution of \eqref{eq:AWBS_f1_ODE} reveals
@@ -328,7 +328,7 @@ which imposes a~right heat flux magnitude \eqref{eq:qSH_approximation}.
   |\vect{q}_{AWBS} - \vect{q}_{SH}| / \vect{q}_{SH}$ of 
   the~$\nue^* = \frac{\nue}{2}$~scaling used in the~AWBS model
   \refeq{eq:AWBS_model} showing the~discrepancy 
-  (maximum around 5$\%$) with respect to the~original solution of 
+  (maximum around 6$\%$) with respect to the~original solution of 
   the~heat flux given by numerical solution in Spitzer and Harm 
   \cite{SpitzerHarm_PR1953}. The~values of $\phi(\Zbar)$ (weak dependence) are 
   also shown. 
@@ -352,7 +352,7 @@ scaling, i.e. with a~very weak dependency on $\Zbar$ as
 \end{equation}
 where the~actual dependence is $\phi(\Zbar)\ll\frac{1}{2}$ for any $\Zbar$.
 Indeed, \tabref{tab:qAWBS} shows $\phi(\Zbar)$ and its corresponding relative
-error (maximum around 5$\%$) of the~heat flux modeled by 
+error (maximum around 6$\%$) of the~heat flux modeled by 
 \eqref{eq:AWBS_model} vs. SH results represented by 
 \eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
 with respect to original values presented in TABLE~III in 
@@ -362,7 +362,7 @@ Nevertheless, the~electron-electron collisions effect represented by
 \eqref{eq:qSH_approximation} provides only an~integrated information about
 the~heat flux magnitude. If one takes a~closure look at the~distribution
 function itself, the~conformity of the~modified AWBS collision operator
-is even more emphasize as can be seen in \figref{fig:q1s_summary} showing
+is even more emphasized as can be seen in \figref{fig:q1s_summary} showing
 the~flux moment in spherical coordinates of velocity
 %\begin{equation}
 $
