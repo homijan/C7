@@ -272,6 +272,38 @@ def AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
         j1[i-1] = f1[i-1] * vp**3.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
+def _AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
+    N = len(v)
+    f1 = np.zeros(N) 
+    j1 = np.zeros(N)
+    q1 = np.zeros(N)
+    f1[N-1] = f0
+    for i in range(N-1, 0, -1):
+        dv = v[i] - v[i-1]
+        vp = v[i-1]
+        mfpe = vp**4.0 / Gamma_ee / ne
+        rhs = corr * mfpe / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
+        rhs = rhs * fM(ne, Te, vp)
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (corr * Z + 1.) / vp - 1. / dv) 
+        j1[i-1] = f1[i-1] * vp**3.0
+        q1[i-1] = f1[i-1] * vp**5.0
+    return f1, j1, q1
+def HighVelocity_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
+    N = len(v)
+    f1 = np.zeros(N) 
+    j1 = np.zeros(N)
+    q1 = np.zeros(N)
+    f1[N-1] = f0
+    for i in range(N-1, 0, -1):
+        dv = v[i] - v[i-1]
+        vp = v[i-1]
+        mfpe = vp**4.0 / Gamma_ee / ne
+        rhs = corr * mfpe / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
+        rhs = rhs * fM(ne, Te, vp)
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + 1. / 2.) / vp - 1. / dv) 
+        j1[i-1] = f1[i-1] * vp**3.0
+        q1[i-1] = f1[i-1] * vp**5.0
+    return f1, j1, q1
 ########### AWBS diffusive asymptotic #########################################
 ###############################################################################
 
@@ -378,9 +410,13 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     ## Lorentz gas E field.
     Ez_SH = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
     ## Compute AWBS f1 part of the distribution.
-    corr = 2.0
+    corr = 2.0 # Heat flux fit
+    #corr = 1.8 # Current fit
     ## Compute AWBS (you can check the zero current condition by varying Ez)
-    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
+    #fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
+    fAWBS1s, jAWBS1s, qAWBS1s = _AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
+    #corr = 1.7
+    #fAWBS1s, jAWBS1s, qAWBS1s = HighVelocity_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
     ## Compute SH original distributions from the 1953 paper.
     fSH19531s, jSH19531s, qSH19531s = SH_distribution(vs, ne, Te, dTedz, Z, G_ee)
     ## Fill BGK distributions, which correspond to the Lorentz gas model, when

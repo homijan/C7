@@ -40,7 +40,8 @@ The~approximate transport solution is then obtained when analyzing
 the~action of the~time-steady form of \eqref{eq:kinetic_equation} in 1D 
 on the~approximation \eqref{eq:f_approximation} as
 \begin{equation}
-  \mu\left(\pdv{\tilde{f}}{z} + \frac{\Ez}{\vmag}\pdv{\tilde{f}}{\vmag}\right) 
+  \mu\left(\pdv{\tilde{f}}{z} 
+  + \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{f}}{\vmag}\right) 
   + \frac{\qe\Ez}{\me}\frac{(1-\mu^2)}{\vmag^2}\pdv{\tilde{f}}{\mu}
   %\mu\left(\pdv{f^0}{z} + \frac{\Ez}{\vmag}\pdv{f^0}{\vmag}\right) 
   %+ \frac{\Ez\mfpei}{\vmag^2} f^1 
@@ -243,16 +244,17 @@ can use the~explicit evaluation of the~electron distribution function
 published in \cite{SpitzerHarm_PR1953}, which takes the~following form
 \begin{multline}
   %\ft^1(\vmag, \mu) 
-  \ft^1(z, \vmag) = \frac{\me^2}{4 \pi \qe^4\lnc} 
-  \frac{\vtwoh^4}{\Zbar}
-  \\
-  \left( 2 d_T(\vmag/\vtwoh) 
-  + \frac{3}{2}\frac{\gamma_T}{\gamma_E} d_E(\vmag/\vtwoh) \right) 
-  \frac{\fM}{n_e}\frac{1}{T}\pdv{T_e}{z}  ,
+  \ft^1(z, \vmag) = %\frac{\me^2}{4 \pi \qe^4\lnc} 
+  \frac{\vtwoh^4}{\Gamma\Zbar n_e}\\
+  \left( 2\tilde{D}_T\left(\frac{\vmag}{\vtwoh}\right) 
+  + \frac{3}{2}\frac{\gamma_T}{\gamma_E} 
+  \tilde{D}_E\left(\frac{\vmag}{\vtwoh}\right) \right)%\\ 
+  \frac{\fM}{T}\pdv{T_e}{z}  ,
   \label{eq:f1_SH}
 \end{multline}
-where $d_T(x) = \Zbar D_{T}(x) / B$, $d_E(x) = \Zbar D_{E}(x) / A$, $\gamma_T$,
-and $\gamma_E$ are represented by numerical values in TABLE~I, TABLE~II, and
+where $\tilde{D}_T(x) = \Zbar D_{T}(x) / B$, 
+$\tilde{D}_E(x) = \Zbar D_{E}(x) / A$, $\gamma_T$,
+and $\gamma_E$ are numerical values in TABLE~I, TABLE~II, and
 TABLE~III in \cite{SpitzerHarm_PR1953}, and 
 $\vtwoh = \sqrt{\frac{\kB T_e}{2\me}}$.
 
