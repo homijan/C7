@@ -42,26 +42,35 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
-XPOINT=0.075 # in cm qSH maximum
-L=0.095 #0.07
+#XPOINT=0.06441 # in cm qCalder maximum
+XPOINT=0.075 # in cm preheat position
+L=0.094
 declare -a Zarray=("2")
 declare -a NIarray=("2.5e20") # ne = 5e20
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Te
-python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 950 #700 -s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 940 #700 -s
 cp _Te_Te_00110000.txt.txt $DIRroot/VFPdata/temperature.dat
 cd $DIRroot
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/qx
-python $DIRroot/VFPdata/loadPhilippegrace.py -f qx_00110000.txt -o _Q_ -cf 950 #700 -s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f qx_00110000.txt -o _Q_ -cf 940 #700 -s
 cp _Q_qx_00110000.txt.txt $DIRroot/VFPdata/flux1.dat
 cd $DIRroot
 #cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Ex
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f Ex_00110000.txt -o _E_ -cf 950 -s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f Ex_00110000.txt -o _E_ -cf 940 -s
 #cp _E_Ex_00110000.txt.txt $DIRroot/VFPdata/Efield1.dat
-#cd $DIRroot
-#cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f f_00110000.txt -o _F0_ -cf 950 -s
-#cp _F0_f_00110000.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-#cd $DIRroot
+cd $DIRroot
+cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
+## Heat flux maximum.
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F1_ --column 2 #-s
+#cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+#cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+## Preheat position
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F1_ --column 2 #-s
+cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+cd $DIRroot
 
 # get length of an array
 length=${#Zarray[@]}
@@ -85,12 +94,13 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --plotmultvTh 12 --pltshow --pltTe -xp #-SH #-lD1 Calder --Efield --labelEfieldExt1 Calder
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 12 #--Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###
 cp heatflux.png $DIRroot/VFPdata/C7_Calder_case1_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_kinetics.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_kinetics.png
+cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_nonlocal_kinetics.png
 
 cd $DIRroot
 done

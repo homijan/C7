@@ -2,6 +2,8 @@
 *.o
 ## Avoid vim .swp
 *.swp
+## Avoid copy results data.
+_*
 ## Avoid temporary C7 results directed by default to ./results/tmp
 results/tmp/*.* 
 results/fe_analysis/Ecorrect_data/*.* 

@@ -43,6 +43,7 @@ parser.add_argument("-pZ", "--pltZbar", action='store_true', help="Plot Zbar in 
 parser.add_argument("-As", "--AWBSstar", action='store_true', help="Display the AWBS* diffusive asymptotic by adding -As/--AWBSstar argument.")
 parser.add_argument("-Ao", "--AWBSoriginal", action='store_true', help="Display the AWBSoriginal diffusive asymptotic by adding -Ao/--AWBSoriginal argument.")
 parser.add_argument("-SH", "--kinSH", action='store_true', help="Display the SH profiles by adding -SH/--kinSH argument.")
+parser.add_argument("-f0", "--kinf0", action='store_true', help="Display the f0 profiles by adding -f0/--kinf0 argument.")
 parser.add_argument("-E", "--Efield", action='store_true', help="Display the E field profiles by adding -E/--Efield argument.")
 parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoint computed output of distribution function instead of nonlocal heat flux maximum.")
 #parser.add_argument("-vs", "--vlimshow", action='store_true', help="vlim show by adding -vs/--vlimshow argument.")
@@ -558,22 +559,23 @@ ax2 = ax1.twinx()
 log_min = -3.0
 data_max = -1e64
 data_min = 1e64
-if (args.labelUseC7):
-   data = np.log10(abs(p_C7Ef0v2 - p_C7EfMv2) / p_C7EfMv2)
-   data[data < log_min] = log_min
-   data_max = max([max(data), data_max])
-   data_min = min([min(data), data_min])
-   ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0/f_M-$'+labelC7)
-if (args.labelDistributionExt1):
-   data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
-   data[data < log_min] = log_min
-   data_max = max([max(data), data_max])
-   data_min = min([min(data), data_min])
-   ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0/f_M-$'+args.labelDistributionExt1 )
-#ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
-ax2.set_ylabel(r'$\log_{10}(|\delta f_0| / f_M)$ [a.u.]')
-#ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')
-#ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
+if (args.kinf0):
+   if (args.labelUseC7):
+      data = np.log10(abs(p_C7Ef0v2 - p_C7EfMv2) / p_C7EfMv2)
+      data[data < log_min] = log_min
+      data_max = max([max(data), data_max])
+      data_min = min([min(data), data_min])
+      ax2.plot(p_C7Ev/vTh(Te), data, C7Ecolor+'--', label=r'$\delta f_0/f_M-$'+labelC7)
+   if (args.labelDistributionExt1):
+      data = np.log10(abs(p_D1_f0 - p_D1_fMv2) / p_D1_fMv2)
+      data[data < log_min] = log_min
+      data_max = max([max(data), data_max])
+      data_min = min([min(data), data_min])
+      ax2.plot(p_D1v/vTh(Te), data, Ext1color+'--', label=r'$\delta f_0/f_M-$'+args.labelDistributionExt1 )
+   #ax2.plot(p_v/vTh(Te), (data_max - data_min) * p_fM_analytic / max(p_fM_analytic) + data_min, SHcolor+':', label=r'$f_M$')
+   ax2.set_ylabel(r'$\log_{10}(|\delta f_0| / f_M)$ [a.u.]')
+   #ax2.set_ylabel(r'$\delta f_0 v^2$ [s/cm$^4$]')
+   #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:

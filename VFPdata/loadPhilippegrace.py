@@ -99,9 +99,23 @@ if __name__ == "__main__":
    else:
       if (args.CalderFile):
          ## Calder file keeps only y data.
-         y = np.loadtxt(args.filename)
+         ### WORKS FOR AP1 paper!!!
+         _y = np.loadtxt(args.filename) * 1e3
          ## x data must be generated according to input.
-         x = np.linspace(0, args.CalderFile, len(y))
+         x = np.linspace(0, args.CalderFile, len(_y))
+		 ## PIC data may require some smoothing
+         from scipy.interpolate import splev, splrep 
+         ## Obtain a smooth profile.
+         ### WORKS FOR AP1 paper!!!
+         smooth = 700 # lower equals less smoothing
+         ## Find a spline for the temperature data.
+         ytck = splrep(x, _y, s=smooth)
+         ## Assign smooth profiles profiles.
+         y = splev(x, ytck, der=0)
+         #print "x_max: ", max(x)
+         #print "max(_y), max(y): ", max(_y), max(y)
+         ### WORKS FOR AP1 paper!!!
+         y = y * 1e-3
       else:
          if (args.row):
             ## The case of data stored in rows.
