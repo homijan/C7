@@ -125,7 +125,7 @@ def fourier_series(x, y, wn, n=None):
     return y2.real
 
 y = q1_point
-wn = 30
+wn = 35
 q1_point = fourier_series(v, y, wn)
 #q1_point[v / vTe_point > 11] = 0.0
 plt.plot(v / vTe_point, q1_point)

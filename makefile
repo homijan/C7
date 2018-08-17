@@ -70,9 +70,9 @@ MFEM_DIR1 := $(MFEM_DIR)
 MFEM_DIR2 := $(realpath $(MFEM_DIR))
 
 # Use the Laghos build directory
-LAGHOS_DIR = ../Laghos
-LAGHOS_DIR1 := $(LAGHOS_DIR)
-LAGHOS_DIR2 := $(realpath $(LAGHOS_DIR))
+#LAGHOS_DIR = ../Laghos
+#LAGHOS_DIR1 := $(LAGHOS_DIR)
+#LAGHOS_DIR2 := $(realpath $(LAGHOS_DIR))
 
 # Use the compiler used by MFEM. Get the compiler and the options for compiling
 # and linking from MFEM's config.mk. (Skip this if the target does not require
@@ -104,7 +104,7 @@ ifneq ($(LAGHOS_DEBUG),$(MFEM_DEBUG))
    endif
 endif
 
-LAGHOS_FLAGS = $(CPPFLAGS) $(CXXFLAGS) $(MFEM_INCFLAGS) -I$(LAGHOS_DIR)
+LAGHOS_FLAGS = $(CPPFLAGS) $(CXXFLAGS) $(MFEM_INCFLAGS) #-I$(LAGHOS_DIR)
 LAGHOS_LIBS = $(MFEM_LIBS)
 
 ifeq ($(LAGHOS_DEBUG),YES)
@@ -115,7 +115,7 @@ LIBS = $(strip $(LAGHOS_LIBS) $(LDFLAGS))
 CCC  = $(strip $(CXX) $(LAGHOS_FLAGS))
 Ccc  = $(strip $(CC) $(CFLAGS) $(GL_OPTS))
 
-SOURCE_FILES = C7.cpp c7_solver.cpp c7_assembly.cpp $(LAGHOS_DIR)/laghos_solver.cpp $(LAGHOS_DIR)/laghos_assembly.cpp eos.cpp AWBSphysics.cpp ic.cpp
+SOURCE_FILES = C7.cpp c7_solver.cpp c7_assembly.cpp eos.cpp AWBSphysics.cpp ic.cpp #$(LAGHOS_DIR)/laghos_solver.cpp $(LAGHOS_DIR)/laghos_assembly.cpp 
 OBJECT_FILES1 = $(SOURCE_FILES:.cpp=.o)
 OBJECT_FILES = $(OBJECT_FILES1:.c=.o)
 HEADER_FILES = c7_solver.hpp c7_assembly.hpp eos.hpp AWBSphysics.hpp ic.hpp

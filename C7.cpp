@@ -51,7 +51,7 @@
 //    p = 3  --> Triple point.
 
 
-#include "laghos_solver.hpp"
+//#include "laghos_solver.hpp"
 #include "c7_solver.hpp"
 #include "eos.hpp"
 #include "ic.hpp"
@@ -61,7 +61,7 @@
 
 using namespace std;
 using namespace mfem;
-using namespace mfem::hydrodynamics;
+//using namespace mfem::hydrodynamics;
 
 // Choice for the problem setup.
 // int problem; 
@@ -352,25 +352,25 @@ int main(int argc, char *argv[])
       }
    }
 
-   // Define the explicit ODE solver used for time integration.
-   ODESolver *ode_solver = NULL;
-   switch (ode_solver_type)
-   {
-      case 1: ode_solver = new ForwardEulerSolver; break;
-      case 2: ode_solver = new RK2Solver; break; 
-      case 3: ode_solver = new RK3SSPSolver; break;
-      case 4: ode_solver = new RK4Solver; break;
-      case 5: ode_solver = new RK2Solver(0.5); break;
-      case 6: ode_solver = new RK6Solver; break;
-      default:
-         if (myid == 0)
-         {
-            cout << "Unknown ODE solver type: " << ode_solver_type << '\n';
-         }
-         delete pmesh;
-         MPI_Finalize();
-         return 3;
-   }
+//   // Define the explicit ODE solver used for time integration.
+//   ODESolver *ode_solver = NULL;
+//   switch (ode_solver_type)
+//   {
+//      case 1: ode_solver = new ForwardEulerSolver; break;
+//      case 2: ode_solver = new RK2Solver; break; 
+//      case 3: ode_solver = new RK3SSPSolver; break;
+//      case 4: ode_solver = new RK4Solver; break;
+//      case 5: ode_solver = new RK2Solver(0.5); break;
+//      case 6: ode_solver = new RK6Solver; break;
+//      default:
+//         if (myid == 0)
+//         {
+//            cout << "Unknown ODE solver type: " << ode_solver_type << '\n';
+//         }
+//         delete pmesh;
+//         MPI_Finalize();
+//         return 3;
+//   }
 
    HYPRE_Int glob_size_l2 = L2FESpace.GlobalTrueVSize();
    HYPRE_Int glob_size_h1 = H1FESpace.GlobalTrueVSize();
@@ -449,6 +449,7 @@ int main(int argc, char *argv[])
    FunctionCoefficient gamma_cf = (nth::gamma);
    Coefficient *material_pcf = &gamma_cf;
 
+/* LAGHOS
    // Additional details, depending on the problem.
    int source = 0; bool visc;
    switch (nth::nth_problem)
@@ -467,10 +468,11 @@ int main(int argc, char *argv[])
       case 10: visc = true; break;
       default: MFEM_ABORT("Wrong problem specification!");
    }
+LAGHOS */
 
-   LagrangianHydroOperator oper(S.Size(), H1FESpace, L2FESpace,
-                                ess_tdofs, rho_gf, source, cfl, material_pcf,
-                                visc, p_assembly, cg_tol, cg_max_iter);
+//   LagrangianHydroOperator oper(S.Size(), H1FESpace, L2FESpace,
+//                                ess_tdofs, rho_gf, source, cfl, material_pcf,
+//                                visc, p_assembly, cg_tol, cg_max_iter);
 
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
@@ -631,7 +633,7 @@ int main(int argc, char *argv[])
       }
    }
 
-   oper.ComputeDensity(rho_gf); 
+//   oper.ComputeDensity(rho_gf); 
    double loc_Tmax = e_gf.Max(), glob_Tmax;
    MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                  pmesh->GetComm());
@@ -735,12 +737,13 @@ int main(int argc, char *argv[])
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
+/* LAGHOS
    socketstream vis_rho, vis_v, vis_e, vis_f0, vis_j, vis_Efield, vis_Kn, 
                 vis_hflux;
    char vishost[] = "localhost";
    int  visport   = 19916;
 
-   if (visualization || visit) { oper.ComputeDensity(rho_gf); }
+   //if (visualization || visit) { oper.ComputeDensity(rho_gf); }
 
    if (visualization)
    {
@@ -796,10 +799,12 @@ int main(int argc, char *argv[])
       visit_dc.SetTime(0.0);
       visit_dc.Save();
    }
+LAGHOS */
 
    // Perform time-integration (looping over the time iterations, ti, with a
    // time-step dt). The object oper is of type LagrangianHydroOperator that
    // defines the Mult() method that used by the time integrators.
+/* LAGHOS
    ode_solver->Init(oper);
    oper.ResetTimeStepEstimate();
    double t = 0.0, dt = oper.GetTimeStepEstimate(S), t_old;
@@ -862,12 +867,15 @@ int main(int argc, char *argv[])
          // Make sure all ranks have sent their 'v' solution before initiating
          // another set of GLVis connections (one from each rank):
          MPI_Barrier(pmesh->GetComm());
+LAGHOS */
 
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-         oper.ComputeDensity(rho_gf); 
-         double loc_Tmax = e_gf.Max(), glob_Tmax;
+         int ti = 1; // In case of evolution/iteration in time.
+         c7oper.ComputeDensity(rho_gf); 
+         //double 
+		 loc_Tmax = e_gf.Max(), glob_Tmax;
          MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                        pmesh->GetComm());
          AWBSPhysics.SetVelocityScale(vTmultiple, glob_Tmax);         
@@ -1238,7 +1246,7 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-
+/* LAGHOS
          if (visualization || visit || gfprint) { oper.ComputeDensity(rho_gf); }
          if (visualization)
          {
@@ -1334,9 +1342,11 @@ int main(int argc, char *argv[])
             hflux_gf.Save(hflux_ofs);
             hflux_ofs.close();
          }
-      }
+      } 
    }
+LAGHOS */
 
+/* LAGHOS
    switch (ode_solver_type)
    {
       case 2: steps *= 2; break;
@@ -1354,11 +1364,11 @@ int main(int argc, char *argv[])
       vis_v.close();
       vis_e.close();
    }
-
+*/
    // Free the used memory.
-   delete ode_solver;
+   //delete ode_solver;
    delete pmesh;
-   delete tensors1D; 
+   //delete tensors1D; 
    delete c7ode_solver;
 
    return 0;
