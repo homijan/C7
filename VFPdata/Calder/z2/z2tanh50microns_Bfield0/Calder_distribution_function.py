@@ -87,6 +87,7 @@ x_point = x[point] * 1e4
 Te_point = Te[point]
 print "x(point)[microns]: ", x_point
 print "Te(point)[eV]: ", Te[point]
+print "vTe(point)[cm/s]: ", vTe_point
 dv = v[1] - v[0]
 ne_point = sum(f0_point) * dv
 ## Valid explicitly for simulation run ne = 5e20 cm-3.
@@ -131,4 +132,5 @@ q1_point = fourier_series(v, y, wn)
 plt.plot(v / vTe_point, q1_point)
 plt.show()
 
+print "Saving: ", 'f/F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_'+'{:.1f}'.format(x_point)+'mic.txt'
 np.savetxt('f/F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_'+'{:.1f}'.format(x_point)+'mic.txt', np.transpose([v, f0_point, q1_point]))
