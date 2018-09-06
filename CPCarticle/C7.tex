@@ -2854,11 +2854,11 @@ which leads to the~final form
 where the~only unknown is $\pdv{\fone}{\vmag}$.
 \begin{eqnarray}
   \matr{A}_{\fone} \cdot \pdv{\fone^{k+1}}{\vmag} &=&
-  \vect{b_1}^k + \vect{b_1}^n ,
+  \vect{b_1}^n + \vect{b_1}^k ,
   \label{eq:OOE_fullP1hosf1_embedded}
   \\
   \pdv{\davfzero^{k+1}}{\vmag}  
-  &=& \vect{b_0}^k + \vect{b_0}^n ,
+  &=& \vect{b_0}^n + \vect{b_0}^k + \vect{b_0}^{k+1} ,
   \label{eq:OOE_fullP1hosf0_embedded}
 \end{eqnarray}
 \begin{eqnarray}
@@ -2868,12 +2868,6 @@ where the~only unknown is $\pdv{\fone}{\vmag}$.
   \matr{D_{I}V_{E}}
   - \frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
   + \IM^1_{\left( \nutot \right)}\right)\right] ,
-  \nonumber \\
-  \vect{b_1}^k &=& \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
-  \pdv{\davfzero^k}{\vmag}
-  - \frac{\Delta\vmag}{\vmag} \ID_{\left(\MA\right)} \cdot
-  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} 
-  \cdot \pdv{\fone^k}{\vmag} ,
   \nonumber \\
   \vect{b_1}^n &=& \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
   \pdv{\tvfM^n}{\vmag}
@@ -2886,13 +2880,21 @@ where the~only unknown is $\pdv{\fone}{\vmag}$.
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n ,
   \nonumber \\
-  \vect{b_0}^k &=& \frac{1}{\vmag}
-  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
-  \pdv{\fone^k}{\vmag} 
-  + \Delta\vmag\IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot   
-  \pdv{\fone^{k+1}}{\vmag} ,
+  \vect{b_1}^k &=& \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero^k}{\vmag}
+  - \frac{\Delta\vmag}{\vmag} \ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} 
+  \cdot \pdv{\fone^k}{\vmag} ,
   \nonumber \\
   \vect{b_0}^n &=& \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot \fone^n ,
+  \nonumber \\
+  \vect{b_0}^k &=& \frac{1}{\vmag}
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone^k}{\vmag} ,
+  \nonumber \\
+  \vect{b_0}^{k+1} &=&
+  \Delta\vmag\IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot   
+  \pdv{\fone^{k+1}}{\vmag} ,
   \label{eq:OOE_rhs}
 \end{eqnarray}
 

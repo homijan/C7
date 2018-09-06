@@ -261,6 +261,11 @@ double Divf1Integrator::GetIntegrator(int i, int vd, int gd)
    return quad_data.stress1JinvT(vd)(i, gd);
 }
 
+double EfieldIntegrator::GetIntegrator(int i, int vd)
+{
+   return quad_data.Einvrho(i, vd) * quad_data.rho0DetJ0w(i);
+}
+
 double EfieldScIntegrator::GetIntegrator(int i, int vd)
 {
    return quad_data.Escaled_invrho(i, vd) * quad_data.rho0DetJ0w(i);

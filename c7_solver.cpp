@@ -97,6 +97,7 @@ C7Operator::C7Operator(int size,
      Mf0nu(&l2_fes), invMf0nu(&l2_fes), invMf0nuE(&l2_fes), 
      implMf1nu(&h1_fes), Mf1nu(&h1_fes), Mf1nut(&h1_fes), Bfieldf1(&h1_fes), 
      Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes), 
+	 _Efieldf0(&l2_fes, &h1_fes), 
      Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes), 
      AEfieldf1M(&l2_fes, &h1_fes), AIEfieldf1(&l2_fes, &h1_fes),
      MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
@@ -217,6 +218,13 @@ C7Operator::C7Operator(int size,
    // Make a dummy assembly to figure out the sparsity.
    Divf0.Assemble(0);
    Divf0.Finalize(0);
+
+   EfieldIntegrator *_f0ei = new EfieldIntegrator(quad_data);
+   _f0ei->SetIntRule(&integ_rule);
+   _Efieldf0.AddDomainIntegrator(_f0ei);
+   // Make a dummy assembly to figure out the sparsity.
+   _Efieldf0.Assemble(0);
+   _Efieldf0.Finalize(0);
 
    EfieldScIntegrator *f0ei = new EfieldScIntegrator(quad_data);
    f0ei->SetIntRule(&integ_rule);
@@ -481,6 +489,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Mf1nut.Update();
    Bfieldf1.Update();
    Divf0 = 0.0;
+   _Efieldf0 = 0.0;
    Efieldf0 = 0.0;
    Divf1 = 0.0; 
    AEfieldf1 = 0.0;
@@ -501,6 +510,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Bfieldf1.Finalize();
    Divf0.Assemble();
    Divf0.Finalize();
+   _Efieldf0.Assemble(0);   
+   _Efieldf0.Finalize();
    Efieldf0.Assemble(0);   
    Efieldf0.Finalize();
    Divf1.Assemble();  
@@ -732,15 +743,10 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    amg_dF1.SetPrintLevel(verbose);
    pcg_dF1.Mult(B, X);
    timer.sw_cgH1.Stop();
+   implMf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
    int PCGNumIter_dF1;
    pcg_dF1.GetNumIterations(PCGNumIter_dF1);
-   timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
-   { 
-      cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
-           <<  PCGNumIter_dF1 << endl << flush;
-   }    
-   implMf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
+   timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();     
  
    ////// f0 equation //////////////////////////////////////////////////////////
    //                                                                         //
@@ -758,6 +764,23 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    invM0_tDIVE->AddMult(dF1, dF0, dv_real);
    invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
 
+   double loc_dF1_norm = dF1.Norml2(), glob_dF1_norm;
+   MPI_Allreduce(&loc_dF1_norm, &glob_dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+   double loc_dF0_norm = dF0.Norml2(), glob_dF0_norm;
+   MPI_Allreduce(&loc_dF0_norm, &glob_dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   { 
+      cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_dF1 << endl << flush;
+      cout << "dF1 L2 norm: " 
+           <<  glob_dF1_norm * dv_real * pow(velocity_real, 5.0)
+		   << endl << flush;	   
+      cout << "dF0 L2 norm: " 
+		   <<  glob_dF0_norm * dv_real * pow(velocity_real, 5.0)
+		   << endl << flush;
+   }
    /*
    // Hyperbolic system only.
    dF0 = dfMdv_source;
@@ -803,7 +826,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // F0 related operators.
    ParBilinearForm &invM0nu = invMf0nu;
    MixedBilinearForm &DI = Divf0;
-   MixedBilinearForm &VE = Efieldf0; 
+   MixedBilinearForm &VE = _Efieldf0; 
 
    // Fundamental matrices.
    SparseMatrix *_tVE = Transpose(VE.SpMat());
@@ -816,10 +839,15 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    SparseMatrix *_DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *_invM0_tDIVE);
    SparseMatrix *_DA_invM0_tVE = mfem::Mult(DA.SpMat(), *_invM0_tVE);
    SparseMatrix *_VAE_invM0_tDIVE = mfem::Mult(VAE.SpMat(), *_invM0_tDIVE);
-   //SparseMatrix *_VAE_invM0_tVE = mfem::Mult(VAE.SpMat(), *_invM0_tVE);
 
-   // Partial RHS vectors.
-   Vector b1_k(VsizeH1), b1_n(VsizeH1), b0_k(VsizeL2), b0_n(VsizeL2);
+   // Complete the system matrix A_f1 initialized by the operator Mf1nu.
+   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
+   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
+   A_f1.SpMat().Add(dv_real * dv_real, *_DA_invM0_tDIVE);
+
+   // Full and partial RHS vectors.
+   Vector b1(VsizeH1), b0(VsizeL2), b1_n(VsizeH1), b1_k(VsizeH1), 
+          b0_n(VsizeL2), b0_k(VsizeL2), b0_kplus1(VsizeL2);
    // Fill b1_n vector.
    DA.Mult(fM_source, b1_n);
    DA.AddMult(F0, b1_n);
@@ -832,54 +860,84 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Fill b0_n vector.
    _invM0_tDIVE->Mult(F1, b0_n);
 
-   // Fill b1_k vector.
-   b1_k = 0.0;
-   VAE.AddMult(dF0, b1_k, 1.0 / velocity_real);
-   _DA_invM0_tVE->AddMult(dF1, b1_k, -1.0 * dv_real / velocity_real);
-   // Fill b0_k vector.
-   b0_k = 0.0;
-   _invM0_tVE->AddMult(dF1, b0_k, 1.0 / velocity_real); // correct is dF1^k
-   _invM0_tDIVE->AddMult(dF1, b0_k, dv_real); // dF1^k+1
-
-   // Complete the system matrix A_f1 initialized by the operator Mf1nu.
-   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
-   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
-   A_f1.SpMat().Add(dv_real * dv_real, *_DA_invM0_tDIVE);
-
-   // RHS vectors.
-   Vector b1(VsizeH1), b0(VsizeL2);
-   // Fill full RHS vectors.
-   b1 = b1_n;
-   b1 += b1_k;
-
-   // Run the HYPRE solver.
-   timer.sw_force.Stop();
-   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
-   Vector _B, _X;
-   HypreParMatrix _A;
-   Vector _dF1(VsizeH1);
+   // Unknown at level k = 0 equal zero.
+   Vector _dF1(VsizeH1), _dF0(VsizeL2);
    _dF1 = 0.0;
-   A_f1.FormLinearSystem(ess_tdofs, _dF1, b1, _A, _X, _B);
-   bool _verbose = false;
-   HypreBoomerAMG _amg_dF1(_A);
-   HyprePCG _pcg_dF1(_A);
-   _pcg_dF1.SetTol(cg_rel_tol);
-   _pcg_dF1.SetMaxIter(cg_max_iter);
-   _pcg_dF1.SetPrintLevel(_verbose);
-   _pcg_dF1.SetPreconditioner(_amg_dF1);
-   _amg_dF1.SetPrintLevel(_verbose);
-   _pcg_dF1.Mult(_B, _X);
-   timer.sw_cgH1.Stop();
-   int _PCGNumIter_dF1;
-   _pcg_dF1.GetNumIterations(_PCGNumIter_dF1);
-   timer.H1dof_iter += _PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
-   { 
-      cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
-           <<  _PCGNumIter_dF1 << endl << flush;
-   }    
-   A_f1.RecoverFEMSolution(_X, b1, _dF1);
+   _dF0 = 0.0;
 
+   for (int k = 0; k < 10; k++)
+   {
+      // Fill b1_k vector.
+      b1_k = 0.0;
+      VAE.AddMult(_dF0, b1_k, 1.0 / velocity_real);
+      _DA_invM0_tVE->AddMult(_dF1, b1_k, -1.0 * dv_real / velocity_real);
+      // Fill b0_k vector. To be filled before dF1^k+1 has been solved.
+      b0_k = 0.0;
+      _invM0_tVE->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+
+      // Fill full F1 RHS vectors.
+      b1 = b1_n;
+      b1 += b1_k;
+      // Run the HYPRE solver.
+      timer.sw_force.Stop();
+      timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+      Vector _B, _X;
+      HypreParMatrix _A; 
+      _dF1 = 0.0;    
+      A_f1.FormLinearSystem(ess_tdofs, _dF1, b1, _A, _X, _B);
+      bool _verbose = false;
+      HypreBoomerAMG _amg_dF1(_A);
+      HyprePCG _pcg_dF1(_A);
+      _pcg_dF1.SetTol(cg_rel_tol);
+      _pcg_dF1.SetMaxIter(cg_max_iter);
+      _pcg_dF1.SetPrintLevel(_verbose);
+      _pcg_dF1.SetPreconditioner(_amg_dF1);
+      _amg_dF1.SetPrintLevel(_verbose);
+      // Solve for _dF1.
+      _pcg_dF1.Mult(_B, _X);
+      timer.sw_cgH1.Stop();
+      // Number of PCG iterations.
+      int _PCGNumIter_dF1;
+      _pcg_dF1.GetNumIterations(_PCGNumIter_dF1);
+      timer.H1dof_iter += _PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();    
+      A_f1.RecoverFEMSolution(_X, b1, _dF1);
+
+      // Fill b0_k vector. Trying to be fill after dF1^k+1 has been solved.
+      //b0_k = 0.0;
+      //_invM0_tVE->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+      // Fill b0_k+1 vector. To be filled after dF1^k+1 has been solved.
+      b0_kplus1 = 0.0;
+      _invM0_tDIVE->AddMult(_dF1, b0_kplus1, dv_real); // dF1^k+1
+
+      // Fill full F0 RHS vector.
+      b0 = b0_n;
+      b0 += b0_k;
+      b0 += b0_kplus1;
+
+      // Solve for _dF0.
+      _dF0 = b0;
+
+      // L2 norm will be used for convergence.
+      double loc__dF1_norm = _dF1.Norml2(), glob__dF1_norm;
+      MPI_Allreduce(&loc__dF1_norm, &glob__dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+      double loc__dF0_norm = _dF0.Norml2(), glob__dF0_norm;
+      MPI_Allreduce(&loc__dF0_norm, &glob__dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+      // Output on root processor.
+      if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+      { 
+         cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+              <<  _PCGNumIter_dF1 << endl << flush;
+         cout << "_dF1 L2 norm: " 
+              <<  glob__dF1_norm * dv_real * pow(velocity_real, 5.0)
+			  << endl << flush;
+         cout << "_dF0 L2 norm: " 
+              <<  glob__dF0_norm * dv_real * pow(velocity_real, 5.0)
+			  << endl << flush;
+      }  
+   }
+   
    // Clean the buffer.
    delete _tVE;
    delete _tDIVE; 
@@ -1302,6 +1360,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                      F0stressJiT(vd, gd);
                }
                // Extensive vector quadrature data.
+               quad_data.Einvrho(z_id*nqp + q, vd) = Efield(vd) / rho;
                quad_data.Escaled_invrho(z_id*nqp + q, vd) = Efield_scale * 
                                                             Efield(vd) / rho;
                quad_data.AEscaled_invrho(z_id*nqp + q, vd) = Efield_scale *

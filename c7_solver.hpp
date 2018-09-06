@@ -96,6 +96,7 @@ protected:
    // right-hand sides for momentum and specific internal energy.
    mutable MixedBilinearForm Divf0, Efieldf0, Divf1, AEfieldf1, AEfieldf1M, 
                              AIEfieldf1;
+   mutable MixedBilinearForm _Efieldf0;
 
    mutable TimingData timer;
 
