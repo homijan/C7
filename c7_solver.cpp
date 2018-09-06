@@ -776,8 +776,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ///////////////////////////////////////////////////////////////////////////////
 ////// Implicit Efield by splitting ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-*/
-
+*/ 
 
    // Clean the buffer.
    delete tVE;
@@ -788,6 +787,113 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    delete DA_invM0_tVE;
    delete VAE_invM0_tDIVE;
    delete VAE_invM0_tVE;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+   // Notation corresponding to the C7 documentation.
+   // F1 related operators.
+   ParBilinearForm &A_f1 = Mf1nu; // dF1 system matrix. Initialized as Mf1nu.
+   ParBilinearForm &M1nut = Mf1nut;
+   MixedBilinearForm &DA = Divf1;
+   MixedBilinearForm &VAE = AEfieldf1M; 
+   ParBilinearForm &B1 = Bfieldf1;
+   // F0 related operators.
+   ParBilinearForm &invM0nu = invMf0nu;
+   MixedBilinearForm &DI = Divf0;
+   MixedBilinearForm &VE = Efieldf0; 
+
+   // Fundamental matrices.
+   SparseMatrix *_tVE = Transpose(VE.SpMat());
+   // Diffusion plus directional effect of Efield matrices.
+   SparseMatrix *_tDIVE = Transpose(DI.SpMat()); 
+   _tDIVE->Add(-2.0 / velocity_real / velocity_real, *_tVE);
+   // Proceed with matrix inversions.
+   SparseMatrix *_invM0_tDIVE = mfem::Mult(invM0nu.SpMat(), *_tDIVE);
+   SparseMatrix *_invM0_tVE = mfem::Mult(invM0nu.SpMat(), *_tVE);
+   SparseMatrix *_DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *_invM0_tDIVE);
+   SparseMatrix *_DA_invM0_tVE = mfem::Mult(DA.SpMat(), *_invM0_tVE);
+   SparseMatrix *_VAE_invM0_tDIVE = mfem::Mult(VAE.SpMat(), *_invM0_tDIVE);
+   //SparseMatrix *_VAE_invM0_tVE = mfem::Mult(VAE.SpMat(), *_invM0_tVE);
+
+   // Partial RHS vectors.
+   Vector b1_k(VsizeH1), b1_n(VsizeH1), b0_k(VsizeL2), b0_n(VsizeL2);
+   // Fill b1_n vector.
+   DA.Mult(fM_source, b1_n);
+   DA.AddMult(F0, b1_n);
+   b1_n.Neg();
+   VAE.AddMult(dfMdv_source, b1_n, 1.0 / velocity_real);
+   M1nut.AddMult(F1, b1_n, 1.0 / velocity_real);
+   B1.AddMult(F1, b1_n, 1.0 / velocity_real);
+   _VAE_invM0_tDIVE->AddMult(F1, b1_n, 1.0 / velocity_real);
+   _DA_invM0_tDIVE->AddMult(F1, b1_n, -1.0 * dv_real);
+   // Fill b0_n vector.
+   _invM0_tDIVE->Mult(F1, b0_n);
+
+   // Fill b1_k vector.
+   b1_k = 0.0;
+   VAE.AddMult(dF0, b1_k, 1.0 / velocity_real);
+   _DA_invM0_tVE->AddMult(dF1, b1_k, -1.0 * dv_real / velocity_real);
+   // Fill b0_k vector.
+   b0_k = 0.0;
+   _invM0_tVE->AddMult(dF1, b0_k, 1.0 / velocity_real); // correct is dF1^k
+   _invM0_tDIVE->AddMult(dF1, b0_k, dv_real); // dF1^k+1
+
+   // Complete the system matrix A_f1 initialized by the operator Mf1nu.
+   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
+   A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
+   A_f1.SpMat().Add(dv_real * dv_real, *_DA_invM0_tDIVE);
+
+   // RHS vectors.
+   Vector b1(VsizeH1), b0(VsizeL2);
+   // Fill full RHS vectors.
+   b1 = b1_n;
+   b1 += b1_k;
+
+   // Run the HYPRE solver.
+   timer.sw_force.Stop();
+   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
+   Vector _B, _X;
+   HypreParMatrix _A;
+   Vector _dF1(VsizeH1);
+   _dF1 = 0.0;
+   A_f1.FormLinearSystem(ess_tdofs, _dF1, b1, _A, _X, _B);
+   bool _verbose = false;
+   HypreBoomerAMG _amg_dF1(_A);
+   HyprePCG _pcg_dF1(_A);
+   _pcg_dF1.SetTol(cg_rel_tol);
+   _pcg_dF1.SetMaxIter(cg_max_iter);
+   _pcg_dF1.SetPrintLevel(_verbose);
+   _pcg_dF1.SetPreconditioner(_amg_dF1);
+   _amg_dF1.SetPrintLevel(_verbose);
+   _pcg_dF1.Mult(_B, _X);
+   timer.sw_cgH1.Stop();
+   int _PCGNumIter_dF1;
+   _pcg_dF1.GetNumIterations(_PCGNumIter_dF1);
+   timer.H1dof_iter += _PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();
+   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   { 
+      cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+           <<  _PCGNumIter_dF1 << endl << flush;
+   }    
+   A_f1.RecoverFEMSolution(_X, b1, _dF1);
+
+   // Clean the buffer.
+   delete _tVE;
+   delete _tDIVE; 
+   delete _invM0_tDIVE;
+   delete _invM0_tVE;
+   delete _DA_invM0_tDIVE;
+   delete _DA_invM0_tVE;
+   delete _VAE_invM0_tDIVE;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /*
    delete tVE_;
@@ -1213,7 +1319,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             //                                       / velocity_real / f0
             //                                       / rho;
             // Scattering on ions and electrons.
-			quad_data.nutinvrho(z_id*nqp + q) = (mspei + 
+            quad_data.nutinvrho(z_id*nqp + q) = (mspei + 
                                                 (1.0 + mspEt_scale) * mspee) 
                                                 / rho;
 			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;

@@ -2391,7 +2391,7 @@ The moment P1 model can be written in a semi-discrete form
 \end{eqnarray}
 It is convenient to define
 \begin{equation}
-  \matr{DIVE} = \ID^T_{\left(\MI\right)} 
+  \matr{D_{I}V_{E}} = \ID^T_{\left(\MI\right)} 
   + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}.
   \nonumber
 \end{equation}
@@ -2402,7 +2402,7 @@ Then, a~very effective inversion in the~L2 space can be formally performed
   = \frac{1}{\vmag}
   \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
   \pdv{\fone}{\vmag} 
-  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot  
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot  
   \left(\fone^n 
   + \Delta\vmag\pdv{\fone}{\vmag}\right) 
   + \pdv{\vect{\fM}}{\vmag}.
@@ -2430,7 +2430,7 @@ which leads to the~final form
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \IM^{0^{-1}}_{(\nue)} \cdot 
   \left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
-  + \Delta\vmag \matr{DIVE}
+  + \Delta\vmag \matr{D_{I}V_{E}}
   \right)
   \cdot \pdv{\fone}{\vmag}
   \\
@@ -2443,7 +2443,7 @@ which leads to the~final form
   +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \left[  
-  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n 
   + \pdv{\vect{\fM}}{\vmag}
   \right] - \ID_{\left(\MA\right)}\cdot\vfzero^n,
   \label{eq:fullP1hosf1}
@@ -2461,9 +2461,9 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \cdot\IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)}
   \right) 
   + \Delta\vmag^2 \left(\ID_{\left(\MA\right)} \cdot
-  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\right)\\ 
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\right)\\ 
   -\frac{\Delta\vmag}{\vmag}\left(
-  \IV_{\left(\MA \cdot \tE\right)}\cdot\IM^{0^{-1}}_{(\nue)}\cdot\matr{DIVE}
+  \IV_{\left(\MA \cdot \tE\right)}\cdot\IM^{0^{-1}}_{(\nue)}\cdot\matr{D_{I}V_{E}}
   - \ID_{\left(\MA\right)} \cdot \IM^{0^{-1}}_{(\nue)} \cdot 
   \IV^T_{\left(\tE\right)}
   + \IM^1_{\left( \nutot \right)} + \IB_{\left( \tB \right)} 
@@ -2472,7 +2472,7 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \left[  
-  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n 
   + \pdv{\vect{\fM}}{\vmag}
   \right] \\  
   + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
@@ -2485,7 +2485,7 @@ $[\pdv{\vfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
   %- \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   %\IM^{0^{-1}}_{(\nue)} \cdot 
   %\left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
-  %+ \Delta\vmag \matr{DIVE}
+  %+ \Delta\vmag \matr{D_{I}V_{E}}
   %\right)
   %\cdot \pdv{\fone}{\vmag}
   %\\
@@ -2729,7 +2729,7 @@ in a~semi-discrete form
 \end{eqnarray}
 It is convenient to define
 \begin{equation}
-  \matr{DIVE} = \ID^T_{\left(\MI\right)} 
+  \matr{D_{I}V_{E}} = \ID^T_{\left(\MI\right)} 
   + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}.
   \nonumber
 \end{equation}
@@ -2740,7 +2740,7 @@ Then, a~very effective inversion in the~L2 space can be formally performed
   = \frac{1}{\vmag}
   \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
   \pdv{\fone}{\vmag} 
-  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot  
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot  
   \left(\fone^n 
   + \Delta\vmag\pdv{\fone}{\vmag}\right) .
   \label{eq:OOE_fullP1hosf0}
@@ -2769,7 +2769,7 @@ which leads to the~final form
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
   \IM^{0^{-1}}_{(\nue)} \cdot 
   \left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
-  + \Delta\vmag \matr{DIVE}
+  + \Delta\vmag \matr{D_{I}V_{E}}
   \right)
   \cdot \pdv{\fone}{\vmag}
   \\
@@ -2784,11 +2784,121 @@ which leads to the~final form
   \\ 
   +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
   - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
-  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n 
   - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
   \label{eq:OOE_fullP1hosf1}
 \end{multline}
-where the~only unknown is $\pdv{\fone}{\vmag}$. Once \eqref{eq:OOE_fullP1hosf1}
+where the~only unknown is $\pdv{\fone}{\vmag}$. 
+
+\textbf{Embedded iteration scheme begins!}
+
+The next step goes towards implicit Runge-Kutta method (DIRK).
+Then, a~very effective inversion in the~L2 space can be formally performed
+\begin{equation}
+  \pdv{\davfzero}{\vmag}  
+  = \frac{1}{\vmag}
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone^k}{\vmag} 
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot  
+  \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right) .
+  \label{eq:OOE_fullP1hosf0}
+\end{equation}
+The~first moment equation in the DIRK framework reads
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero^k}{\vmag}
+  - \ID_{\left(\MA\right)}\cdot \left(\tvfM^n + \davfzero^n 
+  + \Delta\vmag\pdv{\davfzero}{\vmag}\right)\\ 
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right)
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag} .
+  \label{eq:OOE_semiM1hosf1}
+\end{multline}
+Finally, one can eliminate $\pdv{\davfzero}{\vmag}$, 
+which leads to the~final form
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = 
+  - \Delta\vmag \ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot 
+  \Delta\vmag \matr{D_{I}V_{E}}
+  \cdot \pdv{\fone}{\vmag}
+  +\frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \pdv{\fone}{\vmag}
+  \\
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero^k}{\vmag}
+  - \Delta\vmag \ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot 
+  \frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
+  \cdot \pdv{\fone^k}{\vmag}
+  \\
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \fone^n
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag}
+  \\ 
+  +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n 
+  - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
+  \label{eq:OOE_fullP1hosf1}
+\end{multline}
+where the~only unknown is $\pdv{\fone}{\vmag}$.
+\begin{eqnarray}
+  \matr{A}_{\fone} \cdot \pdv{\fone^{k+1}}{\vmag} &=&
+  \vect{b_1}^k + \vect{b_1}^n ,
+  \label{eq:OOE_fullP1hosf1_embedded}
+  \\
+  \pdv{\davfzero^{k+1}}{\vmag}  
+  &=& \vect{b_0}^k + \vect{b_0}^n ,
+  \label{eq:OOE_fullP1hosf0_embedded}
+\end{eqnarray}
+\begin{eqnarray}
+  \matr{A}_{\fone} &=&   
+  \left[\IM^1_{(\nue)} + \Delta\vmag^2 \ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot 
+  \matr{D_{I}V_{E}}
+  - \frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right)\right] ,
+  \nonumber \\
+  \vect{b_1}^k &=& \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero^k}{\vmag}
+  - \frac{\Delta\vmag}{\vmag} \ID_{\left(\MA\right)} \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} 
+  \cdot \pdv{\fone^k}{\vmag} ,
+  \nonumber \\
+  \vect{b_1}^n &=& \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag}
+  - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right)
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \fone^n
+  \nonumber \\ 
+  && + \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot\fone^n ,
+  \nonumber \\
+  \vect{b_0}^k &=& \frac{1}{\vmag}
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone^k}{\vmag} 
+  + \Delta\vmag\IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot   
+  \pdv{\fone^{k+1}}{\vmag} ,
+  \nonumber \\
+  \vect{b_0}^n &=& \IM^{0^{-1}}_{(\nue)} \cdot \matr{D_{I}V_{E}}\cdot \fone^n ,
+  \label{eq:OOE_rhs}
+\end{eqnarray}
+
+\textbf{Embedded iteration scheme ends!}
+
+Once \eqref{eq:OOE_fullP1hosf1}
 is solved the~completion of the~solution 
 $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
 \eqref{eq:OOE_fullP1hosf0}.
