@@ -94,8 +94,7 @@ C7Operator::C7Operator(int size,
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
      cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
-     Mf0nu(&l2_fes), invM0nu(&l2_fes), invM0nuE(&l2_fes), 
-     implM1nu(&h1_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
+     invM0nu(&l2_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
      DI(&l2_fes, &h1_fes), VEscaled(&l2_fes, &h1_fes), 
 	 VEfull(&l2_fes, &h1_fes), 
      DA(&l2_fes, &h1_fes), VAEscaled(&l2_fes, &h1_fes), 
@@ -151,47 +150,17 @@ C7Operator::C7Operator(int size,
       default: MFEM_ABORT("Unknown zone type!");
    }
    quad_data.h0 /= (double) H1FESpace.GetOrder(0);
- 
-
-/*
-   // Standard local assembly and inversion for energy mass matrices.
-   DenseMatrix Mf0_(l2dofs_cnt);
-   DenseMatrixInverse inv(&Mf0_);
-   Mass0cIntegrator mi(quad_data);
-   mi.SetIntRule(&integ_rule);
-   for (int i = 0; i < nzones; i++)
-   {
-      mi.AssembleElementMatrix(*l2_fes.GetFE(i),
-                               *l2_fes.GetElementTransformation(i), Mf0_);
-      MSf0(i) = Mf0_;
-      inv.Factor();
-      inv.GetInverseMatrix(Mf0_inv(i));
-   }
-*/
-
-   // Standard assembly for the f0 mass matrix.
-   Mass0NuIntegrator *mf0nui = new Mass0NuIntegrator(quad_data);
-   mf0nui->SetIntRule(&integ_rule);
-   Mf0nu.AddDomainIntegrator(mf0nui);
 
    // Inverted Mf0 intergrators.
    invMass0NuIntegrator *invmf0nui = new invMass0NuIntegrator(quad_data);
    invmf0nui->SetIntRule(&integ_rule);
    invM0nu.AddDomainIntegrator(invmf0nui);
-   // Special form for explicit calculation.
-   invMass0NuEIntegrator *invmf0nuEi = new invMass0NuEIntegrator(quad_data);
-   invmf0nuEi->SetIntRule(&integ_rule);
-   invM0nuE.AddDomainIntegrator(invmf0nuEi);
 
    // Standard assembly for the velocity mass matrix.
    Mass1NuIntegrator *mf1nui = new Mass1NuIntegrator(quad_data);
    mf1nui->SetIntRule(&integ_rule);
    M1nu.AddDomainIntegrator(mf1nui);
-   M1nu.Assemble();
-   Mass1NuIntegrator *implmf1nui = new Mass1NuIntegrator(quad_data);
-   implmf1nui->SetIntRule(&integ_rule);
-   implM1nu.AddDomainIntegrator(implmf1nui);
-   implM1nu.Assemble();
+   M1nu.Assemble(); 
 
    Mass1NutIntegrator *mf1nuti = new Mass1NutIntegrator(quad_data);
    mf1nuti->SetIntRule(&integ_rule);
@@ -304,8 +273,8 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    size += VsizeH1;
    djC_gf.MakeRef(&H1FESpace, dFdv, size);
 
-   Mf0nu.Update();
-   invM0nuE.Update();
+   //Mf0nu.Update();
+   //invM0nuE.Update();
    M1nu.Update(); 
    M1nut.Update();
    B1.Update();
@@ -315,8 +284,8 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    VAEscaled = 0.0;
 
    timer.sw_force.Start(); 
-   Mf0nu.Assemble();
-   invM0nuE.Assemble();
+   //Mf0nu.Assemble();
+   //invM0nuE.Assemble();
    M1nu.Assemble(); 
    M1nut.Assemble();
    B1.Assemble();
@@ -338,9 +307,9 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    DI.MultTranspose(F1, F0_rhs);
    VEscaled.AddMultTranspose(F1, F0_rhs, 
                              2.0 / velocity_real / velocity_real);
-   Mf0nu.AddMult(dfMdv_source, F0_rhs); 
+   //Mf0nu.AddMult(dfMdv_source, F0_rhs); 
    // Compute dF0.
-   invM0nuE.Mult(F0_rhs, dF0);
+   //invM0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
    ////// f1 equation //////////////////////////////////////////////////////////
@@ -471,8 +440,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    db1_gf.MakeRef(&H1FESpace, dFdv, size);
 
    invM0nu.Update();
-   Mf0nu.Update();
-   implM1nu.Update();
    M1nu.Update(); 
    M1nut.Update();
    B1.Update();
@@ -486,9 +453,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    timer.sw_force.Start(); 
    invM0nu.Assemble();
    invM0nu.Finalize();
-   Mf0nu.Assemble(); // Not using SpMat.
-   implM1nu.Assemble();
-   implM1nu.Finalize();
    M1nu.Assemble(); 
    M1nu.Finalize();
    M1nut.Assemble();
@@ -511,322 +475,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    // Force no effect of Bfield.
    B1.SpMat()   *= 0.0; 
-
-   /////////////////////////////////////////////////////////////////////////////
-   ////// Fully implicit scheme. ///////////////////////////////////////////////
-   /////////////////////////////////////////////////////////////////////////////
-   ////// f1 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // M1(nu)*df1dv = 1/v*M1(nut)*(f1^n + dv*df1dv) - D(A)*(f0^n + dv*df0dv)   //
-   //                + 1/v*V(AE)*df0dv + 1/v^2*V((3A-I)E)*(f0^n + dv*df0dv)   //
-   //                + 1/v*B(B)*(f1^n +dv*df1dv)                              //
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-   ////// f1 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // df0dv = M0(nu)^{-1}*(D(I)^T + 2/v^2*VT(E))*(f1^n + dv*df1dv)            //
-   //         M0(nu)^{-1}*1/v*VT(E)*df1dv + dfMdv                             //
-   //                                                                         //
-   // [M1(nu) - dv*1/v*(M1(nut) + B(B))]*df1dv =                              //
-   // [1/v*V(AE) + dv*(1/v^2*V((3A-I)E) - D(A))]*df0dv                        //
-   // 1/v*(M1(nut) + B(B))*f1^n + (1/v^2*V((3A-I)E) - D(A))*f0^n              //
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-   ////// f1 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // df0dv = (invM0nuVTE + dv*invM0nuA0)*df1dv + invM0nuA0*f1^n + dfMdv   //
-   //                                                                         //
-   // [M1(nu) - dv*A3]*df1dv = A2*df0dv + A3*f1^n + A1*f0^n                   //
-   //                                                                         //
-   // [M1(nu) - dv*A3 - A2*invM0nuVTE - dv*A2*invM0nuA0)]*df1dv =           //
-   // (A2*invM0nuA0 + A3)*f1^n + A1*f0^n + A2*dfMdv                          //
-   //
-   // A0 = D(I)^T + 2/v^2*VT(E)
-   // VTE = VT(E)
-   // A1 = 1/v^2*V((3A-I)E) - D(A)
-   // A2 = 
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-
-   // Fill the rhs vector.
-   Vector F1_rhs(VsizeH1);
-   //fM_source = 0.0;
-   DA.Mult(fM_source, F1_rhs);
-   DA.AddMult(F0, F1_rhs);
-   F1_rhs.Neg();
-   // Here the full Efield must be used!!!
-   VAEfull.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
-   //VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
-   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-
-/*
-///////////////////////////////////////////////////////////////////////////////
-////// Implicit Efield by splitting ///////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-   // Full but directional E field effect.
-   // Fundamental matrices.
-   SparseMatrix *tVE_ = Transpose(VEscaled.SpMat());
-   // Diffusion plus directional effect of Efield matrices.
-   SparseMatrix *tDIVE_ = Transpose(DI.SpMat()); 
-   tDIVE_->Add(-2.0 / velocity_real / velocity_real, *tVE_);
-   
-   // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
-   //*tVE = 0.0;
-   //VAEscaled.SpMat() = 0.0;
-   
-   // Proceed with matrix inversions.
-   SparseMatrix *invM0_tDIVE_ = mfem::Mult(invM0nu.SpMat(), *tDIVE_);
-   SparseMatrix *invM0_tVE_ = mfem::Mult(invM0nu.SpMat(), *tVE_);
-   SparseMatrix *VAE_invM0_tDIVE_ = mfem::Mult(VAEscaled.SpMat(), 
-                                               *invM0_tDIVE_);
-   SparseMatrix *VAE_invM0_tVE_ = mfem::Mult(VAEscaled.SpMat(), *invM0_tVE_);
-
-   ParGridFunction dF1E(&H1FESpace), dF1E_rhs(&H1FESpace), F1nu(&H1FESpace);
-   // Prepare the right hand sides.
-   F1nu = F1;
-   //F1nu += dF1;
-   VAE_invM0_tDIVE_->Mult(F1nu, dF1E_rhs);
-   //VAEscaled.AddMult(dfMdv_source, dF1E_rhs, 1.0);
-   dF1E_rhs.Neg();
-   // Prepare the system matrix.
-   M1nu.SpMat() = 0.0;
-   M1nu.SpMat().Add(dv_real, *VAE_invM0_tDIVE_);
-   M1nu.SpMat().Add(1.0 / velocity_real, *VAE_invM0_tVE_);
-
-   dF1E = 0.0;
-   // START HERE
-   Vector B_, X_;
-   HypreParMatrix A_;
-   M1nu.FormLinearSystem(ess_tdofs, dF1E, dF1E_rhs, A_, X_, B_);
-   bool verbose_dF1E = false;
-   HypreBoomerAMG amg_dF1E(A_);
-   HyprePCG pcg_dF1E(A_);
-   pcg_dF1E.SetTol(cg_rel_tol);
-   pcg_dF1E.SetMaxIter(cg_max_iter);
-   pcg_dF1E.SetPrintLevel(verbose_dF1E);
-   pcg_dF1E.SetPreconditioner(amg_dF1E);
-   amg_dF1E.SetPrintLevel(verbose_dF1E);
-   pcg_dF1E.Mult(B_, X_);
-   int PCGNumIter_dF1E;
-   pcg_dF1E.GetNumIterations(PCGNumIter_dF1E);
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
-   { 
-      cout << "HyprePCG_dF1E(BoomerAMG) GetNumIterations: " 
-           <<  PCGNumIter_dF1E << endl << flush;
-   }    
-   M1nu.RecoverFEMSolution(X_, dF1E_rhs, dF1E);
-
-   if (PCGNumIter_dF1E == cg_max_iter) { dF1E = 0.0; }
-///////////////////////////////////////////////////////////////////////////////
-////// Implicit Efield by splitting ///////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-*/
-
-
-   // Get rid of the evolution of deltaF0.
-   //invM0nu.SpMat() = 0.0;
-   // Get rid of the implicit effect of Efield.
-   //VEscaled.SpMat() = 0.0;
-   //VAEscaled.SpMat() = 0.0;
-
-   /*
-   // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
-   SparseMatrix *Df0T = Transpose(DI.SpMat());
-   // Hyperbolic system only.
-   SparseMatrix *invM0nuDf0T = mfem::Mult(invM0nu.SpMat(), *Df0T);
-   SparseMatrix *Df1invM0nuDf0T = mfem::Mult(DA.SpMat(), *invM0nuDf0T);
-   // Fill the rhs vector.
-   Vector F1_rhs(VsizeH1), B, X;
-   DA.Mult(F0, F1_rhs);
-   DA.AddMult(dfMdv_source, F1_rhs, dv_real); 
-   Df1invM0nuDf0T->AddMult(F1, F1_rhs, dv_real);
-   F1_rhs.Neg();   
-   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   // Complete the system matrix.
-   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
-   implM1nu.SpMat().Add(dv_real * dv_real, *Df1invM0nuDf0T);
-   */
-
-   // Full but directional E field effect.
-   // Fundamental matrices.
-   SparseMatrix *tVE = Transpose(VEscaled.SpMat());
-   // Diffusion plus directional effect of Efield matrices.
-   SparseMatrix *tDIVE = Transpose(DI.SpMat()); 
-   tDIVE->Add(-2.0 / velocity_real / velocity_real, *tVE);
-   
-   // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
-   //*tVE = 0.0;
-   //VAEscaled.SpMat() = 0.0;
-   
-   // Proceed with matrix inversions.
-   SparseMatrix *invM0_tDIVE = mfem::Mult(invM0nu.SpMat(), *tDIVE);
-   SparseMatrix *invM0_tVE = mfem::Mult(invM0nu.SpMat(), *tVE);
-   SparseMatrix *DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *invM0_tDIVE);
-   SparseMatrix *DA_invM0_tVE = mfem::Mult(DA.SpMat(), *invM0_tVE);
-   SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(VAEscaled.SpMat(), *invM0_tDIVE);
-   SparseMatrix *VAE_invM0_tVE = mfem::Mult(VAEscaled.SpMat(), *invM0_tVE);
-   
-   // Check if the effect of E^2 is avoided.
-   ////M1nu.SpMat() = 0.0;
-   //*VAE_invM0_tVE = 0.0;
-   ////*VAE_invM0_tDIVE = 0.0;
-
-   // Prepare source of electrons.
-   Vector S0(VsizeL2), invM0_S0(VsizeL2);
-   Mf0nu.Mult(dfMdv_source, S0);
-   invM0nu.Mult(S0, invM0_S0);
-/*
-   // Fill the rhs vector.
-   Vector F1_rhs(VsizeH1);
-   DA.Mult(F0, F1_rhs);
-   F1_rhs.Neg();
-   //DA.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
-   //VAEscaled.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
-   DA.AddMult(dfMdv_source, F1_rhs, -1.0 * dv_real);
-   VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real); 
-   VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
-   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-*/   
-
-   // Fill the rhs vector.
-   //fM_source = 0.0;
-   //DA.Mult(fM_source, F1_rhs);
-   //DA.AddMult(F0, F1_rhs);
-   //F1_rhs.Neg();
-   //VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
-   // Here a reduced value of Efield probably needs to be used...
-   VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
-   //M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   //B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-
-   // Complete the system matrix.
-   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
-   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
-   implM1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDIVE);
-   implM1nu.SpMat().Add(dv_real / velocity_real, *DA_invM0_tVE);
-   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDIVE);
-   implM1nu.SpMat().Add(-1.0 / velocity_real / velocity_real, *VAE_invM0_tVE);
-
-   // Run the HYPRE solver.
-   timer.sw_force.Stop();
-   timer.dof_tstep += H1FESpace.GlobalTrueVSize();
-   Vector B, X;
-   HypreParMatrix A;
-   dF1 = 0.0;
-   implM1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
-   bool verbose = false;
-   HypreBoomerAMG amg_dF1(A);
-   HyprePCG pcg_dF1(A);
-   pcg_dF1.SetTol(cg_rel_tol);
-   pcg_dF1.SetMaxIter(cg_max_iter);
-   pcg_dF1.SetPrintLevel(verbose);
-   pcg_dF1.SetPreconditioner(amg_dF1);
-   amg_dF1.SetPrintLevel(verbose);
-   pcg_dF1.Mult(B, X);
-   timer.sw_cgH1.Stop();
-   implM1nu.RecoverFEMSolution(X, F1_rhs, dF1);
-   int PCGNumIter_dF1;
-   pcg_dF1.GetNumIterations(PCGNumIter_dF1);
-   timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();     
- 
-   ////// f0 equation //////////////////////////////////////////////////////////
-   //                                                                         //
-   // df0dv = M0(nu)^{-1}*D(I)^T*(f1^n + dv*df1dv) + dfMdv                    //
-   //          + 2/v^2*M0(nu)^{-1}*VT(E)*(f1^n + dv*df1dv)                    //
-   //                                                                         //
-   /////////////////////////////////////////////////////////////////////////////
-
-   // Full but directional E field effect.
-   //dF0 = invM0_S0;
-   //dF0 = dfMdv_source; 
-   //dF0 = 0.0;
-   //invM0_tDIVE->AddMult(F1, dF0);
-   invM0_tDIVE->Mult(F1, dF0);
-   invM0_tDIVE->AddMult(dF1, dF0, dv_real);
-   invM0_tVE->AddMult(dF1, dF0, 1.0 / velocity_real);
-
-   double loc_dF1_norm = dF1.Norml2(), glob_dF1_norm;
-   MPI_Allreduce(&loc_dF1_norm, &glob_dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
-	                H1FESpace.GetParMesh()->GetComm());
-   double loc_dF0_norm = dF0.Norml2(), glob_dF0_norm;
-   MPI_Allreduce(&loc_dF0_norm, &glob_dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
-	                H1FESpace.GetParMesh()->GetComm());
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
-   { 
-      cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
-           <<  PCGNumIter_dF1 << endl << flush;
-      cout << "dF1 L2 norm: " << scientific
-           <<  glob_dF1_norm //* dv_real * pow(velocity_real, 5.0)
-		   << endl << flush;	   
-      cout << "dF0 L2 norm: " << scientific
-		   <<  glob_dF0_norm //* dv_real * pow(velocity_real, 5.0)
-		   << endl << flush;
-   }
-   /*
-   // Hyperbolic system only.
-   dF0 = dfMdv_source;
-   invM0nuDf0T->AddMult(F1, dF0);
-   invM0nuDf0T->AddMult(dF1, dF0, dv_real);
-   */  
-
-/*
-///////////////////////////////////////////////////////////////////////////////
-////// Implicit Efield by splitting ///////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-   dF1 += dF1E;
-   invM0_tDIVE_->Mult(F1, dF0);
-   invM0_tDIVE_->AddMult(dF1, dF0, dv_real);
-   invM0_tVE_->AddMult(dF1, dF0, 1.0 / velocity_real);
-///////////////////////////////////////////////////////////////////////////////
-////// Implicit Efield by splitting ///////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-*/ 
-
-   // Clean the buffer.
-   delete tVE;
-   delete tDIVE; 
-   delete invM0_tDIVE;
-   delete invM0_tVE;
-   delete DA_invM0_tDIVE;
-   delete DA_invM0_tVE;
-   delete VAE_invM0_tDIVE;
-   delete VAE_invM0_tVE;
-
-/*
-   delete tVE_;
-   delete tDIVE_;
-   delete invM0_tDIVE_;
-   delete invM0_tVE_;
-   delete VAE_invM0_tDIVE_;
-   delete VAE_invM0_tVE_;
-*/
-
-   /*
-   // Some output.
-   int impl_count = 1, impl_output_rank = 0;
-   double loc_impldF1Norml2 = dF1.Norml2();
-   double glob_impldF1Norml2; 
-   MPI_Reduce(&loc_impldF1Norml2, &glob_impldF1Norml2, impl_count, MPI_DOUBLE, 
-              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm()); 
-   double loc_impldF0Norml2 = dF0.Norml2();
-   double glob_impldF0Norml2;
-   MPI_Reduce(&loc_impldF0Norml2, &glob_impldF0Norml2, impl_count, MPI_DOUBLE, 
-              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm());
-   if (H1FESpace.GetParMesh()->GetMyRank() == impl_output_rank)
-   {
-      //cout << "GetNRanks(): " << H1FESpace.GetParMesh()->GetNRanks() << endl 
-	  //     << flush;
-	  cout << "|impldF1|: " << glob_impldF1Norml2 << endl << flush;
-	  cout << "|impldF0|: " << glob_impldF0Norml2 << endl << flush;
-   }
-   */
-   /////////////////////////////////////////////////////////////////////////////
-   /////////////////////////////////////////////////////////////////////////////
-   /////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -1080,7 +728,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    pcg_gradAf0.SetMaxIter(cg_max_iter);
    pcg_gradAf0.SetPrintLevel(verbose_gradAf0);
    pcg_gradAf0.SetPreconditioner(amg_gradAf0);
-   amg_gradAf0.SetPrintLevel(verbose);
+   amg_gradAf0.SetPrintLevel(verbose_gradAf0);
    pcg_gradAf0.Mult(B_, X_);
    timer.sw_cgH1.Stop();
    int PCGNumIter_gradAf0;

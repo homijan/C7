@@ -81,7 +81,6 @@ protected:
    // Velocity mass matrix and local inverses of the energy mass matrices. These
    // are constant in time, due to the pointwise mass conservation property.
    mutable ParBilinearForm invM0nu, M1nu, M1nut, B1;
-   mutable ParBilinearForm Mf0nu, invM0nuE, implM1nu;
 
    // Integration rule for all assemblies.
    const IntegrationRule &integ_rule;
