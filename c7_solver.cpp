@@ -854,23 +854,27 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    ParBilinearForm &M1nut = Mf1nut;
    MixedBilinearForm &DA = Divf1;
    MixedBilinearForm &VAE = AEfieldf1M; 
+   MixedBilinearForm &VAEsc = AEfieldf1;
    ParBilinearForm &B1 = Bfieldf1;
    // F0 related operators.
    ParBilinearForm &invM0nu = invMf0nu;
    MixedBilinearForm &DI = Divf0;
    MixedBilinearForm &VE = _Efieldf0; 
+   MixedBilinearForm &VEsc = Efieldf0;
 
-   // Fundamental matrices.
+   // Transposed matrices.
+   // Full E field matrix.
    SparseMatrix *_tVE = Transpose(VE.SpMat());
    // Diffusion plus directional effect of Efield matrices.
    SparseMatrix *_tDIVE = Transpose(DI.SpMat()); 
    _tDIVE->Add(-2.0 / velocity_real / velocity_real, *_tVE);
+   // Scaled E field matrix.
+   SparseMatrix *_tVEsc = Transpose(VEsc.SpMat());
    // Proceed with matrix inversions.
    SparseMatrix *_invM0_tDIVE = mfem::Mult(invM0nu.SpMat(), *_tDIVE);
-   SparseMatrix *_invM0_tVE = mfem::Mult(invM0nu.SpMat(), *_tVE);
+   SparseMatrix *_invM0_tVEsc = mfem::Mult(invM0nu.SpMat(), *_tVEsc);
    SparseMatrix *_DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *_invM0_tDIVE);
-   SparseMatrix *_DA_invM0_tVE = mfem::Mult(DA.SpMat(), *_invM0_tVE);
-   SparseMatrix *_VAE_invM0_tDIVE = mfem::Mult(VAE.SpMat(), *_invM0_tDIVE);
+   SparseMatrix *_DA_invM0_tVEsc = mfem::Mult(DA.SpMat(), *_invM0_tVEsc);
 
    // Complete the system matrix A_f1 initialized by the operator Mf1nu.
    A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
@@ -887,7 +891,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    VAE.AddMult(dfMdv_source, b1_n, 1.0 / velocity_real);
    M1nut.AddMult(F1, b1_n, 1.0 / velocity_real);
    B1.AddMult(F1, b1_n, 1.0 / velocity_real);
-   _VAE_invM0_tDIVE->AddMult(F1, b1_n, 1.0 / velocity_real);
    _DA_invM0_tDIVE->AddMult(F1, b1_n, -1.0 * dv_real);
    // Fill b0_n vector.
    _invM0_tDIVE->Mult(F1, b0_n);
@@ -900,7 +903,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    double delta_dF_norm = 1.0; 
    double _dF1_norm = 0.0;
    double converg_lim = 0.001;
-   int kiter_max = 10;
+   int kiter_max = 25;
    int k;
    int _PCGNumIter_dF1;
    double glob__dF1_norm, glob__dF0_norm;
@@ -909,12 +912,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    {
       // Fill b1_k0 and b1_k1 vectors.
       b1_k0 = 0.0;
-      VAE.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
+      VAEsc.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
 	  b1_k1 = 0.0;
-      _DA_invM0_tVE->AddMult(_dF1, b1_k1, -1.0 * dv_real / velocity_real);
+      _DA_invM0_tVEsc->AddMult(_dF1, b1_k1, -1.0 * dv_real / velocity_real);
       // Fill b0_k vector. To be filled before dF1^k+1 has been solved.
       b0_k = 0.0;
-      _invM0_tVE->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+      _invM0_tVEsc->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
 
       // Fill full F1 RHS vectors.
       b1 = b1_n;
@@ -945,7 +948,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
       // Fill b0_k vector. Trying to be fill after dF1^k+1 has been solved.
       //b0_k = 0.0;
-      //_invM0_tVE->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+      //_invM0_tVEsc->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
       // Fill b0_k+1 vector. To be filled after dF1^k+1 has been solved.
       b0_kplus1 = 0.0;
       _invM0_tDIVE->AddMult(_dF1, b0_kplus1, dv_real); // dF1^k+1
@@ -1035,11 +1038,11 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Clean the buffer.
    delete _tVE;
    delete _tDIVE; 
+   delete _tVEsc;
    delete _invM0_tDIVE;
-   delete _invM0_tVE;
+   delete _invM0_tVEsc;
    delete _DA_invM0_tDIVE;
-   delete _DA_invM0_tVE;
-   delete _VAE_invM0_tDIVE;
+   delete _DA_invM0_tVEsc;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -1047,6 +1050,21 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme action ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+   dF0 = _dF0;
+   dF1 = _dF1;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme action ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
    quad_data_is_current = false;
@@ -1120,23 +1138,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    AWBSPhysics->P1b1_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b1_cf = *(AWBSPhysics->P1b1_pcf);
    db1_gf.ProjectCoefficient(P1b1_cf);
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////// Embedded iteration scheme action ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-   //dF0 = _dF0;
-   //dF1 = _dF1;
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////// Embedded iteration scheme action ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),
