@@ -774,11 +774,11 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    { 
       cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
            <<  PCGNumIter_dF1 << endl << flush;
-      cout << "dF1 L2 norm: " 
-           <<  glob_dF1_norm * dv_real * pow(velocity_real, 5.0)
+      cout << "dF1 L2 norm: " << scientific
+           <<  glob_dF1_norm //* dv_real * pow(velocity_real, 5.0)
 		   << endl << flush;	   
-      cout << "dF0 L2 norm: " 
-		   <<  glob_dF0_norm * dv_real * pow(velocity_real, 5.0)
+      cout << "dF0 L2 norm: " << scientific
+		   <<  glob_dF0_norm //* dv_real * pow(velocity_real, 5.0)
 		   << endl << flush;
    }
    /*
@@ -810,6 +810,38 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    delete DA_invM0_tVE;
    delete VAE_invM0_tDIVE;
    delete VAE_invM0_tVE;
+
+/*
+   delete tVE_;
+   delete tDIVE_;
+   delete invM0_tDIVE_;
+   delete invM0_tVE_;
+   delete VAE_invM0_tDIVE_;
+   delete VAE_invM0_tVE_;
+*/
+
+   /*
+   // Some output.
+   int impl_count = 1, impl_output_rank = 0;
+   double loc_impldF1Norml2 = dF1.Norml2();
+   double glob_impldF1Norml2; 
+   MPI_Reduce(&loc_impldF1Norml2, &glob_impldF1Norml2, impl_count, MPI_DOUBLE, 
+              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm()); 
+   double loc_impldF0Norml2 = dF0.Norml2();
+   double glob_impldF0Norml2;
+   MPI_Reduce(&loc_impldF0Norml2, &glob_impldF0Norml2, impl_count, MPI_DOUBLE, 
+              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm());
+   if (H1FESpace.GetParMesh()->GetMyRank() == impl_output_rank)
+   {
+      //cout << "GetNRanks(): " << H1FESpace.GetParMesh()->GetNRanks() << endl 
+	  //     << flush;
+	  cout << "|impldF1|: " << glob_impldF1Norml2 << endl << flush;
+	  cout << "|impldF0|: " << glob_impldF0Norml2 << endl << flush;
+   }
+   */
+   /////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -846,8 +878,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    A_f1.SpMat().Add(dv_real * dv_real, *_DA_invM0_tDIVE);
 
    // Full and partial RHS vectors.
-   Vector b1(VsizeH1), b0(VsizeL2), b1_n(VsizeH1), b1_k(VsizeH1), 
-          b0_n(VsizeL2), b0_k(VsizeL2), b0_kplus1(VsizeL2);
+   Vector b1(VsizeH1), b0(VsizeL2), b1_n(VsizeH1), b1_k0(VsizeH1), 
+          b1_k1(VsizeH1), b0_n(VsizeL2), b0_k(VsizeL2), b0_kplus1(VsizeL2);
    // Fill b1_n vector.
    DA.Mult(fM_source, b1_n);
    DA.AddMult(F0, b1_n);
@@ -865,19 +897,29 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    _dF1 = 0.0;
    _dF0 = 0.0;
 
-   for (int k = 0; k < 10; k++)
+   double delta_dF_norm = 1.0; 
+   double _dF1_norm = 0.0;
+   double converg_lim = 0.001;
+   int kiter_max = 10;
+   int k;
+   int _PCGNumIter_dF1;
+   double glob__dF1_norm, glob__dF0_norm;
+   double glob_b1_n_norm, glob_b1_k0_norm, glob_b1_k1_norm;
+   for (k = 1; k < kiter_max && delta_dF_norm > converg_lim; k++)
    {
-      // Fill b1_k vector.
-      b1_k = 0.0;
-      VAE.AddMult(_dF0, b1_k, 1.0 / velocity_real);
-      _DA_invM0_tVE->AddMult(_dF1, b1_k, -1.0 * dv_real / velocity_real);
+      // Fill b1_k0 and b1_k1 vectors.
+      b1_k0 = 0.0;
+      VAE.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
+	  b1_k1 = 0.0;
+      _DA_invM0_tVE->AddMult(_dF1, b1_k1, -1.0 * dv_real / velocity_real);
       // Fill b0_k vector. To be filled before dF1^k+1 has been solved.
       b0_k = 0.0;
       _invM0_tVE->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
 
       // Fill full F1 RHS vectors.
       b1 = b1_n;
-      b1 += b1_k;
+      b1 += b1_k0;
+	  b1 += b1_k1;
       // Run the HYPRE solver.
       timer.sw_force.Stop();
       timer.dof_tstep += H1FESpace.GlobalTrueVSize();
@@ -897,7 +939,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       _pcg_dF1.Mult(_B, _X);
       timer.sw_cgH1.Stop();
       // Number of PCG iterations.
-      int _PCGNumIter_dF1;
       _pcg_dF1.GetNumIterations(_PCGNumIter_dF1);
       timer.H1dof_iter += _PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();    
       A_f1.RecoverFEMSolution(_X, b1, _dF1);
@@ -917,25 +958,78 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       // Solve for _dF0.
       _dF0 = b0;
 
-      // L2 norm will be used for convergence.
-      double loc__dF1_norm = _dF1.Norml2(), glob__dF1_norm;
+      // L2 norms will be used for convergence.
+      double loc__dF1_norm = _dF1.Norml2();
       MPI_Allreduce(&loc__dF1_norm, &glob__dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
 	                H1FESpace.GetParMesh()->GetComm());
-      double loc__dF0_norm = _dF0.Norml2(), glob__dF0_norm;
+      double loc__dF0_norm = _dF0.Norml2();
       MPI_Allreduce(&loc__dF0_norm, &glob__dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
 	                H1FESpace.GetParMesh()->GetComm());
+	  // Relative difference in the norm evolution.
+	  delta_dF_norm = abs((_dF1_norm - glob__dF1_norm) / glob__dF1_norm);
+	  _dF1_norm = glob__dF1_norm;
+      double loc_b1_n_norm = b1_n.Norml2(), loc_b1_k0_norm = b1_k0.Norml2(),
+             loc_b1_k1_norm = b1_k1.Norml2();
+      MPI_Allreduce(&loc_b1_n_norm, &glob_b1_n_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+      MPI_Allreduce(&loc_b1_k0_norm, &glob_b1_k0_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
+      MPI_Allreduce(&loc_b1_k1_norm, &glob_b1_k1_norm, 1, MPI_DOUBLE, MPI_SUM, 
+	                H1FESpace.GetParMesh()->GetComm());
       // Output on root processor.
+      if (0)
+	  {
       if (H1FESpace.GetParMesh()->GetMyRank() == 0)
       { 
+         cout << "kth iteration: " <<  k << endl << flush;
          cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
               <<  _PCGNumIter_dF1 << endl << flush;
          cout << "_dF1 L2 norm: " 
-              <<  glob__dF1_norm * dv_real * pow(velocity_real, 5.0)
-			  << endl << flush;
+              <<  glob__dF1_norm //* dv_real * pow(velocity_real, 5.0)
+              << endl << flush;
          cout << "_dF0 L2 norm: " 
-              <<  glob__dF0_norm * dv_real * pow(velocity_real, 5.0)
-			  << endl << flush;
-      }  
+              <<  glob__dF0_norm //* dv_real * pow(velocity_real, 5.0)
+              << endl << flush;
+         cout << "delta_dF_norm: " <<  delta_dF_norm << endl << flush;
+         cout << "b1_n_norm: " << scientific
+              <<  glob_b1_n_norm 
+              << endl << flush;
+         cout << "b1_k0_norm: " << scientific
+              <<  glob_b1_k0_norm 
+              << endl << flush;
+         cout << "b1_k1_norm: " << scientific
+              <<  glob_b1_k1_norm 
+              << endl << flush;
+      }
+	  }
+   }
+   // Output on root processor.
+   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   { 
+      cout << "kth iteration: " <<  k << endl << flush;
+      cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+           <<  _PCGNumIter_dF1 << endl << flush;
+      cout << "_dF1 L2 norm: " << scientific
+           <<  glob__dF1_norm //* dv_real * pow(velocity_real, 5.0)
+           << endl << flush;
+      cout << "_dF0 L2 norm: " << scientific
+           <<  glob__dF0_norm //* dv_real //* pow(velocity_real, 5.0)
+           << endl << flush;
+      cout << "delta_dF_norm: " <<  delta_dF_norm << endl << flush;
+      if (delta_dF_norm > converg_lim)
+      {
+         cout << "Embedded E.dFdv itaration has not converged!" 
+              << endl << flush;
+         cout << "b1_n_norm: " << scientific
+              <<  glob_b1_n_norm 
+              << endl << flush;
+         cout << "b1_k0_norm: " << scientific
+              <<  glob_b1_k0_norm 
+              << endl << flush;
+         cout << "b1_k1_norm: " << scientific
+              <<  glob_b1_k1_norm 
+              << endl << flush;
+      } 
    }
    
    // Clean the buffer.
@@ -953,37 +1047,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-/*
-   delete tVE_;
-   delete tDIVE_;
-   delete invM0_tDIVE_;
-   delete invM0_tVE_;
-   delete VAE_invM0_tDIVE_;
-   delete VAE_invM0_tVE_;
-*/
 
-   /*
-   // Some output.
-   int impl_count = 1, impl_output_rank = 0;
-   double loc_impldF1Norml2 = dF1.Norml2();
-   double glob_impldF1Norml2; 
-   MPI_Reduce(&loc_impldF1Norml2, &glob_impldF1Norml2, impl_count, MPI_DOUBLE, 
-              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm()); 
-   double loc_impldF0Norml2 = dF0.Norml2();
-   double glob_impldF0Norml2;
-   MPI_Reduce(&loc_impldF0Norml2, &glob_impldF0Norml2, impl_count, MPI_DOUBLE, 
-              MPI_SUM, impl_output_rank, H1FESpace.GetParMesh()->GetComm());
-   if (H1FESpace.GetParMesh()->GetMyRank() == impl_output_rank)
-   {
-      //cout << "GetNRanks(): " << H1FESpace.GetParMesh()->GetNRanks() << endl 
-	  //     << flush;
-	  cout << "|impldF1|: " << glob_impldF1Norml2 << endl << flush;
-	  cout << "|impldF0|: " << glob_impldF0Norml2 << endl << flush;
-   }
-   */
-   /////////////////////////////////////////////////////////////////////////////
-   /////////////////////////////////////////////////////////////////////////////
-   /////////////////////////////////////////////////////////////////////////////
 
    quad_data_is_current = false;
 
@@ -1056,6 +1120,23 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    AWBSPhysics->P1b1_pcf->SetVelocityReal(velocity_real);
    VectorCoefficient &P1b1_cf = *(AWBSPhysics->P1b1_pcf);
    db1_gf.ProjectCoefficient(P1b1_cf);
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme action ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+   //dF0 = _dF0;
+   //dF1 = _dF1;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////// Embedded iteration scheme action ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
 
    // c7_oper uses a more general formulation of velocity space with scaled
    // velocity magnitude from v_normalized in (0, 1) to v_real in (0, NxvTmax),

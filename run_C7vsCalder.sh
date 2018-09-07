@@ -46,8 +46,8 @@ declare -a NAMEarray=("case")
 XPOINT=0.075 # in cm preheat position
 L=0.094
 declare -a Zarray=("2")
-#declare -a NIarray=("2.5e20") # ne = 5e20
-declare -a NIarray=("1e19")
+declare -a NIarray=("2.5e20") # ne = 5e20
+#declare -a NIarray=("1e19")
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Te
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 940 #700 -s
 cp _Te_Te_00110000.txt.txt $DIRroot/VFPdata/temperature.dat
