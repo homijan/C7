@@ -94,14 +94,12 @@ C7Operator::C7Operator(int size,
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
      cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
-     Mf0nu(&l2_fes), invMf0nu(&l2_fes), invMf0nuE(&l2_fes), 
-     implMf1nu(&h1_fes), Mf1nu(&h1_fes), Mf1nut(&h1_fes), Bfieldf1(&h1_fes), 
-     Divf0(&l2_fes, &h1_fes), Efieldf0(&l2_fes, &h1_fes), 
-	 _Efieldf0(&l2_fes, &h1_fes), 
-     Divf1(&l2_fes, &h1_fes), AEfieldf1(&l2_fes, &h1_fes), 
-     AEfieldf1M(&l2_fes, &h1_fes), AIEfieldf1(&l2_fes, &h1_fes),
-     MSf0(l2dofs_cnt, l2dofs_cnt, nzones),
-     Mf0_inv(l2dofs_cnt, l2dofs_cnt, nzones),
+     Mf0nu(&l2_fes), invM0nu(&l2_fes), invM0nuE(&l2_fes), 
+     implM1nu(&h1_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
+     DI(&l2_fes, &h1_fes), VEscaled(&l2_fes, &h1_fes), 
+	 VEfull(&l2_fes, &h1_fes), 
+     DA(&l2_fes, &h1_fes), VAEscaled(&l2_fes, &h1_fes), 
+     VAEfull(&l2_fes, &h1_fes),
      integ_rule(IntRules.Get(h1_fes.GetMesh()->GetElementBaseGeometry(),
                              3*h1_fes.GetOrder(0) + l2_fes.GetOrder(0) - 1)),
      quad_data(dim, nzones, integ_rule.GetNPoints()),
@@ -179,80 +177,73 @@ C7Operator::C7Operator(int size,
    // Inverted Mf0 intergrators.
    invMass0NuIntegrator *invmf0nui = new invMass0NuIntegrator(quad_data);
    invmf0nui->SetIntRule(&integ_rule);
-   invMf0nu.AddDomainIntegrator(invmf0nui);
+   invM0nu.AddDomainIntegrator(invmf0nui);
    // Special form for explicit calculation.
    invMass0NuEIntegrator *invmf0nuEi = new invMass0NuEIntegrator(quad_data);
    invmf0nuEi->SetIntRule(&integ_rule);
-   invMf0nuE.AddDomainIntegrator(invmf0nuEi);
+   invM0nuE.AddDomainIntegrator(invmf0nuEi);
 
    // Standard assembly for the velocity mass matrix.
    Mass1NuIntegrator *mf1nui = new Mass1NuIntegrator(quad_data);
    mf1nui->SetIntRule(&integ_rule);
-   Mf1nu.AddDomainIntegrator(mf1nui);
-   Mf1nu.Assemble();
+   M1nu.AddDomainIntegrator(mf1nui);
+   M1nu.Assemble();
    Mass1NuIntegrator *implmf1nui = new Mass1NuIntegrator(quad_data);
    implmf1nui->SetIntRule(&integ_rule);
-   implMf1nu.AddDomainIntegrator(implmf1nui);
-   implMf1nu.Assemble();
+   implM1nu.AddDomainIntegrator(implmf1nui);
+   implM1nu.Assemble();
 
    Mass1NutIntegrator *mf1nuti = new Mass1NutIntegrator(quad_data);
    mf1nuti->SetIntRule(&integ_rule);
-   Mf1nut.AddDomainIntegrator(mf1nuti);
-   Mf1nut.Assemble();
+   M1nut.AddDomainIntegrator(mf1nuti);
+   M1nut.Assemble();
 
    BfieldIntegrator *f1bfi = new BfieldIntegrator(quad_data);
    f1bfi->SetIntRule(&integ_rule);
-   Bfieldf1.AddDomainIntegrator(f1bfi);
-   Bfieldf1.Assemble();
+   B1.AddDomainIntegrator(f1bfi);
+   B1.Assemble();
 
    Divf1Integrator *f1di = new Divf1Integrator(quad_data);
    f1di->SetIntRule(&integ_rule);
-   Divf1.AddDomainIntegrator(f1di);
+   DA.AddDomainIntegrator(f1di);
    // Make a dummy assembly to figure out the sparsity.
-   Divf1.Assemble(0);
-   Divf1.Finalize(0);
+   DA.Assemble(0);
+   DA.Finalize(0);
 
    Divf0Integrator *tfi = new Divf0Integrator(quad_data);
    tfi->SetIntRule(&integ_rule);
-   Divf0.AddDomainIntegrator(tfi);
+   DI.AddDomainIntegrator(tfi);
    // Make a dummy assembly to figure out the sparsity.
-   Divf0.Assemble(0);
-   Divf0.Finalize(0);
+   DI.Assemble(0);
+   DI.Finalize(0);
 
    EfieldIntegrator *_f0ei = new EfieldIntegrator(quad_data);
    _f0ei->SetIntRule(&integ_rule);
-   _Efieldf0.AddDomainIntegrator(_f0ei);
+   VEfull.AddDomainIntegrator(_f0ei);
    // Make a dummy assembly to figure out the sparsity.
-   _Efieldf0.Assemble(0);
-   _Efieldf0.Finalize(0);
+   VEfull.Assemble(0);
+   VEfull.Finalize(0);
 
    EfieldScIntegrator *f0ei = new EfieldScIntegrator(quad_data);
    f0ei->SetIntRule(&integ_rule);
-   Efieldf0.AddDomainIntegrator(f0ei);
+   VEscaled.AddDomainIntegrator(f0ei);
    // Make a dummy assembly to figure out the sparsity.
-   Efieldf0.Assemble(0);
-   Efieldf0.Finalize(0);
+   VEscaled.Assemble(0);
+   VEscaled.Finalize(0);
 
    AEfieldScIntegrator *f1aei = new AEfieldScIntegrator(quad_data);
    f1aei->SetIntRule(&integ_rule);
-   AEfieldf1.AddDomainIntegrator(f1aei);
+   VAEscaled.AddDomainIntegrator(f1aei);
    // Make a dummy assembly to figure out the sparsity.
-   AEfieldf1.Assemble(0);
-   AEfieldf1.Finalize(0);
+   VAEscaled.Assemble(0);
+   VAEscaled.Finalize(0);
 
    AEfieldIntegrator *f1Maei = new AEfieldIntegrator(quad_data);
    f1Maei->SetIntRule(&integ_rule);
-   AEfieldf1M.AddDomainIntegrator(f1Maei);
+   VAEfull.AddDomainIntegrator(f1Maei);
    // Make a dummy assembly to figure out the sparsity.
-   AEfieldf1M.Assemble(0);
-   AEfieldf1M.Finalize(0);
-
-   AIEfieldIntegrator *f1aiei = new AIEfieldIntegrator(quad_data);
-   f1aiei->SetIntRule(&integ_rule);
-   AIEfieldf1.AddDomainIntegrator(f1aiei);
-   // Make a dummy assembly to figure out the sparsity.
-   AIEfieldf1.Assemble(0);
-   AIEfieldf1.Finalize(0);
+   VAEfull.Assemble(0);
+   VAEfull.Finalize(0);
 }
 
 void C7Operator::Mult(const Vector &F, Vector &dFdv) const
@@ -314,27 +305,25 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    djC_gf.MakeRef(&H1FESpace, dFdv, size);
 
    Mf0nu.Update();
-   invMf0nuE.Update();
-   Mf1nu.Update(); 
-   Mf1nut.Update();
-   Bfieldf1.Update();
-   Divf0 = 0.0;
-   Efieldf0 = 0.0;
-   Divf1 = 0.0; 
-   AEfieldf1 = 0.0;
-   AIEfieldf1 = 0.0; 
+   invM0nuE.Update();
+   M1nu.Update(); 
+   M1nut.Update();
+   B1.Update();
+   DI = 0.0;
+   VEscaled = 0.0;
+   DA = 0.0; 
+   VAEscaled = 0.0;
 
    timer.sw_force.Start(); 
    Mf0nu.Assemble();
-   invMf0nuE.Assemble();
-   Mf1nu.Assemble(); 
-   Mf1nut.Assemble();
-   Bfieldf1.Assemble();
-   Divf0.Assemble();
-   Efieldf0.Assemble(0);   
-   Divf1.Assemble();  
-   AEfieldf1.Assemble(0); 
-   AIEfieldf1.Assemble(0); 
+   invM0nuE.Assemble();
+   M1nu.Assemble(); 
+   M1nut.Assemble();
+   B1.Assemble();
+   DI.Assemble();
+   VEscaled.Assemble(0);   
+   DA.Assemble();  
+   VAEscaled.Assemble(0); 
    timer.sw_force.Stop();
 
    // Solve for df0dv. 
@@ -346,12 +335,12 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    /////////////////////////////////////////////////////////////////////////////
    Vector F0_rhs(VsizeL2);
    timer.sw_force.Start();
-   Divf0.MultTranspose(F1, F0_rhs);
-   Efieldf0.AddMultTranspose(F1, F0_rhs, 
+   DI.MultTranspose(F1, F0_rhs);
+   VEscaled.AddMultTranspose(F1, F0_rhs, 
                              2.0 / velocity_real / velocity_real);
    Mf0nu.AddMult(dfMdv_source, F0_rhs); 
    // Compute dF0.
-   invMf0nuE.Mult(F0_rhs, dF0);
+   invM0nuE.Mult(F0_rhs, dF0);
 
    // Solve for df1dv.
    ////// f1 equation //////////////////////////////////////////////////////////
@@ -362,18 +351,17 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    /////////////////////////////////////////////////////////////////////////////
    Vector F1_rhs(VsizeH1), B, X;
    timer.sw_force.Start();
-   Divf1.Mult(F0, F1_rhs);
+   DA.Mult(F0, F1_rhs);
    F1_rhs.Neg(); 
-   AIEfieldf1.AddMult(F0, F1_rhs, 1.0 / velocity_real / velocity_real);
-   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   AEfieldf1.AddMult(dF0, F1_rhs, 1.0 / velocity_real);
+   B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   VAEscaled.AddMult(dF0, F1_rhs, 1.0 / velocity_real);
    // Compute dF1.
    timer.sw_force.Stop();
    timer.dof_tstep += H1FESpace.GlobalTrueVSize();
    HypreParMatrix A;
    dF1 = 0.0;
-   Mf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
+   M1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
    CGSolver cg(H1FESpace.GetParMesh()->GetComm());
    cg.SetOperator(A);
    cg.SetRelTol(cg_rel_tol); cg.SetAbsTol(0.0);
@@ -383,7 +371,7 @@ void C7Operator::Mult(const Vector &F, Vector &dFdv) const
    cg.Mult(B, X);
    timer.sw_cgH1.Stop();
    timer.H1dof_iter += cg.GetNumIterations() * H1compFESpace.GlobalTrueVSize();
-   Mf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
+   M1nu.RecoverFEMSolution(X, F1_rhs, dF1);
 
    quad_data_is_current = false;
 
@@ -482,50 +470,47 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    size += VsizeH1;
    db1_gf.MakeRef(&H1FESpace, dFdv, size);
 
-   invMf0nu.Update();
+   invM0nu.Update();
    Mf0nu.Update();
-   implMf1nu.Update();
-   Mf1nu.Update(); 
-   Mf1nut.Update();
-   Bfieldf1.Update();
-   Divf0 = 0.0;
-   _Efieldf0 = 0.0;
-   Efieldf0 = 0.0;
-   Divf1 = 0.0; 
-   AEfieldf1 = 0.0;
-   AEfieldf1M = 0.0;
-   //AIEfieldf1 = 0.0; 
+   implM1nu.Update();
+   M1nu.Update(); 
+   M1nut.Update();
+   B1.Update();
+   DI = 0.0;
+   VEfull = 0.0;
+   VEscaled = 0.0;
+   DA = 0.0; 
+   VAEscaled = 0.0;
+   VAEfull = 0.0;
 
    timer.sw_force.Start(); 
-   invMf0nu.Assemble();
-   invMf0nu.Finalize();
+   invM0nu.Assemble();
+   invM0nu.Finalize();
    Mf0nu.Assemble(); // Not using SpMat.
-   implMf1nu.Assemble();
-   implMf1nu.Finalize();
-   Mf1nu.Assemble(); 
-   Mf1nu.Finalize();
-   Mf1nut.Assemble();
-   Mf1nut.Finalize();
-   Bfieldf1.Assemble();
-   Bfieldf1.Finalize();
-   Divf0.Assemble();
-   Divf0.Finalize();
-   _Efieldf0.Assemble(0);   
-   _Efieldf0.Finalize();
-   Efieldf0.Assemble(0);   
-   Efieldf0.Finalize();
-   Divf1.Assemble();  
-   Divf1.Finalize();
-   AEfieldf1.Assemble(0); 
-   AEfieldf1.Finalize();
-   AEfieldf1M.Assemble(0); 
-   AEfieldf1M.Finalize();
-   //AIEfieldf1.Assemble(0);
-   //AIEfieldf1.Finalize(0); 
+   implM1nu.Assemble();
+   implM1nu.Finalize();
+   M1nu.Assemble(); 
+   M1nu.Finalize();
+   M1nut.Assemble();
+   M1nut.Finalize();
+   B1.Assemble();
+   B1.Finalize();
+   DI.Assemble();
+   DI.Finalize();
+   VEfull.Assemble(0);   
+   VEfull.Finalize();
+   VEscaled.Assemble(0);   
+   VEscaled.Finalize();
+   DA.Assemble();  
+   DA.Finalize();
+   VAEscaled.Assemble(0); 
+   VAEscaled.Finalize();
+   VAEfull.Assemble(0); 
+   VAEfull.Finalize();
    timer.sw_force.Stop();
 
-   //AIEfieldf1.SpMat() *= 0.0;
-   Bfieldf1.SpMat()   *= 0.0; 
+   // Force no effect of Bfield.
+   B1.SpMat()   *= 0.0; 
 
    /////////////////////////////////////////////////////////////////////////////
    ////// Fully implicit scheme. ///////////////////////////////////////////////
@@ -549,12 +534,12 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /////////////////////////////////////////////////////////////////////////////
    ////// f1 equation //////////////////////////////////////////////////////////
    //                                                                         //
-   // df0dv = (invMf0nuVTE + dv*invMf0nuA0)*df1dv + invMf0nuA0*f1^n + dfMdv   //
+   // df0dv = (invM0nuVTE + dv*invM0nuA0)*df1dv + invM0nuA0*f1^n + dfMdv   //
    //                                                                         //
    // [M1(nu) - dv*A3]*df1dv = A2*df0dv + A3*f1^n + A1*f0^n                   //
    //                                                                         //
-   // [M1(nu) - dv*A3 - A2*invMf0nuVTE - dv*A2*invMf0nuA0)]*df1dv =           //
-   // (A2*invMf0nuA0 + A3)*f1^n + A1*f0^n + A2*dfMdv                          //
+   // [M1(nu) - dv*A3 - A2*invM0nuVTE - dv*A2*invM0nuA0)]*df1dv =           //
+   // (A2*invM0nuA0 + A3)*f1^n + A1*f0^n + A2*dfMdv                          //
    //
    // A0 = D(I)^T + 2/v^2*VT(E)
    // VTE = VT(E)
@@ -566,14 +551,14 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1);
    //fM_source = 0.0;
-   Divf1.Mult(fM_source, F1_rhs);
-   Divf1.AddMult(F0, F1_rhs);
+   DA.Mult(fM_source, F1_rhs);
+   DA.AddMult(F0, F1_rhs);
    F1_rhs.Neg();
    // Here the full Efield must be used!!!
-   AEfieldf1M.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
-   //AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   VAEfull.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   //VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
 
 /*
 ///////////////////////////////////////////////////////////////////////////////
@@ -581,39 +566,39 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ///////////////////////////////////////////////////////////////////////////////
    // Full but directional E field effect.
    // Fundamental matrices.
-   SparseMatrix *tVE_ = Transpose(Efieldf0.SpMat());
+   SparseMatrix *tVE_ = Transpose(VEscaled.SpMat());
    // Diffusion plus directional effect of Efield matrices.
-   SparseMatrix *tDIVE_ = Transpose(Divf0.SpMat()); 
+   SparseMatrix *tDIVE_ = Transpose(DI.SpMat()); 
    tDIVE_->Add(-2.0 / velocity_real / velocity_real, *tVE_);
    
    // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
    //*tVE = 0.0;
-   //AEfieldf1.SpMat() = 0.0;
+   //VAEscaled.SpMat() = 0.0;
    
    // Proceed with matrix inversions.
-   SparseMatrix *invM0_tDIVE_ = mfem::Mult(invMf0nu.SpMat(), *tDIVE_);
-   SparseMatrix *invM0_tVE_ = mfem::Mult(invMf0nu.SpMat(), *tVE_);
-   SparseMatrix *VAE_invM0_tDIVE_ = mfem::Mult(AEfieldf1.SpMat(), 
+   SparseMatrix *invM0_tDIVE_ = mfem::Mult(invM0nu.SpMat(), *tDIVE_);
+   SparseMatrix *invM0_tVE_ = mfem::Mult(invM0nu.SpMat(), *tVE_);
+   SparseMatrix *VAE_invM0_tDIVE_ = mfem::Mult(VAEscaled.SpMat(), 
                                                *invM0_tDIVE_);
-   SparseMatrix *VAE_invM0_tVE_ = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE_);
+   SparseMatrix *VAE_invM0_tVE_ = mfem::Mult(VAEscaled.SpMat(), *invM0_tVE_);
 
    ParGridFunction dF1E(&H1FESpace), dF1E_rhs(&H1FESpace), F1nu(&H1FESpace);
    // Prepare the right hand sides.
    F1nu = F1;
    //F1nu += dF1;
    VAE_invM0_tDIVE_->Mult(F1nu, dF1E_rhs);
-   //AEfieldf1.AddMult(dfMdv_source, dF1E_rhs, 1.0);
+   //VAEscaled.AddMult(dfMdv_source, dF1E_rhs, 1.0);
    dF1E_rhs.Neg();
    // Prepare the system matrix.
-   Mf1nu.SpMat() = 0.0;
-   Mf1nu.SpMat().Add(dv_real, *VAE_invM0_tDIVE_);
-   Mf1nu.SpMat().Add(1.0 / velocity_real, *VAE_invM0_tVE_);
+   M1nu.SpMat() = 0.0;
+   M1nu.SpMat().Add(dv_real, *VAE_invM0_tDIVE_);
+   M1nu.SpMat().Add(1.0 / velocity_real, *VAE_invM0_tVE_);
 
    dF1E = 0.0;
    // START HERE
    Vector B_, X_;
    HypreParMatrix A_;
-   Mf1nu.FormLinearSystem(ess_tdofs, dF1E, dF1E_rhs, A_, X_, B_);
+   M1nu.FormLinearSystem(ess_tdofs, dF1E, dF1E_rhs, A_, X_, B_);
    bool verbose_dF1E = false;
    HypreBoomerAMG amg_dF1E(A_);
    HyprePCG pcg_dF1E(A_);
@@ -630,7 +615,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       cout << "HyprePCG_dF1E(BoomerAMG) GetNumIterations: " 
            <<  PCGNumIter_dF1E << endl << flush;
    }    
-   Mf1nu.RecoverFEMSolution(X_, dF1E_rhs, dF1E);
+   M1nu.RecoverFEMSolution(X_, dF1E_rhs, dF1E);
 
    if (PCGNumIter_dF1E == cg_max_iter) { dF1E = 0.0; }
 ///////////////////////////////////////////////////////////////////////////////
@@ -640,91 +625,91 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
 
    // Get rid of the evolution of deltaF0.
-   //invMf0nu.SpMat() = 0.0;
+   //invM0nu.SpMat() = 0.0;
    // Get rid of the implicit effect of Efield.
-   //Efieldf0.SpMat() = 0.0;
-   //AEfieldf1.SpMat() = 0.0;
+   //VEscaled.SpMat() = 0.0;
+   //VAEscaled.SpMat() = 0.0;
 
    /*
    // The fundamental scheme matrix D(A).invM0(nu)*D(I)^T.
-   SparseMatrix *Df0T = Transpose(Divf0.SpMat());
+   SparseMatrix *Df0T = Transpose(DI.SpMat());
    // Hyperbolic system only.
-   SparseMatrix *invMf0nuDf0T = mfem::Mult(invMf0nu.SpMat(), *Df0T);
-   SparseMatrix *Df1invMf0nuDf0T = mfem::Mult(Divf1.SpMat(), *invMf0nuDf0T);
+   SparseMatrix *invM0nuDf0T = mfem::Mult(invM0nu.SpMat(), *Df0T);
+   SparseMatrix *Df1invM0nuDf0T = mfem::Mult(DA.SpMat(), *invM0nuDf0T);
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1), B, X;
-   Divf1.Mult(F0, F1_rhs);
-   Divf1.AddMult(dfMdv_source, F1_rhs, dv_real); 
-   Df1invMf0nuDf0T->AddMult(F1, F1_rhs, dv_real);
+   DA.Mult(F0, F1_rhs);
+   DA.AddMult(dfMdv_source, F1_rhs, dv_real); 
+   Df1invM0nuDf0T->AddMult(F1, F1_rhs, dv_real);
    F1_rhs.Neg();   
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
    // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
-   implMf1nu.SpMat().Add(dv_real * dv_real, *Df1invMf0nuDf0T);
+   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
+   implM1nu.SpMat().Add(dv_real * dv_real, *Df1invM0nuDf0T);
    */
 
    // Full but directional E field effect.
    // Fundamental matrices.
-   SparseMatrix *tVE = Transpose(Efieldf0.SpMat());
+   SparseMatrix *tVE = Transpose(VEscaled.SpMat());
    // Diffusion plus directional effect of Efield matrices.
-   SparseMatrix *tDIVE = Transpose(Divf0.SpMat()); 
+   SparseMatrix *tDIVE = Transpose(DI.SpMat()); 
    tDIVE->Add(-2.0 / velocity_real / velocity_real, *tVE);
    
    // Check only  directional effect of E, i.e. turn off effect E*n dfdv.
    //*tVE = 0.0;
-   //AEfieldf1.SpMat() = 0.0;
+   //VAEscaled.SpMat() = 0.0;
    
    // Proceed with matrix inversions.
-   SparseMatrix *invM0_tDIVE = mfem::Mult(invMf0nu.SpMat(), *tDIVE);
-   SparseMatrix *invM0_tVE = mfem::Mult(invMf0nu.SpMat(), *tVE);
-   SparseMatrix *DA_invM0_tDIVE = mfem::Mult(Divf1.SpMat(), *invM0_tDIVE);
-   SparseMatrix *DA_invM0_tVE = mfem::Mult(Divf1.SpMat(), *invM0_tVE);
-   SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tDIVE);
-   SparseMatrix *VAE_invM0_tVE = mfem::Mult(AEfieldf1.SpMat(), *invM0_tVE);
+   SparseMatrix *invM0_tDIVE = mfem::Mult(invM0nu.SpMat(), *tDIVE);
+   SparseMatrix *invM0_tVE = mfem::Mult(invM0nu.SpMat(), *tVE);
+   SparseMatrix *DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *invM0_tDIVE);
+   SparseMatrix *DA_invM0_tVE = mfem::Mult(DA.SpMat(), *invM0_tVE);
+   SparseMatrix *VAE_invM0_tDIVE = mfem::Mult(VAEscaled.SpMat(), *invM0_tDIVE);
+   SparseMatrix *VAE_invM0_tVE = mfem::Mult(VAEscaled.SpMat(), *invM0_tVE);
    
    // Check if the effect of E^2 is avoided.
-   ////Mf1nu.SpMat() = 0.0;
+   ////M1nu.SpMat() = 0.0;
    //*VAE_invM0_tVE = 0.0;
    ////*VAE_invM0_tDIVE = 0.0;
 
    // Prepare source of electrons.
    Vector S0(VsizeL2), invM0_S0(VsizeL2);
    Mf0nu.Mult(dfMdv_source, S0);
-   invMf0nu.Mult(S0, invM0_S0);
+   invM0nu.Mult(S0, invM0_S0);
 /*
    // Fill the rhs vector.
    Vector F1_rhs(VsizeH1);
-   Divf1.Mult(F0, F1_rhs);
+   DA.Mult(F0, F1_rhs);
    F1_rhs.Neg();
-   //Divf1.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
-   //AEfieldf1.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
-   Divf1.AddMult(dfMdv_source, F1_rhs, -1.0 * dv_real);
-   AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real); 
+   //DA.AddMult(invM0_S0, F1_rhs, -1.0 * dv_real);
+   //VAEscaled.AddMult(invM0_S0, F1_rhs, 1.0 / velocity_real); 
+   DA.AddMult(dfMdv_source, F1_rhs, -1.0 * dv_real);
+   VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real); 
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
    DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
-   Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
 */   
 
    // Fill the rhs vector.
    //fM_source = 0.0;
-   //Divf1.Mult(fM_source, F1_rhs);
-   //Divf1.AddMult(F0, F1_rhs);
+   //DA.Mult(fM_source, F1_rhs);
+   //DA.AddMult(F0, F1_rhs);
    //F1_rhs.Neg();
-   //AEfieldf1.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
+   //VAEscaled.AddMult(dfMdv_source, F1_rhs, 1.0 / velocity_real);
    // Here a reduced value of Efield probably needs to be used...
    VAE_invM0_tDIVE->AddMult(F1, F1_rhs, 1.0 / velocity_real);
    DA_invM0_tDIVE->AddMult(F1, F1_rhs, -1.0 * dv_real);
-   //Mf1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
-   //Bfieldf1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   //M1nut.AddMult(F1, F1_rhs, 1.0 / velocity_real);
+   //B1.AddMult(F1, F1_rhs, 1.0 / velocity_real);
 
    // Complete the system matrix.
-   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Mf1nut.SpMat());
-   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, Bfieldf1.SpMat());
-   implMf1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDIVE);
-   implMf1nu.SpMat().Add(dv_real / velocity_real, *DA_invM0_tVE);
-   implMf1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDIVE);
-   implMf1nu.SpMat().Add(-1.0 / velocity_real / velocity_real, *VAE_invM0_tVE);
+   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
+   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
+   implM1nu.SpMat().Add(dv_real * dv_real, *DA_invM0_tDIVE);
+   implM1nu.SpMat().Add(dv_real / velocity_real, *DA_invM0_tVE);
+   implM1nu.SpMat().Add(-1.0 * dv_real / velocity_real, *VAE_invM0_tDIVE);
+   implM1nu.SpMat().Add(-1.0 / velocity_real / velocity_real, *VAE_invM0_tVE);
 
    // Run the HYPRE solver.
    timer.sw_force.Stop();
@@ -732,7 +717,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    Vector B, X;
    HypreParMatrix A;
    dF1 = 0.0;
-   implMf1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
+   implM1nu.FormLinearSystem(ess_tdofs, dF1, F1_rhs, A, X, B);
    bool verbose = false;
    HypreBoomerAMG amg_dF1(A);
    HyprePCG pcg_dF1(A);
@@ -743,7 +728,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    amg_dF1.SetPrintLevel(verbose);
    pcg_dF1.Mult(B, X);
    timer.sw_cgH1.Stop();
-   implMf1nu.RecoverFEMSolution(X, F1_rhs, dF1);
+   implM1nu.RecoverFEMSolution(X, F1_rhs, dF1);
    int PCGNumIter_dF1;
    pcg_dF1.GetNumIterations(PCGNumIter_dF1);
    timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();     
@@ -784,8 +769,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    /*
    // Hyperbolic system only.
    dF0 = dfMdv_source;
-   invMf0nuDf0T->AddMult(F1, dF0);
-   invMf0nuDf0T->AddMult(dF1, dF0, dv_real);
+   invM0nuDf0T->AddMult(F1, dF0);
+   invM0nuDf0T->AddMult(dF1, dF0, dv_real);
    */  
 
 /*
@@ -848,35 +833,24 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ////// Embedded iteration scheme //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-   // Notation corresponding to the C7 documentation.
-   // F1 related operators.
-   ParBilinearForm &A_f1 = Mf1nu; // dF1 system matrix. Initialized as Mf1nu.
-   ParBilinearForm &M1nut = Mf1nut;
-   MixedBilinearForm &DA = Divf1;
-   MixedBilinearForm &VAE = AEfieldf1M; 
-   MixedBilinearForm &VAEsc = AEfieldf1;
-   ParBilinearForm &B1 = Bfieldf1;
-   // F0 related operators.
-   ParBilinearForm &invM0nu = invMf0nu;
-   MixedBilinearForm &DI = Divf0;
-   MixedBilinearForm &VE = _Efieldf0; 
-   MixedBilinearForm &VEsc = Efieldf0;
+   // The system matrix is constructed from M1nu mass matrix.
+   ParBilinearForm &A_f1 = M1nu; // dF1 system matrix. Initialized as M1nu.
 
    // Transposed matrices.
    // Full E field matrix.
-   SparseMatrix *_tVE = Transpose(VE.SpMat());
+   SparseMatrix *_tVE = Transpose(VEfull.SpMat());
    // Diffusion plus directional effect of Efield matrices.
    SparseMatrix *_tDIVE = Transpose(DI.SpMat()); 
    _tDIVE->Add(-2.0 / velocity_real / velocity_real, *_tVE);
    // Scaled E field matrix.
-   SparseMatrix *_tVEsc = Transpose(VEsc.SpMat());
+   SparseMatrix *_tVEsc = Transpose(VEscaled.SpMat());
    // Proceed with matrix inversions.
    SparseMatrix *_invM0_tDIVE = mfem::Mult(invM0nu.SpMat(), *_tDIVE);
    SparseMatrix *_invM0_tVEsc = mfem::Mult(invM0nu.SpMat(), *_tVEsc);
    SparseMatrix *_DA_invM0_tDIVE = mfem::Mult(DA.SpMat(), *_invM0_tDIVE);
    SparseMatrix *_DA_invM0_tVEsc = mfem::Mult(DA.SpMat(), *_invM0_tVEsc);
 
-   // Complete the system matrix A_f1 initialized by the operator Mf1nu.
+   // Complete the system matrix A_f1 initialized by the operator M1nu.
    A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, M1nut.SpMat());
    A_f1.SpMat().Add(-1.0 * dv_real / velocity_real, B1.SpMat());
    A_f1.SpMat().Add(dv_real * dv_real, *_DA_invM0_tDIVE);
@@ -888,7 +862,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    DA.Mult(fM_source, b1_n);
    DA.AddMult(F0, b1_n);
    b1_n.Neg();
-   VAE.AddMult(dfMdv_source, b1_n, 1.0 / velocity_real);
+   VAEfull.AddMult(dfMdv_source, b1_n, 1.0 / velocity_real);
    M1nut.AddMult(F1, b1_n, 1.0 / velocity_real);
    B1.AddMult(F1, b1_n, 1.0 / velocity_real);
    _DA_invM0_tDIVE->AddMult(F1, b1_n, -1.0 * dv_real);
@@ -912,7 +886,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    {
       // Fill b1_k0 and b1_k1 vectors.
       b1_k0 = 0.0;
-      VAEsc.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
+      VAEscaled.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
 	  b1_k1 = 0.0;
       _DA_invM0_tVEsc->AddMult(_dF1, b1_k1, -1.0 * dv_real / velocity_real);
       // Fill b0_k vector. To be filled before dF1^k+1 has been solved.
@@ -1091,14 +1065,14 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    ////////////////////////////////////////////////////////////////////////////
    ParGridFunction gradAf0(&H1FESpace), gradAf0_rhs(&H1FESpace);
    // Weak derivative.
-   Divf1.Mult(fM_source, gradAf0_rhs);
-   Divf1.AddMult(F0, gradAf0_rhs);
+   DA.Mult(fM_source, gradAf0_rhs);
+   DA.AddMult(F0, gradAf0_rhs);
    gradAf0_rhs.Neg();
    // Initialize unknown vector.
    gradAf0 = 0.0;
    Vector B_, X_;
    HypreParMatrix A_;
-   Mf1nut.FormLinearSystem(ess_tdofs, gradAf0, gradAf0_rhs, A_, X_, B_);
+   M1nut.FormLinearSystem(ess_tdofs, gradAf0, gradAf0_rhs, A_, X_, B_);
    bool verbose_gradAf0 = false;
    HypreBoomerAMG amg_gradAf0(A_);
    HyprePCG pcg_gradAf0(A_);
@@ -1117,7 +1091,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       cout << "HyprePCG_gradAf0(BoomerAMG) GetNumIterations: " 
            <<  PCGNumIter_gradAf0 << endl << flush;
    }    
-   Mf1nut.RecoverFEMSolution(X_, gradAf0_rhs, gradAf0);
+   M1nut.RecoverFEMSolution(X_, gradAf0_rhs, gradAf0);
    ////////////////////////////////////////////////////////////////////////////
    ///// The weak solution to 1/nut*grad(fM + delta f0) ///////////////////////
    ////////////////////////////////////////////////////////////////////////////
@@ -1395,7 +1369,7 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 			DenseMatrix A1 = P1;
 			if (M1_closure) { A1 = AM1_b[z](q); }
 
-            Vector Efield(dim), Bfield(dim), AEfield(dim), AIEfield(dim); 
+            Vector Efield(dim), Bfield(dim), AEfield(dim); 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
             double mspE, mspEe_scale, mspEt_scale, Efield_scale;
@@ -1418,9 +1392,6 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
 
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
-            AIEfield = 0.0;
-            A1.AddMult_a(3.0, Efield, AIEfield);
-            I.AddMult_a(-1.0, Efield, AIEfield);
 
             // Stress matrices for f0 and f1 equations.
 			F0stress = I;
@@ -1449,8 +1420,6 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                                                              AEfield(vd) / rho;
                quad_data.AEinvrho(z_id*nqp + q, vd) = AEfield(vd) / rho;
                quad_data.Binvrho(z_id*nqp + q, vd) = Bfield(vd) / rho;
-               // The case of M1.
-			   quad_data.AIEinvrho(z_id*nqp + q, vd) = AIEfield(vd) / rho; 
             }
 
             // Extensive scalar quadrature data.

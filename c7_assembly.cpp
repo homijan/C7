@@ -281,11 +281,6 @@ double AEfieldIntegrator::GetIntegrator(int i, int vd)
    return quad_data.AEinvrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
-double AIEfieldIntegrator::GetIntegrator(int i, int vd)
-{
-   return quad_data.AIEinvrho(i, vd) * quad_data.rho0DetJ0w(i);
-}
-
 double BfieldIntegrator::GetIntegrator(int i, int vd)
 {
    return quad_data.Binvrho(i, vd) * quad_data.rho0DetJ0w(i);
