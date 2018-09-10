@@ -117,6 +117,7 @@ protected:
 public:
    EfieldCoefficient(GridFunction *gf_) : VectorGridFunctionCoefficient(gf_) 
    { times_nue = 1.0; }
+/*
    void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
                    double velocity, double mspee, double mspei, 
                    double &mspEe_scale, double &mspEt_scale, 
@@ -180,6 +181,7 @@ public:
       // v * nu_Et = max(0, E - Eb)
       //double Eb = Enorm * mspee / (mspee + mspei);
 	  double alpha = times_nue; //10000000000.0;
+	  std::cout << "times_nue: " << times_nue << std::endl;
 	  double Eb = std::min(velocity * (1.0 + alpha) * mspee, Enorm);
 	  mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
 	  double nu_E = (Eb - velocity * mspee) / 2.0 / velocity;
@@ -191,8 +193,62 @@ public:
       //                            / mspee);
       //Efield_scale = std::min(1.0, (Enorm - (Enorm - velocity * mspee) / 2.0)
       //                             / Enorm);
-      return;
+      
+      // No additional scattering case.
+      mspEt_scale = 0.0;
+
+	  return;
    }
+*/
+
+/*
+   void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
+                   double velocity, double mspee, double mspei, 
+                   double &mspEe_scale, double &mspEt_scale, 
+                   double &Efield_scale)
+   {
+      Vector Efield(vdim); 
+      Eval(Efield, T, ip);
+      double Enorm = std::max(1e-32, Efield.Norml2());
+      //double mspE = Enorm / velocity;
+
+	  double Eb = std::min(velocity * mspee, Enorm);
+	  //mspEt_scale = std::max(0.0 , Enorm - Eb) / velocity / mspee;
+	  double nu_E = (Eb - velocity * mspee) / 2.0 / velocity;
+      double Ed = Eb - velocity * nu_E;
+      mspEe_scale = std::max(0.0 , nu_E / mspee);
+      Efield_scale = std::min(1.0, Ed / Enorm);
+      
+      // No additional scattering case.
+      mspEe_scale = 0.0; //std::max(0.0 , nu_E / mspee);
+      Efield_scale = std::min(1.0, Eb / Enorm);
+      mspEt_scale = 0.0;
+
+	  return;
+   }
+*/
+
+   void GetEscales(ElementTransformation &T, const IntegrationPoint &ip, 
+                   double velocity, double mspee, double &Efield_scale)
+   {
+      Vector Efield(vdim); 
+      Eval(Efield, T, ip);
+      double Enorm = std::max(1e-32, Efield.Norml2());
+	  double Eb = std::min(velocity * mspee, Enorm);
+      
+      // The simplest case.
+	  // No additional nu_e friction.
+	  // No additional nu_t scattering.
+	  // The actual field strength over limit goes to scattering due to E field,
+	  // i.e. E_scat = Efield + (1.0 - Efield_scale) * Efield. 
+      Efield_scale = std::min(1.0, Eb / Enorm);
+      // Only because of the function declaration.
+      //mspEt_scale = 0.0;
+      //mspEe_scale = 0.0;
+
+	  return;
+   }
+
    void SetTimesNue(double _times_nue) { times_nue = _times_nue; }
 }; 
 

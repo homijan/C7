@@ -96,7 +96,7 @@ C7Operator::C7Operator(int size,
      cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
      invM0nu(&l2_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
      DI(&l2_fes, &h1_fes), VEscaled(&l2_fes, &h1_fes), 
-	 VEfull(&l2_fes, &h1_fes), 
+	 VEscatter(&l2_fes, &h1_fes), 
      DA(&l2_fes, &h1_fes), VAEscaled(&l2_fes, &h1_fes), 
      VAEfull(&l2_fes, &h1_fes),
      integ_rule(IntRules.Get(h1_fes.GetMesh()->GetElementBaseGeometry(),
@@ -186,21 +186,21 @@ C7Operator::C7Operator(int size,
    DI.Assemble(0);
    DI.Finalize(0);
 
-   EfieldIntegrator *_f0ei = new EfieldIntegrator(quad_data);
+   EfieldScatterIntegrator *_f0ei = new EfieldScatterIntegrator(quad_data);
    _f0ei->SetIntRule(&integ_rule);
-   VEfull.AddDomainIntegrator(_f0ei);
+   VEscatter.AddDomainIntegrator(_f0ei);
    // Make a dummy assembly to figure out the sparsity.
-   VEfull.Assemble(0);
-   VEfull.Finalize(0);
+   VEscatter.Assemble(0);
+   VEscatter.Finalize(0);
 
-   EfieldScIntegrator *f0ei = new EfieldScIntegrator(quad_data);
+   EfieldScaledIntegrator *f0ei = new EfieldScaledIntegrator(quad_data);
    f0ei->SetIntRule(&integ_rule);
    VEscaled.AddDomainIntegrator(f0ei);
    // Make a dummy assembly to figure out the sparsity.
    VEscaled.Assemble(0);
    VEscaled.Finalize(0);
 
-   AEfieldScIntegrator *f1aei = new AEfieldScIntegrator(quad_data);
+   AEfieldScaledIntegrator *f1aei = new AEfieldScaledIntegrator(quad_data);
    f1aei->SetIntRule(&integ_rule);
    VAEscaled.AddDomainIntegrator(f1aei);
    // Make a dummy assembly to figure out the sparsity.
@@ -444,7 +444,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    M1nut.Update();
    B1.Update();
    DI = 0.0;
-   VEfull = 0.0;
+   VEscatter = 0.0;
    VEscaled = 0.0;
    DA = 0.0; 
    VAEscaled = 0.0;
@@ -461,8 +461,8 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    B1.Finalize();
    DI.Assemble();
    DI.Finalize();
-   VEfull.Assemble(0);   
-   VEfull.Finalize();
+   VEscatter.Assemble(0);   
+   VEscatter.Finalize();
    VEscaled.Assemble(0);   
    VEscaled.Finalize();
    DA.Assemble();  
@@ -486,7 +486,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    // Transposed matrices.
    // Full E field matrix.
-   SparseMatrix *_tVE = Transpose(VEfull.SpMat());
+   SparseMatrix *_tVE = Transpose(VEscatter.SpMat());
    // Diffusion plus directional effect of Efield matrices.
    SparseMatrix *_tDIVE = Transpose(DI.SpMat()); 
    _tDIVE->Add(-2.0 / velocity_real / velocity_real, *_tVE);
@@ -518,28 +518,28 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    _invM0_tDIVE->Mult(F1, b0_n);
 
    // Unknown at level k = 0 equal zero.
-   Vector _dF1(VsizeH1), _dF0(VsizeL2);
-   _dF1 = 0.0;
-   _dF0 = 0.0;
+   //Vector dF1(VsizeH1), dF0(VsizeL2);
+   dF1 = 0.0;
+   dF0 = 0.0;
 
    double delta_dF_norm = 1.0; 
-   double _dF1_norm = 0.0;
+   double dF1_norm = 0.0;
    double converg_lim = 0.001;
    int kiter_max = 25;
    int k;
-   int _PCGNumIter_dF1;
-   double glob__dF1_norm, glob__dF0_norm;
+   int PCGNumIter_dF1;
+   double glob_dF1_norm, glob_dF0_norm;
    double glob_b1_n_norm, glob_b1_k0_norm, glob_b1_k1_norm;
    for (k = 1; k < kiter_max && delta_dF_norm > converg_lim; k++)
    {
       // Fill b1_k0 and b1_k1 vectors.
       b1_k0 = 0.0;
-      VAEscaled.AddMult(_dF0, b1_k0, 1.0 / velocity_real);
+      VAEscaled.AddMult(dF0, b1_k0, 1.0 / velocity_real);
 	  b1_k1 = 0.0;
-      _DA_invM0_tVEsc->AddMult(_dF1, b1_k1, -1.0 * dv_real / velocity_real);
+      _DA_invM0_tVEsc->AddMult(dF1, b1_k1, -1.0 * dv_real / velocity_real);
       // Fill b0_k vector. To be filled before dF1^k+1 has been solved.
       b0_k = 0.0;
-      _invM0_tVEsc->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+      _invM0_tVEsc->AddMult(dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
 
       // Fill full F1 RHS vectors.
       b1 = b1_n;
@@ -550,49 +550,49 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       timer.dof_tstep += H1FESpace.GlobalTrueVSize();
       Vector _B, _X;
       HypreParMatrix _A; 
-      _dF1 = 0.0;    
-      A_f1.FormLinearSystem(ess_tdofs, _dF1, b1, _A, _X, _B);
-      bool _verbose = false;
-      HypreBoomerAMG _amg_dF1(_A);
-      HyprePCG _pcg_dF1(_A);
-      _pcg_dF1.SetTol(cg_rel_tol);
-      _pcg_dF1.SetMaxIter(cg_max_iter);
-      _pcg_dF1.SetPrintLevel(_verbose);
-      _pcg_dF1.SetPreconditioner(_amg_dF1);
-      _amg_dF1.SetPrintLevel(_verbose);
-      // Solve for _dF1.
-      _pcg_dF1.Mult(_B, _X);
+      dF1 = 0.0;    
+      A_f1.FormLinearSystem(ess_tdofs, dF1, b1, _A, _X, _B);
+      bool verbose = false;
+      HypreBoomerAMG amg_dF1(_A);
+      HyprePCG pcg_dF1(_A);
+      pcg_dF1.SetTol(cg_rel_tol);
+      pcg_dF1.SetMaxIter(cg_max_iter);
+      pcg_dF1.SetPrintLevel(verbose);
+      pcg_dF1.SetPreconditioner(amg_dF1);
+      amg_dF1.SetPrintLevel(verbose);
+      // Solve for dF1.
+      pcg_dF1.Mult(_B, _X);
       timer.sw_cgH1.Stop();
       // Number of PCG iterations.
-      _pcg_dF1.GetNumIterations(_PCGNumIter_dF1);
-      timer.H1dof_iter += _PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();    
-      A_f1.RecoverFEMSolution(_X, b1, _dF1);
+      pcg_dF1.GetNumIterations(PCGNumIter_dF1);
+      timer.H1dof_iter += PCGNumIter_dF1 * H1compFESpace.GlobalTrueVSize();    
+      A_f1.RecoverFEMSolution(_X, b1, dF1);
 
       // Fill b0_k vector. Trying to be fill after dF1^k+1 has been solved.
       //b0_k = 0.0;
-      //_invM0_tVEsc->AddMult(_dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
+      //_invM0_tVEsc->AddMult(dF1, b0_k, 1.0 / velocity_real); // correct dF1^k
       // Fill b0_k+1 vector. To be filled after dF1^k+1 has been solved.
       b0_kplus1 = 0.0;
-      _invM0_tDIVE->AddMult(_dF1, b0_kplus1, dv_real); // dF1^k+1
+      _invM0_tDIVE->AddMult(dF1, b0_kplus1, dv_real); // dF1^k+1
 
       // Fill full F0 RHS vector.
       b0 = b0_n;
       b0 += b0_k;
       b0 += b0_kplus1;
 
-      // Solve for _dF0.
-      _dF0 = b0;
+      // Solve for dF0.
+      dF0 = b0;
 
       // L2 norms will be used for convergence.
-      double loc__dF1_norm = _dF1.Norml2();
-      MPI_Allreduce(&loc__dF1_norm, &glob__dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
+      double loc_dF1_norm = dF1.Norml2();
+      MPI_Allreduce(&loc_dF1_norm, &glob_dF1_norm, 1, MPI_DOUBLE, MPI_SUM, 
 	                H1FESpace.GetParMesh()->GetComm());
-      double loc__dF0_norm = _dF0.Norml2();
-      MPI_Allreduce(&loc__dF0_norm, &glob__dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
+      double loc_dF0_norm = dF0.Norml2();
+      MPI_Allreduce(&loc_dF0_norm, &glob_dF0_norm, 1, MPI_DOUBLE, MPI_SUM, 
 	                H1FESpace.GetParMesh()->GetComm());
 	  // Relative difference in the norm evolution.
-	  delta_dF_norm = abs((_dF1_norm - glob__dF1_norm) / glob__dF1_norm);
-	  _dF1_norm = glob__dF1_norm;
+	  delta_dF_norm = abs((dF1_norm - glob_dF1_norm) / glob_dF1_norm);
+	  dF1_norm = glob_dF1_norm;
       double loc_b1_n_norm = b1_n.Norml2(), loc_b1_k0_norm = b1_k0.Norml2(),
              loc_b1_k1_norm = b1_k1.Norml2();
       MPI_Allreduce(&loc_b1_n_norm, &glob_b1_n_norm, 1, MPI_DOUBLE, MPI_SUM, 
@@ -607,13 +607,13 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
       if (H1FESpace.GetParMesh()->GetMyRank() == 0)
       { 
          cout << "kth iteration: " <<  k << endl << flush;
-         cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
-              <<  _PCGNumIter_dF1 << endl << flush;
-         cout << "_dF1 L2 norm: " 
-              <<  glob__dF1_norm //* dv_real * pow(velocity_real, 5.0)
+         cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+              <<  PCGNumIter_dF1 << endl << flush;
+         cout << "dF1 L2 norm: " 
+              <<  glob_dF1_norm //* dv_real * pow(velocity_real, 5.0)
               << endl << flush;
-         cout << "_dF0 L2 norm: " 
-              <<  glob__dF0_norm //* dv_real * pow(velocity_real, 5.0)
+         cout << "dF0 L2 norm: " 
+              <<  glob_dF0_norm //* dv_real * pow(velocity_real, 5.0)
               << endl << flush;
          cout << "delta_dF_norm: " <<  delta_dF_norm << endl << flush;
          cout << "b1_n_norm: " << scientific
@@ -632,13 +632,13 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    if (H1FESpace.GetParMesh()->GetMyRank() == 0)
    { 
       cout << "kth iteration: " <<  k << endl << flush;
-      cout << "_HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
-           <<  _PCGNumIter_dF1 << endl << flush;
-      cout << "_dF1 L2 norm: " << scientific
-           <<  glob__dF1_norm //* dv_real * pow(velocity_real, 5.0)
+      cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
+           <<  PCGNumIter_dF1 << endl << flush;
+      cout << "dF1 L2 norm: " << scientific
+           <<  glob_dF1_norm //* dv_real * pow(velocity_real, 5.0)
            << endl << flush;
-      cout << "_dF0 L2 norm: " << scientific
-           <<  glob__dF0_norm //* dv_real //* pow(velocity_real, 5.0)
+      cout << "dF0 L2 norm: " << scientific
+           <<  glob_dF0_norm //* dv_real //* pow(velocity_real, 5.0)
            << endl << flush;
       cout << "delta_dF_norm: " <<  delta_dF_norm << endl << flush;
       if (delta_dF_norm > converg_lim)
@@ -672,23 +672,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////// Embedded iteration scheme action ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-   dF0 = _dF0;
-   dF1 = _dF1;
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////// Embedded iteration scheme action ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-
    quad_data_is_current = false;
 
    // Integrate heat flux.
@@ -699,9 +682,6 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    djC_gf *= pow(velocity_real, 3.0);
 
    // Generalized Ohm's law related grid functions.
-   //dfMdv_source = 0.0;
-   // Implicit Efield effect is turned off.
-   //dfMdv_source += dF0;
    AWBSPhysics->P1a0_pcf->SetdFM(&dfMdv_source);
    AWBSPhysics->P1a0_pcf->SetdF0(&dF0);
    AWBSPhysics->P1a0_pcf->SetVelocityReal(velocity_real); 
@@ -1020,23 +1000,10 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
             Vector Efield(dim), Bfield(dim), AEfield(dim); 
             AWBSPhysics->Efield_pcf->Eval(Efield, *T, ip);
 			AWBSPhysics->Bfield_pcf->Eval(Bfield, *T, ip);
-            double mspE, mspEe_scale, mspEt_scale, Efield_scale;
-			//double Enorm = max(1e-32, Efield.Norml2());
-			// Represent Efield effect as friction.
-            // mspE = Enorm / velocity_real;
-            // Scale the mspE effect.
-			//mspEscale = max(0.0, mspE - mspee) / mspee;
-			//mspEe_scale = max(0.0 , (Enorm - velocity_real * mspee) 
-            //                       / 2.0 / velocity_real
-            //                       / mspee); 
-            //Efield_scale = min(1.0, (Enorm - (Enorm - velocity_real * mspee) 
-            //                        / 2.0) 
-            //                        / Enorm);
-            AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
-                                                mspei, mspEe_scale, mspEt_scale,
+
+            double Efield_scale;
+			AWBSPhysics->Efield_pcf->GetEscales(*T, ip, velocity_real, mspee,
                                                 Efield_scale);
-            mspE = mspEe_scale * mspee;
-            //Efield *= Efield_scale;	
 
 			// Matrix projections. 
             A1.Mult(Efield, AEfield); 
@@ -1061,26 +1028,29 @@ void C7Operator::UpdateQuadratureData(double velocity, const Vector &S) const
                      F0stressJiT(vd, gd);
                }
                // Extensive vector quadrature data.
-               quad_data.Einvrho(z_id*nqp + q, vd) = Efield(vd) / rho;
+               // F0 equation Scattering Efield quadrature 
+               // plus compensation of Maxwellization Efield.
+               quad_data.Escatter_invrho(z_id*nqp + q, vd) = Efield(vd) / rho;
+               quad_data.Escatter_invrho(z_id*nqp + q, vd) += (1.0 
+                                                              - Efield_scale) 
+                                                              * Efield(vd) 
+                                                              / rho;
+               // F0 Maxwellization Efield under effect of scaling.
                quad_data.Escaled_invrho(z_id*nqp + q, vd) = Efield_scale * 
                                                             Efield(vd) / rho;
+               // F1 full Efield quadrature.
+               quad_data.AE_invrho(z_id*nqp + q, vd) = AEfield(vd) / rho;
+               // F1 Maxwellization Efield under effect of scaling.
                quad_data.AEscaled_invrho(z_id*nqp + q, vd) = Efield_scale *
                                                              AEfield(vd) / rho;
-               quad_data.AEinvrho(z_id*nqp + q, vd) = AEfield(vd) / rho;
-               quad_data.Binvrho(z_id*nqp + q, vd) = Bfield(vd) / rho;
+               // F1 Full Bfield quadrature.
+               quad_data.B_invrho(z_id*nqp + q, vd) = Bfield(vd) / rho;
             }
 
             // Extensive scalar quadrature data.
-            quad_data.nuinvrho(z_id*nqp + q) = mspee / rho; //nue/rho;
-            quad_data.nuEinvrho(z_id*nqp + q) = mspE / rho;
-			//quad_data.Ef1invvf0rho(z_id*nqp + q) = Efield * f1
-            //                                       / velocity_real / f0
-            //                                       / rho;
+            quad_data.nu_invrho(z_id*nqp + q) = mspee / rho; //nue/rho; 
             // Scattering on ions and electrons.
-            quad_data.nutinvrho(z_id*nqp + q) = (mspei + 
-                                                (1.0 + mspEt_scale) * mspee) 
-                                                / rho;
-			//quad_data.nutinvrho(z_id*nqp + q) = mspei / rho;
+			quad_data.nut_invrho(z_id*nqp + q) = (mspei + mspee) / rho;
 
             // Time step estimate at the point. Here the more relevant length
             // scale is related to the actual mesh deformation; we use the min

@@ -216,39 +216,22 @@ void VcrossIntegrator::AssembleElementMatrix2(const FiniteElement &trial_fe,
 
 double Mass0NuIntegrator::GetIntegrator(int i)
 {
-   return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
-}
-
-double ExplMass0Integrator::GetIntegrator(int i)
-{
-   return (quad_data.nuinvrho(i) - quad_data.Ef1invvf0rho(i))
-          * quad_data.rho0DetJ0w(i);
-   //return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
+   return quad_data.nu_invrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double invMass0NuIntegrator::GetIntegrator(int i)
 {
-   return (quad_data.nuinvrho(i) + quad_data.nuEinvrho(i)) 
-          * quad_data.rho0DetJ0w(i);
-   //return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
-}
-
-double invMass0NuEIntegrator::GetIntegrator(int i)
-{
-   return (quad_data.nuinvrho(i) - quad_data.Ef1invvf0rho(i))
-          * quad_data.rho0DetJ0w(i);
+   return quad_data.nu_invrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double Mass1NuIntegrator::GetIntegrator(int i)
 {
-   return (quad_data.nuinvrho(i) + quad_data.nuEinvrho(i)) 
-          * quad_data.rho0DetJ0w(i);   
-   //return quad_data.nuinvrho(i) * quad_data.rho0DetJ0w(i);
+   return quad_data.nu_invrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double Mass1NutIntegrator::GetIntegrator(int i)
 {
-   return quad_data.nutinvrho(i) * quad_data.rho0DetJ0w(i);
+   return quad_data.nut_invrho(i) * quad_data.rho0DetJ0w(i);
 }
 
 double Divf0Integrator::GetIntegrator(int i, int vd, int gd)
@@ -261,29 +244,29 @@ double Divf1Integrator::GetIntegrator(int i, int vd, int gd)
    return quad_data.stress1JinvT(vd)(i, gd);
 }
 
-double EfieldIntegrator::GetIntegrator(int i, int vd)
+double EfieldScatterIntegrator::GetIntegrator(int i, int vd)
 {
-   return quad_data.Einvrho(i, vd) * quad_data.rho0DetJ0w(i);
+   return quad_data.Escatter_invrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
-double EfieldScIntegrator::GetIntegrator(int i, int vd)
+double EfieldScaledIntegrator::GetIntegrator(int i, int vd)
 {
    return quad_data.Escaled_invrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
-double AEfieldScIntegrator::GetIntegrator(int i, int vd)
+double AEfieldScaledIntegrator::GetIntegrator(int i, int vd)
 {
    return quad_data.AEscaled_invrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
 double AEfieldIntegrator::GetIntegrator(int i, int vd)
 {
-   return quad_data.AEinvrho(i, vd) * quad_data.rho0DetJ0w(i);
+   return quad_data.AE_invrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
 double BfieldIntegrator::GetIntegrator(int i, int vd)
 {
-   return quad_data.Binvrho(i, vd) * quad_data.rho0DetJ0w(i);
+   return quad_data.B_invrho(i, vd) * quad_data.rho0DetJ0w(i);
 }
 
 } // namespace nth

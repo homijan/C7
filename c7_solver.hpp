@@ -93,7 +93,7 @@ protected:
    // Force matrix that combines the kinematic and thermodynamic spaces. It is
    // assembled in each time step and then it's used to compute the final
    // right-hand sides for momentum and specific internal energy.
-   mutable MixedBilinearForm DI, DA, VAEfull, VAEscaled, VEfull, VEscaled;
+   mutable MixedBilinearForm DI, DA, VAEfull, VAEscaled, VEscatter, VEscaled;
 
    mutable TimingData timer;
 

@@ -119,15 +119,12 @@ double P1a0KineticCoefficient::Eval(ElementTransformation &T,
    double dFMdv = dFM->GetValue(T.ElementNo, ip);
    double dF0dv = dF0->GetValue(T.ElementNo, ip); 
 
-   double nuEe_scale, nuEt_scale, Efield_scale;
-   Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee, nu_ei,
-                          nuEe_scale, nuEt_scale, Efield_scale);
+   double Efield_scale;
+   Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee, Efield_scale);
 
-   double nu_t = nu_ei + (1.0 + nuEt_scale) * nu_ee;
-   //double nu_t = nu_ei + nu_ee + nu_E;
+   double nu_t = nu_ei + nu_ee;
 
    // Scattering on ions and electrons.
-   //return velocity_real / 3.0 / nu_t * dF0dv * velocity_real * velocity_real;
    return velocity_real / 3.0 / nu_t * (dFMdv + Efield_scale * dF0dv) 
           * velocity_real * velocity_real;
 }
@@ -141,14 +138,7 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
    double nu_ei =  mspei_pcf->Eval(T, ip);
    double nu_ee =  mspee_pcf->Eval(T, ip);
 
-   double nu_E, nuEe_scale, nuEt_scale, Efield_scale;
-   Efield_pcf->GetEscales(T, ip, velocity_real, nu_ee, nu_ei,
-                          nuEe_scale, nuEt_scale, Efield_scale);
-   // Provide appropriate isotropic Efield effect.
-   nu_E = nu_ee * nuEe_scale;
-
-   double nu_t = nu_ei + (1.0 + nuEt_scale) * nu_ee;
-   //double nu_t = nu_ei + nu_ee + nu_E;
+   double nu_t = nu_ei + nu_ee;
 
    T.SetIntPoint(&ip);
    //F0->GetGradient(T, V); 
@@ -161,8 +151,7 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
 	  // It is stored in F1 pointer.
 	  V(d) = F1->GetValue(T.ElementNo, ip, d);
 	  // Scattering on ions and electrons.
-      V(d) -= (nu_ee + nu_E) / nu_t * dF1->GetValue(T.ElementNo, ip, d);
-      //V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
+      V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
    }
    
    V *= pow(velocity_real, 4.0);

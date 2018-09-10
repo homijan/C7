@@ -54,13 +54,12 @@ struct QuadratureData
    Vector rho0DetJ0w;
 
    // Mass integrators.
-   Vector nuinvrho, nutinvrho, nuEinvrho;
+   Vector nu_invrho, nut_invrho;
 
    // The pointwise equality rho * detJ = rho0 * detJ0 is used by integrators.
    // Electric and magnetic fields. 
-   DenseMatrix Einvrho, Escaled_invrho, AEscaled_invrho, AEinvrho, Binvrho;
-   // Explicit zero moment "mass" integrator.
-   Vector Ef1invvf0rho;
+   DenseMatrix Escaled_invrho, Escatter_invrho, AEscaled_invrho, 
+               AE_invrho, B_invrho;
 
    // Initial length scale. This represents a notion of local mesh size. We
    // assume that all initial zones have similar size.
@@ -75,15 +74,13 @@ struct QuadratureData
         stress1JinvT(nzones * quads_per_zone, dim, dim),
         stress0JinvT(nzones * quads_per_zone, dim, dim),
         rho0DetJ0w(nzones * quads_per_zone),
-        nuinvrho(nzones * quads_per_zone),
-        nutinvrho(nzones * quads_per_zone),
-        nuEinvrho(nzones * quads_per_zone),
-        Einvrho(nzones * quads_per_zone, dim),
+        nu_invrho(nzones * quads_per_zone),
+        nut_invrho(nzones * quads_per_zone),
 		Escaled_invrho(nzones * quads_per_zone, dim),
-        AEscaled_invrho(nzones * quads_per_zone, dim),
-        AEinvrho(nzones * quads_per_zone, dim),
-        Binvrho(nzones * quads_per_zone, dim),
-        Ef1invvf0rho(nzones * quads_per_zone) { }
+        Escatter_invrho(nzones * quads_per_zone, dim),
+		AEscaled_invrho(nzones * quads_per_zone, dim),
+        AE_invrho(nzones * quads_per_zone, dim),
+        B_invrho(nzones * quads_per_zone, dim) { }
 };
 
 // This class is used only for visualization. It assembles (rho, phi) in each
@@ -241,37 +238,11 @@ public:
 // Assembles element contributions to the global velocity force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
-class ExplMass0Integrator : public Mass0Integrator
-{
-private:
-public:
-   ExplMass0Integrator(QuadratureData &quad_data_) :
-      Mass0Integrator(quad_data_) { }
-
-   double GetIntegrator(int i);
-};
-
-// Assembles element contributions to the global velocity force matrix.
-// This class is used for the full assembly case; it's not used with partial
-// assembly.
 class invMass0NuIntegrator : public invMass0Integrator
 {
 private:
 public:
    invMass0NuIntegrator(QuadratureData &quad_data_) :
-      invMass0Integrator(quad_data_) { }
-
-   double GetIntegrator(int i);
-};
-
-// Assembles element contributions to the global velocity force matrix.
-// This class is used for the full assembly case; it's not used with partial
-// assembly.
-class invMass0NuEIntegrator : public invMass0Integrator
-{
-private:
-public:
-   invMass0NuEIntegrator(QuadratureData &quad_data_) :
       invMass0Integrator(quad_data_) { }
 
    double GetIntegrator(int i);
@@ -331,13 +302,13 @@ public:
 // Assembles element contributions to the global temperature force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
-class EfieldIntegrator : public VdotIntegrator
+class EfieldScatterIntegrator : public VdotIntegrator
 {
 private:
 
 public:
-   EfieldIntegrator(QuadratureData &quad_data_) : VdotIntegrator(quad_data_) 
-   { }
+   EfieldScatterIntegrator(QuadratureData &quad_data_) 
+      : VdotIntegrator(quad_data_) { }
 
    double GetIntegrator(int q, int vd);
 };
@@ -345,13 +316,13 @@ public:
 // Assembles element contributions to the global temperature force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
-class EfieldScIntegrator : public VdotIntegrator
+class EfieldScaledIntegrator : public VdotIntegrator
 {
 private:
 
 public:
-   EfieldScIntegrator(QuadratureData &quad_data_) : VdotIntegrator(quad_data_) 
-   { }
+   EfieldScaledIntegrator(QuadratureData &quad_data_) 
+      : VdotIntegrator(quad_data_) { }
 
    double GetIntegrator(int q, int vd);
 };
@@ -359,12 +330,12 @@ public:
 // Assembles element contributions to the global temperature force matrix.
 // This class is used for the full assembly case; it's not used with partial
 // assembly.
-class AEfieldScIntegrator : public VdotIntegrator
+class AEfieldScaledIntegrator : public VdotIntegrator
 {
 private:
 
 public:
-   AEfieldScIntegrator(QuadratureData &quad_data_) :
+   AEfieldScaledIntegrator(QuadratureData &quad_data_) :
       VdotIntegrator(quad_data_) { }
 
    double GetIntegrator(int q, int vd);
