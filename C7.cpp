@@ -110,6 +110,7 @@ int main(int argc, char *argv[])
    double nuS0 = -1.0; // In the case of < 0.0, use the Zbar correction of nu.
    // We expect rho = 1, and so, the ion mass follows.
    double ni = 0.0; //5e19;
+   bool PCGoutput = false;
    bool M1closure = false;
    // Minimum number of velocity groups.
    double MinimumGroups = 10.0;
@@ -196,6 +197,9 @@ int main(int argc, char *argv[])
                   "Electric field effect division, maximum friction part as times the nue.");
    args.AddOption(&ni, "-ni", "--ni",
                   "Ion density (conversion as ni = rho/mi).");
+   args.AddOption(&PCGoutput, "-PCGo", "--PCGoutput", "-no-PCGo",
+                  "--no-PCGoutput",
+                  "Enable or disable output from Preconditioned Conjugate Gradient iteration.");
    args.AddOption(&M1closure, "-M1", "--M1closure", "-no-M1",
                   "--no-M1closure->P1closure",
                   "Enable or disable M1 VEF closure. If disabled P1 closure applies.");
@@ -352,26 +356,6 @@ int main(int argc, char *argv[])
       }
    }
 
-//   // Define the explicit ODE solver used for time integration.
-//   ODESolver *ode_solver = NULL;
-//   switch (ode_solver_type)
-//   {
-//      case 1: ode_solver = new ForwardEulerSolver; break;
-//      case 2: ode_solver = new RK2Solver; break; 
-//      case 3: ode_solver = new RK3SSPSolver; break;
-//      case 4: ode_solver = new RK4Solver; break;
-//      case 5: ode_solver = new RK2Solver(0.5); break;
-//      case 6: ode_solver = new RK6Solver; break;
-//      default:
-//         if (myid == 0)
-//         {
-//            cout << "Unknown ODE solver type: " << ode_solver_type << '\n';
-//         }
-//         delete pmesh;
-//         MPI_Finalize();
-//         return 3;
-//   }
-
    HYPRE_Int glob_size_l2 = L2FESpace.GlobalTrueVSize();
    HYPRE_Int glob_size_h1 = H1FESpace.GlobalTrueVSize();
 
@@ -449,31 +433,6 @@ int main(int argc, char *argv[])
    FunctionCoefficient gamma_cf = (nth::gamma);
    Coefficient *material_pcf = &gamma_cf;
 
-/* LAGHOS
-   // Additional details, depending on the problem.
-   int source = 0; bool visc;
-   switch (nth::nth_problem)
-   {
-      case 0: if (pmesh->Dimension() == 2) { source = 1; }
-         visc = false; break;
-      case 1: visc = true; break;
-      case 2: visc = true; break;
-      case 3: visc = true; break;
-      case 4: visc = true; break;
-      case 5: visc = true; break;
-      case 6: visc = true; break;
-      case 7: visc = true; break;
-      case 8: visc = true; break;
-      case 9: visc = true; break;
-      case 10: visc = true; break;
-      default: MFEM_ABORT("Wrong problem specification!");
-   }
-LAGHOS */
-
-//   LagrangianHydroOperator oper(S.Size(), H1FESpace, L2FESpace,
-//                                ess_tdofs, rho_gf, source, cfl, material_pcf,
-//                                visc, p_assembly, cg_tol, cg_max_iter);
-
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -532,7 +491,7 @@ LAGHOS */
 
    nth::EOS *eos = &eosext; //&eosig;
 
-   // Prepare C6 physics.
+   // Prepare C7 physics.
    nth::ClassicalMeanStoppingPower mspei_cf(rho_gf, e_gf, v_gf, material_pcf,
                                             eos);
    nth::ClassicalAWBSMeanStoppingPower mspee_cf(rho_gf, e_gf, v_gf, 
@@ -550,12 +509,14 @@ LAGHOS */
    nth::LorentzEfield LorentzEfield_cf(pmesh->Dimension(), rho_gf, e_gf, v_gf, 
                                        material_pcf, eos);  
    dfMdv_cf.SetScale0(F0SourceS0);
+/*
    LorentzEfield_cf.SetScale0(EfieldS0);
    // Represent Lorentz Efield as a VectorCoefficient.
    VectorCoefficient *LorentzEfield_pvcf = &LorentzEfield_cf;
    VectorCoefficient &Efield_vcf = *LorentzEfield_pvcf;
    // Estimate the Efield by projecting Lorentz to the Efield grid function.
    //Efield_gf.ProjectCoefficient(Efield_vcf);
+*/
    Efield_gf = 0.0;
 
    // Represent Efield by a vector coefficient.
@@ -606,6 +567,8 @@ LAGHOS */
    // and provide some maximum dv step.
    double dvmax = (vmax - vmin) / MinimumGroups;
    //double dvmax = vmax*0.0005;
+
+/*
    bool nonlocal_test = false;
    if (nonlocal_test)
    {
@@ -632,8 +595,8 @@ LAGHOS */
          c7cfl = 0.5;
       }
    }
+*/
 
-//   oper.ComputeDensity(rho_gf); 
    double loc_Tmax = e_gf.Max(), glob_Tmax;
    MPI_Allreduce(&loc_Tmax, &glob_Tmax, 1, MPI_DOUBLE, MPI_MAX,
                  pmesh->GetComm());
@@ -644,6 +607,8 @@ LAGHOS */
    // Initialize the C7-AWBS operator
    nth::C7Operator c7oper(c7F.Size(), H1FESpace, L2FESpace, ess_tdofs, rho_gf, 
                           c7cfl, &AWBSPhysics, x_gf, e_gf, cg_tol, cg_max_iter);
+   // Turn on Preconditioned Conjugate Gradient iteration output.
+   if (PCGoutput) { c7oper.SetPCGoutputOn(); }
    // Turn on M1closure.
    if (M1closure) { c7oper.SetM1closure(); }
 
@@ -676,63 +641,7 @@ LAGHOS */
    }
    
    c7ode_solver->Init(c7oper);
-/*   
-   c7oper.ResetVelocityStepEstimate();
-   c7oper.ResetQuadratureData();
-   c7oper.SetTime(vmax);
-   //double dvmax = vmax*0.1;
-   double dvmin = min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-   F0_gf = 0.0; F1_gf = 0.0;
-   int c7ti = 0;
-   double v = vmax;
-   double dv = -dvmin;
-   //EfieldNedelec_gf.ProjectCoefficient(Efield_cf);
-   hflux_gf = 0.0;
-   jC_gf = 0.0;
-   while (abs(dv) >= abs(dvmin))
-   {
-      c7ti++;
-      c7ode_solver->Step(c7F, v, dv);
 
-      // Perform the integration over velocity space.
-      intf0_gf.Add(pow(N_x_vTmax*v, 2.0) * N_x_vTmax*abs(dv), F0_gf);
-      //jC_gf.Add(pow(N_x_vTmax*v, 3.0) * N_x_vTmax*abs(dv), F1_gf);
-      //hflux_gf.Add(me / 2.0 * pow(N_x_vTmax*v, 5.0) * N_x_vTmax*abs(dv), 
-	  //             F1_gf);
-
-      double loc_minF0 = F0_gf.Min(), glob_minF0;
-      MPI_Allreduce(&loc_minF0, &glob_minF0, 1, MPI_DOUBLE, MPI_MIN,
-                       pmesh->GetComm());
-      double loc_maxF0 = F0_gf.Max(), glob_maxF0;
-      MPI_Allreduce(&loc_maxF0, &glob_maxF0, 1, MPI_DOUBLE, MPI_MAX,
-                       pmesh->GetComm());
-      double loc_minF1 = F1_gf.Min(), glob_minF1;
-      MPI_Allreduce(&loc_minF1, &glob_minF1, 1, MPI_DOUBLE, MPI_MIN,
-                       pmesh->GetComm());
-      double loc_maxF1 = F1_gf.Max(), glob_maxF1;
-      MPI_Allreduce(&loc_maxF1, &glob_maxF1, 1, MPI_DOUBLE, MPI_MAX,
-                       pmesh->GetComm());
-
-      c7oper.ResetVelocityStepEstimate();
-      c7oper.ResetQuadratureData();
-      c7oper.SetTime(v);
-      dv = - min(dvmax, c7oper.GetVelocityStepEstimate(c7F));
-      if (v + dv < vmin) { dv = vmin - v; }
-
-      if (mpi.Root())
-      {
-         cout << fixed;
-         cout << "group " << setw(5) << c7ti
-                 << ",\tv = " << setw(5) << setprecision(4) << v
-                 << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
-                 << "[min(f0), max(f0)] = [" << setprecision(17)
-                 << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
-                 << "[min(f1), max(f1)] = [" << setprecision(17)
-                 << glob_minF1 << ",\t" << glob_maxF1 << "]"
-                 << endl;
-      }
-   }
-*/
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -801,74 +710,10 @@ LAGHOS */
    }
 LAGHOS */
 
+
    // Perform time-integration (looping over the time iterations, ti, with a
    // time-step dt). The object oper is of type LagrangianHydroOperator that
    // defines the Mult() method that used by the time integrators.
-/* LAGHOS
-   ode_solver->Init(oper);
-   oper.ResetTimeStepEstimate();
-   double t = 0.0, dt = oper.GetTimeStepEstimate(S), t_old;
-   bool last_step = false;
-   int steps = 0;
-   BlockVector S_old(S);
-   for (int ti = 1; !last_step; ti++)
-   {
-      if (t + dt >= t_final)
-      {
-         dt = t_final - t;
-         last_step = true;
-      }
-      if (steps == max_tsteps) { last_step = true; }
-
-      S_old = S;
-      t_old = t;
-      oper.ResetTimeStepEstimate();
-
-      // S is the vector of dofs, t is the current time, and dt is the time step
-      // to advance.
-      ode_solver->Step(S, t, dt);
-      steps++;
-
-      // Adaptive time step control.
-      const double dt_est = oper.GetTimeStepEstimate(S);
-      if (dt_est < dt)
-      {
-         // Repeat (solve again) with a decreased time step - decrease of the
-         // time estimate suggests appearance of oscillations.
-         dt *= 0.85;
-         if (dt < numeric_limits<double>::epsilon())
-         { MFEM_ABORT("The time step crashed!"); }
-         t = t_old;
-         S = S_old;
-         oper.ResetQuadratureData();
-         if (mpi.Root()) { cout << "Repeating step " << ti << endl; }
-         ti--; continue;
-      }
-      else if (dt_est > 1.25 * dt) { dt *= 1.02; }
-
-      // Make sure that the mesh corresponds to the new solution state.
-      pmesh->NewNodes(x_gf, false);
-
-      if (last_step || (ti % vis_steps) == 0)
-      {
-         double loc_norm = e_gf * e_gf, tot_norm;
-         MPI_Allreduce(&loc_norm, &tot_norm, 1, MPI_DOUBLE, MPI_SUM,
-                       pmesh->GetComm());
-         if (mpi.Root())
-         {
-            cout << fixed;
-            cout << "step " << setw(5) << ti
-                 << ",\tt = " << setw(5) << setprecision(4) << t
-                 << ",\tdt = " << setw(5) << setprecision(6) << dt
-                 << ",\t|e| = " << setprecision(10)
-                 << sqrt(tot_norm) << endl;
-         }
-
-         // Make sure all ranks have sent their 'v' solution before initiating
-         // another set of GLVis connections (one from each rank):
-         MPI_Barrier(pmesh->GetComm());
-LAGHOS */
-
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -1050,12 +895,13 @@ LAGHOS */
                if (mpi.Root())
                {
                   cout << fixed;
-                  cout << "group " << setw(5) << c7ti
+                  cout << "group " << setw(5) << (int) MinimumGroups + 1 - c7ti
                   << ",\tv = " << setw(5) << setprecision(4) << v
                   << ",\tdv = " << setw(5) << setprecision(8) << dv << endl
-                  << "[min(f0), max(f0)] = [" << setprecision(17)
+                  << "[min(df0), max(df0)] = [" << setprecision(15) 
+                  << scientific
                   << glob_minF0 << ",\t" << glob_maxF0 << "]" << endl
-                  << "[min(f1), max(f1)] = [" << setprecision(17)
+                  << "[min(f1),  max(f1)]  = [" << setprecision(15)
                   << glob_minF1 << ",\t" << glob_maxF1 << "]"
                   << endl;
                }
@@ -1246,129 +1092,9 @@ LAGHOS */
 ///////////////////////////////////////////////////////////////
 ///// C7 nonlocal solver //////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-/* LAGHOS
-         if (visualization || visit || gfprint) { oper.ComputeDensity(rho_gf); }
-         if (visualization)
-         {
-            int Wx = 0, Wy = 0; // window position
-            int Ww = 350, Wh = 350; // window size
-            int offx = Ww+10; // window offsets
 
-            VisualizeField(vis_rho, vishost, visport, rho_gf,
-                           "Density", Wx, Wy, Ww, Wh);
-            //Wx += offx;
-            //VisualizeField(vis_v, vishost, visport,
-            //               v_gf, "Velocity", Wx, Wy, Ww, Wh);
-            Wx += offx;
-            VisualizeField(vis_j, vishost, visport, jC_gf,
-                           "Current", Wx, Wy, Ww, Wh);		
-            Wx += offx;
-            VisualizeField(vis_e, vishost, visport, e_gf,
-                           "T", Wx, Wy, Ww,Wh);
-
-            Wx = 0;
-            Wy +=offx;
-            VisualizeField(vis_Efield, vishost, visport, Efield_gf, "Efield", 
-                           Wx, Wy, Ww, Wh);
-            //VisualizeField(vis_Kn, vishost, visport, Kn_gf, "Kn", 
-            //               Wx, Wy, Ww, Wh);
-            //Wx += offx;
-            //VisualizeField(vis_f0, vishost, visport, intf0_gf,
-            //               "int(f0 4pi v^2)dv", Wx, Wy, Ww, Wh);
-            Wx += offx;
-            VisualizeField(vis_hflux, vishost, visport, hflux_gf,
-                           "Heat flux", Wx, Wy, Ww, Wh);
-         }
-
-         if (visit)
-         {
-            visit_dc.SetCycle(ti);
-            visit_dc.SetTime(t);
-            visit_dc.Save();
-         }
-
-         if (gfprint)
-         {
-            ostringstream mesh_name, rho_name, v_name, e_name;
-            mesh_name << basename << "_" << ti
-                      << "_mesh." << setfill('0') << setw(6) << myid;
-            rho_name  << basename << "_" << ti
-                      << "_rho." << setfill('0') << setw(6) << myid;
-            v_name << basename << "_" << ti
-                   << "_v." << setfill('0') << setw(6) << myid;
-            e_name << basename << "_" << ti
-                   << "_e." << setfill('0') << setw(6) << myid;
-
-            ofstream mesh_ofs(mesh_name.str().c_str());
-            mesh_ofs.precision(8);
-            pmesh->Print(mesh_ofs);
-            mesh_ofs.close();
-
-            ofstream rho_ofs(rho_name.str().c_str());
-            rho_ofs.precision(8);
-            rho_gf.Save(rho_ofs);
-            rho_ofs.close();
-
-            ofstream v_ofs(v_name.str().c_str());
-            v_ofs.precision(8);
-            v_gf.Save(v_ofs);
-            v_ofs.close();
-
-            ofstream e_ofs(e_name.str().c_str());
-            e_ofs.precision(8);
-            e_gf.Save(e_ofs);
-            e_ofs.close();
-
-            ostringstream j_name, Kn_name, hflux_name;
-            j_name << basename << "_" << ti
-                   << "_j." << setfill('0') << setw(6) << myid;
-            Kn_name << basename << "_" << ti
-                   << "_Kn." << setfill('0') << setw(6) << myid;
-            hflux_name << basename << "_" << ti
-                   << "_hflux." << setfill('0') << setw(6) << myid;
-
-            ofstream j_ofs(j_name.str().c_str());
-            j_ofs.precision(8);
-            jC_gf.Save(j_ofs);
-            j_ofs.close();
-
-            //ofstream Kn_ofs(Kn_name.str().c_str());
-            //Kn_ofs.precision(8);
-            //Kn_gf.Save(Kn_ofs);
-            //Kn_ofs.close();
-
-            ofstream hflux_ofs(hflux_name.str().c_str());
-            hflux_ofs.precision(8);
-            hflux_gf.Save(hflux_ofs);
-            hflux_ofs.close();
-         }
-      } 
-   }
-LAGHOS */
-
-/* LAGHOS
-   switch (ode_solver_type)
-   {
-      case 2: steps *= 2; break;
-      case 3: steps *= 3; break;
-      case 4: steps *= 4; break;
-      case 6: steps *= 6;
-   }
-   if (mpi.Root()) { cout << "Hydrodynamics kernel timer:" << endl << flush; }
-   oper.PrintTimingData(mpi.Root(), steps);
-   if (mpi.Root()) { cout << "C7 kernel timer:" << endl << flush; }
-   c7oper.PrintTimingData(mpi.Root(), steps);
-
-   if (visualization)
-   {
-      vis_v.close();
-      vis_e.close();
-   }
-*/
    // Free the used memory.
-   //delete ode_solver;
    delete pmesh;
-   //delete tensors1D; 
    delete c7ode_solver;
 
    return 0;

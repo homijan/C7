@@ -304,6 +304,91 @@ def HighVelocity_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
         j1[i-1] = f1[i-1] * vp**3.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
+
+def corr_AWBS_distribution(corr, v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH):
+    # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr. 
+    # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 = 
+    # dfMdz + qe * E / me / v * dfMdv
+    N = len(v)
+    f1 = np.zeros(N) 
+    j1 = np.zeros(N)
+    q1 = np.zeros(N)
+    # Integration starts from zero particle density for velocity -> infinity.
+    f0 = 0.0 
+    f1[N-1] = f0
+    for i in range(N-1, 0, -1):
+        dv = v[i] - v[i-1]
+        vp = v[i-1]  
+        mfpe = vp**4.0 / Gamma_ee / ne
+        rhs = mfpe / corr / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
+        rhs = rhs * fM(ne, Te, vp)
+        #f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + 1.0) / corr / vp - 1. / dv)
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + corr) / corr / vp - 1. / dv) 
+        j1[i-1] = f1[i-1] * vp**3.0
+        q1[i-1] = f1[i-1] * vp**5.0
+    q_AWBS = sum(q1) * dv    
+    return abs(q_AWBS) - abs(q_SH)
+
+def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
+    from scipy import optimize
+    ## Number of cells in velocity magnitude.
+    #N = 10000
+    ## Multiple of thermal velocity for min(v).
+    min_x_vTh = 0.001
+    ## Multiple of thermal velocity for max(v).
+    max_x_vTh = 7.0
+    ## Define velocity magnitude discretization.
+    v = np.linspace(min_x_vTh * vTh(Te), max_x_vTh * vTh(Te), N)
+    dv = v[1] - v[0]
+    ## Lorentz gas E field.
+    E_SH = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
+    
+    Z = 1.0
+    E = E_SH
+
+    Zs = [1.0, 2.0, 4.0, 16.0]
+    #Zs = [1.0]
+    for Z in Zs:
+        # Get the original SH heat flux. 
+        f1SH1953, j1SH1953, q1SH1953 = SH_distribution(v, ne, Te, gradTe, Z, Gamma_ee)
+        q_SH = sum(q1SH1953) * dv
+    
+        corr =  optimize.brentq(corr_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH))
+
+        print "Z / corr:", Z, "/ ", corr 
+    return corr
+
+def rational(x, p, q):
+    """
+    The general rational function description.
+    p is a list with the polynomial coefficients in the numerator
+    q is a list with the polynomial coefficients (except the first one)
+    in the denominator
+    The zeroth order coefficient of the denominator polynomial is fixed at 1.
+    Numpy stores coefficients in [x**2 + x + 1] order, so the fixed
+    zeroth order denominator coefficent must comes last. (Edited.)
+    """
+    return np.polyval(p, x) / np.polyval(q, x)
+
+def rational2_3(x, p0, p1, q0, q1, q2):
+    return rational(x, [p0, p1], [q0, q1, q2])
+
+from scipy.optimize import curve_fit
+
+x = np.linspace(0, 100, 300)  
+y = (688.9*x + 114.4) / (x*x + 1038.0*x + 474.1)
+#y = rational(x, [688.9, 114.4], [1.0, 1038.0, 474.1])
+ynoise = y * (1.0 + np.random.normal(scale=0.01, size=x.shape))
+popt, pcov = curve_fit(rational2_3, x, ynoise)
+print popt
+
+plt.plot(x, y, label='original')
+plt.plot(x, ynoise, '.', label='data')
+plt.plot(x, rational2_3(x, *popt), label='fit')
+plt.legend()
+plt.show()
+
+
 ########### AWBS diffusive asymptotic #########################################
 ###############################################################################
 
@@ -435,6 +520,9 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
 
 ## Perform actual distribution evaluation for given Zbar
 N = 10000
+## PRECISE EVALUATION OF Z dependence
+FindAWBSdependenceOnZ(N, ne, Te, dTedz, Gamma_ee)
+## PRECISE EVALUATION OF Z dependence
 vs, fBGK1s, fAWBS1s, fSH19531s, jBGK1s, jAWBS1s, jSH19531s, qBGK1s, qAWBS1s, qSH19531s = DistributionsOfZbar(N, ne, Te, dTedz, Zbar, Gamma_ee)
 ## Perform rough evaluation for ZbarLv for BGK model.
 vsLv_rough, fLvBGK1s_rough, fLvAWBS1s, fLvSH19531s, jLvBGK1s_rough, jLvAWBS1s, jLvSH19531s, qLvBGK1s_rough, qLvAWBS1s, qLvSH19531s = DistributionsOfZbar(30, ne, Te, dTedz, ZbarLv, GammaLv_ee)

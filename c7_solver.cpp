@@ -93,8 +93,9 @@ C7Operator::C7Operator(int size,
      nzones(h1_fes.GetMesh()->GetNE()),
      l2dofs_cnt(l2_fes.GetFE(0)->GetDof()),
      h1dofs_cnt(h1_fes.GetFE(0)->GetDof()),
-     cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), M1_closure(false),
-     invM0nu(&l2_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
+     cfl(cfl_), cg_rel_tol(cgt), cg_max_iter(cgiter), PCG_out(false),
+     M1_closure(false),
+	 invM0nu(&l2_fes), M1nu(&h1_fes), M1nut(&h1_fes), B1(&h1_fes), 
      DI(&l2_fes, &h1_fes), VEscaled(&l2_fes, &h1_fes), 
 	 VEscatter(&l2_fes, &h1_fes), 
      DA(&l2_fes, &h1_fes), VAEscaled(&l2_fes, &h1_fes), 
@@ -629,7 +630,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 	  }
    }
    // Output on root processor.
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   if (PCG_out && H1FESpace.GetParMesh()->GetMyRank() == 0)
    { 
       cout << "kth iteration: " <<  k << endl << flush;
       cout << "HyprePCG_dF1(BoomerAMG) GetNumIterations: " 
@@ -714,7 +715,7 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
    int PCGNumIter_gradAf0;
    pcg_gradAf0.GetNumIterations(PCGNumIter_gradAf0);
    timer.H1dof_iter += PCGNumIter_gradAf0 * H1compFESpace.GlobalTrueVSize();
-   if (H1FESpace.GetParMesh()->GetMyRank() == 0)
+   if (PCG_out && H1FESpace.GetParMesh()->GetMyRank() == 0)
    { 
       cout << "HyprePCG_gradAf0(BoomerAMG) GetNumIterations: " 
            <<  PCGNumIter_gradAf0 << endl << flush;

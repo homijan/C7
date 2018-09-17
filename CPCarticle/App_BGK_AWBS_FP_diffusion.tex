@@ -114,4 +114,128 @@ Finally, it should be stressed, that the~concept of locality expressed as
 $Kn\ll1$ is crucial for our \textit{local diffusive regime} analysis, 
 because it provides sufficient Maxwellization, i.e.  \eqref{app_eq:BGK_f0} and
 \eqref{app_eq:AWBS_f0}, and correspondingly, \eqref{app_eq:BGK_f1_fM} 
-and \eqref{app_eq:AWBS_f1_fM} are valid models. 
+and \eqref{app_eq:AWBS_f1_fM} are valid models.
+
+\section{AP1 electric field limit}
+\label{app:AP1limit}
+
+Interestingly, we have encountered a~very specific property of the~AP1 model
+with respect to the~electric field magnitude. The~easiest way how to 
+demonstrate this is to write the~model equations \eqref{eq:AP1f0} and 
+\eqref{eq:AP1f1} in 1D (z-axis). Then, due to its linear nature, it is easy 
+to eliminate one of the~partial derivatives with respect to $\vmag$, i.e. 
+$\pdv{\fzero}{\vmag}$ or $\pdv{\fonez}{\vmag}$. 
+In the~case of elimination of $\pdv{\fzero}{\vmag}$ 
+one obtains the~following equation
+\begin{multline}
+  %\frac{2}{3\vmag\nue} 
+  %\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \Ez^2\right)  
+  \left(\vmag\frac{\nue}{2} - \frac{2\qe^2\Ez^2}{3\me^2\vmag\nue}\right) 
+  \pdv{\fonez}{\vmag} 
+  =
+  \frac{2\qe\Ez}{3\me\nue}\pdv{\fonez}{z}  
+  + \frac{4\pi\qe\Ez}{3\me}\pdv{\fM}{\vmag} \\
+  + \frac{\vmag}{3}\pdv{\fzero}{z} 
+  + \left(\frac{4\qe^2\Ez^2}{3\me^2\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez .
+  \label{eq:AP1_model_1D}
+\end{multline}
+It is convenient to write the~bracket on the~left hand side of 
+\eqref{eq:AP1_model_1D} as
+$\frac{2}{3\vmag\nue} 
+\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 
+- \frac{\qe^2}{\me^2}\Ez^2\right)$
+from where it is clear that the~bracket is negative if 
+$\sqrt{3}\vmag\frac{\nue}{2} < \frac{\qe}{\me}|\E|$, 
+i.e. there is a~velocity limit for a~given magnitude $|\E|$, 
+when the~collisions are no more fully dominant and the~electric field 
+introduces a~comparable effect to the~collision friction in 
+the~electron transport.
+
+It can be shown, that the~last term on the~right hand side of 
+\eqref{eq:AP1_model_1D} is dominant and the~solution behaves as 
+\begin{equation}
+  \Delta \fone \sim \exp\left(\frac{\frac{4\qe^2\Ez^2}{3\me^2\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right)}
+  {\vmag\frac{\nue}{2} - \frac{2\qe^2\Ez^2}{3\me^2\vmag\nue}}\, 
+  \Delta\vmag\right) ,
+  \label{eq:f1z_behavior}
+\end{equation}
+where $\Delta \vmag < 0$ represents a~velocity step of the~implicit Euler
+numerical integration of decelerating electrons.
+However, \eqref{eq:f1z_behavior} exhibits an~exponential growth 
+for velocities above the~friction limit (bracket on the~left hand side of 
+\eqref{eq:AP1_model_1D})
+\begin{equation}
+  \vmag_{lim}  = \sqrt{\frac{\sqrt{3}\Gamma\me}{2\qe}\frac{n_e}{|\E|}} ,
+  \label{eq:v_limit}
+\end{equation}
+which makes the~problem to be ill-posed.
+
+In order to provide a~stable model, we introduce a~reduced electric field
+to be acting as the~accelerating force of electrons
+\begin{equation}
+  |\E_{red}| = \sqrt{3} \vmag\frac{\me}{\qe}\frac{\nue}{2} ,
+  \label{eq:Elimit}
+\end{equation}
+ensuring that the~bracket on the~left hand side of \eqref{eq:AP1_model_1D}
+remains positive. Further more we define two quantities
+\begin{equation}
+  \omega_{red} = \frac{|\E_{red}|}{|\E|} ,\quad 
+  \nuscat^E = \frac{\qe}{\me\vmag} \left(|\E| - |\E_{red}|\right),
+  \nonumber
+\end{equation}
+introducing the~reduction factor of the~electric field
+$\omega_{red}$ and the~compensation of the~electric field effect in terms of
+scattering $\nuscat^E$. Consequently, the~AP1 model \eqref{eq:AP1f0}, 
+\eqref{eq:AP1f1}, and \eqref{eq:AP1_Efield} can be formulated as well posed 
+with the~help of $\omega_{red}$ and $\nuscat^E$. Nevertheless, before doing so,
+we introduce a~slightly different approximation to the~electron distribution 
+function as
+\begin{equation}
+  \tilde{f} = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \label{eq:P1_OOE}
+\end{equation}
+where $\dafzero$ represents the~departure of isotropic part from 
+the~Maxwell-Boltzmann equilibrium distribution $\fM$. 
+%which we keep 
+%intentionally in the~distribution function approximation.
+Then, the~stable AP1 model reads
+\begin{eqnarray}
+  \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone 
+  + \frac{\qe}{\me}\E\cdot\left(\omega_{red} \pdv{\fone}{\vmag} 
+  + \frac{2}{\vmag}\fone\right) , 
+  \label{eq:AP1f0_stable}\\
+  \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} 
+  &=& \tnuscat\fone 
+  + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
+  \nonumber \\
+  && 
+  + \frac{\qe\E}{3\me}\left(4\pi \pdv{\fM}{\vmag} 
+  + \omega_{red} \pdv{\dafzero}{\vmag} 
+  \right) ,
+  \label{eq:AP1f1_stable}
+\end{eqnarray}
+where $\tnuscat = \nuei + \nuscat^E + \frac{\nue}{2}$.
+
+The~reason for keeping $\fM$ in the~distribution function approximation
+\eqref{eq:P1_OOE} can be seen in the~last term on the~right hand side of 
+\eqref{eq:AP1f1_stable}, which provides the~effect of electric field on
+directional quantities as current or heat flux. In principle, the~explicit use
+of $\fM$ ensures the~proper effect of $\E$ if $\dafzero \ll \fM$, i.e.
+no matter what the~reduction $\omega_{red}$ is. Apart from its stability,
+it also exhibits much better convergence of the~electric field, which is now
+given by the~zero current condition of \eqref{eq:AP1f1_stable} as
+\begin{equation}
+  \E =
+  \frac{\intv \left(\frac{\nue}{2\tnuscat}\vmag^2\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\tnuscat}
+  \nabla\left(4\pi\fM + \dafzero\right)\right) \vmag^2\, \dI\vmag}
+  {\frac{\qe}{\me}\intv \frac{\vmag}
+  {3\tnuscat}
+  \left(4\pi\pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag}\right)
+  \vmag^2\, \dI\vmag} .
+  \label{eq:AP1_Efield_stable}
+\end{equation}
+

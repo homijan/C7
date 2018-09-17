@@ -78,6 +78,9 @@ protected:
    // Switch for M1 VEF closure. 
    bool M1_closure;
 
+   // Switch for Preconditioned Conjugate Gradient iteration output. 
+   bool PCG_out;
+
    // Velocity mass matrix and local inverses of the energy mass matrices. These
    // are constant in time, due to the pointwise mass conservation property.
    mutable ParBilinearForm invM0nu, M1nu, M1nut, B1;
@@ -128,6 +131,8 @@ public:
    void ResetQuadratureData() const { quad_data_is_current = false; }
    void SetM1closure() { M1_closure = true; }
    void SetP1closure() { M1_closure = false; }
+   void SetPCGoutputOn() { PCG_out = true; }
+   void SetPCGoutputOff() { PCG_out = false; }
 
    // The density values, which are stored only at some quadrature points, are
    // projected as a ParGridFunction.
