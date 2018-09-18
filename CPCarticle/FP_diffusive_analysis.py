@@ -4,6 +4,8 @@ from math import pi
 from math import exp
 ## Interpolation.
 from scipy.interpolate import splev, splrep
+## Brent solver for corr factors.
+from scipy import optimize
 ## Graphics.
 import matplotlib.pyplot as plt
 import matplotlib
@@ -256,22 +258,22 @@ def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
 
 ###############################################################################
 ########### AWBS diffusive asymptotic ######################################### 
-def AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
-    N = len(v)
-    f1 = np.zeros(N) 
-    j1 = np.zeros(N)
-    q1 = np.zeros(N)
-    f1[N-1] = f0
-    for i in range(N-1, 0, -1):
-        dv = v[i] - v[i-1]
-        vp = v[i-1]
-        mfpei = vp**4.0 / Gamma_ee / ne / Z
-        rhs = corr * Z * mfpei / (corr * Z + 1.0) * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
-        rhs = rhs * fM(ne, Te, vp)
-        f1[i-1] = (f1[i] * vp / (corr * Z + 1.0) / dv - rhs) /  (1.0 + vp / (corr * Z + 1.0) / dv) # ee iso 
-        j1[i-1] = f1[i-1] * vp**3.0
-        q1[i-1] = f1[i-1] * vp**5.0
-    return f1, j1, q1
+#def AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
+#    N = len(v)
+#    f1 = np.zeros(N) 
+#    j1 = np.zeros(N)
+#    q1 = np.zeros(N)
+#    f1[N-1] = f0
+#    for i in range(N-1, 0, -1):
+#        dv = v[i] - v[i-1]
+#        vp = v[i-1]
+#        mfpei = vp**4.0 / Gamma_ee / ne / Z
+#        rhs = corr * Z * mfpei / (corr * Z + 1.0) * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
+#        rhs = rhs * fM(ne, Te, vp)
+#        f1[i-1] = (f1[i] * vp / (corr * Z + 1.0) / dv - rhs) /  (1.0 + vp / (corr * Z + 1.0) / dv) # ee iso 
+#        j1[i-1] = f1[i-1] * vp**3.0
+#        q1[i-1] = f1[i-1] * vp**5.0
+#    return f1, j1, q1
 def _AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
     N = len(v)
     f1 = np.zeros(N) 
@@ -305,7 +307,9 @@ def HighVelocity_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
 
-def corr_AWBS_distribution(corr, v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH):
+## Correct AWBS diffusive limit distribution calculation! 
+## Using appropriate explicit values of corr_nu and corr_E.
+def AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0):
     # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr. 
     # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 = 
     # dfMdz + qe * E / me / v * dfMdv
@@ -320,17 +324,39 @@ def corr_AWBS_distribution(corr, v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH):
         dv = v[i] - v[i-1]
         vp = v[i-1]  
         mfpe = vp**4.0 / Gamma_ee / ne
-        rhs = mfpe / corr / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
+        rhs = mfpe / corr_nu / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - corr_E * E / vTh(Te)**2.0)
         rhs = rhs * fM(ne, Te, vp)
-        #f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + 1.0) / corr / vp - 1. / dv)
-        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + corr) / corr / vp - 1. / dv) 
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + corr_nu) / corr_nu / vp - 1. / dv) 
         j1[i-1] = f1[i-1] * vp**3.0
-        q1[i-1] = f1[i-1] * vp**5.0
-    q_AWBS = sum(q1) * dv    
+        q1[i-1] = f1[i-1] * vp**5.0 
+    return f1, j1, q1
+
+## AWBS distribution calculation in order to seek for j=0 based on corr_E.
+def corr_E_AWBS_distribution(corr_E, v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu):
+    ## Compute the q1 AWBS distribution on velocities v. 
+    f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu, corr_E)
+    ## Integrate heat flux along equidistant velocity.
+    dv = v[1] - v[0]
+    j = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv    
+    # Zero current condition.
+    return j
+
+## AWBS distribution calculation in order to seek for q_AWBS = q_SH 
+## based on corr_nu. The zero current condition j=0 holds.
+def corr_nu_AWBS_distribution(corr_nu, v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH):
+    #corr_E = 1.0
+    corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu))
+    #print "corr_E:", corr_E
+    ## Compute the q1 AWBS distribution on velocities v. 
+    f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu, corr_E)
+    ## Integrate heat flux along equidistant velocity.
+    dv = v[1] - v[0]
+    q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv    
     return abs(q_AWBS) - abs(q_SH)
 
-def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
-    from scipy import optimize
+## Usefull overall output from AWBS distribution calculation 
+## with respect to original SH1953 calculations.
+def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee): 
     ## Number of cells in velocity magnitude.
     #N = 10000
     ## Multiple of thermal velocity for min(v).
@@ -340,23 +366,59 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
     ## Define velocity magnitude discretization.
     v = np.linspace(min_x_vTh * vTh(Te), max_x_vTh * vTh(Te), N)
     dv = v[1] - v[0]
-    ## Lorentz gas E field.
-    E_SH = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
-    
-    Z = 1.0
-    E = E_SH
+    ## Lorentz gas E field valid for Z>>1.
+    E_Lorentz = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
 
-    Zs = [1.0, 2.0, 4.0, 16.0]
-    #Zs = [1.0]
+    ## Find AWBS correction to nu and E for the following Z.
+    Zs = [1.0, 2.0, 4.0, 16.0, 20.0, 50.0, 116.0, 1000.0]
     for Z in Zs:
+        print "Z:", Z
+        ## The case Z = 1 provides good distribution function in SH paper.
+        ## In other cases the distribution function is not so convincing.
         # Get the original SH heat flux. 
-        f1SH1953, j1SH1953, q1SH1953 = SH_distribution(v, ne, Te, gradTe, Z, Gamma_ee)
-        q_SH = sum(q1SH1953) * dv
-    
-        corr =  optimize.brentq(corr_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH))
+        #f1SH1953, j1SH1953, q1SH1953 = SH_distribution(v, ne, Te, gradTe, Z, Gamma_ee)
+        #q_SH1953 = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1SH1953) * dv
+        
+        #Gamma_ee = sigma * coulLog
+        coulLog = Gamma_ee / sigma  
+        SHcorr = SH_corr(Z)
+        ## SH computation was FP based up to Z = 4.
+        if (Z > 4):
+            SHcorr = (Z + 0.24)/(Z + 4.2)  
+        q_SH = - SHcorr * 1.31e10 / coulLog / Z * Te**2.5 * gradTe
+        #print "q_SH1953:", q_SH1953
+        #print "q_SH:", q_SH 
+        ## Find appropriate AWBS corr_nu matching the SH heat flux along j=0.
+        corr_nu =  optimize.brentq(corr_nu_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, q_SH))
+        print "corr_nu:", corr_nu 
+       
+        ## Obtain the appropriate corr_E.
+        corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu))
+        print "corr_E:", corr_E
 
-        print "Z / corr:", Z, "/ ", corr 
-    return corr
+        ## Double-check the corr_nu and corr_E results.
+        f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
+        j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
+        q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
+        print "j_AWBS:", j_AWBS
+        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH)
+
+        ## General case of using corr_nu = 0.5 always.
+        dcorr = corr_nu - 0.5
+        corr_nu = 0.5
+        print "The case of always using corr_nu = 0.5!"
+        print "corr_nu deviation from 0.5 =", dcorr
+        ## Obtain the appropriate corr_E.
+        corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu))
+        print "corr_E:", corr_E
+
+        ## Double-check the corr_nu and corr_E results.
+        f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
+        j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
+        q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
+        print "j_AWBS:", j_AWBS
+        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH)
+    return corr_nu
 
 def rational(x, p, q):
     """
@@ -495,11 +557,18 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     ## Lorentz gas E field.
     Ez_SH = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
     ## Compute AWBS f1 part of the distribution.
-    corr = 2.0 # Heat flux fit
+    #corr = 2.0 # Heat flux fit
     #corr = 1.8 # Current fit
     ## Compute AWBS (you can check the zero current condition by varying Ez)
     #fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
-    fAWBS1s, jAWBS1s, qAWBS1s = _AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
+    #fAWBS1s, jAWBS1s, qAWBS1s = _AWBS_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
+    ## Generic values.
+    corr_E = 1.0
+    corr_nu = 0.5
+    ## Exact values for Z = 1
+    #corr_nu = 0.45642791622
+    #corr_E = 0.999946330759
+    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
     #corr = 1.7
     #fAWBS1s, jAWBS1s, qAWBS1s = HighVelocity_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
     ## Compute SH original distributions from the 1953 paper.

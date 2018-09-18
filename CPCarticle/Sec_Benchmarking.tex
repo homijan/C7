@@ -157,6 +157,63 @@ code. Their description follows in the~next section.
 %\subsection{Aladin, Impact, and Calder kinetic codes}
 %\label{sec:AladinImpactCaldercodes}
 
+%%% CEA contribution starts
+
+\subsection{Calder PIC code}
+In the limit of classical physics, a fluid description of the particle phase-space, including small angle binary collisions, can be described with the Maxwell equations:
+
+\begin{eqnarray}
+&&\nabla\cdot \mathbf{E}=\sum_\alpha \frac{q_\alpha}{\varepsilon_0} n_{\alpha},\\
+&&\nabla\cdot \mathbf{B}=0,\\
+&&\nabla\wedge \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
+&&\nabla\wedge \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
+\end{eqnarray}
+coupled with the ion and electron Vlasov equations with the Landau-Beliaev-Budker collisions integral [14, and you can cite beliaev and budker 1956]. The latter is the relativistic version of the collision operator introduced in Eq. (2) and is written (it would be better to write Eq. (2) in its conservative forme and its non relativistic kernel U):
+\begin{widetext}
+\begin{eqnarray}
+&&\frac{\partial f_\alpha}{\partial t}+\mathbf{v}\cdot\nabla_{\mathbf{x}}f_\alpha+q_\alpha\left(\mathbf{E}+\mathbf{v}\wedge\mathbf{B}\right)\nabla_{\mathbf{p}}f_\alpha=C_{LBB}(f_\alpha,f_\alpha)+\sum_\beta C_{LBB}(f_\alpha,f_\beta),\\
+&&C_{LBB}(f_\alpha,f_\beta)=-\frac{\partial}{\partial \mathbf{p}}\cdot\frac{\Gamma_{\alpha\beta}}{2}\left[\int \mathbf{U}(\mathbf{p},\mathbf{p}^\prime)\cdot(f_\alpha\nabla_{\mathbf{p}^\prime}f_\beta^\prime-f_\beta^\prime\nabla_{\mathbf{p}}f_\alpha)\right]d^3\mathbf{p}^\prime,\\
+&&\mathbf{U}(\mathbf{p},\mathbf{p}^\prime)=\frac{r^2/\gamma\gamma^\prime}{(r^2-1)^{3/2}}\left[(r^2-1)\mathbf{I}-\mathbf{p}\otimes\mathbf{p}-\mathbf{p}^\prime\otimes\mathbf{p}^\prime+r(\mathbf{p}\otimes\mathbf{p}^\prime+\mathbf{p}^\prime\otimes\mathbf{p})\right],
+\end{eqnarray}
+\end{widetext}
+with $\gamma=\sqrt{1+\mathbf{p}^2}$, $\gamma^\prime=\sqrt{1+\mathbf{p}^{\prime 2}}$ and $r=\gamma\gamma^\prime-\mathbf{p}\cdot\mathbf{p}^\prime$. The momemtum $\mathbf{p}_\alpha$ ($\mathbf{p}_\beta$) is normalized to $m_\alpha c$ (resp. $m_\beta c$). Obviously, this collision operator tends to Eq. (2) in the non-relativistic limit.
+
+The aforementioned set of Eqs. in 3D is solved by the PIC code CALDER. (cite lefebvre et al., nucl. fus. 43, 629, 2003 and Perez et al. pop 19,083104, 2012).
+
+\subsection{P$_1$ model: Impact and Aladin}
+
+The PIC code is extremely expensive as the collisions require the description of the velocity space in 3 dimensions. Yet, a reduction of dimensions can be done by developing the distribution function in a cartesian tensor series, equivalent to a serie along the spherical harmonics (cite johnston 1960) as follows:
+\begin{equation}
+f(t,\mathbf{x},\mathbf{v})=f_0(t,\mathbf{x},v)+\Omega\cdot \mathbf{f}_1(t,\mathbf{x},v)+\Omega\otimes\Omega:\mathbf{f}_2(t,\mathbf{x},v)+... \label{Pn},
+\end{equation}
+where $v=|\mathbf{v}|$, $\Omega=\mathbf{v}/v$. A P$_n$ model refers to neglecting orders higher than $n$.
+The distribution function approximation $f(t,\mathbf{x},\mathbf{v})\approx f_0(t,\mathbf{x},v)+\Omega\cdot \mathbf{f}_1(t,\mathbf{x},v)$ coupled with the Vlasov-Landau Eq. (cite Eq. (2)), leads to the P$_1$ model (cite johnston 1960 and kingham 2004):
+\begin{widetext}
+\begin{eqnarray}
+&&\frac{\partial f_0}{\partial t}+\frac{v}{3}\nabla_{\mathbf{x}}\cdot f_1-\frac{e}{3m_ev^2}\frac{\partial}{\partial v}(v^2\mathbf{E}\cdot \mathbf{f}_1)=\frac{\Gamma_{ee}}{v^2}\frac{\partial}{\partial v}\left[C(f_0)f_0+D(f_0)\frac{\partial f_0}{\partial v}\right],\\
+&&\frac{\partial \mathbf{f}_1}{\partial t}+v\nabla_{\mathbf{x}}f_0-\frac{e\mathbf{E}}{m_e}\frac{\partial f_0}{\partial v}-\frac{e\mathbf{B}}{m_e}\wedge \mathbf{f}_1=-\Gamma_{ei}\frac{n_i}{v^3}\mathbf{f}_1.\\ 
+&&C[f_0(v)]=4\pi\int_0^vf_0(u)u^2du,\\
+&&D[f_0(v)]=\frac{4\pi}{v}\int_0^vu^2\int_u^\infty wf_0(w)dwdu.\label{P1}
+\end{eqnarray}
+\end{widetext}
+
+
+
+The electron and energy densities are obtained from the isotropic part of the distribution function $f_0$:
+\begin{eqnarray}
+n_e=4\pi\int_{\mathbf{R}^+} f_0v^2dv,\\
+U_e=2\pi m_e\int_{\mathbf{R}^+} f_0v^4dv,
+\end{eqnarray}
+and the electron current and heat flux are obtained from the anisotropic part of the distribution function $\mathbf{f}_1$:
+\begin{eqnarray}
+\mathbf{j}_e=-\frac{4\pi e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^3dv,\\
+\mathbf{Q}_e=\frac{2\pi m_e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^5dv.
+\end{eqnarray}
+
+Impact and Aladin solve the system of Eqs. \eqref{P1} with the Maxwell equations  \eqref{maxw} in two dimensions, assuming motionless ions.
+
+%%% CEA contribution ends
+
 \begin{itemize}
   \item Brief description of the Aladin code \figref{fig:C7_Aladin_case5}, \figref{fig:C7_Aladin_case3}. %\figref{fig:C7_Aladin_case6}
 \end{itemize}
@@ -332,6 +389,44 @@ the~heat flux maximum, in \figref{fig:C7_Aladin_case5}
 we also present the~detail of the~kinetic profile at point 580~$\mu$m 
 corresponding to a~highly nonlocal nature of the~heat flux profile. 
 Here a~good agreement with \cite{Sherlock_PoP2017} can be found.
+
+When analyzing the~results of \figref{fig:Kn_results} we have found 
+an~interesting observation related to stopping effect of electrons.
+It turns out, that the~force acting on electrons is dominated by electric field
+above some velocity limit $\vmag_{lim}$ and this limit drops down significantly
+when the~plasma conditions are more nonlocal, i.e. with increasing Knudsen 
+number as can be seen in \tabref{tab:vlim}.
+
+\begin{table}
+\begin{center}
+  \begin{tabular}{c|ccccc}
+    \hline\hline\\
+    %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
+    Kn$^e$ & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
+    \hline\\
+    $\vmag_{lim} / \vth$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
+    \hline\hline
+  \end{tabular}
+  \caption{
+  Scan over varying nonlocality (Kn$^e$) showing the~limit of 
+  the~collision friction dominance over the~acceleration of electrons 
+  due to the~electric field force. The~electric field effect is dominant
+  for electrons with higher velocity than $\vmag_{lim}$ defined in 
+  \eqref{eq:v_limit}. Kn$^e$ and $\vth$ are evaluated from the~same 
+  plasma profiles.
+  %$\sqrt{3}\vmag\frac{\me}{2\qe}\nue > |\E|$.
+  }
+\label{tab:vlim}
+\end{center}
+\end{table}
+
+For practical reasons we present in \tabref{tab:vlim} 
+some explicit values of velocity limit corresponding to varying transport 
+conditions expressed in terms of "$\Zbar$" Knudsen number 
+$\text{Kn}^e = \frac{\mfpe}{\sqrt{\Zbar + 1}L_{T_e}}$, 
+where $\sqrt{\Zbar + 1}$ provides a~proper scaling of nonlocality with respect
+to ionization, i.e. the~effect of scattering of electrons on ions 
+\cite{LMV_1983_7}.
 
 In every simulation run of AP1 we used 250~velocity groups in order to avoid
 numerical errors in modeling of the~electron kinetics. However, a~smaller 
