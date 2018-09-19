@@ -6,6 +6,8 @@ from math import exp
 from scipy.interpolate import splev, splrep
 ## Brent solver for corr factors.
 from scipy import optimize
+## delta corr fit.
+from scipy.optimize import curve_fit
 ## Graphics.
 import matplotlib.pyplot as plt
 import matplotlib
@@ -370,7 +372,9 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
     E_Lorentz = vTh(Te)**2.0 * (dnedz / ne +  2.5 * dTedz / Te)
 
     ## Find AWBS correction to nu and E for the following Z.
-    Zs = [1.0, 2.0, 4.0, 16.0, 20.0, 50.0, 116.0, 1000.0]
+    #Zs = [1.0, 2.0, 4.0, 16.0, 20.0, 50.0, 116.0, 1000.0]
+    Zs = [1.0, 2.0, 4.0, 10.0, 16.0]
+    corrs = []
     for Z in Zs:
         print "Z:", Z
         ## The case Z = 1 provides good distribution function in SH paper.
@@ -390,6 +394,7 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         #print "q_SH:", q_SH 
         ## Find appropriate AWBS corr_nu matching the SH heat flux along j=0.
         corr_nu =  optimize.brentq(corr_nu_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, q_SH))
+        corrs.append(corr_nu - 0.5)
         print "corr_nu:", corr_nu 
        
         ## Obtain the appropriate corr_E.
@@ -417,7 +422,25 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
         q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
         print "j_AWBS:", j_AWBS
-        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH)
+        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH) 
+
+    ## Find an analytic fit to corr_nu.
+    Z = np.linspace(1, 100, 1000)  
+    popt, pcov = curve_fit(rational2_2, Zs, corrs)
+    u0 = popt[1]
+    u1 = popt[0]
+    l0 = popt[3]
+    l1 = popt[2]   
+    print "fit = (u0 + u1 * Z) / (l0 + l1 * Z), u0 ,u1, l0, l1:", u0, u1, l0, l1
+
+    plt.plot(Zs, corrs, label='corr - 0.5')
+    #plt.plot(Z, (u0 + u1 * Z) / (l0 + l1 * Z), label='delta fit')
+    plt.plot(Z, (-1.11 + 0.59 * Z) / (5.15 + 8.37 * Z), label='fit') 
+
+    #plt.plot(Z, rational2_2(Z, *popt), label='fit')
+
+    plt.legend()
+    plt.show()
     return corr_nu
 
 def rational(x, p, q):
@@ -435,7 +458,8 @@ def rational(x, p, q):
 def rational2_3(x, p0, p1, q0, q1, q2):
     return rational(x, [p0, p1], [q0, q1, q2])
 
-from scipy.optimize import curve_fit
+def rational2_2(x, p0, p1, q0, q1):
+    return rational(x, [p0, p1], [q0, q1])
 
 x = np.linspace(0, 100, 300)  
 y = (688.9*x + 114.4) / (x*x + 1038.0*x + 474.1)
@@ -444,11 +468,11 @@ ynoise = y * (1.0 + np.random.normal(scale=0.01, size=x.shape))
 popt, pcov = curve_fit(rational2_3, x, ynoise)
 print popt
 
-plt.plot(x, y, label='original')
-plt.plot(x, ynoise, '.', label='data')
-plt.plot(x, rational2_3(x, *popt), label='fit')
-plt.legend()
-plt.show()
+#plt.plot(x, y, label='original')
+#plt.plot(x, ynoise, '.', label='data')
+#plt.plot(x, rational2_3(x, *popt), label='fit')
+#plt.legend()
+#plt.show()
 
 
 ########### AWBS diffusive asymptotic #########################################

@@ -14,7 +14,7 @@ $\fzero = \int_{4\pi} \tilde{\ft} \dI\vn$
 and the~directional part represented by the~first angular moment 
 $\fone = \int_{4\pi} \vn
 \tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction (the~solid angle).
-It should noticed, that \eqref{eq:P1approximation} represents 
+It should be noticed, that \eqref{eq:P1approximation} represents 
 a~multi-dimensional equivalent to \eqref{eq:f_approximation}, where 
 the~following relations between the~spherical harmonics method
 and the~moments method hold $\ft^0 = \frac{\fzero}{4\pi}$ and 
@@ -159,46 +159,76 @@ code. Their description follows in the~next section.
 
 %%% CEA contribution starts
 
-\subsection{Calder PIC code}
+%\subsection{Calder PIC code}
+\textbf{Calder PIC code}
+
 In the limit of classical physics, a fluid description of the particle phase-space, including small angle binary collisions, can be described with the Maxwell equations:
 
 \begin{eqnarray}
 &&\nabla\cdot \mathbf{E}=\sum_\alpha \frac{q_\alpha}{\varepsilon_0} n_{\alpha},\\
 &&\nabla\cdot \mathbf{B}=0,\\
-&&\nabla\wedge \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
-&&\nabla\wedge \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
+&&\nabla\vect{\times} \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
+&&\nabla\vect{\times} \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
 \end{eqnarray}
-coupled with the ion and electron Vlasov equations with the Landau-Beliaev-Budker collisions integral [14, and you can cite beliaev and budker 1956]. The latter is the relativistic version of the collision operator introduced in Eq. (2) and is written (it would be better to write Eq. (2) in its conservative forme and its non relativistic kernel U):
-\begin{widetext}
-\begin{eqnarray}
-&&\frac{\partial f_\alpha}{\partial t}+\mathbf{v}\cdot\nabla_{\mathbf{x}}f_\alpha+q_\alpha\left(\mathbf{E}+\mathbf{v}\wedge\mathbf{B}\right)\nabla_{\mathbf{p}}f_\alpha=C_{LBB}(f_\alpha,f_\alpha)+\sum_\beta C_{LBB}(f_\alpha,f_\beta),\\
-&&C_{LBB}(f_\alpha,f_\beta)=-\frac{\partial}{\partial \mathbf{p}}\cdot\frac{\Gamma_{\alpha\beta}}{2}\left[\int \mathbf{U}(\mathbf{p},\mathbf{p}^\prime)\cdot(f_\alpha\nabla_{\mathbf{p}^\prime}f_\beta^\prime-f_\beta^\prime\nabla_{\mathbf{p}}f_\alpha)\right]d^3\mathbf{p}^\prime,\\
-&&\mathbf{U}(\mathbf{p},\mathbf{p}^\prime)=\frac{r^2/\gamma\gamma^\prime}{(r^2-1)^{3/2}}\left[(r^2-1)\mathbf{I}-\mathbf{p}\otimes\mathbf{p}-\mathbf{p}^\prime\otimes\mathbf{p}^\prime+r(\mathbf{p}\otimes\mathbf{p}^\prime+\mathbf{p}^\prime\otimes\mathbf{p})\right],
-\end{eqnarray}
-\end{widetext}
-with $\gamma=\sqrt{1+\mathbf{p}^2}$, $\gamma^\prime=\sqrt{1+\mathbf{p}^{\prime 2}}$ and $r=\gamma\gamma^\prime-\mathbf{p}\cdot\mathbf{p}^\prime$. The momemtum $\mathbf{p}_\alpha$ ($\mathbf{p}_\beta$) is normalized to $m_\alpha c$ (resp. $m_\beta c$). Obviously, this collision operator tends to Eq. (2) in the non-relativistic limit.
+coupled with the~ion and electron Vlasov equations with 
+the~Landau-Beliaev-Budker collisions integral [14, and you can cite beliaev and budker 1956] described in Appendix~\ref{app:CalderKinetics}. 
+The~latter is the~relativistic version of the~collision operator 
+introduced in \eqref{eq:LFP_model}. 
+The aforementioned set of Eqs. in 3D is solved by the PIC code CALDER. 
+(cite lefebvre et al., nucl. fus. 43, 629, 2003 and Perez et al. pop 19,083104, 2012).
 
-The aforementioned set of Eqs. in 3D is solved by the PIC code CALDER. (cite lefebvre et al., nucl. fus. 43, 629, 2003 and Perez et al. pop 19,083104, 2012).
+%\subsection{P$_1$ model: Impact and Aladin}
 
-\subsection{P$_1$ model: Impact and Aladin}
+\textbf{Impact and Aladin VFP codes}
 
-The PIC code is extremely expensive as the collisions require the description of the velocity space in 3 dimensions. Yet, a reduction of dimensions can be done by developing the distribution function in a cartesian tensor series, equivalent to a serie along the spherical harmonics (cite johnston 1960) as follows:
+The~PIC code is extremely expensive as the~collisions require the~description 
+of the~velocity space in 3 dimensions. Yet, a~reduction of dimensions can be 
+done by developing the~distribution function in a~cartesian tensor series, 
+equivalent to a~serie along the spherical harmonics (cite johnston 1960) 
+as follows:
 \begin{equation}
-f(t,\mathbf{x},\mathbf{v})=f_0(t,\mathbf{x},v)+\Omega\cdot \mathbf{f}_1(t,\mathbf{x},v)+\Omega\otimes\Omega:\mathbf{f}_2(t,\mathbf{x},v)+... \label{Pn},
+  f(t,\mathbf{x},\vv) = f_0(t,\mathbf{x},\vmag) 
+  + \vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)
+  +\vn\otimes\vn:\matr{f}_2(t,\mathbf{x},\vmag)+... .
+  \label{Pn}
 \end{equation}
-where $v=|\mathbf{v}|$, $\Omega=\mathbf{v}/v$. A P$_n$ model refers to neglecting orders higher than $n$.
-The distribution function approximation $f(t,\mathbf{x},\mathbf{v})\approx f_0(t,\mathbf{x},v)+\Omega\cdot \mathbf{f}_1(t,\mathbf{x},v)$ coupled with the Vlasov-Landau Eq. (cite Eq. (2)), leads to the P$_1$ model (cite johnston 1960 and kingham 2004):
-\begin{widetext}
+%where $v=|\mathbf{v}|$, $\Omega=\mathbf{v}/v$. 
+A P$_n$ model refers to 
+neglecting orders higher than $\matr{f}_n$. The distribution function 
+approximation $f(t,\mathbf{x},\vv)\approx f_0(t,\mathbf{x},\vmag)
++\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with the Vlasov-Landau 
+\eqref{eq:LFP_model}, leads to the P$_1$ model 
+(cite johnston 1960 and kingham 2004):
+%\begin{widetext}
 \begin{eqnarray}
-&&\frac{\partial f_0}{\partial t}+\frac{v}{3}\nabla_{\mathbf{x}}\cdot f_1-\frac{e}{3m_ev^2}\frac{\partial}{\partial v}(v^2\mathbf{E}\cdot \mathbf{f}_1)=\frac{\Gamma_{ee}}{v^2}\frac{\partial}{\partial v}\left[C(f_0)f_0+D(f_0)\frac{\partial f_0}{\partial v}\right],\\
-&&\frac{\partial \mathbf{f}_1}{\partial t}+v\nabla_{\mathbf{x}}f_0-\frac{e\mathbf{E}}{m_e}\frac{\partial f_0}{\partial v}-\frac{e\mathbf{B}}{m_e}\wedge \mathbf{f}_1=-\Gamma_{ei}\frac{n_i}{v^3}\mathbf{f}_1.\\ 
-&&C[f_0(v)]=4\pi\int_0^vf_0(u)u^2du,\\
-&&D[f_0(v)]=\frac{4\pi}{v}\int_0^vu^2\int_u^\infty wf_0(w)dwdu.\label{P1}
+\frac{\partial f_0}{\partial t}+\frac{\vmag}{3}\nabla \cdot f_1
++\frac{\qe}{3\me\vmag^2}\frac{\partial}{\partial \vmag}(\vmag^2\E\cdot \mathbf{f}_1)
+&=&
+C^0_{ee}(f_0) ,
+\\
+\frac{\partial \mathbf{f}_1}{\partial t}+\vmag\nabla f_0
++ \frac{\qe\mathbf{E}}{\me}\frac{\partial f_0}{\partial \vmag}
++\frac{\qe\B}{\me}\vect{\times} \mathbf{f}_1 
+&=&
+- \nuei\mathbf{f}_1 .
 \end{eqnarray}
-\end{widetext}
+\begin{eqnarray} 
+C^0_{ee}(f_0) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
+\left[C(f_0)f_0+D(f_0)\frac{\partial f_0}{\partial \vmag}\right] ,
+\\
+C(f_0(\vmag)) &=& 4\pi\int_0^\vmag f_0(u) u^2 \dI u ,
+\\
+D(f_0(\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w f_0(w) 
+\dI w \dI u .
+\label{P1}
+\end{eqnarray}
+%\begin{eqnarray}
+%&&C[f_0(v)]=4\pi\int_0^vf_0(u)u^2du,\\
+%&&D[f_0(v)]=\frac{4\pi}{v}\int_0^vu^2\int_u^\infty wf_0(w)dwdu.\label{P1}
+%\end{eqnarray
+%\end{widetext}
 
-
-
+\begin{comment} % Hydro quantities.
 The electron and energy densities are obtained from the isotropic part of the distribution function $f_0$:
 \begin{eqnarray}
 n_e=4\pi\int_{\mathbf{R}^+} f_0v^2dv,\\
@@ -209,6 +239,7 @@ and the electron current and heat flux are obtained from the anisotropic part of
 \mathbf{j}_e=-\frac{4\pi e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^3dv,\\
 \mathbf{Q}_e=\frac{2\pi m_e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^5dv.
 \end{eqnarray}
+\end{comment} % Hydro quantities.
 
 Impact and Aladin solve the system of Eqs. \eqref{P1} with the Maxwell equations  \eqref{maxw} in two dimensions, assuming motionless ions.
 
