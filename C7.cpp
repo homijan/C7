@@ -793,7 +793,7 @@ LAGHOS */
 
          // Starting value of the E field norm.
 		 double loc_Eit_norm = Efield_gf.Norml2();
-         double glob_old_Eit_norm = 1.0;
+         double glob_old_Eit_norm = 1e64;
          //MPI_Allreduce(&loc_Eit_norm, &glob_old_Eit_norm, 1, 
          //              MPI_DOUBLE, MPI_SUM, pmesh->GetComm());
          double dEit_norm = 1e64;
@@ -937,9 +937,11 @@ LAGHOS */
 			//double glob_new_Eit_norm = glob_hflux_norm;
             double dEit_norm_new = abs(glob_old_Eit_norm - glob_new_Eit_norm) 
                                   / glob_old_Eit_norm;
-            // Stop iteration if reached convergence or not converging.
-            if (dEit_norm_new < dEit_norm_limit)
-            //if (dEit_norm_new > dEit_norm || dEit_norm_new < dEit_norm_limit)
+            // Stop iteration if reached convergence.
+            //if (dEit_norm_new < dEit_norm_limit)
+            // Stop iteration if reached convergence or current not converging.
+			if (glob_new_Eit_norm > glob_old_Eit_norm || 
+                dEit_norm_new < dEit_norm_limit)
             { 
                converging = false; 
             }

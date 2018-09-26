@@ -80,7 +80,7 @@ declare -a NAMEarray=("case")
 #cp _F1_F0F1x_Aladin_4milan_5e19_Z2_2.00e-11-0.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 #cd $DIRroot
 
-### CASE 3 ###
+### CASE 3 ###  Z = 10 for AWBS paper.
 #XPOINT=0.055 # in cm q nonlocal
 ##XPOINT=0.0442 # in cm qSH maximum
 #L=0.07
@@ -120,9 +120,9 @@ declare -a NAMEarray=("case")
 #cp _F1_F0F1x_Aladin_4milan_5e19_Z10_2.00e-11-0.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 #cd $DIRroot
 
-### CASE 5 ###
-#XPOINT=0.058 # in cm q nonlocal
-XPOINT=0.0438 # in cm qSH maximum
+### CASE 5 ###  Z = 1 for AWBS paper.
+XPOINT=0.058 # in cm q nonlocal
+#XPOINT=0.0438 # in cm qSH maximum
 L=0.07
 declare -a Zarray=("1") 
 declare -a NIarray=("5e20") # ne = 5e20
@@ -210,9 +210,9 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin  --plotmultvTh 14 #-lD1 Aladin
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin  --plotmultvTh 14 #-lD1 Aladin
 # FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin   -lD1 Aladin --plotmultvTh 6
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin   -lD1 Aladin --plotmultvTh 6
 
 # Safe figs.
 ### CASE 1 ###
@@ -221,17 +221,17 @@ python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labe
 ### CASE 2 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case2_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case2_kinetics.png
-### CASE 3 ###
+### CASE 3 ###   Z = 10 for AWBS paper.
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case3_heatflux.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_kinetics.png
+##cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_kinetics.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_nonlocal_kinetics.png
 ### CASE 4 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case4_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case4_kinetics.png
-### CASE 5 ###
+### CASE 5 ### Z = 1 for AWBS paper.
 cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case5_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png
+cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
 ### CASE 6 ###
 #cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case6_heatflux.png
 #cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case6_kinetics.png

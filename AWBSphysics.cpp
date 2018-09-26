@@ -150,8 +150,9 @@ void P1b0KineticCoefficient::Eval(Vector &V, ElementTransformation &T,
 	  // Gradient of A(fM + df0) divided by nu_t contribution 
 	  // It is stored in F1 pointer.
 	  V(d) = F1->GetValue(T.ElementNo, ip, d);
-	  // Scattering on ions and electrons.
-      V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
+	  // Scattering of electrons.
+      // However the electron momentum conservation requires it to cancel out.
+	  //V(d) -= nu_ee / nu_t * dF1->GetValue(T.ElementNo, ip, d);
    }
    
    V *= pow(velocity_real, 4.0);

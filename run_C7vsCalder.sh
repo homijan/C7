@@ -42,8 +42,8 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
+XPOINT=0.075 # in cm q nonlocal
 #XPOINT=0.06441 # in cm qCalder maximum
-XPOINT=0.075 # in cm preheat position
 L=0.094
 declare -a Zarray=("2")
 declare -a NIarray=("2.5e20") # ne = 5e20
@@ -59,7 +59,7 @@ cd $DIRroot
 #cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Ex
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f Ex_00110000.txt -o _E_ -cf 940 -s
 #cp _E_Ex_00110000.txt.txt $DIRroot/VFPdata/Efield1.dat
-cd $DIRroot
+#cd $DIRroot
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
 ## Heat flux maximum.
 #python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
@@ -95,7 +95,10 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 12 #--Efield --labelEfieldExt1 Calder
+# NONLOCAL DISTRIBUTION
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 14 #--Efield --labelEfieldExt1 Calder
+# FLUX MAXIMUM DISTRIBUTION
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 6 #--Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###
