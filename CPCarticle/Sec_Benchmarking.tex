@@ -73,57 +73,6 @@ $\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero
 
 \subsection{Nonlocal Ohm's law}
 \label{sec:Efield}
-\begin{comment} % Original E field.
-%\begin{multline}
-%  %\frac{\vect{j}}{\qe} = 
-%  \vect{q}_c \equiv
-%  \qe \intv \Bigg[\frac{\frac{\nue}{2}\vmag^2}{\nuei + \frac{\nue}{2}}
-%  \pdv{\fone}{\vmag} 
-%  - \frac{\vmag^2}{3\left(\nuei + \frac{\nue}{2}\right)}
-%  \nabla\fzero \\
-%  - \frac{\vmag}{3\left(\nuei + \frac{\nue}{2}\right)}\pdv{\fzero}{\vmag}\tE
-%  \Bigg] \vmag^2\, \dI\vmag = 0
-%  , \nonumber
-%\end{multline}
-Similarly to the~quasi-neutrality condition \eqref{app_eq:BGK_Efield}, 
-one can obtain the~model equation of the~electric field $\E$ by evaluating 
-the~zero current condition (a~first moment velocity integration of 
-\eqref{eq:AP1f1})
-\begin{equation}
-  \intv \left(\frac{\frac{\nue}{2}\vmag^2}{\nuscat}
-  \pdv{\fone}{\vmag} 
-  - \frac{\vmag^2}{3\nuscat}
-  \nabla\fzero 
-  - \frac{\vmag}{3\nuscat}\pdv{\fzero}{\vmag}\frac{\qe}{\me}\E
-  \right) \vmag^2\, \dI\vmag = 0 ,
-  \label{eq:AP1_Efield}
-\end{equation}
-from which it is easy to express $\E$ once $\fzero$ and $\fone$ are known.
-
-In other words, the~integral-differential model equations 
-\eqref{eq:AP1f0}, \eqref{eq:AP1f1}, and \eqref{eq:AP1_Efield}
-need to be solved simultaneously. This is achieved by $k$-iteration of 
-$\fzero^k(\E^k), \fone^k(\E^k)$, i.e. \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, and 
-$\E^{k+1}(\fzero^k, \fone^k)$, i.e.  \eqref{eq:AP1_Efield}, until 
-the~current evaluation \eqref{eq:AP1_Efield} converges to zero. In principle,
-our concept of $k$-iteration resembles to the~embedded nonlinear iteration
-of the~implicit E field introduced in \cite{Kingham_JCP2004}.
-The~first iteration starts with $\E=\vect{0}$ in \eqref{eq:AP1f0} and 
-\eqref{eq:AP1f1} and usually less than 10 iterations is sufficient to obey
-the~quasi-neutrality constraint.
-%\begin{eqnarray}
-%  \pdv{\fzero}{\vmag} &=&
-%  \frac{2}{\nue}\pdv{\fonez}{z} + \frac{2\Ez}{\vmag\nue} \pdv{\fonez}{\vmag} 
-%  + \frac{4}{\vmag^2\nue}\Ez\fonez 
-%  + 4\pi\pdv{\fM}{\vmag}
-%  , \nonumber\\
-%  \vmag\frac{\nue}{2}\pdv{\fonez}{\vmag} 
-%  &=&  
-%  \frac{\Ez}{3}\pdv{\fzero}{\vmag} + \frac{\vmag}{3}\pdv{\fzero}{z} 
-%  + \left(\nuei + \frac{\nue}{2}\right)\fonez
-%  , \nonumber \label{eq:OOE_P1f1}
-%\end{eqnarray}
-\end{comment} % Original E field.
 The~expression \eqref{eq:f1_explicit} becomes extremely useful when used
 to describe the~electron fluid momentum, i.e. the~current velocity moment
 %\begin{equation}
@@ -225,43 +174,65 @@ $\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
 
 \subsection{AWBS Nonlocal Transport Hydrodynamics}
 \label{sec:ANTH}
+The~\textit{AWBS nonlocal~transport~hydrodynamic~model}
+refers to two~temperature single-fluid hydrodynamic model 
+extended by a~kinetic model of electrons using the~AWBS transport equation,
+which provides a~direct coupling between hydrodynamics and Maxwell equations.
+Mass, momentum density, and total energy 
+$\rho$, $\rho\vect{u}$, and 
+$E = \frac{1}{2}\rho\vect{u}\cdot\vect{u} + 
+ \rho \varepsilon_i + \rho \varepsilon_e$, 
+where $\rho$ is 
+the~density of plasma, $\vect{u}$ the~plasma fluid velocity, $\varepsilon_i$ 
+the~specific internal ion energy density, 
+and $\varepsilon_e$ the~specific internal 
+electron energy density,
+are modeled by the~Euler equations in Lagrangian frame 
 \begin{eqnarray}
  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u}
  , 
- \nonumber\\ 
+ \label{eq:NTH_rho}\\
  \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla (p_i + p_e) 
  + \vect{j}(f, \E, \B) \vect{\times}\B
- , 
- \nonumber\\   
+ ,  
+ \label{eq:NTH_v}\\
  \rho~C_{V_i}\frac{\dI \Ti}{\dI t} 
  &=& 
  \left(\rho^2 C_{\Ti} - p_i\right)\nabla\cdot\vect{u} 
  - G(\Ti - \Te)
- , 
- \nonumber\\
+ ,  
+ \label{eq:NTH_Ti}\\
  \rho~C_{V_e} \frac{\dI \Te}{\dI t}
   %+ \frac{\dI \epsilon_R}{\dI t} 
   &=& 
  \left(\rho^2 C_{\Te} - p_e \right) \nabla\cdot\vect{u}  
  + G(T_i - \Te)
  \nonumber\\ 
- && - \nabla\cdot\vect{q}_h(f, \E, \B) + Q_{\text{IB}}(I_L)
+ && - \nabla\cdot\vect{q}_h(f, \E, \B) + Q_{\text{IB}} 
  , 
- \nonumber
- \\
- \label{eq:ANTH}
+ \label{eq:NTH_Te}
 \end{eqnarray}
+where $\Ti$ is the~temperature of ions, $\Te$ the~temperature of electrons,
+$p_i$ the~ion pressure, $p_e$ the~electron pressure,
+$\vect{q}_h$ the~heat flux, $Q_{\text{IB}}$ the~inverse-bremsstrahlung laser 
+absorption, and 
+$G = \rho C_{V_e} \nuei$ is 
+the~ion-electron energy exchange rate. 
+The~thermodynamic closure terms 
+$p_e$, $p_i$, 
 $C_{V_i} = \frac{\partial \varepsilon_i}{\partial \Ti}$, 
 $C_{\Ti} = \pdv{\varepsilon_i}{\rho}$,
 $C_{V_e} = \frac{\partial \varepsilon_e}{\partial \Te}$, 
-$C_{\Te} = \pdv{\varepsilon_e}{\rho}$.
-%\begin{equation}
-%  \vect{q}_h(f, \vect{E}) = \frac{\me}{2} \int \vmag^3 \fone \vmag^2~\dI \vmag =
-%  \frac{\me}{2} \int \vmag^3 \frac{\E^*}
-%  {\nuei} \vmag^2~\dI \vmag ,
-%  \label{eq:NonlocalQh}
-%\end{equation}
+$C_{\Te} = \pdv{\varepsilon_e}{\rho}$
+%$\frac{\partial \varepsilon_e}{\partial T_e}$,
+%$\frac{\partial \varepsilon_i}{\partial T_i}$,
+%$\frac{\partial \varepsilon_e}{\partial \rho}$,
+%$\frac{\partial \varepsilon_i}{\partial \rho}$ 
+are obtained from an~equation of state (EOS), e.g.
+the~SESAME equation of state tables
+\cite{T4_SESAME_83, Lyon_SESAME_EOS_database-TechRep-92}.
 
+The~magnetic and electric fields are modeled by Maxwell equations
 \begin{eqnarray}
   \frac{1}{c}\frac{\dI \B}{\dI t} &=& - \nabla\vect{\times}\E
   ,
@@ -273,15 +244,17 @@ $C_{\Te} = \pdv{\varepsilon_e}{\rho}$.
   %\frac{4\pi}{c}
   %\vect{j}(f, \vect{E}) &=& \nabla\vect{\times}\vect{B} ,
 \end{eqnarray}
+where the~initial state of $\B$ and $\E$ obeys the~Gauss law.
 
-The aforementioned hydrodynamic model defines all the~quantities 
-in the~fluid frame.
-
-
-especially that 
-$\nabla\vect{\times} \nabla \fzero \sim \nabla\vect{\times} \nabla p_e \sim \nabla \ed \vect{\times} \nabla \Te$
-
-
+We have explicitly written the~current and heat flux as dependent on
+electron kinetics, represented by the~electron distribution function $f$,
+and electric and magnetic fields. In principal, $\vect{j}(f, \E, \B)$
+and $\vect{q}_h(f, \E, \B)$ can be referred to as the~\textit{kinetic closure}
+and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1},
+where $\fM$ is given on the~spatial profile of $\Te$ 
+governed by \eqref{eq:NTH_Te}.
+%especially that 
+%$\nabla\vect{\times} \nabla \fzero \sim \nabla\vect{\times} \nabla p_e \sim \nabla \ed \vect{\times} \nabla \Te$
 
 The~strategy of solving 
 \eqref{eq:AP1f0} and \eqref{eq:AP1f1} resides in integrating 
@@ -295,6 +268,8 @@ It should be noted, that the~backward integration concept is crucial for
 the~model, since it corresponds to the~deceleration of electrons due to 
 collisions \cite{Touati_2014}. 
 
+The aforementioned full model defines all quantities 
+in the~fluid frame.
 
 \section{Benchmarking the~AWBS nonlocal transport model}
 \label{sec:BenchmarkingAWBS}
