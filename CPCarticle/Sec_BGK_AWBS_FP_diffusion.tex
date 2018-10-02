@@ -182,7 +182,7 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   + Kn \frac{\vth^2}{\vmag^2}\frac{f^1}{\vmag} ,
   \label{eq:AWBS_f0} \\
   \pdv{f^1}{\vmag}  
-  - \frac{\Zbar + 1}{\vmag} f^1 &=& \frac{\mfpe}{\vmag}
+  - \frac{\Zbar + \xi}{\vmag\xi} f^1 &=& \frac{\mfpe}{\vmag\xi}
   \left(\pdv{f^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
   \label{eq:AWBS_f1} 
   %\\  
@@ -191,8 +191,8 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   %\nonumber
 \end{eqnarray}
-%where 
-%$Kn = \mfpe \left(\frac{1}{L_{n_e}} + \frac{5}{2}\frac{1}{L_{T_e}} \right)$.
+where $\xi$ represents a~scaling parameter defining the~modified
+e-e collision frequency as $\nue^* = \xi \nue$.
 A~detailed derivation of \eqref{eq:AWBS_f0} and \eqref{eq:AWBS_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 One observes that $\ft^0$ goes to Maxwellian when the~local regime of transport 
@@ -206,9 +206,9 @@ in local diffusive regime to be
 %the~ordinary differential equation 
 %(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
-  \pdv{f^1}{\vmag} + \frac{\Zbar + 1}{\vmag}f^1
+  \pdv{f^1}{\vmag} + \frac{\Zbar + \xi}{\vmag\xi}f^1
   = \\
-  \frac{\mfpe}{\vmag}\left(\frac{1}{L_{n_e}} + 
+  \frac{\mfpe}{\vmag\xi}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   \frac{1}{L_{T_e}} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   %\frac{\mfpe}{\vmag}\left(\frac{1}{n_e}\pdv{n_e}{z} + 
@@ -223,15 +223,16 @@ with $\Delta v < 0$, i.e. we integrate from high electron velocity
 ($v_{max} = 7\vth$) to the~velocity equal to zero (using 10$^4$ steps). 
 This mimics a~particle deceleration due to collisions. The~correct numerical
 solution of \eqref{eq:AWBS_f1_ODE} corresponds to an~appropriate value of 
-$\Ez$ leading to a~zero current. Interestingly, this numerical value matches
-precisely the~Spitzer electric field \eqref{app_eq:BGK_Efield}.
-
+$\Ez$ leading to a~zero current. 
+%Interestingly, this numerical value matches
+%precisely the~Spitzer electric field \eqref{app_eq:BGK_Efield}.
 As in the~BGK case, the~numerical solution of \eqref{eq:AWBS_f1_ODE} reveals
 that $\ft^1 \sim Kn \fM$ and that $\ft^0$ equilibrates to $\fM$ 
 as $O(Kn^2)$ based on \eqref{eq:AWBS_f0}.
 
 The~details about the~AWBS distribution function compared to other
-collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
+collision operators and a~proper evaluation of the~scaling parameter $\xi$
+can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{The~Fokker-Planck local diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
@@ -347,9 +348,9 @@ the~AWBS heat flux was about 60$\%$ less than the~SH calculation, while
 there was a~perfect match in the case of $\Zbar\gg1$. By assuming that the~e-e
 collisions are responsible for this inadequacy, we searched for a~scaling of
 $\nue$ in \eqref{eq:AWBS_model}. Interestingly, we found an~almost constant
-scaling, i.e. with a~very weak dependency on $\Zbar$ as  
+scaling $\xi$, i.e. with a~very weak dependency on $\Zbar$ as  
 \begin{equation}
-  \nue^* = \left(\frac{1}{2} + \phi(\Zbar)\right) \nue \approx \frac{\nue}{2} ,
+  \nue^* = \xi \nue = \left(\frac{1}{2} + \phi(\Zbar)\right) \nue \approx \frac{\nue}{2} ,
   \label{eq:qAWBS_approximation}
 \end{equation}
 where the~dependence $\phi(\Zbar) = \frac{0.59 \Zbar - 1.11}{8.37 \Zbar + 5.15} \ll\frac{1}{2}$ for any $\Zbar$.

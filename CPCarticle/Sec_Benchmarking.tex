@@ -1,57 +1,79 @@
 \section{The AWBS nonlocal transport model of electrons}
-\label{sec:C7cod}
+\label{sec:AWBSnonlocal}
 
-Here, we use the~collision operator \eqref{eq:AWBS_model} with 
-\eqref{eq:qAWBS_approximation} and the~P1 angular discretization 
-referred to as AP1. It adopts the~so-called angular 
-moments method with the~electron distribution function having the~form
+In order to define a~nonlocal transport model of electrons, 
+we use the~AWBS collision operator and the~P1 angular 
+discretization of the~electron distribution function
 \begin{equation}
-  \tilde{\ft} = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \tilde{\ft}(\vect{x}, \vn, \vmag) = 
+  \fzero(\vect{x}, \vmag) + \vn\cdot\fone(\vect{x}, \vmag) , 
   \label{eq:P1approximation}
 \end{equation}
-which consists of the~isotropic part represented by the zeroth angular moment 
-$\fzero = \int_{4\pi} \tilde{\ft} \dI\vn$ 
+consisting of the~isotropic part represented by the zeroth angular moment 
+$\fzero = \frac{1}{4\pi}\int_{4\pi} \tilde{\ft} \dI\vn$ 
 and the~directional part represented by the~first angular moment 
-$\fone = \int_{4\pi} \vn
+$\fone = \frac{3}{4\pi}\int_{4\pi} \vn
 \tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction (the~solid angle).
-It should be noticed, that \eqref{eq:P1approximation} represents 
-a~multi-dimensional equivalent to \eqref{eq:f_approximation}, where 
-the~following relations between the~spherical harmonics method
-and the~moments method hold $\ft^0 = \frac{\fzero}{4\pi}$ and 
-$\ft^1 = \frac{3}{4\pi}|\fone|$.
-
-The~first two angular moments applied to the~steady form of 
+%It should be noticed, that \eqref{eq:P1approximation} represents 
+%a~multi-dimensional equivalent to \eqref{eq:f_approximation}, where 
+%the~following relations between the~spherical harmonics method
+%and the~moments method hold $\ft^0 = \frac{\fzero}{4\pi}$ and 
+%$\ft^1 = \frac{3}{4\pi}|\fone|$.
+Then, the~first two angular moments
+\cite{Shkarofsky_Particle_Kinetics_book_1966_24} applied to the~steady form of 
 \eqref{eq:kinetic_equation} with collision operator \eqref{eq:AWBS_model} 
-using \eqref{eq:qAWBS_approximation} lead to the~AP1 model equations
+(extended by \eqref{eq:qAWBS_approximation}) lead to the~model equations
 \begin{eqnarray}
-  \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - 4\pi\fM \right) &=&
-  \vmag\nabla\cdot\fone + \frac{\qe}{\me}\E\cdot\left(
+  \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - \fM \right) &=&
+  \frac{\vmag}{3}\nabla\cdot\fone + \frac{\qe}{\me}\frac{\E}{3}\cdot\left(
   \pdv{\fone}{\vmag} + \frac{2}{\vmag}\fone\right) , 
   \nonumber \\
   \label{eq:AP1f0}\\
   \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
   - \nuscat\fone &=& 
-  \frac{\vmag}{3}\nabla\fzero + 
-  \frac{\qe}{\me}\frac{\E}{3}\pdv{\fzero}{\vmag} ,
+  \vmag\nabla\fzero + 
+  \frac{\qe}{\me}\E\pdv{\fzero}{\vmag} 
+  +\frac{\qe\B}{\me c}\vect{\times} \fone
+  ,
+  \nonumber \\
   \label{eq:AP1f1}
 \end{eqnarray}
-where $\nuscat = \nuei + \frac{\nue}{2}$. 
+where $\nuscat = \nuei + \frac{\nue}{2}$. The system of equations 
+\eqref{eq:AP1f0} and \eqref{eq:AP1f1} is called the~{\bf AP1 model} 
+(AWBS + P1).  
 
-The~strategy of solving 
-\eqref{eq:AP1f0} and \eqref{eq:AP1f1} resides in integrating 
-$\pdv{\fzero}{\vmag}$
-and $\pdv{\fone}{\vmag}$ along the~velocity magnitude. 
-This is done by starting the~integration
-from infinite velocity ($\vmag = 7 \vth^{max}$) to zero velocity. The~value
-$\vth^{max}$ equals the~electron thermal velocity corresponding to the~maximum 
-electron temperature in the~current profile of plasma.
-It should be noted, that the~backward integration concept is crucial for 
-the~model, since it corresponds to the~deceleration of electrons due to 
-collisions \cite{Touati_2014}. 
+On the~one hand side AP1 model gives us with the~information about 
+the~electron distribution function, on the~other hand side 
+a~macroscopic interpretation of the~microscopic EDF properties are of great
+importance and provide the~bridge between kinetic and fluid description of 
+plasma. For example the~\textit{flux} quantities as 
+electric current and heat flux due to the~motion of electrons
+\begin{equation}
+  \vect{j} = \frac{4\pi}{3}\qe \int \vmag \fone~\dI\tilde{\vmag},~~ 
+  \vect{q}_h = \frac{4\pi}{3}\frac{\me}{2} \int \vmag^3 \fone~\dI\tilde{\vmag},
+  \nonumber
+\end{equation}
+where $\dI\tilde{\vmag} = \vmag^2\dI\vmag$ 
+the~spherical coordinates metric,
+are based on corresponding velocity moments (integrals) of the~first angular 
+moment of EDF. Consequently, the~explicit formula for the~first angular moment
+from \eqref{eq:AP1f1} proves to be extremely useful
+\begin{equation}
+  \fone = \frac{\nuscat^2 \vect{F}^* + \omegaB~\omegaB\cdot\vect{F}^* 
+  - \nuscat~\omegaB \vect{\times} \vect{F}^*}{\nuscat (\omegaB^2 + \nuscat^2)}
+  ,
+  \label{eq:f1_explicit}
+\end{equation} 
+because it provides a~valuable 
+information about the~dependence of macroscopic \textit{flux} quantities on
+electric and magnetic fields in plasma, 
+where $\omegaB = \frac{\qe\B}{\me c}$ is the~electron gyro-frequency and 
+$\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero 
+ - \frac{\qe}{\me}\E\pdv{\fzero}{\vmag}$.
 
-\subsection{Nonlocal electric field treatment}
+\subsection{Nonlocal Ohm's law}
 \label{sec:Efield}
-
+\begin{comment} % Original E field.
 %\begin{multline}
 %  %\frac{\vect{j}}{\qe} = 
 %  \vect{q}_c \equiv
@@ -101,27 +123,178 @@ the~quasi-neutrality constraint.
 %  + \left(\nuei + \frac{\nue}{2}\right)\fonez
 %  , \nonumber \label{eq:OOE_P1f1}
 %\end{eqnarray}
+\end{comment} % Original E field.
+The~expression \eqref{eq:f1_explicit} becomes extremely useful when used
+to describe the~electron fluid momentum, i.e. the~current velocity moment
+%\begin{equation}
+%  \vect{j}(f, \vect{E}) = e \int \vmag \fone \vmag^2~\dI \vmag =
+%  e \int \vmag \frac{\E^*}
+%  {\nuei} \vmag^2~\dI \vmag ,
+%  \label{eq:NonlocalOhm}
+%\end{equation}
+\begin{multline}
+  \vect{j}(f, \E, \B) = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
+  - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \E^* 
+  + \omegaB~\omegaB\cdot\E^* + \nuei~\omegaB \vect{\times} \E^*}
+  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag} ,
+  \label{eq:NonlocalOhm}
+\end{multline}
+where $\E^* = \E~\pdv{\fzero}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fzero$ 
+is the~effective electric field in plasma. We refer to 
+\eqref{eq:NonlocalOhm} as to the~{\bf nonlocal Ohm's law}.
+Its relation and a~proper local asymptotic to the~standard Ohm's law  
+can be found when $\fzero\rightarrow\fM$ and no magnetic field ($\omegaB = 0$) 
+is considered. Then \eqref{eq:NonlocalOhm} simplifies to
+\begin{multline}
+  \vect{j} =- \frac{\qe^2}{\me} \int \frac{\vmag^3}{\nuei}
+  \left( \E~\pdv{\fM}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fM \right)
+  ~\dI \vmag =\\
+  \frac{16\sqrt{\frac{2}{\pi}}\qe^2 \kB^\frac{3}{2} \Te^\frac{3}{2}}{\me^\frac{5}{2} \Gamma\Zbar}
+  \left[\E - \frac{\frac{5}{2} \ed \kB \nabla \Te 
+  + \nabla \ed \kB \Te}{\qe \ed}  \right] 
+  ,
+  \label{eq:AsymptoticOhm}
+\end{multline}
+which can be directly compared to the~fluid theory represented by 
+the~\textit{generalized Ohm's law} 
+\begin{equation}
+  \E =  
+  \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed}
+  + \frac{\vect{j}}{\sigma}
+  ,
+  \label{eq:GeneralOhm} 
+\end{equation}
+while addressing properly  the~pressure $p_e = \ed \kB \Te$,
+the~thermal force $\vect{R}_{\Te} = - \frac{3}{2} \ed \kB \nabla \Te$ 
+and the~electrical conductivity 
+$\sigma = \frac{16\sqrt{\frac{2}{\pi}}\qe^2 \kB^\frac{3}{2} \Te^\frac{3}{2}}
+{\me^\frac{5}{2} \Gamma\Zbar}$ \cite{Braginskii_1965_3}.
+The~local dependence of the~AP1 current \eqref{eq:AsymptoticOhm} 
+on electric field and gradients of $\ed$ and $\Te$ clearly demonstrates, 
+that \eqref{eq:GeneralOhm} is a~local version of \eqref{eq:NonlocalOhm}.
+
+A~local version of the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} 
+compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} when
+a~magnetic field is applied would require a~much more delicate analysis and 
+we leave it as a~future complementary work.
+
+It should be noted, that $\nue$-related terms in \eqref{eq:f1_explicit} 
+have been omitted in \eqref{eq:NonlocalOhm}, 
+since the~e-e collisions do not contribute 
+(cancel out when integrated over velocity) to the~momentum
+change, i.e. 
+$\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
+  - \frac{\nue}{2}\fone\right) \dI\tilde{\vmag} = 0$.
+
+\begin{comment} % Ohm's law with B.
+\begin{eqnarray} 
+  \E &=&  
+  \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed}
+  +~~~~~~~~ 
+  \frac{\vect{j}}{\sigma} 
+  ~~~~~~-~~~~~~ 
+  \frac{\vect{j}\vect{\times}\B}{\qe\ed c} 
+  ,
+  \nonumber \\
+  %\E 
+  %&=& 
+  %\frac{\int \vmag^2 \nabla \fzero \vmag^2\, \dI \vmag}
+  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag}
+  %+  
+  %\frac{\int \vmag \nuei\fone \vmag^2\, \dI \vmag}
+  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag} 
+  %+ 
+  %\frac{\int \vmag \fone\times\B \vmag^2\, \dI \vmag}
+  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag} 
+  %.
+  %\nonumber
+  \frac{\qe}{\me}\E 
+  &=& 
+  \frac{\int \vmag^2 \nabla \fzero~\dI \tilde{\vmag}}
+  {\int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}}
+  +  
+  \frac{\int \vmag \nuei\fone~\dI \tilde{\vmag}}
+  {\int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}} 
+  + 
+  \frac{\qe\int \vmag \fone\vect{\times}\B~\dI \tilde{\vmag}}
+  {\me c \int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}} 
+  .
+  \nonumber
+\end{eqnarray}
+\end{comment} % Ohm's law with B.
+
+\subsection{AWBS Nonlocal Transport Hydrodynamics}
+\label{sec:ANTH}
+\begin{eqnarray}
+ \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u}
+ , 
+ \nonumber\\ 
+ \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla (p_i + p_e) 
+ + \vect{j}(f, \E, \B) \vect{\times}\B
+ , 
+ \nonumber\\   
+ \rho~C_{V_i}\frac{\dI \Ti}{\dI t} 
+ &=& 
+ \left(\rho^2 C_{\Ti} - p_i\right)\nabla\cdot\vect{u} 
+ - G(\Ti - \Te)
+ , 
+ \nonumber\\
+ \rho~C_{V_e} \frac{\dI \Te}{\dI t}
+  %+ \frac{\dI \epsilon_R}{\dI t} 
+  &=& 
+ \left(\rho^2 C_{\Te} - p_e \right) \nabla\cdot\vect{u}  
+ + G(T_i - \Te)
+ \nonumber\\ 
+ && - \nabla\cdot\vect{q}_h(f, \E, \B) + Q_{\text{IB}}(I_L)
+ , 
+ \nonumber
+ \\
+ \label{eq:ANTH}
+\end{eqnarray}
+$C_{V_i} = \frac{\partial \varepsilon_i}{\partial \Ti}$, 
+$C_{\Ti} = \pdv{\varepsilon_i}{\rho}$,
+$C_{V_e} = \frac{\partial \varepsilon_e}{\partial \Te}$, 
+$C_{\Te} = \pdv{\varepsilon_e}{\rho}$.
+%\begin{equation}
+%  \vect{q}_h(f, \vect{E}) = \frac{\me}{2} \int \vmag^3 \fone \vmag^2~\dI \vmag =
+%  \frac{\me}{2} \int \vmag^3 \frac{\E^*}
+%  {\nuei} \vmag^2~\dI \vmag ,
+%  \label{eq:NonlocalQh}
+%\end{equation}
+
+\begin{eqnarray}
+  \frac{1}{c}\frac{\dI \B}{\dI t} &=& - \nabla\vect{\times}\E
+  ,
+  \label{eq:Faraday} \\
+  \frac{1}{c}\frac{\dI \E}{\dI t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
+  \vect{j}(f, \E, \B)
+  ,
+  \label{eq:Ampere}
+  %\frac{4\pi}{c}
+  %\vect{j}(f, \vect{E}) &=& \nabla\vect{\times}\vect{B} ,
+\end{eqnarray}
+
+The aforementioned hydrodynamic model defines all the~quantities 
+in the~fluid frame.
 
 
-%\begin{table}
-%\begin{center}
-%  \begin{tabular}{c|ccccc}
-%    \hline\hline\\
-%    Kn$^e$ & $\,\,10^{-3}\,\,$ & $\,\,5\times10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,5\times10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ \\\\
-%    \hline\\
-%    $\vmag_{lim}^{Z=1} / \vth$ & 21.6 & 9.8 & 7.0 & 3.8 & 3.1 \\\\
-%    \hline\\
-%    $\vmag_{lim}^{Z=2} / \vth$ & 14.8 & 6.8 & 5.0 & 3.1 & 2.6 \\\\
-%    \hline\\
-%    $\vmag_{lim}^{Z=10} / \vth$ & 6.7 & 3.4 & 2.6 & 1.6 & 1.3 \\\\
-%    \hline\hline
-%  \end{tabular}
-%  \caption{
-%  $\sqrt{3}\vmag\frac{\nue}{2} > |\tE|$.
-%  }
-%\end{center}
-%\label{tab:vlim}
-%\end{table}
+especially that 
+$\nabla\vect{\times} \nabla \fzero \sim \nabla\vect{\times} \nabla p_e \sim \nabla \ed \vect{\times} \nabla \Te$
+
+
+
+The~strategy of solving 
+\eqref{eq:AP1f0} and \eqref{eq:AP1f1} resides in integrating 
+$\pdv{\fzero}{\vmag}$
+and $\pdv{\fone}{\vmag}$ along the~velocity magnitude. 
+This is done by starting the~integration
+from infinite velocity ($\vmag = 7 \vth^{max}$) to zero velocity. The~value
+$\vth^{max}$ equals the~electron thermal velocity corresponding to the~maximum 
+electron temperature in the~current profile of plasma.
+It should be noted, that the~backward integration concept is crucial for 
+the~model, since it corresponds to the~deceleration of electrons due to 
+collisions \cite{Touati_2014}. 
+
 
 \section{Benchmarking the~AWBS nonlocal transport model}
 \label{sec:BenchmarkingAWBS}
@@ -132,12 +305,21 @@ of the~electron transport and focuses on analysis its behavior under variety of
 conditions in plasmas. In principle, this is characterized by allowing that
 electron mean free path can be arbitrarily long, which leads to so-called 
 nonlocal electron transport extensively investigated in numerous publications 
-\cite{Malone_1975_15, Colombant_PoP2005, Bell_1981_83, LMV_1983_7, Brantov_Nonlocal_electron_transport_1998, schurtz2000, Sorbo_2015}, where the~Fokker-Planck
-modeling of electrons in plasma represents the~essential tool. Being so, 
-we introduce our implementation of the~AWBS transport equation called AP1,
+\cite{Malone_1975_15, Colombant_PoP2005, Bell_1981_83, LMV_1983_7, Brantov_Nonlocal_electron_transport_1998, schurtz2000, Sorbo_2015}.
+Among a~variety of tests suitable for benchmarking the~nonlocal electron 
+transport models published 
+\cite{Epperlein_PoFB1991, marocchino2013, Sorbo_2015, 
+Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}, we focus on 
+conditions relevant to inertial confinement fusion plasmas generated by lasers.
+%Since the~Fokker-Planck modeling of electrons in ICF 
+%plasma \eqref{eq:LFP_model} represents an~essential tool. Being so, 
+
+We introduce our implementation of the~AWBS nonlocal transport model presented
+in \secref{sec:AWBSnonlocal} called AP1,
 where its results are further benchmarked against simulation results
-provided by Aladin, Impact VFP codes, and Calder a~collisional Particle-In-Cell
-code. Their description follows in the~next section.
+provided by Calder, a~collisional Particle-In-Cell
+code, and by Aladin and Impact VFP codes. 
+Their description follows in the~next section.
 
 %\begin{figure}[tbh]
 %  \begin{center}
@@ -158,33 +340,54 @@ code. Their description follows in the~next section.
 %\label{sec:AladinImpactCaldercodes}
 
 %%% CEA contribution starts
-
-%\subsection{Calder PIC code}
 \textbf{Calder PIC code}
 
-In the limit of classical physics, a fluid description of the particle phase-space, including small angle binary collisions, can be described with the Maxwell equations:
-
-\begin{eqnarray}
-&&\nabla\cdot \mathbf{E}=\sum_\alpha \frac{q_\alpha}{\varepsilon_0} n_{\alpha},\\
-&&\nabla\cdot \mathbf{B}=0,\\
-&&\nabla\vect{\times} \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
-&&\nabla\vect{\times} \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
-\end{eqnarray}
+In the~limit of classical physics, a~fluid description of the~particle 
+phase-space, including small angle binary collisions, can be described with 
+the~Maxwell equations \eqref{eq:Faraday}, \eqref{eq:Ampere}
+%\begin{eqnarray}
+%&&\nabla\cdot \mathbf{E}=\sum_\alpha \frac{q_\alpha}{\varepsilon_0} n_{\alpha},\\
+%&&\nabla\cdot \mathbf{B}=0,\\
+%&&\nabla\vect{\times} \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
+%&&\nabla\vect{\times} \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
+%\end{eqnarray}
 coupled with the~ion and electron Vlasov equations with 
-the~Landau-Beliaev-Budker collisions integral [14, and you can cite beliaev and budker 1956] described in Appendix~\ref{app:CalderKinetics}. 
-The~latter is the~relativistic version of the~collision operator 
-introduced in \eqref{eq:LFP_model}. 
-The aforementioned set of Eqs. in 3D is solved by the PIC code CALDER. 
-(cite lefebvre et al., nucl. fus. 43, 629, 2003 and Perez et al. pop 19,083104, 2012).
-
-%\subsection{P$_1$ model: Impact and Aladin}
+the~Landau-Beliaev-Budker collisions integral (LBB)
+\cite{Landau_1936, Beliaev_SPD1956} 
+\begin{multline}
+\frac{\partial f_\alpha}{\partial t}+\mathbf{v}\cdot\nabla_{\mathbf{x}}f_\alpha+q_\alpha\left(\mathbf{E}+\mathbf{v}\vect{\times}\mathbf{B}\right)\nabla_{\mathbf{p}}f_\alpha =
+\\
+C_{LBB}(f_\alpha,f_\alpha)+\sum_\beta C_{LBB}(f_\alpha,f_\beta)
+.
+\end{multline}
+The LBB collision integral takes the~form
+\begin{multline}
+C_{LBB}(f_\alpha,f_\beta)=
+\\
+-\frac{\partial}{\partial \mathbf{p}}\cdot\frac{\Gamma_{\alpha\beta}}{2}\left[\int \mathbf{U}(\mathbf{p},\mathbf{p}^\prime)\cdot(f_\alpha\nabla_{\mathbf{p}^\prime}f_\beta^\prime-f_\beta^\prime\nabla_{\mathbf{p}}f_\alpha)\right]d^3\mathbf{p}^\prime
+,
+\label{eq:LBB_model}
+\end{multline}
+where its relativistic kernel reads
+$\mathbf{U}(\mathbf{p},\mathbf{p}^\prime)=\frac{r^2/\gamma\gamma^\prime}{(r^2-1)^{3/2}}$ 
+$\left[(r^2-1)\mathbf{I}-\mathbf{p}\otimes\mathbf{p}-\mathbf{p}^\prime\otimes\mathbf{p}^\prime+r(\mathbf{p}\otimes\mathbf{p}^\prime+\mathbf{p}^\prime\otimes\mathbf{p})\right]$
+with $\gamma=\sqrt{1+\mathbf{p}^2}$, $\gamma^\prime=\sqrt{1+\mathbf{p}^{\prime 2}}$ and $r=\gamma\gamma^\prime-\mathbf{p}\cdot\mathbf{p}^\prime$. 
+The momemtum $\mathbf{p}_\alpha$ ($\mathbf{p}_\beta$) is normalized to 
+$m_\alpha c$ (resp. $m_\beta c$). The~collision operator \eqref{eq:LBB_model} 
+tends to \eqref{eq:LFP_model} in the non-relativistic limit.
+%described in Appendix~\ref{app:CalderKinetics}. 
+%The~latter is the~relativistic version of the~collision operator 
+%introduced in \eqref{eq:LFP_model}. 
+The aforementioned model is solved in 3D by the PIC code CALDER. 
+\cite{Lefebvre_NF2003, Perez_PoP2012}.
+Brief description of the Calder code \figref{fig:C7_Calder_case1}.
 
 \textbf{Impact and Aladin VFP codes}
 
 The~PIC code is extremely expensive as the~collisions require the~description 
 of the~velocity space in 3 dimensions. Yet, a~reduction of dimensions can be 
 done by developing the~distribution function in a~cartesian tensor series, 
-equivalent to a~serie along the spherical harmonics (cite johnston 1960) 
+equivalent to a~serie along the spherical harmonics \cite{Johnston_PR1960}
 as follows:
 \begin{equation}
   f(t,\mathbf{x},\vv) = f_0(t,\mathbf{x},\vmag) 
@@ -196,22 +399,25 @@ as follows:
 A P$_n$ model refers to 
 neglecting orders higher than $\matr{f}_n$. The distribution function 
 approximation $f(t,\mathbf{x},\vv)\approx f_0(t,\mathbf{x},\vmag)
-+\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with the Vlasov-Landau 
-\eqref{eq:LFP_model}, leads to the P$_1$ model 
-(cite johnston 1960 and kingham 2004):
-%\begin{widetext}
++\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with 
+the~Landau-Fokker-Planck collisional operator 
+\eqref{eq:LFP_model}, leads to the P$_1$-VFP model 
+\cite{Johnston_PR1960, Kingham_JCP2004}:
 \begin{eqnarray}
 \frac{\partial f_0}{\partial t}+\frac{\vmag}{3}\nabla \cdot f_1
 +\frac{\qe}{3\me\vmag^2}\frac{\partial}{\partial \vmag}(\vmag^2\E\cdot \mathbf{f}_1)
 &=&
 C^0_{ee}(f_0) ,
-\\
+ \label{eq:P1f0_Aladin}\\
 \frac{\partial \mathbf{f}_1}{\partial t}+\vmag\nabla f_0
-+ \frac{\qe\mathbf{E}}{\me}\frac{\partial f_0}{\partial \vmag}
++ \frac{\qe\E}{\me}\frac{\partial f_0}{\partial \vmag}
 +\frac{\qe\B}{\me}\vect{\times} \mathbf{f}_1 
 &=&
 - \nuei\mathbf{f}_1 .
+\label{eq:P1f1_Aladin}
 \end{eqnarray}
+where for simplicity only the~isotropic 
+contribution of \eqref{eq:LFP_model} is used 
 \begin{eqnarray} 
 C^0_{ee}(f_0) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
 \left[C(f_0)f_0+D(f_0)\frac{\partial f_0}{\partial \vmag}\right] ,
@@ -220,13 +426,7 @@ C(f_0(\vmag)) &=& 4\pi\int_0^\vmag f_0(u) u^2 \dI u ,
 \\
 D(f_0(\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w f_0(w) 
 \dI w \dI u .
-\label{P1}
 \end{eqnarray}
-%\begin{eqnarray}
-%&&C[f_0(v)]=4\pi\int_0^vf_0(u)u^2du,\\
-%&&D[f_0(v)]=\frac{4\pi}{v}\int_0^vu^2\int_u^\infty wf_0(w)dwdu.\label{P1}
-%\end{eqnarray
-%\end{widetext}
 
 \begin{comment} % Hydro quantities.
 The electron and energy densities are obtained from the isotropic part of the distribution function $f_0$:
@@ -241,13 +441,14 @@ and the electron current and heat flux are obtained from the anisotropic part of
 \end{eqnarray}
 \end{comment} % Hydro quantities.
 
-Impact and Aladin solve the system of Eqs. \eqref{P1} with the Maxwell equations  \eqref{maxw} in two dimensions, assuming motionless ions.
+Impact and Aladin solve the system \eqref{eq:P1f0_Aladin} 
+and \eqref{eq:P1f1_Aladin} with the Maxwell equations  
+\eqref{eq:Faraday} and \eqref{eq:Ampere} in two dimensions, 
+assuming motionless ions.
+Brief description of the Aladin code \figref{fig:C7_Aladin_case5}, \figref{fig:C7_Aladin_case3}.
+
 
 %%% CEA contribution ends
-
-\begin{itemize}
-  \item Brief description of the Aladin code \figref{fig:C7_Aladin_case5}, \figref{fig:C7_Aladin_case3}. %\figref{fig:C7_Aladin_case6}
-\end{itemize}
 
 %\begin{itemize}
 %  \item Brief description of the Impact code \figref{fig:C7_Impact_case3}.
@@ -290,19 +491,6 @@ Impact and Aladin solve the system of Eqs. \eqref{P1} with the Maxwell equations
   \label{fig:C7_Calder_case1}
   \end{center} 
 \end{figure}
-
-\begin{itemize}
-  \item Brief description of the Calder code \figref{fig:C7_Calder_case1}.
-\end{itemize}
-
-%\subsection{Tests relevant to laser-heated plasmas}
-%\label{sec:SimulationResults}
-
-Among a~variety of test suitable for benchmarking the~nonlocal electron 
-transport models published 
-\cite{Epperlein_PoFB1991, marocchino2013, Sorbo_2015, 
-Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}, we decided to focus on 
-conditions relevant to inertial confinement fusion plasmas generated by lasers.
 
 \subsection{Heat-bath problem}  
 \label{sec:heatbath_test}

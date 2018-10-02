@@ -4,14 +4,15 @@
 The~electrons in plasma can be modeled by the~deterministic Vlasov model 
 of charged particles
 \begin{equation}
-  \pdv{\ft}{t} + \vv\cdot\gx \ft + \frac{\qe}{\me}\E \cdot\gv \ft = 
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + 
+  \frac{\qe}{\me}\left(\E + \frac{\vv}{c}\vect{\times}\B\right)\cdot\gv \ft = 
   C_{ee}(f) + C_{ei}(f) ,
   \label{eq:kinetic_equation}
 \end{equation}
 where $\ft(t, \vect{x}, \vect{v})$ represents the~density function of electrons
-at time $t$, spatial point $\vect{x}$, and velocity $\vv$, and 
-$\E$ is the~electric field in plasma, $\qe$ and $\me$ being the~charge and mass
-of electron.
+at time $t$, spatial point $\vect{x}$, and velocity $\vv$, $\E$ and $\B$ are 
+the~electric and magnetic fields in plasma, $\qe$ and $\me$ being 
+the~charge and mass of electron.
 
 The~general form of the~e-e collision operator 
 $C_{ee}$ is the~Fokker-Planck form published by Landau \cite{Landau_1936}
