@@ -525,8 +525,10 @@ void C7Operator::ImplicitSolve(const double dv, const Vector &F, Vector &dFdv)
 
    double delta_dF_norm = 1.0; 
    double dF1_norm = 0.0;
-   double converg_lim = 0.001;
-   int kiter_max = 25;
+   //double converg_lim = 0.001;
+   //int kiter_max = 25;
+   double converg_lim = 0.00001;
+   int kiter_max = 100;
    int k;
    int PCGNumIter_dF1;
    double glob_dF1_norm, glob_dF0_norm;

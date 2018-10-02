@@ -11,8 +11,8 @@ F0ORDER=1
 
 XPOINT=0.1605 # in cm qSH maximum
 
-MING=1000
-#MING=250
+#MING=1000
+MING=250
 
 MAXITER=100
 #MAXITER=40
@@ -50,7 +50,7 @@ cd ..
 
 
 # Run C7.
-mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 -PCGo | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
