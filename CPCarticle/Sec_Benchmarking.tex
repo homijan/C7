@@ -57,7 +57,8 @@ where $\dI\tilde{\vmag} = \vmag^2\dI\vmag$
 the~spherical coordinates metric,
 are based on corresponding velocity moments (integrals) of the~first angular 
 moment of EDF. Consequently, the~explicit formula for the~first angular moment
-from \eqref{eq:AP1f1} proves to be extremely useful
+from \eqref{eq:AP1f1} (the~inversion inspired by \cite{Shkarofsky_1979_73})
+proves to be extremely useful
 \begin{equation}
   \fone = \frac{\nuscat^2 \vect{F}^* + \omegaB~\omegaB\cdot\vect{F}^* 
   - \nuscat~\omegaB \vect{\times} \vect{F}^*}{\nuscat (\omegaB^2 + \nuscat^2)}
@@ -69,9 +70,9 @@ information about the~dependence of macroscopic \textit{flux} quantities on
 electric and magnetic fields in plasma, 
 where $\omegaB = \frac{\qe\B}{\me c}$ is the~electron gyro-frequency and 
 $\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero 
- - \frac{\qe}{\me}\E\pdv{\fzero}{\vmag}$ \cite{Shkarofsky_1979_73}.
+ - \frac{\qe}{\me}\E\pdv{\fzero}{\vmag}$.
 
-\subsection{Nonlocal Ohm's law}
+\subsection{Nonlocal Ohm's Law}
 \label{sec:Efield}
 The~expression \eqref{eq:f1_explicit} becomes extremely useful when used
 to describe the~electron fluid momentum, i.e. the~current velocity moment
@@ -172,12 +173,13 @@ $\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
 \end{eqnarray}
 \end{comment} % Ohm's law with B.
 
-\subsection{AWBS Nonlocal Transport Hydrodynamics}
+\subsection{AWBS Nonlocal Magneto-Hydrodynamics}
 \label{sec:ANTH}
-The~\textit{AWBS nonlocal~transport~hydrodynamic~model}
+The~\textit{AWBS nonlocal~magneto-hydrodynamic~model} (Nonlocal-MHD)
 refers to two~temperature single-fluid hydrodynamic model 
 extended by a~kinetic model of electrons using the~AWBS transport equation,
 which provides a~direct coupling between hydrodynamics and Maxwell equations.
+
 Mass, momentum density, and total energy 
 $\rho$, $\rho\vect{u}$, and 
 $E = \frac{1}{2}\rho\vect{u}\cdot\vect{u} + 
@@ -188,12 +190,13 @@ the~specific internal ion energy density,
 and $\varepsilon_e$ the~specific internal 
 electron energy density,
 are modeled by the~Euler equations in Lagrangian frame 
+\cite{Holec_DGBGKT_2016, Holec_PoPNTH2018}
 \begin{eqnarray}
  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u}
  , 
  \label{eq:NTH_rho}\\
  \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla (p_i + p_e) 
- + \vect{j}(f, \E, \B) \vect{\times}\B
+ + \vect{j}_{(f, \E, \B)} \vect{\times}\B
  ,  
  \label{eq:NTH_v}\\
  \rho~C_{V_i}\frac{\dI \Ti}{\dI t} 
@@ -208,7 +211,7 @@ are modeled by the~Euler equations in Lagrangian frame
  \left(\rho^2 C_{\Te} - p_e \right) \nabla\cdot\vect{u}  
  + G(T_i - \Te)
  \nonumber\\ 
- && - \nabla\cdot\vect{q}_h(f, \E, \B) + Q_{\text{IB}} 
+ && - \nabla\cdot\vect{q}_{h(f, \E, \B)} + Q_{\text{IB}} 
  , 
  \label{eq:NTH_Te}
 \end{eqnarray}
@@ -238,38 +241,114 @@ The~magnetic and electric fields are modeled by Maxwell equations
   ,
   \label{eq:Faraday} \\
   \frac{1}{c}\frac{\dI \E}{\dI t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
-  \vect{j}(f, \E, \B)
+  \vect{j}_{(f, \E, \B)}
   ,
   \label{eq:Ampere}
   %\frac{4\pi}{c}
   %\vect{j}(f, \vect{E}) &=& \nabla\vect{\times}\vect{B} ,
 \end{eqnarray}
-where the~initial state of $\B$ and $\E$ obeys the~Gauss law.
+where the~initial state of $\B$ and $\E$ obeys the~Gauss's law.
 
 We have explicitly written the~current and heat flux as dependent on
 electron kinetics, represented by the~electron distribution function $f$,
-and electric and magnetic fields. In principal, $\vect{j}(f, \E, \B)$
-and $\vect{q}_h(f, \E, \B)$ can be referred to as the~\textit{kinetic closure}
+and electric and magnetic fields. In principal, $\vect{j}_{(f, \E, \B)}$
+and $\vect{q}_{h(f, \E, \B)}$ can be referred to as the~\textit{kinetic closure}
 and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1},
 where $\fM$ is given on the~spatial profile of $\Te$ 
 governed by \eqref{eq:NTH_Te}.
+All quantities are defined in the~fluid frame in the aforementioned 
+Nonlocal-MHD model.
 %especially that 
 %$\nabla\vect{\times} \nabla \fzero \sim \nabla\vect{\times} \nabla p_e \sim \nabla \ed \vect{\times} \nabla \Te$
 
+\subsection{Numerical Implementation of the AWBS Electron Kinetics}
+\label{sec:Numerics}
+\newcommand{\Iohm}{\matr{J}_{Ohm}}
+It is well known, that as the~electron transport exhibits a~quasi-steady
+behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
+the~time scale of the~fluid. Consequently, the~Ampere's law \eqref{eq:Ampere} 
+usually takes a~quasi-steady form 
+$\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
+when used in hydrodynamics. Proceeding further, one can make use of 
+the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write 
+a~\textit{fully kinetic form of the~Ampere's law} 
+governing the~electric field $\E$
+\begin{equation}
+  \Iohm\bullet\pdv{\fzero}{\vmag}\E 
+  + \frac{\me}{\qe} \Iohm\bullet\vmag \nabla \fzero = 
+  \frac{c}{4\pi} \nabla\vect{\times}\B 
+  ,
+  \label{eq:AmpereKinetic}
+\end{equation}
+which most probably represents the~most important research output of this work,
+where we used the~following notation 
+$\Iohm\bullet\vect{g} = - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \vect{g} 
+  + \omegaB~\omegaB\cdot\vect{g} + \nuei~\omegaB \vect{\times} \vect{g}}
+  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag}$ showing how $\Iohm$
+acts on a~general vector field $\vect{g}$ based on the~kinetic formula 
+\eqref{eq:NonlocalOhm}.
+
+In order to solve the~kinetics of electrons, we adopt a~high-order 
+finite element discretization 
+\cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics, mfem-library} 
+of the~model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
+\eqref{eq:AmpereKinetic}
+\begin{eqnarray}
+  \matr{M}^{L_2}_{_{(\frac{\vmag\nue}{2})}}\cdot\ddv{\vfzero}{\vmag} 
+  - \matr{V}^{L_2}_{_{(\frac{\qe\E}{3\me})}}\cdot\ddv{\fone}{\vmag}
+  &=&
+  \matr{D}^{L_2}_{_{(\frac{\vmag}{3})}}\cdot\fone 
+  + \matr{M}^{L_2}_{_{(\frac{2\qe\E}{3\me\vmag})}}\cdot\fone
+  \nonumber \\ 
+  &&+ \vect{b}^{L_2}_{_{(\frac{\vmag\nue}{2}\pdv{\fM}{\vmag})}}, 
+  \label{eq:FEMAP1f0}
+  \\
+  \matr{M}^{H_1}_{_{(\frac{\vmag\nue}{2})}}\cdot\ddv{\fone}{\vmag}
+  - \matr{V}^{H_1}_{_{(\frac{\qe\E}{\me})}}\cdot\ddv{\vfzero}{\vmag}
+   &=& 
+  \matr{G}^{H_1}_{_{(\vmag)}}\cdot\vfzero 
+  + \matr{M}^{H_1}_{_{(\nuscat)}}\cdot\fone 
+  \nonumber \\
+  && + \matr{C}^{H_1}_{_{(\frac{\qe\B}{\me c}\vect{\times})}}\cdot\fone
+  ,
+  \label{eq:FEMAP1f1}\\
+  \matr{J}^{ND}_{_{(\pdv{\fzero}{\vmag})}}\cdot\E 
+  &=& 
+  \matr{JG}^{ND}_{_{(\frac{\me\vmag}{\qe})}}\cdot\vfzero
+  + \vect{b}^{ND}_{_{(\frac{c}{4\pi} \nabla\vect{\times}\B)}} 
+  ,
+  \nonumber \\
+  \label{eq:FEMAmpereKinetic}
+\end{eqnarray}
+where the~continuous differential operators are represented by standard 
+discrete analogs (matrices of bilinear forms) 
+$\matr{M}, \matr{G}, \matr{D}, \matr{V}, \matr{C}$, i.e. mass, gradient, 
+divergence, vector field dot product, and vector field curl, and
+by $\matr{J}, \matr{JG}$ matrices specific to {\bf nonlocal Ohm's law} 
+\eqref{eq:NonlocalOhm}. The~linear form $\vect{b}$ represents sources, i.e.
+temperature $\Te$ via $\pdv{\fM}{\vmag}$ and the~curl of 
+the~magnetic field $\B$. These finite element discrete analogs are defined
+on piece-wise continuous $L_2$ finite element space (domain of $\vfzero$),
+continuous $H_1$ finite element space (domain of $\fone$) 
+\cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}, 
+and Nedelec finite element space (domain of $\E$). We do not show their
+definitions since it is out of the~scope of this article. 
+
 The~strategy of solving 
-\eqref{eq:AP1f0} and \eqref{eq:AP1f1} resides in integrating 
-$\pdv{\fzero}{\vmag}$
-and $\pdv{\fone}{\vmag}$ along the~velocity magnitude. 
+\eqref{eq:FEMAP1f0} and \eqref{eq:FEMAP1f1} resides in integrating 
+$\ddv{\vfzero}{\vmag}$
+and $\ddv{\fone}{\vmag}$ along the~velocity magnitude. 
 This is done by starting the~integration
-from infinite velocity ($\vmag = 7 \vth^{max}$) to zero velocity. The~value
+from infinite velocity ($\vmag = 7 \vth^{max}$ is a~sufficiently high limit) 
+to zero velocity using the~Implicit Runge-Kutta method. The~value
 $\vth^{max}$ equals the~electron thermal velocity corresponding to the~maximum 
 electron temperature in the~current profile of plasma.
 It should be noted, that the~backward integration concept is crucial for 
 the~model, since it corresponds to the~deceleration of electrons due to 
-collisions \cite{Touati_2014}. 
+collisions \cite{Touati_2014}, which leads to some limitations described in 
+\appref{app:AP1limit}. 
 
-The aforementioned full model defines all quantities 
-in the~fluid frame.
+
 
 \section{Benchmarking the~AWBS nonlocal transport model}
 \label{sec:BenchmarkingAWBS}
