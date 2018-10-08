@@ -611,6 +611,19 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
         qBGK1s[i] = fBGK1s[i] * vs[i]**5.0
     return vs, fBGK1s, fAWBS1s, fSH19531s, jBGK1s, jAWBS1s, jSH19531s, qBGK1s, qAWBS1s, qSH19531s
 
+### Vector product inversion :)
+print "Checking inversion of cross product with friction..."
+nu = 10.1
+omegaB = np.array([0.2, -40.1, 1.0])
+f1 = np.array([1.0001, 2.01, 400.1])
+## Now obtain the right hand side.
+v = nu * f1 + np.cross(omegaB, f1)
+print "f1:", f1
+print "v:", v
+
+f1_ = (nu**2.0 * v + np.inner(np.outer(omegaB, omegaB), v) - nu * np.cross(omegaB, v)) / nu / (np.inner(omegaB, omegaB) + nu**2.0)
+print "f1_:", f1_
+
 ## Perform actual distribution evaluation for given Zbar
 N = 10000
 ## PRECISE EVALUATION OF Z dependence

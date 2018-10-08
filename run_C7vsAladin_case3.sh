@@ -32,8 +32,8 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 3 ###  Z = 10 for AWBS paper.
-XPOINT=0.055 # in cm q nonlocal
-#XPOINT=0.0442 # in cm qSH maximum
+XPOINT=0.058 # in cm q nonlocal
+#XPOINT=0.046 # in cm qSH maximum
 L=0.07
 declare -a Zarray=("10")
 ##declare -a NIarray=("4.5e19") # ne = 4.5e20 Kn test
@@ -75,7 +75,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # NONLOCAL DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin  --plotmultvTh 14 #-lD1 Aladin
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 #-lD1 Aladin #--Efield --labelEfieldExt1 Aladin
 # FLUX MAXIMUM DISTRIBUTION
 #python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin   -lD1 Aladin --plotmultvTh 6
 

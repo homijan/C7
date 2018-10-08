@@ -33,7 +33,7 @@ declare -a NAMEarray=("case")
 
 ### CASE 5 ###  Z = 1 for AWBS paper.
 XPOINT=0.058 # in cm q nonlocal
-#XPOINT=0.0438 # in cm qSH maximum
+#XPOINT=0.046 # in cm qSH maximum
 L=0.07
 declare -a Zarray=("1") 
 declare -a NIarray=("5e20") # ne = 5e20

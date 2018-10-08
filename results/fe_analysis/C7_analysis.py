@@ -415,6 +415,8 @@ labelC7 = args.labelUseC7 #'AWBS-P1'
 labelL = r'Lorentz$^*$'
 labelSH = 'SH'
 
+lwthick = 2
+
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_xlabel(r'z [$\mu$m]')
@@ -424,14 +426,14 @@ if (args.pltTe):
 ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.labelUseC7):
-   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7)
+   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
 
 if (args.labelFluxExt1):
-   ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1)
+   ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1, lw=lwthick)
 if (args.labelFluxExt2):
-   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2)
+   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
 if (args.labelFluxExt3):
-   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3)
+   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
@@ -578,6 +580,7 @@ if (args.kinf0):
    #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
+fig.tight_layout()
 for ext in ["png", "pdf", "eps"]:
    print("saving kinetics.%s" % (ext,))
    plt.savefig("kinetics.%s" % (ext,), bbox_inches="tight")
