@@ -83,18 +83,31 @@ to describe the~electron fluid momentum, i.e. the~current velocity moment
 %  \label{eq:NonlocalOhm}
 %\end{equation}
 \begin{multline}
-  \vect{j}(f, \E, \B) = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
+  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
   - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \E^* 
   + \omegaB~\omegaB\cdot\E^* - \nuei~\omegaB \vect{\times} \E^*}
   {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag} ,
-  \label{eq:NonlocalOhm}
+  \nonumber %\label{eq:NonlocalOhm}
 \end{multline}
 where $\E^* = \E~\pdv{\fzero}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fzero$ 
-is the~effective electric field in plasma. We refer to 
+is the~effective electric field in plasma. 
+This can be written as
+\begin{equation}
+  \vect{j}_{(f, \E, \B)} = \Iohm\pdv{\fzero}{\vmag}\E 
+  + \frac{\me}{\qe} \Iohm\vmag \nabla \fzero
+  ,
+  \label{eq:NonlocalOhm}
+\end{equation}
+where we used the~following notation 
+$\Iohm\vect{g} = - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \vect{g} 
+  + \omegaB~\omegaB\cdot\vect{g} - \nuei~\omegaB \vect{\times} \vect{g}}
+  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag}$ showing how $\Iohm$
+acts on a~general vector field $\vect{g}$.
+We refer to 
 \eqref{eq:NonlocalOhm} as to the~{\bf nonlocal Ohm's law}.
 Its relation and a~proper local asymptotic to the~standard Ohm's law  
-can be found when $\fzero\rightarrow\fM$ and no magnetic field ($\omegaB = 0$) 
-is considered. Then \eqref{eq:NonlocalOhm} simplifies to
+can be found when $\fzero\rightarrow\fM$ and weak magnetization 
+($\omegaB \ll \nuei$) is considered. Then \eqref{eq:NonlocalOhm} simplifies to
 \begin{multline}
   \vect{j} =- \frac{\qe^2}{\me} \int \frac{\vmag^3}{\nuei}
   \left( \E~\pdv{\fM}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fM \right)
@@ -105,23 +118,52 @@ is considered. Then \eqref{eq:NonlocalOhm} simplifies to
   ,
   \label{eq:AsymptoticOhm}
 \end{multline}
-which can be directly compared to the~fluid theory represented by 
-the~\textit{generalized Ohm's law} 
+which can be directly compared to the~local fluid theory 
+%represented by the~\textit{generalized Ohm's law} 
 \begin{equation}
-  \E =  
-  \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed}
-  + \frac{\vect{j}}{\sigma}
+  \E = \matr{\sigma}(\fzero)^{-1} \vect{j} 
+  - \frac{\nabla P (\fzero)}{\qe \ed}
+  \xrightarrow{\fzero \rightarrow \fM}
+  \E_{l} = \frac{\vect{j}}{\sigma_{l}}
+  + \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed} 
   ,
   \label{eq:GeneralOhm} 
 \end{equation}
-while addressing properly  the~pressure $p_e = \ed \kB \Te$,
+while addressing properly the~local electric field $\E_{l}$ given by
+the~pressure $p_e = \ed \kB \Te$,
 the~thermal force $\vect{R}_{\Te} = - \frac{3}{2} \ed \kB \nabla \Te$ 
-and the~electrical conductivity 
-$\sigma = \frac{16\sqrt{\frac{2}{\pi}}\qe^2 \kB^\frac{3}{2} \Te^\frac{3}{2}}
-{\me^\frac{5}{2} \Gamma\Zbar}$ \cite{Braginskii_1965_3}.
+and the~local electrical conductivity 
+$\sigma_{l} = 16\sqrt{\frac{2}{\pi}}\qe^2 \kB^\frac{3}{2} \Te^\frac{3}{2}
+/ \me^\frac{5}{2} \Gamma\Zbar$ \cite{Braginskii_1965_3}.
+In \eqref{eq:GeneralOhm} we defined the~nonlocal electrical tensor conductivity 
+\begin{equation}
+  \matr{\sigma} = \Iohm\pdv{\fzero}{\vmag}
+  ,
+  \label{eq:NonlocalSigma}
+\end{equation}
+and the~nonlocal microscopic force
+\begin{equation}
+  \nabla P = \matr{\sigma}^{-1}\me\ed \Iohm\vmag \nabla \fzero
+  ,
+  \label{eq:NonlocalGradP}
+\end{equation}
+based on \eqref{eq:NonlocalOhm}.
+
 The~local dependence of the~AP1 current \eqref{eq:AsymptoticOhm} 
 on electric field and gradients of $\ed$ and $\Te$ clearly demonstrates, 
 that \eqref{eq:GeneralOhm} is a~local version of \eqref{eq:NonlocalOhm}.
+This also implies that \eqref{eq:NonlocalOhm} provides a~very important 
+physics related to the~magnetic field source in terms of nonlocal 
+Biermann battery, since the~curl on the~electric field 
+\eqref{eq:GeneralOhm} gives
+\begin{equation}
+  \nabla\vect{\times} \frac{\nabla P}{\qe \ed} 
+  \xrightarrow{\fzero \rightarrow \fM} 
+  \nabla\vect{\times} \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed} =
+  \frac{\kB}{\qe\ed}\nabla \Te \vect{\times}\nabla \ed
+  .
+  \label{eq:NonlocalBiermann}
+\end{equation}
 
 A~local version of the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} 
 compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} when
@@ -263,7 +305,7 @@ Nonlocal-MHD model.
 
 \subsection{Numerical Implementation of the AWBS Electron Kinetics}
 \label{sec:Numerics}
-\newcommand{\Iohm}{\matr{J}_{Ohm}}
+
 It is well known, that as the~electron transport exhibits a~quasi-steady
 behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
 the~time scale of the~fluid. Consequently, the~Ampere's law \eqref{eq:Ampere} 
@@ -274,19 +316,12 @@ the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write
 a~\textit{fully kinetic form of the~Ampere's law} 
 governing the~electric field $\E$
 \begin{equation}
-  \Iohm\bullet\pdv{\fzero}{\vmag}\E 
-  + \frac{\me}{\qe} \Iohm\bullet\vmag \nabla \fzero = 
+  \Iohm\pdv{\fzero}{\vmag}\E 
+  + \frac{\me}{\qe} \Iohm\vmag \nabla \fzero = 
   \frac{c}{4\pi} \nabla\vect{\times}\B 
-  ,
+  .
   \label{eq:AmpereKinetic}
 \end{equation}
-which most probably represents the~most important research output of this work,
-where we used the~following notation 
-$\Iohm\bullet\vect{g} = - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \vect{g} 
-  + \omegaB~\omegaB\cdot\vect{g} - \nuei~\omegaB \vect{\times} \vect{g}}
-  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag}$ showing how $\Iohm$
-acts on a~general vector field $\vect{g}$ based on the~kinetic formula 
-\eqref{eq:NonlocalOhm}.
 
 In order to solve the~kinetics of electrons, we adopt a~high-order 
 finite element discretization 

@@ -69,23 +69,31 @@ In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in
 \begin{eqnarray}
   \frac{1}{\vmag}C_{AWBS}(\tilde{\ft})
   &=& 
-  \frac{\vmag}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) \nonumber \\
-  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{1}{\mfpe}\right)
+  \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
+  \nonumber \\
+  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{\xi}{\mfpe}\right)
   \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}  \nonumber \\
-  &=& \frac{\vmag}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
-  &&\, + \mu\left(\frac{\vmag}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+1}{\mfpe}\ft^1\right) .
+  &=& \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
+  &&\, + \mu\left(\frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\xi}{\mfpe}\ft^1\right) ,
   \label{app_eq:AWBS_model_1D}
 \end{eqnarray}
+where $\nue^* = \xi \nue = \frac{\vmag\xi}{\mfpe}$ with $\xi$ being a~scaling
+parameter of the~standard e-e collision frequency. Its purpose is to
+match AWBS heat flux to results obtained by Spitzer and Harm 
+\cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
+\secref{sec:FPDiffusiveRegime} shows that this match can be found with 
+a~constant $\xi=0.5$.
+
 One finds the~following equations if the~isotropic and anisotropic parts of 
 \eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:AWBS_model_1D} are 
 compared 
 \begin{eqnarray}
   \pdv{}{\vmag}\left( \ft^0 -\fM\right) &=& 
-  \frac{\mfpe\qe\Ez}{\me\vmag^2}\frac{\ft^1}{\vmag} ,
+  \frac{\mfpe\qe\Ez}{\xi\me\vmag^2}\frac{\ft^1}{\vmag} ,
   \label{app_eq:AWBS_f0} \\
-  \frac{\vmag}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+1}{\mfpe}\ft^1 &=&
+  \frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\xi}{\mfpe}\ft^1 &=&
   \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} .
   \label{app_eq:AWBS_f1} 
   %\\  
@@ -98,8 +106,8 @@ If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
 \begin{equation}
   \pdv{\ft^1_{AWBS}}{\vmag} 
-  - \frac{\Zbar+1}{\vmag}\ft^1_{AWBS} =
-  \frac{\mfpe}{\vmag} 
+  - \frac{\Zbar+\xi}{\vmag\xi}\ft^1_{AWBS} =
+  \frac{\mfpe}{\vmag\xi} 
   \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) .
   \label{app_eq:AWBS_f1_fM}
 \end{equation}
@@ -108,7 +116,7 @@ Even though it is not straightforward, the~electric field in
 exactly matches \eqref{app_eq:BGK_Efield}. Consequently, the~deviation of
 $\pdv{\ft^0}{\vmag}$ from $\pdv{\fM}{\vmag}$ in 
 \eqref{app_eq:AWBS_f0} can be written as 
-$Kn\frac{\vth^2}{\vmag^2}\frac{f^1}{\vmag}$.
+$Kn\frac{\vth^2}{\xi\vmag^2}\frac{f^1}{\vmag}$.
 
 Finally, it should be stressed, that the~concept of locality expressed as 
 $Kn\ll1$ is crucial for our \textit{local diffusive regime} analysis, 
