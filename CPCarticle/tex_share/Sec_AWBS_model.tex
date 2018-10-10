@@ -1,0 +1,91 @@
+\section{The~AWBS kinetic model}
+\label{sec:AWBSmodel}
+
+The~electrons in plasma can be modeled by the~deterministic Vlasov model 
+of charged particles
+\begin{equation}
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + 
+  \frac{\qe}{\me}\left(\E + \frac{\vv}{c}\vect{\times}\B\right)\cdot\gv \ft = 
+  C_{ee}(f) + C_{ei}(f) ,
+  \label{eq:kinetic_equation}
+\end{equation}
+where $\ft(t, \vect{x}, \vect{v})$ represents the~density function of electrons
+at time $t$, spatial point $\vect{x}$, and velocity $\vv$, $\E$ and $\B$ are 
+the~electric and magnetic fields in plasma, $\qe$ and $\me$ being 
+the~charge and mass of electron.
+
+The~general form of the~e-e collision operator 
+$C_{ee}$ is the~Fokker-Planck form published by Landau \cite{Landau_1936}
+\begin{equation}
+  C_{FP}(\ft) =
+  \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
+  \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb ,
+  \label{eq:LFP_model}
+\end{equation}
+where $\Gamma = \frac{4\pi\qe^4\lnc}{\me^2}$ and 
+$\lnc$ is the~Coulomb logarithm.
+The~e-i collision operator $C_{ei}$ could be expressed
+in a~simpler form since massive ions are considered 
+to be motionless compared to electrons. The~scattering operator accounts
+for the~change of electron velocity without change in the~velocity magnitude. 
+It is expressed in spherical coordinates as
+\begin{equation}
+  C_{ei}(\ft) = \frac{\nuei}{2}
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{\ft}{\mu}\right)
+  + \frac{1}{\sin^2\phi}\frac{\partial^2 \ft}{\partial\theta^2} \right) ,
+  \label{eq:ei_scattering}
+\end{equation}
+where $\mu = \cos\phi$, $\phi$ and $\theta$ are the~polar and azimuthal 
+angles, and $\nuei = \frac{\Zbar n_e \Gamma}{\vmag^3}$ is the~e-i
+collision frequency.
+
+The~e-e collision operator needs to be linearized for efficient computations.
+Fish introduced a~linear form of $C_{ee}$ in \cite{Fish_RMP1987} 
+in the~high-velocity limit ($\vmag\gg\vth$) electron collision operator
+\begin{multline}
+  C_{H}(\ft) = \vmag \nue \pdv{}{\vmag}\left(\ft + 
+  \frac{\vth^2}{\vmag}\pdv{f}{\vmag}\right) \\
+  + \frac{\nue}{2}\left( 1 - \frac{\vth^2}{2\vmag^2}\right) 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2\phi}\frac{\partial^2f}{\partial\theta^2} \right)
+  , \label{eq:HighVelocity_model}
+\end{multline}
+where $\nue = \frac{n_e \Gamma}{\vmag^3}$ is the~e-e collision 
+frequency and $\vth = \sqrt{\frac{\kB T_e}{\me}}$ is the~electron thermal 
+velocity.
+The~linear form of $C_{H}$ arises from an~assumption that the~fast electrons 
+predominantly interact with the~thermal (slow) electrons, 
+which simplifies importantly the~form \eqref{eq:LFP_model}.
+However the~diffusion term in the~e-e collision operator 
+\eqref{eq:HighVelocity_model} still presents numerical difficulties.
+
+A~yet simpler form of the~collision operator of electrons was proposed in 
+\cite{Sorbo_2015}
+\begin{multline}
+  C_{AWBS}(\ft) = \vmag \nue^*\pdv{}{\vmag}\left(\ft - \fM\right) \\
+  + \frac{\nuei + \nue^*}{2} 
+  \left(\pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+  + \frac{1}{\sin^2\phi}\frac{\partial^2f}{\partial\theta^2} \right)
+  , \label{eq:AWBS_model}
+\end{multline}
+where $\fM = \frac{n_e}{(2\pi)^{\frac{3}{2}}\vth^3}
+\exp\left(-\frac{\vmag^2}{2\vth^2}\right)$ 
+is the~Maxwell-Boltzmann equilibrium distribution.
+Here, the~first term representing the AWBS operator \cite{AWBS_PRL1986}
+accounts for relaxation to equilibrium due to the~e-e collisions, and 
+the~second term accounts for the~e-i and e-e collisions contribution 
+to scattering.
+
+A~method of angular momenta for the~solution of the~electron kinetic equation
+with the~collision operator \eqref{eq:AWBS_model} 
+was introduced in \cite{Sorbo_2015, Sorbo_2016}. 
+
+In \eqref{eq:AWBS_model} we have introduced a~modified e-e collision frequency
+$\nue^*$ in order to address a~proper behavior with respect to $\Zbar$, which
+is further analyzed in Section \ref{sec:DiffusiveKinetics} and promising 
+results compared to the~full FP operator are presented.
+
+%The~Maxwell-Boltzmann averaged e-e scattering in 
+%\eqref{eq:HighVelocity_model} can be approximated as 
+%$\nue \int\left(1 - \frac{\vth^2}{2\vmag^2}\right)\fM 4\pi\vmag^2\, \dI\vmag = 
+%\frac{\nue}{2}$.

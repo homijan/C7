@@ -1,0 +1,141 @@
+\section{Introduction}
+\label{sec:Intro}
+%In dealing with the nonequilibrium properties of
+%systems whose particles obey an inverse-square law
+%of interaction, it is convenient to make use of the fact
+%that under most circumstances small-angle collisions
+%are much more important than collisions resulting in
+%large momentum changes. This leads to the method
+%often used for treating such systems, in which one
+%expands the collision integrand of the Boltzmann change per
+%equation in powers of the momentum collision.
+
+The~first attempts of modern kinetic modeling of plasma can be tracked back 
+to the~fifties, when Cohen, Spitzer, and Routly (CSR) \cite{CSR_1950} 
+demonstrated that the~effect of Coulomb collisions between electrons and ions 
+in the~ionized gas predominantly results 
+from frequently occurring events of cumulative small deflections 
+rather than occasional close encounters. This effect was originally described
+by Jeans in \cite{Jeans_BOOK1929} and 
+Chandrasekhar \cite{Chandrasekhar_RMP1943} 
+proposed to use the~diffusion equation model of the~Vlasov-Fokker-Planck type 
+(VFP)~\cite{Planck_1917}.
+
+%A more generally valid approach to the problem of
+%treating changes in a distribution function resulting
+%each of which from frequently occurring "events",
+%produces a small change in the momentum of a particle,
+%is to use the Fokker-Planck equation \cite{Planck_1917}, 
+%which has been discussed by Spitzer and collaborators 
+%\cite{SpitzerHarm_PR1953} . 
+A~classical paper by Spitzer and Harm (SH) 
+\cite{SpitzerHarm_PR1953} provides the~computation of 
+the~electron distribution function (EDF) in a~plasma (from low to high $\Zbar$)
+with a~temperature gradient accounting for e-e and e-i collisions.
+The~expressions for current and heat flux are widely used in every plasma 
+hydrodynamic models.
+%used the formalism of the VFP equation to evaluate the collision terms of 
+%the~Boltzmann equation under the assumptions that 
+%(a) the events producing changes in particle momenta
+%are two-body interactions described by the associated
+%differential scattering cross sections, and 
+%(b) that 
+The~distribution function based on the spherical harmonics method in 
+its first approximation (P1) \cite{Jeans_MNRAS1917} is of the form 
+$f^0+\mu f^1$, where $f^0$ and $f^1$ 
+are isotropic and $\mu$, is the direction cosine between the particle 
+trajectory and some preferred direction in space. It should be emphasized that
+the~SH solution expresses a~small perturbation of equilibrium, i.e. that 
+$f^0$ is the~Maxwell-Boltzmann distribution and $\mu f^1$ represents 
+a~very small anisotropic deviation. 
+This approximation holds for $L_T\gg\mfpe$, 
+a~condition which is often invalid in laser plasmas, 
+where $L_T$ is the~temperature length scale and $\mfpe$ 
+the~mean free path of electrons.% when colliding with ions.
+
+%It is the purpose of this paper to present the mechanics 
+%of two-body collisions in a somewhat simplified
+%form, and to derive the Fokker-Planck equation for an function. 
+%From this general arbitrary distribution equation such special cases 
+%as those of Chandrasekhar and Spitzer may easily be obtained. 
+%For more complex situations the equation is suitable for integration by an
+%electronic computer \cite{Rosenbluth_PR1957}.
+
+The~actual cornerstone of the~modern VFP simulations was set in place
+by Rosenbluth \cite{Rosenbluth_PR1957}, when he derived a~simplified form 
+of the~VFP equation for a~finite expansion of the~distribution function,
+where all the~terms are computed according to plasma conditions, including
+$f^0$, which of course needs to tend to the~Maxwell-Boltzmann distribution.
+Consequently, the~pioneering work on numerical solution of the~VFP equation
+\cite{Bell_1981_83, Matte_1982_86} revealed the~importance of the~nonlocal
+electron transport in laser-heated plasmas. 
+In particular, that the~heat flow down steep temperature gradients in 
+unmagnetised plasma cannot be described by the classical, local fluid
+description of transport \cite{SpitzerHarm_PR1953, Braginskii_1965_3}.
+This is due to the~classical $f^1$ is not a~small deviation 
+(especially for electrons faster than thermal velocity), i.e. $f^0\sim f^1$,
+since the~nonlocal regime is characterized by $L_T\sim\mfpe$.
+It was also shown that a~thermal transport inhibition \cite{Bell_1981_83} 
+on one hand side, and a~nonlocal preheat on the~other hand side, 
+naturally appear. These effects are attributed to significant deviations 
+of $f^0$ from Maxwellian distribution.
+
+
+%Previously the Vlasov-Fokker-Planck (VFP) equation has been solved
+%numerically ignoring magnetic fields in 1-D (1 spatial dimension) 
+%\cite{Bell_1981_83, Matte_1982_86} to address heatflow down steep temperature 
+%gradients in unmagnetised plasma. Under these conditions the classical, fluid
+%description of transport \cite{SpitzerHarm_PR1953, Braginskii_1965_3}, 
+%which makes the local approximation, 
+%breaks down. They found that nonlocal effects are responsible for 
+%thermal transport inhibition \cite{Bell_1981_83}.
+
+%Particle-in-cell (PIC) codes \cite{PIC_Birdsall_Langdon_1985}
+%%\cite{Dawson_PoF1962, PIC_Birdsall_Langdon_1985} 
+%%and Vlasov codes $[23]$ 
+%are fully kinetic and are ideally suited to collisionless plasmas. 
+%Typically PIC codes tend to use explicit methods and consequently require a
+%time step small enough to resolve the fastest frequency present in the problem.
+%They also suffer from the so called "finite grid instability" 
+%\cite{PIC_Birdsall_Langdon_1985} 
+%whereby the plasma numerically heats up until the electron debye length is
+%resolved by the grid. These limitations mean that multidimensional, explicit, 
+%PIC cannot readily simulate the low temperature, high density plasma 
+%created inlaser–solid interactions. 
+%%PIC codes utilising implicit methods do exist 
+%%$[24]$. Implicitness greatly relaxes the time step constraint and mitigates 
+%%the effects of the finite grid instability, so that lower temperatures 
+%%and higher densities can be dealt with. 
+%One spatial dimension PIC codes with electron–ion collisions have successfully 
+%been applied to fast electron transport through solid density plasma 
+%\cite{Guerin_PPCF1999, Perez_PoP2012}. 
+%%Two spatial dimension PIC codes with electron collisions also exist, both
+%%explicit $[25]$ and implicit $[26]$. 
+
+%Explicit 2-D PIC is unable to access conditions where collisions dominate for
+%the bulk of the electrons, though. Even though implicit methods overcome 
+%this particular problem, the PIC method in general struggles to adequately 
+%resolve the distribution function in a given cell when a realistic sized, 
+%2-D problem is addressed. 
+%Statistical noise and under resolution of 
+%the electron distribution lead to an inaccurate treatment of collisions and 
+%can overwhelm real physical effects present.
+
+Nevertheless, numerical solution of the~VFP equation even in the~Rosenbluth
+formalism remains very challenging computationally, because the~e-e collision
+integral is nonlinear. More simple linear forms of e-e collision operator
+are needed.
+
+It is the~purpose of this paper to present an~efficient alternative 
+to VFP model based on the~Albritton-Williams-Bernstein-Swartz 
+collision operator (AWBS) \cite{AWBS_PRL1986}.
+In Section \ref{sec:AWBSmodel} we propose a~modified form of 
+the~AWBS collision operator, where its important properties are further
+presented in Section \ref{sec:DiffusiveKinetics} with the~emphasis on its
+comparison to the~full VFP solution in local diffusive regime. 
+Section \ref{sec:BenchmarkingAWBS} focuses on the~performance of the~AWBS 
+transport equation model compared to modern kinetic codes including VFP codes
+Aladin and Impact \cite{Kingham_JCP2004}, and PIC code Calder 
+\cite{Perez_PoP2012}, where the~cases related to real
+laser generated plasma conditions are studied. Finally, the~most important
+outcomes of our research are concluded in Section \ref{sec:Conclusions}. 
