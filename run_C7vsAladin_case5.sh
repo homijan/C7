@@ -32,13 +32,13 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 5 ###  Z = 1 for AWBS paper.
-#XPOINT=0.058 # in cm q nonlocal
 XPOINT=0.046 # in cm qSH maximum
+#XPOINT=0.058 # in cm q nonlocal
 L=0.07
 declare -a Zarray=("1") 
 declare -a NIarray=("5e20") # ne = 5e20
 
-cd VFPdata/Aladin//Aladin_case3_case5/case5
+cd VFPdata/Aladin/Aladin_cases4AWBSpaper/case5
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Q_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
@@ -78,10 +78,10 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-# NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin  --plotmultvTh 14 -lD1 Aladin
 # FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --Efield --labelEfieldExt1 Aladin   -lD1 Aladin --plotmultvTh 6
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin
+# NONLOCAL DISTRIBUTION
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin --Efield --labelEfieldExt1 Aladin
 
 # Safe figs.
 ### CASE 5 ### Z = 1 for AWBS paper.

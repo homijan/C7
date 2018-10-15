@@ -226,7 +226,7 @@ vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
 print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh
 
 ## Multiples of thermal velocity setting the velocity space range.
-ml_max = 12.0
+ml_max = 16.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
 ## qH = me/Zbar/sigma/coulLog*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
@@ -541,12 +541,16 @@ print "ne: ", ne
 print "Kn_ee: ", Kn_ee
 print "Kn_ei: ", Kn_ei
 print "Kn_LMV: ", Kn_LMV
+## Evaluate the v limit due to Ex value.
+vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
+print "vlim/vTh: ", vlim_vTh
+print "Te[eV]: ", Te
 ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_LMV)+')')
 ## Plot kinetic analysis.
 if (args.labelUseC7):
-   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7)
+   ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7, lw=lwthick)
 if (args.labelDistributionExt1):
-   ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1)
+   ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1, lw=lwthick)
 if (args.kinSH):
    ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1-$'+labelL)
 if (AWBSoriginal):
