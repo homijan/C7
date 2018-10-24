@@ -126,11 +126,11 @@
 % Use the file aiptemplate.tex as a template for your document.
 \documentclass[
  aps,
- jmp,%
+ jmp,
  amsmath,amssymb,
  twocolumn,
 % preprint,%
-% reprint,%
+ reprint,%
 %author-year,%
 %author-numerical,%
 ]{revtex4-1}
@@ -150,6 +150,8 @@
 
 %\usepackage{lineno}
 \usepackage{hyperref}
+% use st command to strike out text
+\usepackage{soul}
 
 \include{C7_commands}
 
@@ -181,16 +183,16 @@ UMR 5107, F-33405 Talence, France.
  CEA, DAM, DIF, F-91297 Arpajon Cedex, France.
 }
 
-\author{J. Brodrick}
+\author{J. P. Brodrick}
  \affiliation{
-Plasma Institute, York,\\ 
-UK.
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
 }
 
 \author{D. Del Sorbo}
  \affiliation{
-Plasma Institute, York,\\ 
-UK.
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
 }
 
 \author{A. Debayle}
@@ -222,31 +224,17 @@ UMR 5107, F-33405 Talence, France.
 France.
 }
 
-\author{Ch. Ridgers}
+\author{C. P. Ridgers}
  \affiliation{
-Plasma Institute, York,\\ 
-UK.
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
 }
 
-\author{R. Kingham}
+\author{R. J. Kingham}
  \affiliation{
-Imperial College, Lodon,\\ 
-UK.
+Plasma Physics Group, Blackett Laboratory, Imperial College,\\ 
+London SW7 2BW, United Kingdom.
 }
-%\author{J. Nikl}
-%\affiliation{ 
-%ELI-Beamlines Institute of Physics, AS CR, v.v.i, 
-%Na Slovance 2, Praha 8, 180 00, Czech Republic%\\This line break forced with \textbackslash\textbackslash
-%}
-%\affiliation{Czech Technical University in Prague, Faculty of 
-% Nuclear Sciences and Physical Engineering,
-% Brehova 7, 115 19 - Praha 1, Czech Republic.}
-%\author{S. Weber}%
-%%\email{stefan.weber@eli-beams.eu.}
-%\affiliation{ 
-%ELI-Beamlines Institute of Physics, AS CR, v.v.i, 
-%Na Slovance 2, Praha 8, 180 00, Czech Republic.%\\This line break forced with \textbackslash\textbackslash
-%}%
 
 \date{\today}% It is always \today, today,
              %  but any date may be explicitly specified
@@ -255,7 +243,7 @@ UK.
 \textit{A preliminary version...}
 The~interaction of lasers with plasmas very often leads to nonlocal transport 
 conditions, where the classical hydrodynamic model fails to describe 
-physical phenomena related to highly mobile particles. In this study 
+physical phenomena, such as heat-flow, related to highly mobile particles. In this study 
 the~electron distribution in plasma is investigated for the~conditions relevant 
 to ICF. In particular, we focus on the~transport of nonlocal (supra-thermal) 
 electrons streaming down the~temperature gradient in the~ablating plasma. 
@@ -264,13 +252,14 @@ of background electrons too. This is achieved by the~action of an~electric
 field, which provides a~self-consistent Ohm’s law based on the~kinetic modeling.Our approach leans on the~Albritton-Williams-Bernstein-Swartz collision 
 operator providing a~simple, computationally efficient, transport equation 
 of electrons and is further benchmarked against Vlasov-Fokker-Planck codes 
-Aladin and Impact and collisional PIC code Calder.
+Aladin and Impact and collisional PIC code Calder. %CPR comment - could benefit from a clearer description of what the main results are, preferably with numbers
 \end{abstract}
 
 \pacs{Valid PACS appear here}% PACS, the Physics and Astronomy
                              % Classification Scheme.
-\keywords{kinetics; nonlocal electron transport; laser-heated plasmas; hydrodynamics, Ohm's law.}%Use showkeys class option if keyword
-                              %display desired
+
+\keywords{kinetics; nonlocal electron transport; laser-heated plasmas; hydrodynamics, Ohm's law.}%Use showkeys class option if keyword display desired
+
 \maketitle
 
 
@@ -307,20 +296,6 @@ Aladin and Impact and collisional PIC code Calder.
 %% Authors are advised to submit their bibtex database files. They are
 %% requested to list a bibtex style file in the manuscript if they do
 %% not want to use elsarticle-num.bst.
-
-%% References without bibTeX database:
-
-%\begin{thebibliography}{00}
-
-%% \bibitem must have the following form:
-%\bibitem{Fish_RMP1987}{Nathaniel J. Fisch. Theory of current drive in plasmas. Rev. Mod. Phys., 59(1):175–234, Jan 1987.}
-%\bibitem{Rosenbluth_PR1957}{Marshall N. Rosenbluth, William M. MacDonald, and David L. Judd. Fokker-planck equation for an inverse-square force. Phys.
-%Rev., 107(1):1–6, Jul 1957.}
-%\bibitem{Longmire_1963}{Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963.}
-%\bibitem{Shkarofsky_1966}{I.P. Shkarofsky, T.W. Johnston, T.W. Bachynski, The Particle Kinetics of Plasmas, Addison-Wesley, Reading, MA, 1966.}
-%\bibitem{SpitzerHarm_PR1953}{SH 1953.}
-
-%\end{thebibliography}
 
 \clearpage
 

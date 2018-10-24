@@ -10,7 +10,7 @@
 %expands the collision integrand of the Boltzmann change per
 %equation in powers of the momentum collision.
 
-The~first modern attempts at kinetic modeling of plasma can be traced back 
+The~first \corrCPR{modern attempts at} kinetic modeling of plasma can be \corrCPR{traced} back 
 to the~fifties, when Cohen, Spitzer, and Routly (CSR) \cite{CSR_1950} 
 demonstrated that the~effect of Coulomb collisions between electrons and ions 
 in the~ionized gas predominantly results 
@@ -19,9 +19,7 @@ rather than occasional close encounters. This effect was originally described
 by Jeans in \cite{Jeans_BOOK1929} and 
 Chandrasekhar \cite{Chandrasekhar_RMP1943} 
 proposed to use the~diffusion equation model of the~Vlasov-Fokker-Planck type 
-(VFP)~\cite{Planck_1917}.
-%CPR comment - do you need to start so far back in the history of plasma kinetic theory?
-
+(VFP)~\cite{Planck_1917}. %CPR comment - do you need to start so far back in the history of plasma kinetic theory?
 
 %A more generally valid approach to the problem of
 %treating changes in a distribution function resulting
@@ -34,7 +32,7 @@ A~classical paper by Spitzer and Harm (SH)
 \cite{SpitzerHarm_PR1953} provides the~computation of 
 the~electron distribution function (EDF) in a~plasma (from low to high $\Zbar$)
 with a~temperature gradient accounting for e-e and e-i collisions.
-The~resulting expressions for current and heat flux are widely used in plasma 
+The~ \corrCPR{resulting} expressions for current and heat flux are widely used in \corrCPR{\st{every}} plasma 
 hydrodynamic models.
 %used the formalism of the VFP equation to evaluate the collision terms of 
 %the~Boltzmann equation under the assumptions that 
@@ -53,10 +51,7 @@ a~very small anisotropic deviation.
 This approximation holds for $L_T\gg\mfpe$, 
 a~condition which is often invalid in laser plasmas, 
 where $L_T$ is the~temperature length scale and $\mfpe$ 
-the~mean free path of electrons. It is worth mentioning, that electrons having
-3 to 4 times the~thermal velocity are dominantly responsible for heat-flow
-and that those faster than 6 times the~thermal velocity can be completely 
-neglected in this local theory.
+the~mean free path of electrons.% when colliding with ions.
 
 %It is the purpose of this paper to present the mechanics 
 %of two-body collisions in a somewhat simplified
@@ -70,8 +65,7 @@ The~actual cornerstone of the~modern VFP simulations was set in place
 by Rosenbluth \cite{Rosenbluth_PR1957}, when he derived a~simplified form 
 of the~VFP equation for a~finite expansion of the~distribution function,
 where all the~terms are computed according to plasma conditions, including
-$f^0$, which of course needs to tend to the~Maxwell-Boltzmann distribution.
-% CPR comment - again not sure you need to go back this far in history.
+$f^0$, which of course needs to tend to the~Maxwell-Boltzmann distribution.% CPR comment - again not sure you need to go back this far in history
 Consequently, the~pioneering work on numerical solution of the~VFP equation
 \cite{Bell_1981_83, Matte_1982_86} revealed the~importance of the~nonlocal
 electron transport in laser-heated plasmas. 
@@ -79,12 +73,11 @@ In particular, that the~heat flow down steep temperature gradients in
 unmagnetised plasma cannot be described by the classical, local fluid
 description of transport \cite{SpitzerHarm_PR1953, Braginskii_1965_3}.
 This is due to the~classical $f^1$ is not a~small deviation 
-(especially for electrons having 3 to 4 times the~thermal velocity), 
-i.e. $f^0\sim f^1$ characterized by $L_T\sim\mfpe$.
+(especially for electrons faster than thermal velocity), i.e. $f^0\sim f^1$,
+since the~nonlocal regime is characterized by $L_T\sim\mfpe$. %CPR comment - which electrons? I would say thi is true for the heat carryong electrons at 3-4 times the thermal speed but not the thermal electrons
 It was also shown that a~thermal transport inhibition \cite{Bell_1981_83} 
-around the peak of the temperature gradient, and a~nonlocal preheat 
-ahead of the main heat wave front, naturally appear. 
-These effects are attributed to significant deviations 
+\corrCPR{around the peak of the temperature gradient}, and a~nonlocal preheat \corrCPR{ahead of the main heat wave front}, 
+naturally appear. These effects are attributed to significant deviations 
 of $f^0$ from Maxwellian distribution.
 
 
@@ -131,16 +124,10 @@ of $f^0$ from Maxwellian distribution.
 Nevertheless, numerical solution of the~VFP equation even in the~Rosenbluth
 formalism remains very challenging computationally, because the~e-e collision
 integral is nonlinear. More simple linear forms of e-e collision operator
-are needed. Although some VFP simulations on experimentally relevant timescales 
-have been performed (for recent examples see 
-\cite{Hawreliak04,Ridgers08,Willingale10,Bissell10,Joglekar14,Joglekar16,Henchen_PRL2018}, 
-an extensive review has been conducted by Thomas et al. \cite{Thomas13}), 
-their relative computational inefficiency severely limits the range of 
-simulations that can be performed.
+are needed. \corrCPR{Although some VFP simulations on experimentally relevant timescales have been performed (for recent examples see \cite{Hawreliak04,Ridgers08,Willingale10,Bissell10,Joglekar14,Joglekar16,Henchen18}, an extensive review has been conducted by Thomas et al. \cite{Thomas13}), their relative computational inefficiency severly limits the range of simulations that can be performed.} % Should cite some of the existing literature on VFP simulations. I chose what I think represents a decent range but feel free to cut or expand.
 
 It is the~purpose of this paper to present an~efficient alternative 
-to a full solution of the VFP equation to accurately calculate 
-nonlocal transport, based on the~Albritton-Williams-Bernstein-Swartz 
+to \corrCPR{a full solution of the VFP equation to accurately calculate non-local transport,} based on the~Albritton-Williams-Bernstein-Swartz 
 collision operator (AWBS) \cite{AWBS_PRL1986}.
 In Section \ref{sec:AWBSmodel} we propose a~modified form of 
 the~AWBS collision operator, where its important properties are further

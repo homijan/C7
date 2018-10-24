@@ -51,19 +51,22 @@ on the~approximation \eqref{eq:f_approximation} as
 where $C$ is a~given collision operator including both e-e and e-i collisions.
 
 The~locality of transport is the~best expressed in terms of the~Knudsen number
-$Kn=\frac{\lambda}{L}$, where $\lambda$ is the~mean free path of electron and
+$Kn=\frac{\lambda}{L}$, where $\lambda$
+is the~mean free path of an~electron having a~velocity $\vmag$ and
 $L$ the~characteristic length scale of plasma. Consequently, plasma conditions
-characterized by $Kn\ll1$ exhibit a~local transport regime. This measure then
-play a~very important role in our analysis, where we use the~electroni-electron
+characterized by $Kn\ll1$ for all electrons exhibit a~local transport regime. 
+This measure then
+play a~very important role in our analysis, where we use the~electron-electron
 and electron-ion mean free paths $\mfpe = \Zbar\mfpei = \frac{\vmag}{\nue}$,
 and the~density and temperature plasma scale lengths 
 $L_{n_e} = n_e/\pdv{n_e}{z}$ and $L_{T_e} = T_e/\pdv{T_e}{z}$.
 
+\corrCPR{ % In reality this comment is by MH.
 In practice, the~Knudsen number of thermal electrons is often used as 
 a~measure of the~locality of transport corresponding to given plasma conditions,
 where $Kn(\vth)<0.001$ is considered the~limit of validity of 
 the~local transport theory \cite{LMV_1983_7}.
-
+}
 
 \subsection{The~BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
@@ -166,9 +169,9 @@ collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 %\end{equation}
 Similarly to the~BGK model, the~AWBS collision operator \ref{eq:AWBS_model} 
 explicitly uses equilibration to the~Maxwell-Boltzmann distribution $\fM$. 
-On the~other hand, AWBS originates from $C_H$, which is derived from 
+On the~other hand \corrCPR{\st{side}}, AWBS originates from $C_H$, which is derived from 
 the~full FP operator \eqref{eq:LFP_model}. This makes the~AWBS operator 
-to be superior to the~BGK operator, which is considered a~purely
+to be superior to the~BGK operator, which is considered a~\corrCPR{purely}
 phenomenological model.
 %and also, 
 %makes it a~very attractive model of the~nonlocal electron
@@ -337,10 +340,10 @@ which imposes a~right heat flux magnitude \eqref{eq:qSH_approximation}.
   |\vect{q}_{AWBS} - \vect{q}_{SH}| / \vect{q}_{SH}$ of 
   the~$\nue^* = \frac{\nue}{2}$~scaling used in the~AWBS model
   \refeq{eq:AWBS_model} showing the~discrepancy 
-  (maximum 6$\%$) with respect to the~original solution of 
+  (maximum around 6$\%$) with respect to the~original solution of 
   the~heat flux given by numerical solution in Spitzer and Harm 
-  \cite{SpitzerHarm_PR1953}. The~values of $\phi(\Zbar)$ (a~weak dependence 
-  \eqref{eq:qAWBS_approximation}) are also shown. 
+  \cite{SpitzerHarm_PR1953}. The~values of $\phi(\Zbar)$ (weak dependence) are 
+  also shown. 
   }
 \label{tab:qAWBS}
 \end{center}
@@ -361,7 +364,7 @@ scaling $\xi$, i.e. with a~very weak dependency on $\Zbar$ as
 \end{equation}
 where the~dependence $\phi(\Zbar) = \frac{0.59 \Zbar - 1.11}{8.37 \Zbar + 5.15} \ll\frac{1}{2}$ for any $\Zbar$.
 Indeed, \tabref{tab:qAWBS} shows $\phi(\Zbar)$ and its corresponding relative
-error (maximum 6$\%$) of the~heat flux modeled by 
+error (maximum around 6$\%$) of the~heat flux modeled by 
 \eqref{eq:AWBS_model} vs. SH results represented by 
 \eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
 with respect to original values presented in TABLE~III in 
@@ -373,7 +376,7 @@ for any $\Zbar$.
  
 Nevertheless, the~electron-electron collisions effect represented by 
 \eqref{eq:qSH_approximation} provides only an~integrated information about
-the~heat flux magnitude. If one takes a~closer look at the~distribution
+the~heat flux magnitude. If one takes a~\corrCPR{closer} look at the~distribution
 function itself, the~conformity of the~modified AWBS collision operator
 is even more emphasized as can be seen in \figref{fig:q1s_summary} showing
 the~flux moment in spherical coordinates of velocity

@@ -9,7 +9,7 @@
 %% http://www.elsevier.com/wps/find/authorsview.authors/elsarticle.
 %%
 %%
-\documentclass[preprint,12pt]{elsarticle}
+%\documentclass[preprint,12pt]{elsarticle}
 
 %% Use the option review to obtain double line spacing
 %% \documentclass[preprint,review,12pt]{elsarticle}
@@ -27,25 +27,25 @@
 %% use the graphics package for simple commands
 %% \usepackage{graphics}
 %% or use the graphicx package for more complicated commands
-\usepackage{graphicx}
+%\usepackage{graphicx}
 %% or use the epsfig package if you prefer to use the old commands
 %% \usepackage{epsfig}
 
 %% The amssymb package provides various useful mathematical symbols
-\usepackage{amssymb}
+%\usepackage{amssymb}
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
 
 %% Additional needed packages.
-\usepackage{amsmath}
-\usepackage{verbatim}
-\usepackage{color}
+%\usepackage{amsmath}
+%\usepackage{verbatim}
+%\usepackage{color}
 
 %% The lineno packages adds line numbers. Start line numbering with
 %% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
 %% for the whole article with \linenumbers after \end{frontmatter}.
-\usepackage{lineno}
-\usepackage{hyperref}
+%\usepackage{lineno}
+%\usepackage{hyperref}
 
 %% natbib.sty is loaded by default. However, natbib options can be
 %% provided with \biboptions{...} command. Following options are
@@ -68,215 +68,240 @@
 
 % \biboptions{}
 
-\include{C7_commands}
-
-\newcommand{\figref}[1]{FIG.~\ref{#1}}
-\newcommand{\refeq}[1]{(\ref{#1})}
-\newcommand{\secref}[1]{Sec.~\ref{#1}}
-\newcommand{\figscale}{0.5}
-
 %% This list environment is used for the references in the
 %% Program Summary
 %%
-\newcounter{bla}
-\newenvironment{refnummer}{%
-\list{[\arabic{bla}]}%
-{\usecounter{bla}%
- \setlength{\itemindent}{0pt}%
- \setlength{\topsep}{0pt}%
- \setlength{\itemsep}{0pt}%
- \setlength{\labelsep}{2pt}%
- \setlength{\listparindent}{0pt}%
- \settowidth{\labelwidth}{[9]}%
- \setlength{\leftmargin}{\labelwidth}%
- \addtolength{\leftmargin}{\labelsep}%
- \setlength{\rightmargin}{0pt}}}
- {\endlist}
+%\newcounter{bla}
+%\newenvironment{refnummer}{%
+%\list{[\arabic{bla}]}%
+%{\usecounter{bla}%
+% \setlength{\itemindent}{0pt}%
+% \setlength{\topsep}{0pt}%
+% \setlength{\itemsep}{0pt}%
+% \setlength{\labelsep}{2pt}%
+% \setlength{\listparindent}{0pt}%
+% \settowidth{\labelwidth}{[9]}%
+% \setlength{\leftmargin}{\labelwidth}%
+% \addtolength{\leftmargin}{\labelsep}%
+% \setlength{\rightmargin}{0pt}}}
+% {\endlist}
 
-\journal{Computer Physics Communications}
+%\journal{Computer Physics Communications}
+
+% ****** Start of file aipsamp.tex ******
+%
+%   This file is part of the AIP files in the AIP distribution for REVTeX 4.
+%   Version 4.1 of REVTeX, October 2009
+%
+%   Copyright (c) 2009 American Institute of Physics.
+%
+%   See the AIP README file for restrictions and more information.
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.1
+%
+% It also requires running BibTeX. The commands are as follows:
+%
+%  1)  latex  aipsamp
+%  2)  bibtex aipsamp
+%  3)  latex  aipsamp
+%  4)  latex  aipsamp
+%
+% Use this file as a source of example code for your aip document.
+% Use the file aiptemplate.tex as a template for your document.
+%\documentclass[%
+% aip,
+%%jmp,%
+%%bmf,%
+% sd,%
+%%rsi,%
+% amsmath,amssymb,
+%%preprint,%
+% reprint,%
+%%author-year,%
+%%author-numerical,%
+%]{revtex4-1}
+
+% Use this file as a source of example code for your aip document.
+% Use the file aiptemplate.tex as a template for your document.
+\documentclass[
+ aps,
+ jmp,%
+ amsmath,amssymb,
+ twocolumn,
+% preprint,%
+% reprint,%
+%author-year,%
+%author-numerical,%
+]{revtex4-1}
+
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+\usepackage{verbatim}
+%\usepackage{subfloat}
+%\usepackage{subcaption}
+%\usepackage{placeins}
+%\usepackage{caption}
+%\captionsetup{font=scriptsize}
+\usepackage{color}
+
+%\usepackage{lineno}
+\usepackage{hyperref}
+%CPR comment - added this package so I can use st command to strike out text
+\usepackage{soul}
+
+\include{C7_commands}
+
+\newcommand{\figref}[1]{FIG.~\ref{#1}}
+\newcommand{\refeq}[1]{\eqref{#1}}
+\newcommand{\secref}[1]{Sec.~\ref{#1}}
+\newcommand{\appref}[1]{Appendix~\ref{#1}}
+\newcommand{\tabref}[1]{TABLE~\ref{#1}}
+\newcommand{\figscale}{0.48}
+\newcommand{\corrCPR}[1]{ {\color{red} #1} }
 
 \begin{document}
 
-\begin{frontmatter}
+\preprint{AIP/123-QED}
 
-%% Title, authors and addresses
+\title[An~efficient kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion by using the~AWBS transport equation]{An~efficient kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion by using the~AWBS transport equation}% Force line breaks with \\
+%\thanks{Footnote to title of article.}
 
-%% use the tnoteref command within \title for footnotes;
-%% use the tnotetext command for the associated footnote;
-%% use the fnref command within \author or \address for footnotes;
-%% use the fntext command for the associated footnote;
-%% use the corref command within \author for corresponding author footnotes;
-%% use the cortext command for the associated footnote;
-%% use the ead command for the email address,
-%% and the form \ead[url] for the home page:
-%%
-%% \title{Title\tnoteref{label1}}
-%% \tnotetext[label1]{}
-%% \author{Name\corref{cor1}\fnref{label2}}
-%% \ead{email address}
-%% \ead[url]{home page}
-%% \fntext[label2]{}
-%% \cortext[cor1]{}
-%% \address{Address\fnref{label3}}
-%% \fntext[label3]{}
+%\author{Authors}
+\author{M. Holec}
+ \email{holec1@llnl.gov}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
 
-\title{An~efficient kinetic modeling in plasmas by using the~AWBS transport equation}
+\author{P. Loiseau}
+ \affiliation{
+ CEA, DAM, DIF, F-91297 Arpajon Cedex, France.
+}
 
-%% use optional labels to link authors explicitly to addresses:
-%% \author[label1,label2]{<author name>}
-%% \address[label1]{<address>}
-%% \address[label2]{<address>}
+\author{J. \corrCPR{P.} Brodrick}
+ \affiliation{
+\corrCPR{York Plasma Institute, Department of Physics, University of York, Heslington, York, YO10 5DD, UK.}
+}
 
-%\author[a]{M. Holec\corref{author}}
-\author[a,b]{Authors}
-%\author[b]{Third Author}
+\author{D. Del Sorbo}
+ \affiliation{
+\corrCPR{York Plasma Institute, Department of Physics, University of York, Heslington, York, YO10 5DD, UK.}
+}
 
-\cortext[author] {Corresponding author.\\\textit{E-mail address:} milan.holec@u-bordeaux.fr}
-\address[a]{Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA, UMR 5107, F-33405 Talence, France}
-%\address[b]{Second Address}
+\author{A. Debayle}
+ \affiliation{
+ CEA, DAM, DIF, F-91297 Arpajon Cedex, France.
+}
+
+\author{V. Tikhonchuk}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{J.-L. Feugeas}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{Ph. Nicolai}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{B. Dubroca}
+ \affiliation{
+, Universite de Bordeaux,\\ 
+France.
+}
+
+\author{\corrCPR{C. P.} Ridgers}
+ \affiliation{
+\corrCPR{York Plasma Institute, Department of Physics, University of York, Heslington, York, YO10 5DD, UK.}
+}
+
+\author{R. Kingham}
+ \affiliation{
+Imperial College, Lodon,\\ 
+UK.
+}
+%\author{J. Nikl}
+%\affiliation{ 
+%ELI-Beamlines Institute of Physics, AS CR, v.v.i, 
+%Na Slovance 2, Praha 8, 180 00, Czech Republic%\\This line break forced with \textbackslash\textbackslash
+%}
+%\affiliation{Czech Technical University in Prague, Faculty of 
+% Nuclear Sciences and Physical Engineering,
+% Brehova 7, 115 19 - Praha 1, Czech Republic.}
+%\author{S. Weber}%
+%%\email{stefan.weber@eli-beams.eu.}
+%\affiliation{ 
+%ELI-Beamlines Institute of Physics, AS CR, v.v.i, 
+%Na Slovance 2, Praha 8, 180 00, Czech Republic.%\\This line break forced with \textbackslash\textbackslash
+%}%
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
 
 \begin{abstract}
-The~AWBS Boltzmann transport equation for electrons equipped with 
-a~simplified e-e collision operator~\cite{AWBS_PRL1986}
-provides an~efficient, yet physically 
-relevant, kinetic extension compared the~classical 
-Spitzer-Harm heat flux (SH)
-based on local approximation and flux-limiting.
-This classical approach is widely used in plasma
-kinetics models coupled to hydrodynamics. 
-Even though SH reflects the~electron-electron collision effect, 
-the essential physical properties
-%, e.g. non-locality due to appropriate electron 
-%distribution function, 
-of the~electron transport cannot be modeled with 
-an~explicitly local model. A~simple form of the~AWBS model opens a~way 
-to couple kinetics to hydrodynamic codes while describing the~important 
-physics correctly. Since the~electron-electron collision effect becomes 
-especially important in the~case of low ion potential, we focus on presenting 
-results related to low Z plasmas.
+\textit{A preliminary version...}
+The~interaction of lasers with plasmas very often leads to nonlocal transport 
+conditions, where the classical hydrodynamic model fails to describe 
+physical phenomena \corrCPR{, such as heat-flow,} related to highly mobile particles. In this study 
+the~electron distribution in plasma is investigated for the~conditions relevant 
+to ICF. In particular, we focus on the~transport of nonlocal (supra-thermal) 
+electrons streaming down the~temperature gradient in the~ablating plasma. 
+Nevertheless, the~nature of plasma (ionized gas) requires a~correct response 
+of background electrons too. This is achieved by the~action of an~electric 
+field, which provides a~self-consistent Ohm’s law based on the~kinetic modeling.Our approach leans on the~Albritton-Williams-Bernstein-Swartz collision 
+operator providing a~simple, computationally efficient, transport equation 
+of electrons and is further benchmarked against Vlasov-Fokker-Planck codes 
+Aladin and Impact and collisional PIC code Calder. %CPR comment - could benefit from a clearer description of what the main results are, preferably with numbers
 \end{abstract}
 
-\begin{keyword}
-%% keywords here, in the form: keyword \sep keyword
-kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
+\pacs{Valid PACS appear here}% PACS, the Physics and Astronomy
+                             % Classification Scheme.
+\keywords{kinetics; nonlocal electron transport; laser-heated plasmas; hydrodynamics, Ohm's law.}%Use showkeys class option if keyword
+                              %display desired
+\maketitle
 
-\end{keyword}
-
-\end{frontmatter}
 
 %%
 %% Start line numbering here if you want
 %%
- \linenumbers
-\pagebreak
-\tableofcontents
-\pagebreak
+% \linenumbers
+
+%\pagebreak
+%\tableofcontents
+%\pagebreak
 %% main text
 %\section{}
 %\label{}
 %---------------------------------------------------------------------
 %---------------------------------------------------------------------
 
-\section{Introduction}
-\label{sec:Intro}
+\input{Sec_Intro}
+\input{Sec_AWBS_model}
+\input{Sec_Diffusion}
+\input{Sec_AP1_nonlocal}
+\input{Sec_Benchmarking}
+\input{Sec_Conclusions}
 
-\section{The~AWBS nonlocal transport model}
-\label{sec:AWBSmodel}
-\cite{Fisch_RMP1987}
+\begin{acknowledgments}
+\end{acknowledgments}
 
-\section{BGK, AWBS, and Fokker-Planck models in diffusive regime}
-\label{sec:DiffusiveKinetics}
-
-\subsection{The~BGK diffusive electron transport}
-\label{sec:BGKDiffusiveRegime}
-
-\subsection{The~AWBS diffusive electron transport}
-\label{sec:AWBSDiffusiveRegime}
-
-\subsection{The~Fokker-Planck diffusive electron transport}
-\label{sec:FPDiffusiveRegime}
-
-\cite{Rosenbluth_PR1957}, \cite{Longmire_1963}, \cite{Shkarofsky_1966}
-
-\section{Benchmarking the~AWBS nonlocal transport model}
-\label{sec:BenchmarkingAWBS}
-
-\subsection{Review of simulation codes}
-\label{sec:ReviewOfCodes}
-
-\subsubsection{C7}
-\label{sec:C7code}
-
-\subsubsection{ALADIN}
-\label{sec:ALADINcode}
-
-\subsubsection{IMPACT}
-\label{sec:IMPACTcode}
-
-\subsubsection{CALDER}
-\label{sec:CALDERcode}
-
-\subsection{Simulation results}
-\label{sec:SimulationResults}
-
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{cc}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case1_heatflux.png} &
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case1_kinetics.png}
-    \end{tabular}
-  \caption{  
-  Left: correct steady solution. Right: time and point to be precised by Aladin.}
-  \end{center}
-  \label{fig:C7_Aladin_case1}
-\end{figure}
-
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{cc}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case2_heatflux.png} &
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case2_kinetics.png}
-    \end{tabular}
-  \caption{  
-  Left: Does not look as steady solution. Right: time and point to be precised by Aladin.
-  }
-  \end{center}
-  \label{fig:C7_Aladin_case2}
-\end{figure}
-
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{cc}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_heatflux.png} &
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_kinetics.png}
-    \end{tabular}
-  \caption{  
-  Left: correct steady solution. Right: time and point to be precised by Aladin.
-  }
-  \end{center}
-  \label{fig:C7_Aladin_case3}
-\end{figure}
-
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{cc}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case4_heatflux.png} & 
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case4_kinetics.png}
-    \end{tabular}
-  \caption{  
-  Left: Does not look as steady solution. Right: time and point to be precised by Aladin.
-  }
-  \end{center}
-  \label{fig:C7_Aladin_case4}
-\end{figure}
-
-\clearpage
-
-\section{Conclusions}
-\label{sec:Conclusions}
+\appendix
+\input{App_BGK_AWBS_FP_diffusion}
 
 \bibliographystyle{elsarticle-num}
-%\bibliography{NTH}
+\bibliography{NTH}
 
 %% Authors are advised to submit their bibtex database files. They are
 %% requested to list a bibtex style file in the manuscript if they do
@@ -284,19 +309,21 @@ kinetics; hydrodynamics; nonlocal electron transport; laser-heated plasmas.
 
 %% References without bibTeX database:
 
-\begin{thebibliography}{00}
+%\begin{thebibliography}{00}
 
 %% \bibitem must have the following form:
-\bibitem{Fisch_RMP1987}{Nathaniel J. Fisch. Theory of current drive in plasmas. Rev. Mod. Phys., 59(1):175–234, Jan 1987.}
-\bibitem{Rosenbluth_PR1957}{Marshall N. Rosenbluth, William M. MacDonald, and David L. Judd. Fokker-planck equation for an inverse-square force. Phys.
-Rev., 107(1):1–6, Jul 1957.}
-\bibitem{Longmire_1963}{Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963.}
-\bibitem{Shkarofsky_1966}{I.P. Shkarofsky, T.W. Johnston, T.W. Bachynski, The Particle Kinetics of Plasmas, Addison-Wesley, Reading, MA, 1966.}
+%\bibitem{Fish_RMP1987}{Nathaniel J. Fisch. Theory of current drive in plasmas. Rev. Mod. Phys., 59(1):175–234, Jan 1987.}
+%\bibitem{Rosenbluth_PR1957}{Marshall N. Rosenbluth, William M. MacDonald, and David L. Judd. Fokker-planck equation for an inverse-square force. Phys.
+%Rev., 107(1):1–6, Jul 1957.}
+%\bibitem{Longmire_1963}{Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963.}
+%\bibitem{Shkarofsky_1966}{I.P. Shkarofsky, T.W. Johnston, T.W. Bachynski, The Particle Kinetics of Plasmas, Addison-Wesley, Reading, MA, 1966.}
+%\bibitem{SpitzerHarm_PR1953}{SH 1953.}
 
-\end{thebibliography}
+%\end{thebibliography}
 
 \clearpage
 
+\end{document}
 
 %% Old stuff goes to appendix 
 \appendix
@@ -358,7 +385,7 @@ which have the following properties
   2 \frac{m_\pb}{m_\pt + m_\pb} \Rhb .
   \nonumber
 \end{equation}
-The~Rosenbluth equation \eqref{eq:FP_Rosenbluth} can be further rewritten
+The~Rosenbluth equation \refeq{eq:FP_Rosenbluth} can be further rewritten
 according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
 \begin{equation}
   \left(\pdv{\ft}{t}\right)_c = \sum_{\pb} \Gamma^{\tob} 
@@ -474,7 +501,7 @@ the~isotropic distribution function can be approximated by
 $\fb_0^{slow} = n_{slow} \delta(\vmag) / (4\pi\vmag^2)$, 
 and since all integrals 
 $I_j(\fb_0^{slow}), J_j(\fb_0^{slow})$ vanish except 
-$I_0(\fb_0^{slow}) = n_{slow}$, equation \eqref{eq:FP_flm} reduces to 
+$I_0(\fb_0^{slow}) = n_{slow}$, equation \refeq{eq:FP_flm} reduces to 
 \begin{equation}
   \frac{1}{\Gamma^{\pt/slow}}\left(\pdv{\ft_l^m}{t}\right)_{slow} = 
   - \frac{l(l+1)}{2}
@@ -606,7 +633,7 @@ change in velocity, i.e. energy, of test particles.
   \nonumber
 \end{equation}
 
-Integration of \eqref{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
+Integration of \refeq{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
 \begin{eqnarray}
   a^{n-0.5} \frac{df^n - df^{n-1}}{ - \Delta \vmag} &=& b^{n-0.5} df^{n-1} 
   + c^{n-0.5} \ft_1^{n-1} + d^{n-0.5} ,
@@ -785,7 +812,7 @@ are the~best expressed via the~definition of current
   \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , 
   \nonumber 
 \end{equation}
-which can be directly expressed from \eqref{eq:OOE_P1f1} as
+which can be directly expressed from \refeq{eq:OOE_P1f1} as
 \begin{equation}
   %\frac{\vect{j}}{\qe} = 
   \vect{q}_c =
@@ -961,7 +988,7 @@ and the~complete effect of diffusion in velocity space reads
 \subsection{\textit{"Friction"} model}
 \label{sec:OOE_stable_splitting}
 \newcommand{\nuE}{\nu_{\tE}}
-In order to obey \eqref{eq:OOE_reverse_time_condition}, an~additional friction
+In order to obey \refeq{eq:OOE_reverse_time_condition}, an~additional friction
 $\nu_{\tE}$ can be introduced as
 \begin{eqnarray}
   |\tE| &=& |\tE^*| + \nuE \vmag  ,
@@ -984,7 +1011,7 @@ which is then applied to perturbation $\dafzero$ as
 \begin{comment} % Implicit fully-discrete scheme
 \subsection{Implicit fully-discrete scheme}
 \label{sec:OOE_impl_fullydiscrete_scheme}
-The moment P1 model \eqref{eq:OOE_P1f0}, \eqref{eq:OOE_P1f1} can be written 
+The moment P1 model \refeq{eq:OOE_P1f0}, \refeq{eq:OOE_P1f1} can be written 
 in a~semi-discrete form
 \begin{eqnarray}
   \IM^0_{(\nue)} \cdot \pdv{\davfzero}{\vmag}  
@@ -1069,10 +1096,10 @@ which leads to the~final form
   - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
   \label{eq:OOE_fullP1hosf1}
 \end{multline}
-where the~only unknown is $\pdv{\fone}{\vmag}$. Once \eqref{eq:OOE_fullP1hosf1}
+where the~only unknown is $\pdv{\fone}{\vmag}$. Once \refeq{eq:OOE_fullP1hosf1}
 is solved the~completion of the~solution 
 $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
-\eqref{eq:OOE_fullP1hosf0}.
+\refeq{eq:OOE_fullP1hosf0}.
 \cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
 \end{comment} % Implicit fully-discrete scheme
 
@@ -1080,7 +1107,7 @@ $[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating
 Three cases:
 \begin{itemize}
   \item constant $n_e = 5\times10^{20}$ [1/cm$^3$], constant $\Zbar = 4$, 
-  $T_e$ temperature profile taken from IMPACT simulation at 12 ps, see Figure 1
+  $T_e$ temperature profile taken from Impact simulation at 12 ps, see Figure 1
   %\figref{fig:Philippe_VFP_12ps}
   \item $n_e, T_e, \Zbar$ profiles taken from HYDRA simulation of Gadolinium
   hohlraum at 10 ps, see Figure 2 and Figure 3

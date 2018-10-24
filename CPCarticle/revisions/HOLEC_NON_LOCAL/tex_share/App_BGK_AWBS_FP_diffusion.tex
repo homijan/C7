@@ -1,0 +1,267 @@
+\section{Background of the local diffusive regime theory}
+\label{app:DiffusiveKinetics}
+
+The~left hand side of \eqref{eq:1D_kinetic_equation} acts on 
+\eqref{eq:f_approximation} as
+\begin{multline}
+  \mu\left(\pdv{\tilde{\ft}}{z} 
+  + \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{\ft}}{\vmag}\right) 
+  + \frac{\qe\Ez}{\me}\frac{1-\mu^2}{\vmag^2}\pdv{\tilde{\ft}}{\mu} = \\
+  \mu\left(\pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}\right) 
+  + \frac{\qe\Ez}{\me\vmag^2} \ft^1 + O(\mu^2) .
+  \label{app_eq:LHS_kinetic_equation}
+\end{multline}
+The~action on \eqref{eq:f_approximation} of the~BGK operator 
+\eqref{eq:BGK_model_1D} as used in \eqref{eq:1D_kinetic_equation} reads
+\begin{eqnarray}
+  \frac{1}{\vmag}C_{BGK}(\tilde{\ft})
+  &=&
+  \frac{\tilde{\ft} - \fM}{\mfpe}
+  + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{1}{\mfpe}\right)
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} ,\nonumber\\
+  &=&  \frac{\ft^0 - \fM}{\mfpe}
+  - \mu \frac{\Zbar}{\mfpe}\ft^1 .
+  \label{app_eq:BGK_model_1D}
+\end{eqnarray}
+Consequently, if the~isotropic and anisotropic parts of 
+\eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:BGK_model_1D} are 
+compared, one finds the~following equations 
+\begin{eqnarray}
+  \ft^0 &=& \fM + \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 ,
+  \label{app_eq:BGK_f0} \\
+  \ft^1 &=& - \frac{\mfpe}{\Zbar}
+  \left( \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right) . 
+  \label{app_eq:BGK_f1}
+\end{eqnarray}
+It is valid to assume that $\ft^0 = \fM$ from \eqref{app_eq:BGK_f0}. Then,
+\begin{equation}
+  \ft^1_{BGK} = - \frac{\mfpe}{\Zbar}
+  \left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right) . 
+  \label{app_eq:BGK_f1_fM}
+\end{equation}
+The~\textit{quasi-neutrality} constraint, corresponding to a~zero 
+electric reads
+\begin{equation}
+\vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0} .
+\end{equation}
+In the~case of the BGK EDF, in particular its~anisotropic part 
+\eqref{app_eq:BGK_f1_fM}, the~zero current condition takes the~form
+\begin{equation}
+  2\pi\int_{-1}^{1} \int_{\vmag} \vmag \mu^2 \ft^1_{BGK}\, \dI\vmag\dI\mu = 0 ,
+  \nonumber
+\end{equation}
+which leads to the~electric field (same as the~classical Lorentz electric field
+\cite{Lorentz_1905})
+\begin{equation}
+  \Ez = \frac{\me\vth^2}{\qe}\left(\frac{1}{L_{n_e}} 
+  + \frac{5}{2}\frac{1}{L_{T_e}} \right) .
+  \label{app_eq:BGK_Efield}
+\end{equation}
+It is worth mentioning, that the~deviation of $\ft^0$ from $\fM$ in 
+\eqref{app_eq:BGK_f0} can be written as $\left(\frac{\mfpe}{L_{n_e}} 
+  + \frac{5}{2}\frac{\mfpe}{L_{T_e}} \right)\frac{\vth^2}{\vmag^2}f^1$,
+where naturally arises the~Knudsen number 
+$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$ comprising
+both contributions of electron density and temperature gradients.
+
+In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in 
+\eqref{eq:1D_kinetic_equation}, its action on \eqref{eq:f_approximation} reads
+\begin{eqnarray}
+  \frac{1}{\vmag}C_{AWBS}(\tilde{\ft})
+  &=& 
+  \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
+  \nonumber \\
+  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{\xi}{\mfpe}\right)
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}  \nonumber \\
+  &=& \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
+  &&\, + \mu\left(\frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\xi}{\mfpe}\ft^1\right) ,
+  \label{app_eq:AWBS_model_1D}
+\end{eqnarray}
+where $\nue^* = \xi \nue = \frac{\vmag\xi}{\mfpe}$ with $\xi$ being a~scaling
+parameter of the~standard e-e collision frequency. Its purpose is to
+match AWBS heat flux to results obtained by Spitzer and Harm 
+\cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
+\secref{sec:FPDiffusiveRegime} shows that this match can be found with 
+a~constant $\xi=0.5$.
+
+One finds the~following equations if the~isotropic and anisotropic parts of 
+\eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:AWBS_model_1D} are 
+compared 
+\begin{eqnarray}
+  \pdv{}{\vmag}\left( \ft^0 -\fM\right) &=& 
+  \frac{\mfpe\qe\Ez}{\xi\me\vmag^2}\frac{\ft^1}{\vmag} ,
+  \label{app_eq:AWBS_f0} \\
+  \frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\xi}{\mfpe}\ft^1 &=&
+  \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} .
+  \label{app_eq:AWBS_f1} 
+  %\\  
+  %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
+  %- \frac{\Zbar + 1}{\Zbar} f^1 &=&
+  %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
+  %\nonumber
+\end{eqnarray}
+If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
+the~anisotropic part of the~AWBS operator is governed by the~equation
+\begin{equation}
+  \pdv{\ft^1_{AWBS}}{\vmag} 
+  - \frac{\Zbar+\xi}{\vmag\xi}\ft^1_{AWBS} =
+  \frac{\mfpe}{\vmag\xi} 
+  \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) .
+  \label{app_eq:AWBS_f1_fM}
+\end{equation}
+Even though it is not straightforward, the~electric field in 
+\eqref{app_eq:AWBS_f1_fM} (solved numerically) providing a~zero current 
+exactly matches \eqref{app_eq:BGK_Efield}. Consequently, the~deviation of
+$\pdv{\ft^0}{\vmag}$ from $\pdv{\fM}{\vmag}$ in 
+\eqref{app_eq:AWBS_f0} can be written as 
+$Kn\frac{\vth^2}{\xi\vmag^2}\frac{f^1}{\vmag}$.
+
+Finally, it should be stressed, that the~concept of locality expressed as 
+$Kn\ll1$ is crucial for our \textit{local diffusive regime} analysis, 
+because it provides sufficient Maxwellization, i.e.  \eqref{app_eq:BGK_f0} and
+\eqref{app_eq:AWBS_f0}, and correspondingly, \eqref{app_eq:BGK_f1_fM} 
+and \eqref{app_eq:AWBS_f1_fM} are valid models.
+
+\section{AP1 electric field limit}
+\label{app:AP1limit}
+
+Interestingly, we have encountered a~very specific property of the~AP1 model
+with respect to the~electric field magnitude. The~easiest way how to 
+demonstrate this is to write the~model equations \eqref{eq:AP1f0} and 
+\eqref{eq:AP1f1} in 1D (z-axis). Then, due to its linear nature, it is easy 
+to eliminate one of the~partial derivatives with respect to $\vmag$, i.e. 
+$\pdv{\fzero}{\vmag}$ or $\pdv{\fonez}{\vmag}$. 
+In the~case of elimination of $\pdv{\fzero}{\vmag}$ 
+one obtains the~following equation
+\begin{multline}
+  %\frac{2}{3\vmag\nue} 
+  %\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \Ez^2\right)  
+  \left(\vmag\frac{\nue}{2} - \frac{2\qe^2\Ez^2}{3\me^2\vmag\nue}\right) 
+  \pdv{\fonez}{\vmag} 
+  =
+  \frac{2\qe\Ez}{3\me\nue}\pdv{\fonez}{z}  
+  + \frac{4\pi\qe\Ez}{3\me}\pdv{\fM}{\vmag} \\
+  + \frac{\vmag}{3}\pdv{\fzero}{z} 
+  + \left(\frac{4\qe^2\Ez^2}{3\me^2\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right) \right)\fonez .
+  \label{eq:AP1_model_1D}
+\end{multline}
+It is convenient to write the~bracket on the~left hand side of 
+\eqref{eq:AP1_model_1D} as
+$\frac{2}{3\vmag\nue} 
+\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 
+- \frac{\qe^2}{\me^2}\Ez^2\right)$
+from where it is clear that the~bracket is negative if 
+$\sqrt{3}\vmag\frac{\nue}{2} < \frac{\qe}{\me}|\E|$, 
+i.e. there is a~velocity limit for a~given magnitude $|\E|$, 
+when the~collisions are no more fully dominant and the~electric field 
+introduces a~comparable effect to the~collision friction in 
+the~electron transport.
+
+It can be shown, that the~last term on the~right hand side of 
+\eqref{eq:AP1_model_1D} is dominant and the~solution behaves as 
+\begin{equation}
+  \Delta \fone \sim \exp\left(\frac{\frac{4\qe^2\Ez^2}{3\me^2\vmag^2\nue}
+  + \left(\nuei + \frac{\nue}{2}\right)}
+  {\vmag\frac{\nue}{2} - \frac{2\qe^2\Ez^2}{3\me^2\vmag\nue}}\, 
+  \Delta\vmag\right) ,
+  \label{eq:f1z_behavior}
+\end{equation}
+where $\Delta \vmag < 0$ represents a~velocity step of the~implicit Euler
+numerical integration of decelerating electrons.
+However, \eqref{eq:f1z_behavior} exhibits an~exponential growth 
+for velocities above the~friction limit (bracket on the~left hand side of 
+\eqref{eq:AP1_model_1D})
+\begin{equation}
+  \vmag_{lim}  = \sqrt{\frac{\sqrt{3}\Gamma\me}{2\qe}\frac{n_e}{|\E|}} ,
+  \label{eq:v_limit}
+\end{equation}
+which makes the~problem to be ill-posed.
+
+In order to provide a~stable model, we introduce a~reduced electric field
+to be acting as the~accelerating force of electrons
+\begin{equation}
+  |\E_{red}| = \sqrt{3} \vmag\frac{\me}{\qe}\frac{\nue}{2} ,
+  \label{eq:Elimit}
+\end{equation}
+ensuring that the~bracket on the~left hand side of \eqref{eq:AP1_model_1D}
+remains positive. Further more we define two quantities
+\begin{equation}
+  \omega_{red} = \frac{|\E_{red}|}{|\E|} ,\quad 
+  \nuscat^E = \frac{\qe}{\me\vmag} \left(|\E| - |\E_{red}|\right),
+  \nonumber
+\end{equation}
+introducing the~reduction factor of the~electric field
+$\omega_{red}$ and the~compensation of the~electric field effect in terms of
+scattering $\nuscat^E$. Consequently, the~AP1 model \eqref{eq:AP1f0}, 
+\eqref{eq:AP1f1}, and \eqref{eq:AmpereKinetic} can be formulated as well posed 
+with the~help of $\omega_{red}$ and $\nuscat^E$. 
+
+\begin{comment} % delta f0.
+Nevertheless, before doing so,
+we introduce a~slightly different approximation to the~electron distribution 
+function as
+\begin{equation}
+  \tilde{f} = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \label{eq:P1_OOE}
+\end{equation}
+where $\dafzero$ represents the~departure of isotropic part from 
+the~Maxwell-Boltzmann equilibrium distribution $\fM$. 
+%which we keep 
+%intentionally in the~distribution function approximation.
+Then, the~stable AP1 model reads
+\begin{eqnarray}
+  \vmag \frac{\nue}{2}\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone 
+  + \frac{\qe}{\me}\E\cdot\left(\omega_{red} \pdv{\fone}{\vmag} 
+  + \frac{2}{\vmag}\fone\right) , 
+  \label{eq:AP1f0_stable}\\
+  \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} 
+  &=& \tnuscat\fone 
+  + \frac{\vmag}{3}\nabla\left(4\pi\fM + \dafzero\right)
+  \nonumber \\
+  && 
+  + \frac{\qe\E}{3\me}\left(4\pi \pdv{\fM}{\vmag} 
+  + \omega_{red} \pdv{\dafzero}{\vmag} 
+  \right) ,
+  \label{eq:AP1f1_stable}
+\end{eqnarray}
+where $\tnuscat = \nuei + \nuscat^E + \frac{\nue}{2}$.
+
+The~reason for keeping $\fM$ in the~distribution function approximation
+\eqref{eq:P1_OOE} can be seen in the~last term on the~right hand side of 
+\eqref{eq:AP1f1_stable}, which provides the~effect of electric field on
+directional quantities as current or heat flux. In principle, the~explicit use
+of $\fM$ ensures the~proper effect of $\E$ if $\dafzero \ll \fM$, i.e.
+no matter what the~reduction $\omega_{red}$ is. Apart from its stability,
+it also exhibits much better convergence of the~electric field, which is now
+given by the~zero current condition of \eqref{eq:AP1f1_stable} as
+\begin{equation}
+  \E =
+  \frac{\intv \left(\frac{\nue}{2\tnuscat}\vmag^2\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\tnuscat}
+  \nabla\left(4\pi\fM + \dafzero\right)\right) \vmag^2\, \dI\vmag}
+  {\frac{\qe}{\me}\intv \frac{\vmag}
+  {3\tnuscat}
+  \left(4\pi\pdv{\fM}{\vmag} + \omega_{red} \pdv{\dafzero}{\vmag}\right)
+  \vmag^2\, \dI\vmag} .
+  \label{eq:AP1_Efield_stable}
+\end{equation}
+\end{comment} % delta f0.
+
+\begin{comment} % CALDER kinetics.
+\section{Calder kinetics}
+\label{app:CalderKinetics}
+and is written (it would be better to write Eq. (2) in its conservative forme and its non relativistic kernel U):
+\begin{widetext}
+\begin{eqnarray}
+&&\frac{\partial f_\alpha}{\partial t}+\mathbf{v}\cdot\nabla_{\mathbf{x}}f_\alpha+q_\alpha\left(\mathbf{E}+\mathbf{v}\vect{\times}\mathbf{B}\right)\nabla_{\mathbf{p}}f_\alpha=C_{LBB}(f_\alpha,f_\alpha)+\sum_\beta C_{LBB}(f_\alpha,f_\beta),\\
+&&C_{LBB}(f_\alpha,f_\beta)=-\frac{\partial}{\partial \mathbf{p}}\cdot\frac{\Gamma_{\alpha\beta}}{2}\left[\int \mathbf{U}(\mathbf{p},\mathbf{p}^\prime)\cdot(f_\alpha\nabla_{\mathbf{p}^\prime}f_\beta^\prime-f_\beta^\prime\nabla_{\mathbf{p}}f_\alpha)\right]d^3\mathbf{p}^\prime,\\
+&&\mathbf{U}(\mathbf{p},\mathbf{p}^\prime)=\frac{r^2/\gamma\gamma^\prime}{(r^2-1)^{3/2}}\left[(r^2-1)\mathbf{I}-\mathbf{p}\otimes\mathbf{p}-\mathbf{p}^\prime\otimes\mathbf{p}^\prime+r(\mathbf{p}\otimes\mathbf{p}^\prime+\mathbf{p}^\prime\otimes\mathbf{p})\right],
+\end{eqnarray}
+\end{widetext}
+with $\gamma=\sqrt{1+\mathbf{p}^2}$, $\gamma^\prime=\sqrt{1+\mathbf{p}^{\prime 2}}$ and $r=\gamma\gamma^\prime-\mathbf{p}\cdot\mathbf{p}^\prime$. The momemtum $\mathbf{p}_\alpha$ ($\mathbf{p}_\beta$) is normalized to $m_\alpha c$ (resp. $m_\beta c$). Obviously, this collision operator tends to Eq. (2) in the non-relativistic limit.
+\end{comment} % CALDER kinetics.
+
