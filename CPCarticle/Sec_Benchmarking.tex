@@ -84,59 +84,49 @@ Brief description of the Calder code \figref{fig:C7_Calder_case1}.
 The~PIC code is extremely expensive as the~collisions require the~description 
 of the~velocity space in 3 dimensions. Yet, a~reduction of dimensions can be 
 done by developing the~distribution function in a~cartesian tensor series, 
-equivalent to a~serie along the spherical harmonics \cite{Johnston_PR1960}
-as follows:\textit{CPR comment - Cartesian tensors are the same as spherical harmonics to first order}
-\begin{equation}
-  f(t,\mathbf{x},\vv) = f_0(t,\mathbf{x},\vmag) 
-  + \vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)
-  +\vn\otimes\vn:\matr{f}_2(t,\mathbf{x},\vmag)+... .
-  \label{Pn}
-\end{equation}
+equivalent to a~serie along the spherical harmonics \cite{Johnston_PR1960}.
+%as follows:\textit{CPR comment - Cartesian tensors are the same as spherical harmonics to first order}
+%\begin{equation}
+%  f(t,\mathbf{x},\vv) = f_0(t,\mathbf{x},\vmag) 
+%  + \vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)
+%  +\vn\otimes\vn:\matr{f}_2(t,\mathbf{x},\vmag)+... .
+%  \label{Pn}
+%\end{equation}
 %where $v=|\mathbf{v}|$, $\Omega=\mathbf{v}/v$. 
-A P$_n$ model refers to 
-neglecting orders higher than $\matr{f}_n$. The distribution function 
-approximation $f(t,\mathbf{x},\vv)\approx f_0(t,\mathbf{x},\vmag)
-+\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with 
+%A P$_n$ model refers to 
+%neglecting orders higher than $\matr{f}_n$. 
+This in its first order form corresponds to the~P1 approximation 
+\eqref{eq:P1approximation} and coupled with
+%distribution function 
+%approximation $f(t,\mathbf{x},\vv)\approx f_0(t,\mathbf{x},\vmag)
+%+\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with 
 the~Landau-Fokker-Planck collisional operator 
-\eqref{eq:LFP_model}, leads to the P$_1$-VFP model 
+\eqref{eq:LFP_model} leads to the P$_1$-VFP model 
 \cite{Johnston_PR1960, Kingham_JCP2004}:
 \begin{eqnarray}
-\frac{\partial f_0}{\partial t}+\frac{\vmag}{3}\nabla \cdot f_1
-+\frac{\qe}{3\me\vmag^2}\frac{\partial}{\partial \vmag}(\vmag^2\E\cdot \mathbf{f}_1)
+\frac{\partial \fzero}{\partial t}+\frac{\vmag}{3}\nabla \cdot \fone
++\frac{\qe}{3\me\vmag^2}\frac{\partial}{\partial \vmag}(\vmag^2\E\cdot \fone)
 &=&
-C^0_{ee}(f_0) ,
+C^0_{ee}(\fzero) ,
  \label{eq:P1f0_Aladin}\\
-\frac{\partial \mathbf{f}_1}{\partial t}+\vmag\nabla f_0
-+ \frac{\qe\E}{\me}\frac{\partial f_0}{\partial \vmag}
-+\frac{\qe\B}{\me}\vect{\times} \mathbf{f}_1 
+\frac{\partial \fone}{\partial t}+\vmag\nabla \fzero
++ \frac{\qe\E}{\me}\frac{\partial \fzero}{\partial \vmag}
++\frac{\qe\B}{\me}\vect{\times} \fone 
 &=&
-- \nuei\mathbf{f}_1 .
+- \nuei\fone .
 \label{eq:P1f1_Aladin}
 \end{eqnarray}
-where for simplicity only the~isotropic 
-contribution of \eqref{eq:LFP_model} is used 
+where for simplicity only a~contribution of the~isotropic part of 
+the~distribution function in \eqref{eq:LFP_model} is used 
 \begin{eqnarray} 
-C^0_{ee}(f_0) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
-\left[C(f_0)f_0+D(f_0)\frac{\partial f_0}{\partial \vmag}\right] ,
+C^0_{ee}(\fzero) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
+\left[C(f_0)f_0+D(\fzero)\frac{\partial \fzero}{\partial \vmag}\right] ,
 \\
-C(f_0(\vmag)) &=& 4\pi\int_0^\vmag f_0(u) u^2 \dI u ,
+C(\fzero(\vmag)) &=& 4\pi\int_0^\vmag \fzero(u) u^2 \dI u ,
 \\
-D(f_0(\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w f_0(w) 
+D(\fzero\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w \fzero(w) 
 \dI w \dI u .
 \end{eqnarray}
-
-\begin{comment} % Hydro quantities.
-The electron and energy densities are obtained from the isotropic part of the distribution function $f_0$:
-\begin{eqnarray}
-n_e=4\pi\int_{\mathbf{R}^+} f_0v^2dv,\\
-U_e=2\pi m_e\int_{\mathbf{R}^+} f_0v^4dv,
-\end{eqnarray}
-and the electron current and heat flux are obtained from the anisotropic part of the distribution function $\mathbf{f}_1$:
-\begin{eqnarray}
-\mathbf{j}_e=-\frac{4\pi e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^3dv,\\
-\mathbf{Q}_e=\frac{2\pi m_e}{3}\int_{\mathbf{R}^+} \mathbf{f}_1v^5dv.
-\end{eqnarray}
-\end{comment} % Hydro quantities.
 
 Impact and Aladin solve the system \eqref{eq:P1f0_Aladin} 
 and \eqref{eq:P1f1_Aladin} with the Maxwell equations  
@@ -151,9 +141,63 @@ coupled to ion fluid via $\fM$.
 
 Brief description of the Aladin code \figref{fig:C7_Aladin_case5}, \figref{fig:C7_Aladin_case3}.
 
-
 %%% CEA contribution ends
 
+\textbf{SNB approach}
+
+Now considered as a~standard among nonlocal electron models in hydrodynamic 
+codes, SNB \cite{Schurtz_2000} represents an efficient P1 method based on
+the~velocity dependent form of the~collision BGK operator. It uses EDF 
+approximation representing deviation from the~local BGK theory
+\begin{equation}
+  \tilde{\ft} = 
+  \fM + \delta\fzero 
+  + \vn\cdot\left(\fone_M + \delta\fone\right) , 
+  \label{eq:SNB_approximation}
+\end{equation}
+where $\fone_M = - \xi\mfpei\left( \frac{\vmag^2}{2 \vth^2} - 4\right)\fM
+\frac{\nabla \Te}{\Te}$ is obtained from the~diffusive solution 
+\eqref{eq:BGK_approximation} with \eqref{eq:BGK_scaling}.
+The~zero and first angular moment of electron transport equation 
+with scaled \eqref{eq:BGK_scaling} collision operator \eqref{eq:BGK_model_1D} 
+acts on SNB approximation \eqref{eq:SNB_approximation} 
+as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1})
+\begin{eqnarray}
+  \frac{\nue}{\xi}\delta\fzero &=&
+  - \frac{\vmag}{3}\nabla\cdot\left(\delta\fone + \fone_M\right)
+  \nonumber\\ 
+  &&\xcancel{- \frac{\qe}{\me}\frac{\E}{3}\cdot\left(
+  \pdv{\fone_M}{\vmag} + \pdv{\delta\fone}{\vmag} 
+  + \frac{2}{\vmag}\left(\fone_M + \delta\fone\right)\right)} , 
+  \nonumber \\
+  \label{eq:SNBf0}\\
+  \frac{\nuei}{\xi}\delta\fone &=& - \vmag\nabla\delta\fzero 
+  ~\xcancel{- \frac{\qe}{\me}\E\pdv{\delta\fzero}{\vmag}} 
+  \nonumber \\
+  &&\underbrace{- \frac{\nuei}{\xi}\fone_M - \vmag\nabla\fM
+  - \frac{\qe}{\me}\E\pdv{\fM}{\vmag}}_{~~~~~~~~~~~~~=~0,~\text{if}~\E = \E_L} 
+  %+\frac{\qe\B}{\me c}\vect{\times} \left(\fone_M + \delta\fone\right)
+  ,
+  \nonumber \\
+  \label{eq:SNBf1}
+\end{eqnarray}
+where the~magnetic field has been omitted. One should notice, that the~local
+EDF contribution cancels out in \eqref{eq:SNBf1} when the~electric field 
+adjusts to the~local Lorentz electric field \eqref{app_eq:BGK_Efield}. 
+The~efficiency of SNB resides in omitting the~directional electric field 
+effect (crossed out terms in \eqref{eq:SNBf0} and \eqref{eq:SNBf1}), which
+leads to a~simple diffusion model 
+\begin{equation}
+  \frac{1}{\mfpe^{SNB}}\delta\fzero 
+  - \nabla\cdot\frac{\mfpei^{SNB}}{3}\nabla\delta\fzero =
+  \nabla\cdot\frac{\xi\mfpei}{3}\frac{\fM}{\Te}\nabla \Te
+  ,
+  \label{eq:SNB_model}
+\end{equation}
+where the~actual effect of $\E$ is mimicked as an~isotropic scattering
+$\frac{1}{\mfpei^{SNB}} = \frac{\nuei}{\xi\vmag} + \frac{|\qe\E|}{\frac{1}{2}\me\vmag^2}$ \cite{Schurtz_2000} and $\mfpe^{SNB} = \frac{\nue}{\xi\vmag}$, and
+the~source term based on $\fone_M$ simplifies by avoiding the~bracket in 
+the~latter.
 %\begin{itemize}
 %  \item Brief description of the Impact code \figref{fig:C7_Impact_case3}.
 %\end{itemize}

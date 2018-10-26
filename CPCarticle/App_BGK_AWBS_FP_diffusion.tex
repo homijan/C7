@@ -39,8 +39,8 @@ It is valid to assume that $\ft^0 = \fM$ from \eqref{app_eq:BGK_f0}. Then,
   \left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right) . 
   \label{app_eq:BGK_f1_fM}
 \end{equation}
-The~\textit{quasi-neutrality} constraint, corresponding to a~zero 
-electric reads
+The~\textit{quasi-neutrality} constraint, corresponding to a~zero current 
+imposed by the~electric field reads
 \begin{equation}
 \vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0} .
 \end{equation}
@@ -51,7 +51,7 @@ In the~case of the BGK EDF, in particular its~anisotropic part
   \nonumber
 \end{equation}
 which leads to the~electric field (same as the~classical Lorentz electric field
-\cite{Lorentz_1905})
+$\E_L$ \cite{Lorentz_1905})
 \begin{equation}
   \Ez = \frac{\me\vth^2}{\qe}\left(\frac{1}{L_{n_e}} 
   + \frac{5}{2}\frac{1}{L_{T_e}} \right) .
@@ -69,31 +69,31 @@ In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in
 \begin{eqnarray}
   \frac{1}{\vmag}C_{AWBS}(\tilde{\ft})
   &=& 
-  \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
+  \frac{\vmag\zeta}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
   \nonumber \\
-  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{\xi}{\mfpe}\right)
+  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{\zeta}{\mfpe}\right)
   \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}  \nonumber \\
-  &=& \frac{\vmag\xi}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
-  &&\, + \mu\left(\frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+\xi}{\mfpe}\ft^1\right) ,
+  &=& \frac{\vmag\zeta}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
+  &&\, + \mu\left(\frac{\vmag\zeta}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\zeta}{\mfpe}\ft^1\right) ,
   \label{app_eq:AWBS_model_1D}
 \end{eqnarray}
-where $\nue^* = \xi \nue = \frac{\vmag\xi}{\mfpe}$ with $\xi$ being a~scaling
+where $\nue^* = \zeta \nue = \frac{\vmag\zeta}{\mfpe}$ with $\zeta$ being a~scaling
 parameter of the~standard e-e collision frequency. Its purpose is to
 match AWBS heat flux to results obtained by Spitzer and Harm 
 \cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
 \secref{sec:FPDiffusiveRegime} shows that this match can be found with 
-a~constant $\xi=0.5$.
+a~constant $\zeta=0.5$.
 
 One finds the~following equations if the~isotropic and anisotropic parts of 
 \eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:AWBS_model_1D} are 
 compared 
 \begin{eqnarray}
   \pdv{}{\vmag}\left( \ft^0 -\fM\right) &=& 
-  \frac{\mfpe\qe\Ez}{\xi\me\vmag^2}\frac{\ft^1}{\vmag} ,
+  \frac{\mfpe\qe\Ez}{\zeta\me\vmag^2}\frac{\ft^1}{\vmag} ,
   \label{app_eq:AWBS_f0} \\
-  \frac{\vmag\xi}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+\xi}{\mfpe}\ft^1 &=&
+  \frac{\vmag\zeta}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+\zeta}{\mfpe}\ft^1 &=&
   \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} .
   \label{app_eq:AWBS_f1} 
   %\\  
@@ -106,8 +106,8 @@ If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
 \begin{equation}
   \pdv{\ft^1_{AWBS}}{\vmag} 
-  - \frac{\Zbar+\xi}{\vmag\xi}\ft^1_{AWBS} =
-  \frac{\mfpe}{\vmag\xi} 
+  - \frac{\Zbar+\zeta}{\vmag\zeta}\ft^1_{AWBS} =
+  \frac{\mfpe}{\vmag\zeta} 
   \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) .
   \label{app_eq:AWBS_f1_fM}
 \end{equation}
@@ -116,7 +116,7 @@ Even though it is not straightforward, the~electric field in
 exactly matches \eqref{app_eq:BGK_Efield}. Consequently, the~deviation of
 $\pdv{\ft^0}{\vmag}$ from $\pdv{\fM}{\vmag}$ in 
 \eqref{app_eq:AWBS_f0} can be written as 
-$Kn\frac{\vth^2}{\xi\vmag^2}\frac{f^1}{\vmag}$.
+$Kn\frac{\vth^2}{\zeta\vmag^2}\frac{f^1}{\vmag}$.
 
 Finally, it should be stressed, that the~concept of locality expressed as 
 $Kn\ll1$ is crucial for our \textit{local diffusive regime} analysis, 
