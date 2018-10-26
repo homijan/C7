@@ -187,17 +187,28 @@ to be acting as the~accelerating force of electrons
   \label{eq:Elimit}
 \end{equation}
 ensuring that the~bracket on the~left hand side of \eqref{eq:AP1_model_1D}
-remains positive. Further more we define two quantities
-\begin{equation}
-  \omega_{red} = \frac{|\E_{red}|}{|\E|} ,\quad 
-  \nuscat^E = \frac{\qe}{\me\vmag} \left(|\E| - |\E_{red}|\right),
-  \nonumber
-\end{equation}
-introducing the~reduction factor of the~electric field
-$\omega_{red}$ and the~compensation of the~electric field effect in terms of
-scattering $\nuscat^E$. Consequently, the~AP1 model \eqref{eq:AP1f0}, 
-\eqref{eq:AP1f1}, and \eqref{eq:AmpereKinetic} can be formulated as well posed 
-with the~help of $\omega_{red}$ and $\nuscat^E$. 
+remains positive. We define a~quantity $\eta_{red} = \frac{|\E_{red}|}{|\E|}$.
+Then, the~AP1 model \eqref{eq:AP1f0}, \eqref{eq:AP1f1} can be formulated 
+as well posed 
+\begin{eqnarray}
+  \vmag\frac{\nue}{2}\pdv{}{\vmag}\left(\fzero - \fM \right) &=&
+  \frac{\vmag}{3}\nabla\cdot\fone + \frac{\qe}{\me}\frac{\E}{3}\cdot
+  \nonumber \\
+  &&\left(
+  \eta_{red}\pdv{\fone}{\vmag} + \frac{2(2-\eta_{red})}{\vmag}\fone\right) , 
+  \nonumber \\
+  \label{eq:AP1f0_app}\\
+  \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
+  - \nuscat\fone &=& 
+  \vmag\nabla\fzero + 
+  \frac{\qe\eta_{red}}{\me}\E\pdv{\fzero}{\vmag} 
+  +\frac{\qe\B}{\me c}\vect{\times} \fone
+  ,
+  \nonumber \\
+  \label{eq:AP1f1_app}
+\end{eqnarray}
+while introducing the~reduction factor of the~accelerating electric field
+and the~compensation of the~electric field effect via its angular term.  
 
 \begin{comment} % delta f0.
 Nevertheless, before doing so,
