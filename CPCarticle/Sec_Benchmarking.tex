@@ -463,9 +463,11 @@ Yet another observation can be made when analysing $q_1$
 in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, and 
 \figref{fig:C7_Aladin_case5}. When comparing their middle and bottom plots,
 both velocity maxima of the~EDF correspond to approximately same velocity
-for each of the~cases, i.e. that the~electrond responsible for the~flux in
+for each of the~cases, i.e. that the~electrons responsible for the~flux in
 the~bottom plot are those flux dominating electrons from the~heat flux
-maximum point shown in the~middle plot. This provides a~microscopic information
+maximum point shown in the~middle plot. Notice that different reference 
+temperatures and $\vth$ are used in the~middle and bottom plots. 
+This provides a~microscopic information
 about the~motion of electrons on the~nonlocal spatial scale. 
 
 In every simulation run of AP1 we used 250~velocity groups in order to avoid
@@ -476,33 +478,44 @@ number of groups, e.g. 50, provides a~very similar results
 Aladin, Impact, and Calder.}
 
 \subsection{Hohlraum problem}
-%While comparisons between the AP1 model and VFP
-%codes have previously been performed 8,45 , none have included 
-%spatially-inhomogeneous ionisation. 
 Additionally to the~steep temperature gradients, the~laser-heated plasma 
 experiments also involve steep density gradients and variation in ionization,
 which is even more dominant in multi-material targets as in inertial
 fusion experiments, e.g. at the interface between the helium gas-fill and 
 the ablated high $\Zbar$ plasma.
-%, it is critical that the AP1 model be tested 
-%in such an environment.
 
 In~\cite{Brodrick_PoP2017}, a~kinetic simulation of such a~test was introduced.
 Plasma profiles provided by a~HYDRA simulation in 1D spherical
 geometry of a~laser-heated gadolinium hohlraum containing a~typical helium 
-gas-fill were used as input for the~IMPACT \cite{Kingham_JCP2004} VFP code. 
-Electron temperature $T_e$, electron density $n_e$ and ionisation $\Zbar$ 
-profiles shown in \figref{fig:Gd_VFP_10ps_heatflux} at 20 nanoseconds of 
-the~HYDRA simulation were used (after spline smoothing) as 
-the~initial conditions for the~IMPACT run (in planar geometry). 
+gas-fill were used as input for the~IMPACT \cite{Kingham_JCP2004} VFP code.  
 For simplicity, the Coulomb logarithm was treated as a
 constant $\lnc_{ei}$ = $\lnc_{ee}$ = 2.1484. In reality, in the~low-density 
 corona $\lnc$ reaches 8, which, however, does not affect the~heat flux profile 
-significantly. 
-%Note that in reality
-%5the plasma is only strongly coupled in the colder region of
-%the gadolinium bubble beyond $\sim$1.7 mm and $\lnc_{ei}\approx$ 8
-%up to $\sim$1.6 mm in the hotter corona.
+significantly. Plasma profiles at 20 nanoseconds of the~HYDRA simulation 
+were used (after spline smoothing) as the~initial conditions for 
+the~IMPACT run (in planar geometry).
+
+\figref{fig:Gd_VFP_10ps_heatflux} shows the~electron temperature $\Te$ 
+evolved during 10 ps by Impact, and the~electron density $\ed$ and 
+ionization $\Zbar$ profiles. Along with plasma profiles the~heat flux profiles
+of AP1, Impact, and SNB are also shown. 
+\textit{Kn profile will be probably added}. One can observe an~overall good
+match among models in the~preheat region.
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
+    \end{tabular}
+  \caption{
+  Heat flux profiles by AP1, Impact and SNB along 
+  the~electron temperature $\Te$, electron density $\ed$, 
+  and ionization $\Zbar$ profiles in a~laser-heated gadolinium hohlraum 
+  containing a helium gas-fill.
+  }
+  \label{fig:Gd_VFP_10ps_heatflux}
+  \end{center} 
+\end{figure}
 
 It is worth mentioning that in the~surroundings of the~heat flux maximum 
 ($\sim 1662 \mu$m) the~profiles of all plasma variables exhibit steep gradients 
@@ -511,22 +524,13 @@ $\Zbar$ = 2 to $T_e$ = 0.3 keV, $n_e$ = 6$\times$10$^{21}$ cm$^{−3}$ ,
 $\Zbar$ = 44 across approximately 100 $\mu$m 
 (between 1600~$\mu$m and 1700~$\mu$m), starting at the~helium-gadolinium 
 interface.  
-
-\textit{Of course this subsection is apparently missing some comments 
-with respect to the simulations using different kinetic models. 
-It is an ongoing process.}
-
-\begin{figure}[tbh]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
-    \end{tabular}
-  \caption{
-  }
-  \label{fig:Gd_VFP_10ps_heatflux}
-  \end{center} 
-\end{figure}
-
-
+In this region, we can see a~qualitative match between AP1 and Impact, however,
+we observe that the~electric field limit \appref{app:AP1limit} leads to 
+the~drop of the~AP1 heat flux on the~material interface, which then aligns to 
+the~Impact heat flux in the~corona appropriately. On the~other hand, 
+SNB exhibits a~significant heat flux overestimation in both
+the~steep gradients region and in the~plasma corona. We also attribute this
+to the~lack of proper action of the~electric field (the~directional effect) 
+in the~SNB approach.
 
 %
