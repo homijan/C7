@@ -316,11 +316,14 @@ and its EDF formula \eqref{eq:BGK_approximation}, the~correct dependence on
 $\Zbar$ can be simply achieved by scaling the~e-e and e-i collision 
 frequencies as
 \begin{equation}
-  \nue^{BGK} = \frac{\nuei^{BGK}}{\Zbar}
-  = \frac{\nue}{\xi} ,
+  \nue^{BGK} = \frac{r\nue}{\xi},\quad \nuei^{BGK} = \frac{\nuei}{\xi}
+   ,
   \label{eq:BGK_scaling}
 \end{equation}
-which imposes a~right heat flux magnitude \eqref{eq:qSH_approximation}. 
+which imposes a~correct value of heat flux \eqref{eq:qSH_approximation}. 
+The~constant $r$ in \eqref{eq:BGK_scaling} has no effect on the~local EDF as
+shown in \appref{app:DiffusiveKinetics} %\eqref{app_eq:BGK_model_1D}  
+and can be set accordingly, e.g. to address the~nonlocal transport behavior.
 
 \begin{table}
 \begin{center}
@@ -380,12 +383,10 @@ the~heat flux magnitude. If one takes a~closer look at the~distribution
 function itself, the~conformity of the~modified AWBS collision operator
 is even more emphasized as can be seen in \figref{fig:q1s_summary} showing
 the~flux moment in spherical coordinates of velocity
-%\begin{equation}
-$
+\begin{equation}
   q_1 = \frac{\me\vmag^2}{2}\vmag \ft^1 \vmag^2 .
-$
-%  \nonumber
-%\end{equation}
+  \label{eq:q1}
+\end{equation}
 %where $\ft_1$ is the~anisotropic part of the~distribution function, i.e.
 %$\ft_1 = \ft^1\mfpei$ ($\mu=1$) in the~local diffusive transport.
 In the~case of the~high $\Zbar$ Livermorium plasma ($\Zbar = 116$), 
