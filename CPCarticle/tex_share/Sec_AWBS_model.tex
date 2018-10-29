@@ -26,8 +26,10 @@ where $\Gamma = \frac{4\pi\qe^4\lnc}{\me^2}$ and
 $\lnc$ is the~Coulomb logarithm.
 The~e-i collision operator $C_{ei}$ could be expressed
 in a~simpler form since massive ions are considered 
-to be motionless compared to electrons. The~scattering operator accounts
-for the~change of electron velocity without change in the~velocity magnitude. 
+to be motionless compared to electrons during a collision. 
+The~scattering operator accounts
+for the~change of electron velocity without change in the~velocity magnitude
+, i.e. angular scattering. 
 It is expressed in spherical coordinates as
 \begin{equation}
   C_{ei}(\ft) = \frac{\nuei}{2}
@@ -39,8 +41,8 @@ where $\mu = \cos\phi$, $\phi$ and $\theta$ are the~polar and azimuthal
 angles, and $\nuei = \frac{\Zbar n_e \Gamma}{\vmag^3}$ is the~e-i
 collision frequency.
 
-The~e-e collision operator needs to be linearized for efficient computations.
-Fish introduced a~linear form of $C_{ee}$ in \cite{Fish_RMP1987} 
+The~e-e collision operator needs to be linearized for efficient computation.
+Fisch introduced a~linear form of $C_{ee}$ in \cite{Fisch_RMP1987} 
 in the~high-velocity limit ($\vmag\gg\vth$) electron collision operator
 \begin{multline}
   C_{H}(\ft) = \vmag \nue \pdv{}{\vmag}\left(\ft + 
@@ -55,7 +57,7 @@ frequency and $\vth = \sqrt{\frac{\kB T_e}{\me}}$ is the~electron thermal
 velocity.
 The~linear form of $C_{H}$ arises from an~assumption that the~fast electrons 
 predominantly interact with the~thermal (slow) electrons, 
-which simplifies importantly the~form \eqref{eq:LFP_model}.
+which is an important simplification to the~form \eqref{eq:LFP_model}.
 However the~diffusion term in the~e-e collision operator 
 \eqref{eq:HighVelocity_model} still presents numerical difficulties.
 

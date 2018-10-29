@@ -59,6 +59,12 @@ and electron-ion mean free paths $\mfpe = \Zbar\mfpei = \frac{\vmag}{\nue}$,
 and the~density and temperature plasma scale lengths 
 $L_{n_e} = n_e/\pdv{n_e}{z}$ and $L_{T_e} = T_e/\pdv{T_e}{z}$.
 
+In practice, the~Knudsen number of thermal electrons is often used as 
+a~measure of the~locality of transport corresponding to given plasma conditions,
+where $Kn(\vth)<0.001$ is considered the~limit of validity of 
+the~local transport theory \cite{LMV_1983_7}.
+
+
 \subsection{The~BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
 
@@ -128,7 +134,7 @@ accordingly, $\ft^1 \rightarrow - \frac{\mfpe}{\Zbar}
 %\end{multline}
 %Consequently, based on \eqref{eq:BGK_f0}, \eqref{eq:BGK_f1}, 
 %and \eqref{eq:BGK_Efield}, the~analytic formula \eqref{eq:f_approximation}
-When the~quasi-neutrality constraint on the~electric field 
+When the~quasi-neutrality constraint imposed by $\E_L$
 \eqref{app_eq:BGK_Efield} is used, one finally obtains the~analytical BGK form 
 of \eqref{eq:f_approximation}
 \begin{equation}
@@ -160,9 +166,9 @@ collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 %\end{equation}
 Similarly to the~BGK model, the~AWBS collision operator \ref{eq:AWBS_model} 
 explicitly uses equilibration to the~Maxwell-Boltzmann distribution $\fM$. 
-On the~other hand side, AWBS originates from $C_H$, which is derived from 
+On the~other hand, AWBS originates from $C_H$, which is derived from 
 the~full FP operator \eqref{eq:LFP_model}. This makes the~AWBS operator 
-to be superior to the~BGK operator, which is considered a~pure
+to be superior to the~BGK operator, which is considered a~purely
 phenomenological model.
 %and also, 
 %makes it a~very attractive model of the~nonlocal electron
@@ -182,7 +188,7 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   + Kn \frac{\vth^2}{\vmag^2}\frac{f^1}{\vmag} ,
   \label{eq:AWBS_f0} \\
   \pdv{f^1}{\vmag}  
-  - \frac{\Zbar + \xi}{\vmag\xi} f^1 &=& \frac{\mfpe}{\vmag\xi}
+  - \frac{\Zbar + \zeta}{\vmag\zeta} f^1 &=& \frac{\mfpe}{\vmag\zeta}
   \left(\pdv{f^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
   \label{eq:AWBS_f1} 
   %\\  
@@ -191,8 +197,8 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   %\nonumber
 \end{eqnarray}
-where $\xi$ represents a~scaling parameter defining the~modified
-e-e collision frequency as $\nue^* = \xi \nue$.
+where $\zeta$ represents a~scaling parameter defining the~modified
+e-e collision frequency as $\nue^* = \zeta \nue$.
 A~detailed derivation of \eqref{eq:AWBS_f0} and \eqref{eq:AWBS_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 One observes that $\ft^0$ goes to Maxwellian when the~local regime of transport 
@@ -206,9 +212,9 @@ in local diffusive regime to be
 %the~ordinary differential equation 
 %(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
-  \pdv{f^1}{\vmag} + \frac{\Zbar + \xi}{\vmag\xi}f^1
+  \pdv{f^1}{\vmag} + \frac{\Zbar + \zeta}{\vmag\zeta}f^1
   = \\
-  \frac{\mfpe}{\vmag\xi}\left(\frac{1}{L_{n_e}} + 
+  \frac{\mfpe}{\vmag\zeta}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   \frac{1}{L_{T_e}} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   %\frac{\mfpe}{\vmag}\left(\frac{1}{n_e}\pdv{n_e}{z} + 
@@ -231,7 +237,7 @@ that $\ft^1 \sim Kn \fM$ and that $\ft^0$ equilibrates to $\fM$
 as $O(Kn^2)$ based on \eqref{eq:AWBS_f0}.
 
 The~details about the~AWBS distribution function compared to other
-collision operators and a~proper evaluation of the~scaling parameter $\xi$
+collision operators and a~proper evaluation of the~scaling parameter $\zeta$
 can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{The~Fokker-Planck local diffusive electron transport}
@@ -299,20 +305,25 @@ in the~CSR paper \cite{CSR_1950}, the~effect of electron-electron collisions
 was properly quantified and the~correct dependence on $\Zbar$ of the~heat flux
 $\vect{q}$ was approximated as \cite{SpitzerHarm_PR1953, Epperlein_PoFB1991} 
 \begin{equation}
-  \vect{q} = \frac{\Zbar + 0.24}{\Zbar + 4.2} \vect{q}_L ,
+  \vect{q} = \xi(\Zbar)~\vect{q}_L 
+  = \frac{\Zbar + 0.24}{\Zbar + 4.2} \vect{q}_L ,
   \label{eq:qSH_approximation}
 \end{equation}
 where $\vect{q}_L = \kappa T_e^{\frac{5}{2}}\nabla T_e$ is the~heat flux given 
-by Lorentz gas model \cite{Lorentz_1905}. In the~case of the~BGK operator 
+by the~Lorentz gas model \cite{Lorentz_1905} and 
+$\xi$ the~$\Zbar$-dependence approximation. In the~case of the~BGK operator 
 and its EDF formula \eqref{eq:BGK_approximation}, the~correct dependence on 
-$\Zbar$can be simply achieved by scaling the~e-e and e-i collision 
+$\Zbar$ can be simply achieved by scaling the~e-e and e-i collision 
 frequencies as
 \begin{equation}
-  \nue^{BGK} = \frac{\nuei^{BGK}}{\Zbar}
-  = \frac{\Zbar + 4.2}{\Zbar + 0.24}\nue ,
+  \nue^{BGK} = \frac{r\nue}{\xi},\quad \nuei^{BGK} = \frac{\nuei}{\xi}
+   ,
   \label{eq:BGK_scaling}
 \end{equation}
-which imposes a~right heat flux magnitude \eqref{eq:qSH_approximation}. 
+which imposes a~correct value of heat flux \eqref{eq:qSH_approximation}. 
+The~constant $r$ in \eqref{eq:BGK_scaling} has no effect on the~local EDF as
+shown in \appref{app:DiffusiveKinetics} %\eqref{app_eq:BGK_model_1D}  
+and can be set accordingly, e.g. to address the~nonlocal transport behavior.
 
 \begin{table}
 \begin{center}
@@ -331,10 +342,10 @@ which imposes a~right heat flux magnitude \eqref{eq:qSH_approximation}.
   |\vect{q}_{AWBS} - \vect{q}_{SH}| / \vect{q}_{SH}$ of 
   the~$\nue^* = \frac{\nue}{2}$~scaling used in the~AWBS model
   \refeq{eq:AWBS_model} showing the~discrepancy 
-  (maximum around 6$\%$) with respect to the~original solution of 
+  (maximum 6$\%$) with respect to the~original solution of 
   the~heat flux given by numerical solution in Spitzer and Harm 
-  \cite{SpitzerHarm_PR1953}. The~values of $\phi(\Zbar)$ (weak dependence) are 
-  also shown. 
+  \cite{SpitzerHarm_PR1953}. The~values of $\phi(\Zbar)$ (a~weak dependence 
+  \eqref{eq:qAWBS_approximation}) are also shown. 
   }
 \label{tab:qAWBS}
 \end{center}
@@ -348,14 +359,15 @@ the~AWBS heat flux was about 60$\%$ less than the~SH calculation, while
 there was a~perfect match in the case of $\Zbar\gg1$. By assuming that the~e-e
 collisions are responsible for this inadequacy, we searched for a~scaling of
 $\nue$ in \eqref{eq:AWBS_model}. Interestingly, we found an~almost constant
-scaling $\xi$, i.e. with a~very weak dependency on $\Zbar$ as  
+scaling $\zeta$, i.e. with a~very weak dependency on $\Zbar$ as  
 \begin{equation}
-  \nue^* = \xi \nue = \left(\frac{1}{2} + \phi(\Zbar)\right) \nue \approx \frac{\nue}{2} ,
+  \nue^* = \zeta(\Zbar)~\nue 
+  = \left(\frac{1}{2} + \phi(\Zbar)\right) \nue \approx \frac{\nue}{2} ,
   \label{eq:qAWBS_approximation}
 \end{equation}
 where the~dependence $\phi(\Zbar) = \frac{0.59 \Zbar - 1.11}{8.37 \Zbar + 5.15} \ll\frac{1}{2}$ for any $\Zbar$.
 Indeed, \tabref{tab:qAWBS} shows $\phi(\Zbar)$ and its corresponding relative
-error (maximum around 6$\%$) of the~heat flux modeled by 
+error (maximum 6$\%$) of the~heat flux modeled by 
 \eqref{eq:AWBS_model} vs. SH results represented by 
 \eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
 with respect to original values presented in TABLE~III in 
@@ -367,16 +379,14 @@ for any $\Zbar$.
  
 Nevertheless, the~electron-electron collisions effect represented by 
 \eqref{eq:qSH_approximation} provides only an~integrated information about
-the~heat flux magnitude. If one takes a~closure look at the~distribution
+the~heat flux magnitude. If one takes a~closer look at the~distribution
 function itself, the~conformity of the~modified AWBS collision operator
 is even more emphasized as can be seen in \figref{fig:q1s_summary} showing
 the~flux moment in spherical coordinates of velocity
-%\begin{equation}
-$
+\begin{equation}
   q_1 = \frac{\me\vmag^2}{2}\vmag \ft^1 \vmag^2 .
-$
-%  \nonumber
-%\end{equation}
+  \label{eq:q1}
+\end{equation}
 %where $\ft_1$ is the~anisotropic part of the~distribution function, i.e.
 %$\ft_1 = \ft^1\mfpei$ ($\mu=1$) in the~local diffusive transport.
 In the~case of the~high $\Zbar$ Livermorium plasma ($\Zbar = 116$), 

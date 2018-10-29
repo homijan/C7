@@ -42,10 +42,9 @@ where $\nuscat = \nuei + \frac{\nue}{2}$. The system of equations
 \eqref{eq:AP1f0} and \eqref{eq:AP1f1} is called the~{\bf AP1 model} 
 (AWBS + P1).  
 
-On the~one hand side AP1 model gives us with the~information about 
-the~electron distribution function, on the~other hand side 
-a~macroscopic interpretation of the~microscopic EDF properties are of great
-importance and provide the~bridge between kinetic and fluid description of 
+The~AP1 model gives us information about the~electron distribution function and
+a~macroscopic interpretation of the~microscopic EDF properties is of great
+importance providing the~bridge between kinetic and fluid description of 
 plasma. For example the~\textit{flux} quantities as 
 electric current and heat flux due to the~motion of electrons
 \begin{equation}
@@ -105,7 +104,10 @@ $\Iohm\vect{g} = - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \vect{g}
 acts on a~general vector field $\vect{g}$.
 We refer to 
 \eqref{eq:NonlocalOhm} as to the~{\bf nonlocal Ohm's law}.
-Its relation and a~proper local asymptotic to the~standard Ohm's law  
+The~need for a~nonlocal Ohm's law to accurately capture magnetic field 
+advection by the~Nernst effect has previously been demonstrated 
+\cite{Luciani85, Ridgers08, Brodrick18}, although a~full investigation 
+of how well our new Ohm's law captures this is beyond the~scope of this article.The~proper local asymptotic to the~standard Ohm's law  
 can be found when $\fzero\rightarrow\fM$ and weak magnetization 
 ($\omegaB \ll \nuei$) is considered. Then \eqref{eq:NonlocalOhm} simplifies to
 \begin{multline}
@@ -154,7 +156,8 @@ on electric field and gradients of $\ed$ and $\Te$ clearly demonstrates,
 that \eqref{eq:GeneralOhm} is a~local version of \eqref{eq:NonlocalOhm}.
 This also implies that \eqref{eq:NonlocalOhm} provides a~very important 
 physics related to the~magnetic field source in terms of nonlocal 
-Biermann battery, since the~curl on the~electric field 
+Biermann battery (similar to \cite{Kingham_PRL2002}),
+since the~curl on the~electric field 
 \eqref{eq:GeneralOhm} gives
 \begin{equation}
   \nabla\vect{\times} \frac{\nabla P}{\qe \ed} 
@@ -260,7 +263,9 @@ are modeled by the~Euler equations in Lagrangian frame
 where $\Ti$ is the~temperature of ions, $\Te$ the~temperature of electrons,
 $p_i$ the~ion pressure, $p_e$ the~electron pressure,
 $\vect{q}_h$ the~heat flux, $Q_{\text{IB}}$ the~inverse-bremsstrahlung laser 
-absorption, and 
+absorption (which can also distort the distribution function away from 
+a~Maxwellian \cite{Langdon80}, strongly modifying the~transport 
+\cite{Ridgers08_2}, an~effect which will not be considered further here) and 
 $G = \rho C_{V_e} \nuei$ is 
 the~ion-electron energy exchange rate. 
 The~thermodynamic closure terms 
@@ -308,12 +313,12 @@ Nonlocal-MHD model.
 
 It is well known, that as the~electron transport exhibits a~quasi-steady
 behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
-the~time scale of the~fluid. Consequently, the~Ampere's law \eqref{eq:Ampere} 
+the~time scale of the~fluid. Consequently, Ampere's law \eqref{eq:Ampere} 
 usually takes a~quasi-steady form 
 $\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
 when used in hydrodynamics. Proceeding further, one can make use of 
 the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write 
-a~\textit{fully kinetic form of the~Ampere's law} 
+a~\textit{fully kinetic form of Ampere's law} 
 governing the~electric field $\E$
 \begin{equation}
   \Iohm\pdv{\fzero}{\vmag}\E 
