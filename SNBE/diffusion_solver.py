@@ -49,18 +49,19 @@ def IsolatedDiffusionProblem(D, A, S, dx):
     d[N-1] = 0.0
 
     f =  TDMAsolver(a, b, c, d)
-    q = np.zeros(N-1)
+    dfdx = np.zeros(N-1)
     for i in range(N-1):
-        q[i] = - D[i] * (f[i+1] - f[i]) / dx
+        dfdx[i] = (f[i+1] - f[i]) / dx
+		#q[i] = - D[i] * (f[i+1] - f[i]) / dx
 
-    return f, q
+    return f, dfdx
 
 # If run as main program
 if __name__ == "__main__":
 
     x_min = 0.0
     x_max = np.pi
-    N = 20
+    N = 10
     D = np.ones(N-1)
     A = np.ones(N)
     S = np.ones(N)
@@ -84,8 +85,9 @@ if __name__ == "__main__":
     f_anal = np.cos(x)
     q_anal = - D * (- np.sin(xD)) 
 
-    f, q = IsolatedDiffusionProblem(D, A, S, dx)
-    #print "min/max f:", min(f), "/", max(f)
+    f, dfdx = IsolatedDiffusionProblem(D, A, S, dx)
+    q = - D * dfdx
+	#print "min/max f:", min(f), "/", max(f)
 
     ## Graphics.
     import matplotlib.pyplot as plt

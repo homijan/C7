@@ -159,19 +159,20 @@ approximation representing deviation from the~local BGK theory
 \begin{equation}
   \tilde{\ft} = 
   \fM + \delta\fzero 
-  + \vn\cdot\left(\fone_M + \delta\fone\right) , 
+  + \vn\cdot\left(\fone_M + \delta\fone\right) . 
   \label{eq:SNB_approximation}
 \end{equation}
-where $\fone_M = - \xi\mfpei\left( \frac{\vmag^2}{2 \vth^2} - 4\right)\fM
-\frac{\nabla \Te}{\Te}$ is obtained from the~diffusive solution 
-\eqref{eq:BGK_approximation} with \eqref{eq:BGK_scaling}.
+%where $\fone_M = - \xi\mfpei\left( \frac{\vmag^2}{2 \vth^2} - 4\right)\fM
+%\frac{\nabla \Te}{\Te}$ is obtained from the~diffusive solution 
+%\eqref{eq:BGK_approximation} with \eqref{eq:BGK_scaling}.
 The~zero and first angular moment of electron transport equation 
 with scaled \eqref{eq:BGK_scaling} collision operator \eqref{eq:BGK_model_1D} 
 acts on SNB approximation \eqref{eq:SNB_approximation} 
 as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1})
 \begin{eqnarray}
   \frac{r \nue}{\xi}\delta\fzero &=&
-  - \frac{\vmag}{3}\nabla\cdot\left(\delta\fone + \fone_M\right)
+  - \frac{\vmag}{3}\nabla\cdot\delta\fone
+  - \frac{\vmag}{3}\nabla\cdot\fone_M
   \nonumber\\ 
   &&\xcancel{- \frac{\qe}{\me}\frac{\E}{3}\cdot\left(
   \pdv{\fone_M}{\vmag} + \pdv{\delta\fone}{\vmag} 
@@ -179,36 +180,68 @@ as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1})
   \nonumber \\
   \label{eq:SNBf0}\\
   \frac{\nuei}{\xi}\delta\fone &=& - \vmag\nabla\delta\fzero 
-  ~\xcancel{- \frac{\qe}{\me}\E\pdv{\delta\fzero}{\vmag}} 
+  ~\xcancel{- \frac{\qe}{\me}\E\pdv{\delta\fzero}{\vmag}}
+  %- \omegaB\vect{\times} \delta\fone } 
   \nonumber \\
   &&\underbrace{- \frac{\nuei}{\xi}\fone_M - \vmag\nabla\fM
-  - \frac{\qe}{\me}\E\pdv{\fM}{\vmag}}_{~~~~~~~~~~~~~=~0,~\text{if}~\E = \E_L} 
+  - \frac{\qe}{\me}\E\pdv{\fM}{\vmag}
+  %- \omegaB\vect{\times} \fone_M
+  }_{~~~~~~~~~~~~~=~0~defines~\fone_M} 
   %+\frac{\qe\B}{\me c}\vect{\times} \left(\fone_M + \delta\fone\right)
   ,
   \nonumber \\
   \label{eq:SNBf1}
 \end{eqnarray}
-where the~magnetic field has been omitted. One should notice, that the~local
-EDF contribution cancels out in \eqref{eq:SNBf1} when the~electric field 
-adjusts to the~local Lorentz electric field \eqref{app_eq:BGK_Efield}. 
+where the~magnetic field was nglected. The~underbraced part
+of \eqref{eq:SNBf1} defines the~local anisotropic term
+%where $\fone_M = \frac{\frac{\nuei^2}{\xi^2} \vect{F}_M 
+%+ \omegaB~\omegaB\cdot\vect{F}_M - \frac{\nuei}{\xi}~\omegaB \vect{\times} 
+%\vect{F}_M}{\frac{\nuei}{\xi} \left(\omegaB^2 + \frac{\nuei^2}{\xi^2}\right)}$
+%, where $\vect{F}_M = -\vmag \left( \frac{\fM}{\ed}\nabla\ed 
+%+ \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
+%\frac{\fM}{\Te}\nabla\Te - \frac{\qe \fM}{\me\vth^2}\E\right)$.
+\begin{equation}
+  \fone_M = -\frac{\xi\vmag\fM}{\nuei}\left( \frac{\nabla\ed}{\ed} 
++ \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
+\frac{\nabla\Te}{\Te} - \frac{\qe}{\me\vth^2}\E\right).
+  \label{eq:f1M}
+\end{equation}
+%One should notice, that the~local
+%EDF contribution cancels out in \eqref{eq:SNBf1} when the~electric field 
+%adjusts to the~local Lorentz electric field \eqref{app_eq:BGK_Efield}. 
 The~efficiency of SNB resides in omitting the~directional electric field 
 effect (crossed out terms in \eqref{eq:SNBf0} and \eqref{eq:SNBf1}), which
 leads to a~simple diffusion model 
 \begin{equation}
   \frac{1}{\mfpe^{SNB}}\delta\fzero 
   - \nabla\cdot\frac{\mfpei^{SNB}}{3}\nabla\delta\fzero =
-  \nabla\cdot\frac{\xi\mfpei}{3}\frac{\fM}{\Te}\nabla \Te
+  \nabla\cdot\frac{\xi\mfpei}{3}\fM
+  \left( \frac{\nabla \ed}{\ed} + \frac{\nabla \Te}{\Te} \right)
   ,
   \label{eq:SNB_model}
 \end{equation}
 where $\frac{1}{\mfpei^{SNB}} = 
 \frac{\nuei}{\xi\vmag} + \frac{|\qe\E|}{\frac{1}{2}\me\vmag^2}$ 
 and $\mfpe^{SNB} = \frac{\xi\vmag}{r \nue}$, and the~source term based on 
-$\fone_M$ simplifies by avoiding the~bracket in the~latter. The~missing
+$\fone_M$ simplifies by avoiding the~$\vmag$-dependent bracket and 
+the~electric field effect in \eqref{eq:f1M}. The~missing
 directional effect of $\E$ in \eqref{eq:SNB_model} is mimicked as 
 an~isotropic scattering in defintion of $\mfpei^{SNB}$ \cite{Schurtz_2000}.
 Consequently, the~real directional effect of the~electric field in SNB
-is reflected only via $\fone_M$ defined on the~basis of $\E_L$.
+is reflected only via $\fone_M$. A~self consistent zero current condition 
+$\vect{j} = \qe \int \vmag (\fone_M + \delta\fone)~\dI\tilde{\vmag} = 0$ then
+defines the~actual value of the~electric field from \eqref{eq:SNBf1} as
+\begin{equation}
+ \E = -\frac{\int \frac{\xi\vmag^2}{\nuei}\nabla
+ \left(\fM + \delta\fzero\right)~\dI\tilde{\vmag}}
+ {\int \frac{\xi\vmag}{\nuei}\frac{\qe}{\me}\pdv{\fM}{\vmag}
+ ~\dI\tilde{\vmag} } 
+ = \E_L - \frac{\int \frac{\vmag^2}{\nuei}\nabla
+ \delta\fzero~\dI\tilde{\vmag}}
+ {\frac{\qe}{\me}\int \frac{\vmag}{\nuei}\pdv{\fM}{\vmag}
+ ~\dI\tilde{\vmag} } ,
+ \label{eq:SNB_E} 
+\end{equation}
 In this paper we porpose to use $r = \frac{1}{2}$ in accordance with 
 \eqref{eq:qAWBS_approximation}. This choice gives 
 $\mfpe^{SNB} = \frac{\vmag}{2.097\nue}$ in the~case of $\Zbar = 1$, 
