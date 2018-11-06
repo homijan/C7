@@ -79,9 +79,9 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # FLUX MAXIMUM DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 #--Efield --labelEfieldExt1 Aladin
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin
 # NONLOCAL DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin #--Efield --labelEfieldExt1 Aladin
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin 
 
 # Safe figs.
 ### CASE 3 ###   Z = 10 for AWBS paper.

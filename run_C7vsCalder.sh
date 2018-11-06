@@ -96,9 +96,9 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 7 #--Efield --labelEfieldExt1 Calder
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 7 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
 # NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 14 #--Efield --labelEfieldExt1 Calder
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder --pltshow --pltTe -SH -xp -lD1 Calder --plotmultvTh 14 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###

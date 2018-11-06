@@ -55,6 +55,8 @@ parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to
 parser.add_argument("-lF3", "--labelFluxExt3", help="Use -lF1/--labelFluxExt3 to use and label VFPdata/flux3.dat.")
 parser.add_argument("-lD1", "--labelDistributionExt1", help="Use -lD1/--labelDistributionExt1 to use and label VFPdata/distribution1.dat.")
 parser.add_argument("-lE1", "--labelEfieldExt1", help="Use -lE1/--labelEfieldExt1 to use and label VFPdata/Efield1.dat.")
+parser.add_argument('-Tpts','--Tpoints', metavar='N', type=float, nargs='+',
+                    help='Points to be displayed along T.')
 
 ## Parse arguments.
 args = parser.parse_args()
@@ -132,6 +134,16 @@ zbartck = splrep(C7x, C7zbar, s=smooth)
 C7zbar = splev(C7x, zbartck, der=0)
 ## Find a spline for the Efield data.
 Etck = splrep(C7x, C7Ex, s=smooth)
+
+## Assign Te points.
+Te_x_points = []
+Te_points = []
+Te_points_markers = ['o', '^', 's', 'x', 'D', 'p']
+for pt in args.Tpoints: 
+    Te_point = splev(pt, Tetck, der=0)
+    Te_x_points.append(pt)
+    Te_points.append(Te_point)
+    #print "point:", pt, ', Te:', Te_point
 
 #######################################
 ## Load C7 kinetic results ############
@@ -411,6 +423,7 @@ if (args.labelFluxExt3):
 SHcolor = 'k'
 C7Ecolor = 'r'
 Ext1color = 'g'
+Tecolor = 'b'
 labelC7 = args.labelUseC7 #'AWBS-P1'
 labelL = r'Lorentz$^*$'
 labelSH = 'SH'
@@ -485,6 +498,43 @@ if (args.Efield):
 #   ax2.plot(C7x_microns, me/qe*C7corrE_scaled, 'k-.', label=r'$v_{lim}/v_{th}$')
 fig.tight_layout()
 ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
+ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
+for ext in ["png", "pdf", "eps"]:
+   print("saving heatflux.%s" % (ext,))
+   plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
+if (args.pltshow):
+   plt.show()
+
+## Set labels.
+fig, ax1 = plt.subplots()
+ax1.set_xlabel(r'z [$\mu$m]')
+ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
+if (args.pltTe):
+   ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
+ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
+## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
+if (args.labelUseC7):
+   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
+
+if (args.labelFluxExt1):
+   ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1, lw=lwthick)
+if (args.labelFluxExt2):
+   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
+if (args.labelFluxExt3):
+   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
+
+if (args.kinSH):
+   ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
+## Second Temperature axis.
+ax2 = ax1.twinx()
+ax2.set_ylabel(r'$T_e$ [eV]')
+ax2.plot(C7x_microns, C7Te, Tecolor+'--',label=r'$T_e$', lw=lwthick)
+for i in range(len(Te_points)):
+    print "point, Te:", Te_x_points[i], Te_points[i]
+    ax2.plot(Te_x_points[i] * 1e4, Te_points[i], Tecolor+Te_points_markers[i], markersize=10)
+
+fig.tight_layout()
+ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:
    print("saving heatflux.%s" % (ext,))
