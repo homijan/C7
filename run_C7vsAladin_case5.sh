@@ -35,6 +35,8 @@ declare -a NAMEarray=("case")
 XPOINT=0.046 # in cm qSH maximum
 #XPOINT=0.058 # in cm q nonlocal
 L=0.07
+ZBAR=1
+NE=5e20
 declare -a Zarray=("1") 
 declare -a NIarray=("5e20") # ne = 5e20
 
@@ -54,6 +56,9 @@ cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $
 cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 #cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
 #cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+
+## SNBE output.
+python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
 cd $DIRroot
 
 # get length of an array
@@ -78,10 +83,10 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P9_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-# FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -Tpts 0.058 0.046
-# NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin --Efield --labelEfieldExt1 Aladin -Tpts 0.058 0.046
+## FLUX MAXIMUM DISTRIBUTION
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -lD2 SNB -Tpts 0.058 0.046
+## NONLOCAL DISTRIBUTION
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin -lD2 SNB --Efield --labelEfieldExt1 Aladin -Tpts 0.058 0.046
 
 # Safe figs.
 ### CASE 5 ### Z = 1 for AWBS paper.

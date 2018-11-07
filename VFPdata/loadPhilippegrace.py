@@ -139,10 +139,9 @@ if __name__ == "__main__":
    for i in range(0, len(xs)):
       legend = legends[i]
       x = xs[i]
-      y = ys[i]
-      ## Obtain a given point value and gradient of temperature.
+      y = ys[i] 
+      ## Find a spline for the data.
       smooth = 0 # lower less smoothing
-      ## Find a spline for the temperature data.
       tck = splrep(x, y, s=smooth)
       # fine data
       N = 10000

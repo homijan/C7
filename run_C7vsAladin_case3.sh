@@ -35,9 +35,12 @@ declare -a NAMEarray=("case")
 #XPOINT=0.046 # in cm qSH maximum
 XPOINT=0.058 # in cm q nonlocal
 L=0.07
+ZBAR=10
+NE=5e20
 declare -a Zarray=("10")
 ##declare -a NIarray=("4.5e19") # ne = 4.5e20 Kn test
 declare -a NIarray=("5e19") # ne = 5e20
+
 cd VFPdata/Aladin/Aladin_cases4AWBSpaper/case3
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Q_ #-s
@@ -54,6 +57,9 @@ cp _E_ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
 #cp _F1_F0F1x_Aladin_Zeq10_tanh_50mic_5e20_B0_1.20e-11_460mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 cp _F0_F0F1x_Aladin_Zeq10_tanh_50mic_5e20_B0_1.20e-11_580mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
 cp _F1_F0F1x_Aladin_Zeq10_tanh_50mic_5e20_B0_1.20e-11_580mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+
+## SNBE output.
+python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
 cd $DIRroot
 
 # get length of an array
@@ -79,9 +85,9 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # FLUX MAXIMUM DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH -lD1 Aladin -lD2 SNB --plotmultvTh 7 -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin
 # NONLOCAL DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin 
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin -lD2 SNB -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin 
 
 # Safe figs.
 ### CASE 3 ###   Z = 10 for AWBS paper.

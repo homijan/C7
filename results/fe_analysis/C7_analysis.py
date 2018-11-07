@@ -54,6 +54,7 @@ parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to
 parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to use and label VFPdata/flux2.dat.")
 parser.add_argument("-lF3", "--labelFluxExt3", help="Use -lF1/--labelFluxExt3 to use and label VFPdata/flux3.dat.")
 parser.add_argument("-lD1", "--labelDistributionExt1", help="Use -lD1/--labelDistributionExt1 to use and label VFPdata/distribution1.dat.")
+parser.add_argument("-lD2", "--labelDistributionExt2", help="Use -lD2/--labelDistributionExt2 to use and label VFPdata/distribution2.dat.")
 parser.add_argument("-lE1", "--labelEfieldExt1", help="Use -lE1/--labelEfieldExt1 to use and label VFPdata/Efield1.dat.")
 parser.add_argument('-Tpts','--Tpoints', metavar='N', type=float, nargs='+',
                     help='Points to be displayed along T.')
@@ -423,6 +424,8 @@ if (args.labelFluxExt3):
 SHcolor = 'k'
 C7Ecolor = 'r'
 Ext1color = 'g'
+Ext2color = 'k'
+Ext3color = 'y'
 Tecolor = 'b'
 labelC7 = args.labelUseC7 #'AWBS-P1'
 labelL = r'Lorentz$^*$'
@@ -444,9 +447,9 @@ if (args.labelUseC7):
 if (args.labelFluxExt1):
    ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1, lw=lwthick)
 if (args.labelFluxExt2):
-   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
+   ax1.plot(Q2xmicrons, Q2Wcm2, Ext2color+'-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
 if (args.labelFluxExt3):
-   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
+   ax1.plot(Q3xmicrons, Q3Wcm2, Ext3color+'-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
@@ -519,9 +522,9 @@ if (args.labelUseC7):
 if (args.labelFluxExt1):
    ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1, lw=lwthick)
 if (args.labelFluxExt2):
-   ax1.plot(Q2xmicrons, Q2Wcm2, 'b-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
+   ax1.plot(Q2xmicrons, Q2Wcm2, Ext2color+'-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
 if (args.labelFluxExt3):
-   ax1.plot(Q3xmicrons, Q3Wcm2, 'y-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
+   ax1.plot(Q3xmicrons, Q3Wcm2, Ext3color+'-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
 
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
@@ -549,7 +552,9 @@ if (args.pltshow):
 if (args.labelDistributionExt1):
    D1v, D1_f0 = np.loadtxt('../../VFPdata/F0distribution1.dat',  usecols=(0, 1), unpack=True)
    D1v, D1_f1x = np.loadtxt('../../VFPdata/F1distribution1.dat',  usecols=(0, 1), unpack=True)  
-   #D1v, D1_f0, D1_f1x = np.loadtxt('../../VFPdata/distribution1.dat',  usecols=(0, 1, 2), unpack=True)
+if (args.labelDistributionExt2):
+   #D2v, D2_f0 = np.loadtxt('../../VFPdata/F0distribution2.dat',  usecols=(0, 1), unpack=True)
+   D2v, D2_f1x = np.loadtxt('../../VFPdata/F1distribution2.dat',  usecols=(0, 1), unpack=True)
 
 mult_min = 0
 mult_max = plotmultvTh
@@ -583,6 +588,16 @@ if (args.labelDistributionExt1):
    for i in range(len(p_D1v)):
       ## Subtract Maxwellian.
       p_D1_fMv2[i] = fM(p_D1v[i], Te)*p_D1v[i]*p_D1v[i]
+if (args.labelDistributionExt2):
+   mask_D2v = (mult_min*vTh(Te) < D2v) & (D2v < mult_max*vTh(Te))
+   p_D2v = D2v[mask_D2v]
+   #p_D2_f0 = D2_f0[mask_D2v]
+   p_D2_f1x = D2_f1x[mask_D2v]
+   #p_D2_fMv2 = D2_f0[mask_D2v]
+   ### out-of-equilibrium source
+   #for i in range(len(p_D2v)):
+   #   ## Subtract Maxwellian.
+   #   p_D2_fMv2[i] = fM(p_D2v[i], Te)*p_D2v[i]*p_D2v[i]
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
@@ -601,6 +616,8 @@ if (args.labelUseC7):
    ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7, lw=lwthick)
 if (args.labelDistributionExt1):
    ax1.plot(p_D1v/vTh(Te), p_D1_f1x, Ext1color+'-', label=r'$q_1-$'+args.labelDistributionExt1, lw=lwthick)
+if (args.labelDistributionExt2):
+   ax1.plot(p_D2v/vTh(Te), p_D2_f1x, Ext2color+'-', label=r'$q_1-$'+args.labelDistributionExt2, lw=lwthick)
 if (args.kinSH):
    ax1.plot(p_v/vTh(Te), p_SHq, SHcolor+"-.", label=r'$q_1-$'+labelL)
 if (AWBSoriginal):
@@ -608,7 +625,7 @@ if (AWBSoriginal):
 if (AWBSstar):
    ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0), "g--", label=r'$q_1^{KIPP}$')
    #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
-ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 
 ## q0 axis
 ax2 = ax1.twinx()

@@ -27,7 +27,7 @@ mictocm = 1e-4
 
 ## Auxiliary function operating on derivatives.
 def map_f(xs, fs, xmap):
-    ## Compute the first derivative from a data interpolation.
+    ## Map the (xs, fs) interpolation on the xmap points.
     smooth = 0 # lower less smoothing
     ## Find a spline for the f data.
     ftck = splrep(xs, fs, s=smooth)
@@ -63,14 +63,15 @@ def xi(Z):
 # Anisotropic part of EDF in local approximation.
 def func_f1M(xs, v, n, T, Z, E):
     return - xi(Z) * v / nuei(v, n, Z) * fM(v, n, T) * f1_grad(xs, v, n, T, E)
-#def func_df1Mdv(xs, v, n, T, Z, E):
-#    return - xi(Z) * (lambdaei(v, n, Z, E) * fM(v, n, T) * v / vTh(T)**2.0 * dfdx(xs, T) / T + (dlambdaeidv(v, n, Z, E) * fM(v, n, T) + lambdaei(v, n, Z, E) * dfMdv(v, n, T)) * f1_grad(xs, v, n, T, E))
+def func_df1Mdv(xs, v, n, T, Z, E):
+    return - xi(Z) * (lambdaei(v, n, Z, E) * fM(v, n, T) * v / vTh(T)**2.0 * dfdx(xs, T) / T + (dlambdaeidv(v, n, Z, E) * fM(v, n, T) + lambdaei(v, n, Z, E) * dfMdv(v, n, T)) * f1_grad(xs, v, n, T, E))
 # Spitzer-Harm heat flux used in hydro codes.
 def SH_flux(xs, T, Z):
     return - xi(Z) * 1.31e10 / coulLog / Z * T**2.5 * dfdx(xs, T)
 
 ## SNB e-e and e-i mean free paths.
 def lambdae(v, n, Z):
+    #return 2.0 * v / nue(v, n)
     return xi(Z) * v / rr / nue(v, n) 
 def lambdaei(v, n, Z, E):
     mfpei = xi(Z) * v / nuei(v, n, Z)
@@ -78,8 +79,8 @@ def lambdaei(v, n, Z, E):
     if (SIMPLE):
         mfpei = 1.0 / (nuei(v, n, Z) / xi(Z) / v + abs(qe * E) / 0.5 / me / v**2)
     return mfpei
-#def dlambdaeidv(v, n, Z, E):
-#    return xi(Z) * 4.0 * v**3.0 / Gamma / n 
+def dlambdaeidv(v, n, Z, E):
+    return xi(Z) * 4.0 * v**3.0 / Gamma / n 
 
 ## SNBE scheme coefficients.
 # Diffusion solver returns solution of d[Ddfdx]dx - A * f = S
@@ -89,14 +90,15 @@ def coeff_A(v, n, Z):
     return 1.0 / lambdae(v, n, Z)
 def coeff_S(xs, v, n, T, Z, E):
     grad = f1_grad(xs, v, n, T, E)
+    E_f1M = qe / me / v / 3.0 * E * (func_df1Mdv(xs, v, n, T, Z, E) + 2.0 / v * func_f1M(xs, v, n, T, Z, E))
     #SIMPLE
     if (SIMPLE):
         grad = f1_grad_simple(xs, v, n, T)
+        E_f1M[:] = 0.0
     f1 = xi(Z) * v / nuei(v, n, Z) / 3.0 * fM(v, n, T) * grad
-    div_f1 = dfdx(xs, f1)
-    #E_f1M = - qe / me / 3.0 * E * (func_df1Mdv(xs, v, n, T, Z, E) + 2.0 / v * func_f1M(xs, v, n, T, Z, E))
+    div_f1 = dfdx(xs, f1) 
     # Revert sign due to the diffusion solver.
-    return - div_f1 #- E_f1M
+    return - div_f1 + E_f1M
 
 # If run as main program
 if __name__ == "__main__":
@@ -106,18 +108,50 @@ if __name__ == "__main__":
     # Number of x-cells.
     N = 400
     # Number of energy groups "v-cells".
-    Ngr = 100
-    
+    Ngr = 250
+    # Reference values for density and ionization.    
     ne_ref = 5e20
-    Zbar_ref = 1.0
-
+    Zbar_ref = 10.0
+    # A reference point for the distribution function output.
     x_point = 580.0 * mictocm
+    # Number of consistent electric field iterations.
+    E_iter_max = 30
 
-    E_iter_max = 10
+    import argparse
+    ps = argparse.ArgumentParser( description = 'SNBE - steady state kinetic solution on given Te, ne, Zbar plasma profiles in [cgs] and T [eV].')
+    ps.add_argument( '-Tinf', '--Te_inputfile', type = str, help = 'Temperature input file.' )
+    ps.add_argument( '-ninf', '--ne_inputfile', type = str, help = 'Electron density input file.' )
+    ps.add_argument( '-Zinf', '--Zbar_inputfile', type = str, help = 'Mean ionization input file.' )
+    ps.add_argument( '-Qo', '--Q_outname', type = str, help = 'Heat flux Q output file name.' )
+    ps.add_argument( '-F1o', '--F1_outname', type = str, help = 'F1 output file name.' )
+    ps.add_argument( '-ne', '--ne_value', type = float, help = 'Electron density value.' )
+    ps.add_argument( '-Z', '--Zbar_value', type = float, help = 'Mean ionization value.' )
+    ps.add_argument( '-pt', '--EDF_outpoint', type = float, help = 'Output point of EDF.' )
+    ## A no value argument solution.
+    ps.add_argument("-s", "--plotshow", action='store_true', help="Provide plots of kinetic simulation related quantities.")
+    # Read args.
+    args = ps.parse_args()
+    # Reflect appropriate arguments.
+    if (args.ne_value):
+        ne_ref = args.ne_value
+    if (args.Zbar_value):
+        Zbar_ref = args.Zbar_value
+    if (args.EDF_outpoint):
+        x_point = args.EDF_outpoint
 
     # Spatial range.
     x_min = 0.0
     x_max = 700.0 * mictocm
+    
+    ## If Te input file provided.
+    if (args.Te_inputfile):
+        filename = 'temperature_Z10.dat'
+        data = np.array(np.loadtxt(args.Te_inputfile))
+        xx = data[:, 0]
+        TT = data[:, 1]
+        x_min = min(xx)
+        x_max = max(xx) 
+
     ## Staggered scheme.
     # Diffusive coefficient.
     xD = np.linspace(x_min, x_max, N-1)
@@ -140,14 +174,18 @@ if __name__ == "__main__":
     EDF_j1 = np.zeros((Ngr, N-1))
 
     ## Plasma profiles.
-    Zbar = Zbar_ref * x**0.0
-    Zbar_xD = Zbar_ref * xD**0.0
-    ne = ne_ref * x**0.0
-    ne_xD = ne_ref * xD**0.0
+    # Constant profiles of ionization and electron density.
+    Zbar = Zbar_ref * np.ones(N)
+    Zbar_xD = Zbar_ref * np.ones(N-1)
+    ne = ne_ref * np.ones(N)
+    ne_xD = ne_ref * np.ones(N-1)
+    # Mapped profile from an input file.
+    Te = map_f(xx, TT, x)
+    Te_xD = map_f(xx, TT, xD)
+
     #s = 1.0 / 25.0
-    s = 1.0 / 50.0
-    Te = 1e3 * (0.575 - 0.425 * np.tanh((x - 450.0 * mictocm) * s / mictocm))
-    Te_xD = 1e3 * (0.575 - 0.425 * np.tanh((xD - 450.0 * mictocm) * s / mictocm))
+    #Te = 1e3 * (0.575 - 0.425 * np.tanh((x - 450.0 * mictocm) * s / mictocm))
+    #Te_xD = 1e3 * (0.575 - 0.425 * np.tanh((xD - 450.0 * mictocm) * s / mictocm))
     #plt.plot(xD, Te_xD)
     #plt.show()
 
@@ -218,32 +256,56 @@ if __name__ == "__main__":
             EDF_j1[gr][:] = qe * v * (EDF_f1[gr][:] + EDF_f1M[gr][:]) * v**2.0
 
     # Heat flux integration of contributions from nonlocal and local EDF parts.
-    Q = 4.0 * np.pi / 3.0 * np.sum(EDF_q1, 0) * dv
+    Qnonlocal = 4.0 * np.pi / 3.0 * np.sum(EDF_q1, 0) * dv
     QM = 4.0 * np.pi / 3.0 * np.sum(EDF_q1M, 0) * dv
     J = 4.0 * np.pi / 3.0 * np.sum(EDF_j1, 0) * dv
- 
-    #plt.plot(xD, QM * 1e-7, label='QM')
-    plt.plot(xD, SH_flux(xD, Te_xD, Zbar_xD) * 1e-7, label='QSH')
-    plt.plot(xD, (QM + Q) * 1e-7, label='QM + Q')
-    plt.legend()
-    plt.show()
 
-    plt.plot(xD, E_L_xD, label=r'$E_L$')
-    plt.plot(xD, E_xD, label=r'$E_L + \delta E$')
-    plt.legend()
-    plt.show()
-
-    plt.plot(xD, J, label='current')
-    plt.legend()
-    plt.show()
-
+    ## Prepare heat flux and EDF for output.
+    # Sum of local and nonlocal parts plus unit scaling.
+    Q_Wcm2 = (QM + Qnonlocal) * 1e-7
+    # EDF at given point.
     q1_point = np.zeros(Ngr)
     q1M_point = np.zeros(Ngr)
     for gr in range(Ngr):
         q1_point[gr] = EDF_q1[gr][index_point]
         q1M_point[gr] = EDF_q1M[gr][index_point]
-    #plt.plot(v_grs / vTh_point, q1_point, label='q1')
-    plt.plot(v_grs / vTh_point, q1M_point, label='q1M')
-    plt.plot(v_grs / vTh_point, q1M_point + q1_point, label='q1M + q1')
-    plt.legend()
-    plt.show()
+ 
+    if (args.plotshow):
+        #plt.plot(xD, QM * 1e-7, label='QM')
+        plt.plot(xD, SH_flux(xD, Te_xD, Zbar_xD) * 1e-7, label='QSH')
+        plt.plot(xD, (QM + Qnonlocal) * 1e-7, label='QM + Q')
+        plt.legend()
+        plt.show()
+
+        plt.plot(xD, E_L_xD, label=r'$E_L$')
+        plt.plot(xD, E_xD, label=r'$E_L + \delta E$')
+        plt.legend()
+        plt.show()
+
+        plt.plot(xD, J, label='current')
+        plt.legend()
+        plt.show()
+
+        #plt.plot(v_grs / vTh_point, q1_point, label='q1')
+        plt.plot(v_grs / vTh_point, q1M_point, label='q1M')
+        plt.plot(v_grs / vTh_point, q1M_point + q1_point, label='q1M + q1')
+        plt.legend()
+        plt.show()
+   
+    ## Save output. 
+    # Heat flux, x axis in microns.
+    if (args.Q_outname):
+        np.savetxt(args.Q_outname, np.transpose([xD * 1e4, Q_Wcm2]))
+    # EDF.
+    if (args.F1_outname):
+        ## Find a spline for the data.
+        smooth = 0 # lower less smoothing
+        q1_tck = splrep(v_grs, q1M_point + q1_point, s=smooth)
+        # fine data
+        Nfine = 10000
+        v_fine = np.linspace(min(v_grs), max(v_grs), Nfine)
+        q1_fine = splev(v_fine, q1_tck, der=0)
+        ## Store fine data
+        np.savetxt(args.F1_outname, np.transpose([v_fine, q1_fine]))
+        #plt.plot(v_fine, q1_fine)
+        #plt.show()
