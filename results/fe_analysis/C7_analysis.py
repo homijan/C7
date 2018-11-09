@@ -49,6 +49,7 @@ parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoi
 #parser.add_argument("-vs", "--vlimshow", action='store_true', help="vlim show by adding -vs/--vlimshow argument.")
 ## Faking arguments providing different labels than C7E and C7*.
 #parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
+parser.add_argument("-ktit", "--kineticstitle", help="Title to use for kinetics output.")
 parser.add_argument("-C7", "--labelUseC7", help="Use -C7/--labelUseC7 to use and label the C7 calculated data.")
 parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to use and label VFPdata/flux1.dat.")
 parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to use and label VFPdata/flux2.dat.")
@@ -433,13 +434,15 @@ labelSH = 'SH'
 
 lwthick = 2
 
+"""
 ## Set labels.
 fig, ax1 = plt.subplots()
 ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
 if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
-ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
+ax1.set_title(r'Heat flux Z = '+"{:.1f}".format(float(Zbar)))
+#ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.labelUseC7):
    ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
@@ -507,6 +510,7 @@ for ext in ["png", "pdf", "eps"]:
    plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
 if (args.pltshow):
    plt.show()
+"""
 
 ## Set labels.
 fig, ax1 = plt.subplots()
@@ -514,7 +518,8 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
 if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
-ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
+ax1.set_title(r'Heat flux Z = '+"{:.0f}".format(float(Zbar)))
+#ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.labelUseC7):
    ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
@@ -610,7 +615,10 @@ print "Kn_LMV: ", Kn_LMV
 vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
 print "vlim/vTh: ", vlim_vTh
 print "Te[eV]: ", Te
-ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_LMV)+')')
+if (args.kineticstitle):
+   ax1.set_title(args.kineticstitle)
+else:
+   ax1.set_title('Kinetics (Z='+"{:.1f}".format(float(Zbar))+r', n$_e$='+"{:.1e}".format(float(ne))+r', Kn$^e$='+"{:.1e}".format(Kn_LMV)+')')
 ## Plot kinetic analysis.
 if (args.labelUseC7):
    ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0), C7Ecolor+'-', label=r'$q_1-$'+labelC7, lw=lwthick)

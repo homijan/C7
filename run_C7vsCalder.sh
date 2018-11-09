@@ -42,8 +42,8 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
-#XPOINT=0.06441 # in cm qCalder maximum
-XPOINT=0.075 # in cm q nonlocal
+XPOINT=0.06441 # in cm qCalder maximum
+#XPOINT=0.075 # in cm q nonlocal
 L=0.094
 ZBAR=2
 NE=5e20
@@ -64,15 +64,15 @@ cd $DIRroot
 #cd $DIRroot
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
 ## Heat flux maximum.
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F1_ --column 2 #-s
-#cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-#cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F1_ --column 2 #-s
+cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 ## Preheat position
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F0_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F1_ --column 2 #-s
-cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F0_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F1_ --column 2 #-s
+#cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+#cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 
 ## SNBE output.
 python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
@@ -101,15 +101,15 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # FLUX MAXIMUM DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB --plotmultvTh 7 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -ktit 'Kinetics at maximum point' --plotmultvTh 7 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
 # NONLOCAL DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB --plotmultvTh 14 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -ktit 'Kinetics at preheat point' --plotmultvTh 14 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
 
 # Safe figs.
 ### CASE 1 ###
 cp heatflux.png $DIRroot/VFPdata/C7_Calder_case1_heatflux.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_kinetics.png
-cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_nonlocal_kinetics.png
+cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_kinetics.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_nonlocal_kinetics.png
 
 cd $DIRroot
 done

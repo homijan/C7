@@ -32,8 +32,8 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 5 ###  Z = 1 for AWBS paper.
-XPOINT=0.046 # in cm qSH maximum
-#XPOINT=0.058 # in cm q nonlocal
+#XPOINT=0.046 # in cm qSH maximum
+XPOINT=0.058 # in cm q nonlocal
 L=0.07
 ZBAR=1
 NE=5e20
@@ -44,18 +44,20 @@ cd VFPdata/Aladin/Aladin_cases4AWBSpaper/case5
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _Q_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt -o _E_ #-m 0.33333334e-4 -s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt -o _F0_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt -o _F1_ --column 2 #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt -o _F0_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt -o _F1_ --column 2 #-s
 ## Copy 4C7 analysis generated data.
 cp _Te_Te_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/temperature.dat
 cp _Q_FluxX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/flux1.dat
 cp _E_ElecX_Aladin_Zeq1_tanh_50mic_2.00e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
-cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
-#cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-#cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+## Heat flux maximum.
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt -o _F0_ #-s
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt -o _F1_ --column 2 #-s
+#cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+#cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_460mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+## Nonlocal at preheat point.
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt -o _F1_ --column 2 #-s
+cp _F0_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
 
 ## SNBE output.
 python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
@@ -84,15 +86,15 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 ## FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH -lD1 Aladin --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -lD2 SNB -Tpts 0.058 0.046
+#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB -SH -lD1 Aladin -ktit 'Kinetics at maximum point' --pltshow --pltTe -xp --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -lD2 SNB -Tpts 0.058 0.046
 ## NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -lD1 Aladin -lD2 SNB --Efield --labelEfieldExt1 Aladin -Tpts 0.058 0.046
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB -ktit 'Kinetics at preheat point' -lD1 Aladin -lD2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin
 
 # Safe figs.
 ### CASE 5 ### Z = 1 for AWBS paper.
 cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case5_heatflux.png
-cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
+#cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png
+cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
 
 cd $DIRroot
 done
