@@ -50,7 +50,8 @@ def f1_grad(xs, v, n, T, E):
 def f1_grad_simple(xs, v, n, T):
     grad_n = dfdx(xs, n)
     grad_T = dfdx(xs, T)
-    return grad_n / n + grad_T / T
+    #return grad_n / n + grad_T / T
+    return grad_T / T
 # Electron-electron collisions.
 def nue(v, n):
     return Gamma * n / v**3.0
@@ -119,6 +120,8 @@ if __name__ == "__main__":
 
     import argparse
     ps = argparse.ArgumentParser( description = 'SNBE - steady state kinetic solution on given Te, ne, Zbar plasma profiles in [cgs] and T [eV].')
+    ps.add_argument( '-N', '--Ncells', type = int, help = 'Number of cells in spatial discretization.' )
+    ps.add_argument( '-Ngr', '--Ngroups', type = int, help = 'Number of groups in velocity discretization.' )
     ps.add_argument( '-Tinf', '--Te_inputfile', type = str, help = 'Temperature input file.' )
     ps.add_argument( '-ninf', '--ne_inputfile', type = str, help = 'Electron density input file.' )
     ps.add_argument( '-Zinf', '--Zbar_inputfile', type = str, help = 'Mean ionization input file.' )
@@ -132,6 +135,10 @@ if __name__ == "__main__":
     # Read args.
     args = ps.parse_args()
     # Reflect appropriate arguments.
+    if (args.Ncells):
+        N = args.Ncells
+    if (args.Ngroups):
+        Ngr = args.Ngroups
     if (args.ne_value):
         ne_ref = args.ne_value
     if (args.Zbar_value):
@@ -143,14 +150,25 @@ if __name__ == "__main__":
     x_min = 0.0
     x_max = 700.0 * mictocm
     
-    ## If Te input file provided.
+    ## If input files provided.
+    # Computational domain is set according to the Te input file.
     if (args.Te_inputfile):
-        filename = 'temperature_Z10.dat'
+        #filename = 'temperature.dat'
         data = np.array(np.loadtxt(args.Te_inputfile))
-        xx = data[:, 0]
+        xx_TT = data[:, 0]
         TT = data[:, 1]
-        x_min = min(xx)
-        x_max = max(xx) 
+        x_min = min(xx_TT)
+        x_max = max(xx_TT) 
+    if (args.ne_inputfile):
+        #filename = 'ne.dat'
+        data = np.array(np.loadtxt(args.ne_inputfile))
+        xx_nn = data[:, 0]
+        nn = data[:, 1]
+    if (args.Zbar_inputfile):
+        #filename = 'zbar.dat'
+        data = np.array(np.loadtxt(args.Zbar_inputfile))
+        xx_ZZbar = data[:, 0]
+        ZZbar = data[:, 1]
 
     ## Staggered scheme.
     # Diffusive coefficient.
@@ -179,15 +197,24 @@ if __name__ == "__main__":
     Zbar_xD = Zbar_ref * np.ones(N-1)
     ne = ne_ref * np.ones(N)
     ne_xD = ne_ref * np.ones(N-1)
-    # Mapped profile from an input file.
-    Te = map_f(xx, TT, x)
-    Te_xD = map_f(xx, TT, xD)
-
-    #s = 1.0 / 25.0
-    #Te = 1e3 * (0.575 - 0.425 * np.tanh((x - 450.0 * mictocm) * s / mictocm))
-    #Te_xD = 1e3 * (0.575 - 0.425 * np.tanh((xD - 450.0 * mictocm) * s / mictocm))
+    # Heat-bath profile of temperature.
+    s = 1.0 / 25.0
+    Te = 1e3 * (0.575 - 0.425 * np.tanh((x - 450.0 * mictocm) * s / mictocm))
+    Te_xD = 1e3 * (0.575 - 0.425 * np.tanh((xD - 450.0 * mictocm) * s / mictocm))
     #plt.plot(xD, Te_xD)
     #plt.show()
+    
+    # Mapped plasma profiles from input files.
+    if (args.Te_inputfile):
+        Te = map_f(xx_TT, TT, x)
+        Te_xD = map_f(xx_TT, TT, xD)
+    if (args.ne_inputfile):
+        ne = map_f(xx_nn, nn, x)
+        ne_xD = map_f(xx_nn, nn, xD)
+    if (args.Zbar_inputfile):
+        Zbar = map_f(xx_ZZbar, ZZbar, x)
+        Zbar_xD = map_f(xx_ZZbar, ZZbar, xD)
+
 
     ## Test point structures.
     # Index of the x_point.
@@ -219,6 +246,7 @@ if __name__ == "__main__":
     ## Solve SNB with E field relaxation.
     if (SIMPLE):
         E_iter_max = 1
+    print "Running SNBE on", N, "cells and", Ngr,"groups."
     for iter in range(E_iter_max):
         ## Calculate the electric field.   
         # Constant denominator in the E field definition.

@@ -28,10 +28,13 @@ DIRout="C7E/"
 
 # Philippe's test!
 PROBLEM=10
+# Spatial scaling of the C7 mesh. 
 L=0.188175
+# Point of EDF output.
+XPOINT=0.16
 
 ## Prepare data profiles.
-cd VFPdata
+cd $DIRroot/VFPdata
 cd GD_Hohlraum
 python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_10ps_TekeV_interp -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_ne1e20cm3_interp -o _ne_ -mx 1e-4 -my 1e20 #-s
@@ -39,14 +42,18 @@ python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_Z_interp -o _Zba
 python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_10ps_IMPACTWcm2 -o _Q_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_10ps_separatedsnbWcm2 -o _Q_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f gdhohlraum_xmic_10ps_LocalWcm2 -o _Q_ #-s
-cd ..
+cd $DIRroot/VFPdata
 cp GD_Hohlraum/_Te_gdhohlraum_xmic_10ps_TekeV_interp.txt temperature.dat
 cp GD_Hohlraum/_ne_gdhohlraum_xmic_ne1e20cm3_interp.txt ne.dat
 cp GD_Hohlraum/_Zbar_gdhohlraum_xmic_Z_interp.txt zbar.dat
 cp GD_Hohlraum/_Q_gdhohlraum_xmic_10ps_IMPACTWcm2.txt flux1.dat
 cp GD_Hohlraum/_Q_gdhohlraum_xmic_10ps_separatedsnbWcm2.txt flux2.dat
 cp GD_Hohlraum/_Q_gdhohlraum_xmic_10ps_LocalWcm2.txt flux3.dat
-cd ..
+
+## SNBE output.
+python $DIRroot/SNBE/SNBE.py -ninf $DIRroot/VFPdata/ne.dat -Zinf $DIRroot/VFPdata/zbar.dat -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT -N 5000 -Ngr 25
+
+cd $DIRroot
 
 
 # Run C7.
