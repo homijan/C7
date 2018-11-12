@@ -439,7 +439,8 @@ to the~laser-heated plasma conditions, i.e. Kn$^e \in (0.0001, 1)$.
 The~variation of Kn$^e$ arises from the~variation
 of the~uniform electron density $n_e \in (10^{19}, 10^{23})$ cm$^{-3}$ or 
 the~length scale given by the~slope of the~temperature profile 
-$s \in (1/2500, 1/25) \mu$m. Results of an~extensive set of simulations of
+$s \in (1/2500, 1/25) \mu$m. Results showing the~heat flux maximum 
+of an~extensive set of simulations of
 varying Kn$^e$ is shown in \figref{fig:Kn_results}.
  
 \begin{figure}[tbh]
@@ -458,16 +459,26 @@ varying Kn$^e$ is shown in \figref{fig:Kn_results}.
   \label{fig:Kn_results}
   \end{center} 
 \end{figure}
-When analyzing the~results of \figref{fig:Kn_results} we have found 
+When analyzing the~results of \figref{fig:Kn_results} we observed that 
+the~maximum of $q_1$ at the~maximum point tends to dicrease with increasing 
+Kn$^e$, however, never shifts much lower than 3 $\vth$, i.e. the~interval of
+electron velocities important for the~heat transport always belongs 
+to $3 \vth < \vmag <4 \vth$. We have also found 
 an~important observation related to the~stopping effect of electrons.
 It turns out, that the~force acting on electrons is dominated by directional
 electric field above some velocity limit $\vmag_{lim}$ and this limit drops 
 down significantly when the~plasma conditions are more nonlocal, 
 i.e. with increasing Knudsen number as can be seen in \tabref{tab:vlim}. 
-As a~consequence, one can see
-that when Kn$^{e} \sim 10^{-1}$ the~electrons responsible for the~heat flux
-(velocity $\sim$ 3.5 $\vth$) are preferably affected by the~electric field
-rather than by collisions.
+As a~consequence, one can see that the~electrons responsible for the~heat flux
+($3 \vth < \vmag <4 \vth$) are preferably affected by the~electric field
+rather than by collisions when Kn$^{e} > 10^{-1}$, since according to 
+\tabref{tab:vlim} collsions dominate stopping for $\vmag < 3.1 \vth$ 
+when Kn$^e = 0.1$ and even a~much lower value $\vmag < 1.8 \vth$ 
+when Kn$^e = 1.0$. This perfectly explains unsatisfactory results of the~AP1
+model for high Kn$^e$ shown in \figref{fig:Kn_results}. 
+Noticably, the~AP1 limited electric field effect (described in 
+\appref{app:AP1limit}) leads to a~steep increase of error with respect 
+to VFP code Aladin for Kn$^e > 10^{-1}$.
 
 \begin{table}
 \begin{center}
@@ -503,12 +514,14 @@ temperatures and $\vth$ are used in the~middle and bottom plots.
 This provides a~microscopic information
 about the~motion of electrons on the~nonlocal spatial scale. 
 
+\begin{comment} % Simulations setup.
 In every simulation run of AP1 we used 250~velocity groups in order to avoid
 numerical errors in modeling of the~electron kinetics. However, a~smaller 
 number of groups, e.g. 50, provides a~very similar results 
 (an~error around 10$\%$ in the~heat flux). 
 \textit{Here gather and provide a brief summary about the simulation input of
 Aladin, Impact, and Calder.}
+\end{comment} % Simulations setup.
 
 \subsection{Hohlraum problem}
 Additionally to the~steep temperature gradients, the~laser-heated plasma 
@@ -538,7 +551,8 @@ match among models in the~preheat region.
 \begin{figure}[tbh]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_GdHohlraum_heatflux.png}
+	  %\includegraphics[width=\figscale\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
     \end{tabular}
   \caption{
   Heat flux profiles by AP1, Impact and SNB along 

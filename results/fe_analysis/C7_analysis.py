@@ -59,6 +59,8 @@ parser.add_argument("-lD2", "--labelDistributionExt2", help="Use -lD2/--labelDis
 parser.add_argument("-lE1", "--labelEfieldExt1", help="Use -lE1/--labelEfieldExt1 to use and label VFPdata/Efield1.dat.")
 parser.add_argument('-Tpts','--Tpoints', metavar='N', type=float, nargs='+',
                     help='Points to be displayed along T.')
+parser.add_argument('-xlims','--xlimits', metavar='N', type=float, nargs='+',
+                    help='Two points used to limit the x-axis in microns.')
 
 ## Parse arguments.
 args = parser.parse_args()
@@ -68,6 +70,15 @@ if (args.coulLog):
    coulLog = args.coulLog
 if (args.plotmultvTh):
    plotmultvTh = args.plotmultvTh
+
+if (args.xlimits):
+   if (len(args.xlimits)!=2):
+      print "Input parameters xlimits must be exactly two!"
+      quit()
+   else:
+      xmin = args.xlimits[0]
+      xmax = args.xlimits[1]
+      #print "xmin/xmax:", xmin, "/", xmax
 
 ###############################################################################
 ########### Loading of results of parallel C7 code ############################
@@ -141,11 +152,12 @@ Etck = splrep(C7x, C7Ex, s=smooth)
 Te_x_points = []
 Te_points = []
 Te_points_markers = ['o', '^', 's', 'x', 'D', 'p']
-for pt in args.Tpoints: 
-    Te_point = splev(pt, Tetck, der=0)
-    Te_x_points.append(pt)
-    Te_points.append(Te_point)
-    #print "point:", pt, ', Te:', Te_point
+if (args.Tpoints):
+   for pt in args.Tpoints: 
+      Te_point = splev(pt, Tetck, der=0)
+      Te_x_points.append(pt)
+      Te_points.append(Te_point)
+      #print "point:", pt, ', Te:', Te_point
 
 #######################################
 ## Load C7 kinetic results ############
@@ -534,13 +546,22 @@ if (args.labelFluxExt3):
 if (args.kinSH):
    ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
 ## Second Temperature axis.
+q_ref = C7Te
+C7ne_scaled = C7ne*(q_ref.max() - q_ref.min())/(C7ne.max() - C7ne.min())
+C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - q_ref.max())
 ax2 = ax1.twinx()
 ax2.set_ylabel(r'$T_e$ [eV]')
 ax2.plot(C7x_microns, C7Te, Tecolor+'--',label=r'$T_e$', lw=lwthick)
-for i in range(len(Te_points)):
-    print "point, Te:", Te_x_points[i], Te_points[i]
-    ax2.plot(Te_x_points[i] * 1e4, Te_points[i], Tecolor+Te_points_markers[i], markersize=10)
+if (args.pltne):
+   ax2.set_ylabel(r'$T_e$ [eV]'+r', $n_e\in$('+"{:.0f}".format(C7ne.min()/1e20)+', '+"{:.0f}".format(C7ne.max()/1e20)+r') [10$^{20}$/cm$^3$]')
+   ax2.plot(C7x_microns, C7ne_scaled, 'k--', label=r'$n_e$', lw=lwthick)
+if (args.Tpoints):
+   for i in range(len(Te_points)):
+      print "point, Te:", Te_x_points[i], Te_points[i]
+      ax2.plot(Te_x_points[i] * 1e4, Te_points[i], Tecolor+Te_points_markers[i], markersize=10)
 
+## Apply x limits to display.
+ax1.set_xlim((xmin, xmax))
 fig.tight_layout()
 ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)

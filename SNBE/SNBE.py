@@ -122,6 +122,7 @@ if __name__ == "__main__":
     ps = argparse.ArgumentParser( description = 'SNBE - steady state kinetic solution on given Te, ne, Zbar plasma profiles in [cgs] and T [eV].')
     ps.add_argument( '-N', '--Ncells', type = int, help = 'Number of cells in spatial discretization.' )
     ps.add_argument( '-Ngr', '--Ngroups', type = int, help = 'Number of groups in velocity discretization.' )
+    ps.add_argument( '-lC', '--logC', type = float, help = 'Coulomb logarithm.' )
     ps.add_argument( '-Tinf', '--Te_inputfile', type = str, help = 'Temperature input file.' )
     ps.add_argument( '-ninf', '--ne_inputfile', type = str, help = 'Electron density input file.' )
     ps.add_argument( '-Zinf', '--Zbar_inputfile', type = str, help = 'Mean ionization input file.' )
@@ -139,6 +140,11 @@ if __name__ == "__main__":
         N = args.Ncells
     if (args.Ngroups):
         Ngr = args.Ngroups
+    if (args.logC):
+        ## Coulomb logarithm.
+        coulLog = args.logC
+        ## Gamma factor cross section.
+        Gamma = sigma * coulLog
     if (args.ne_value):
         ne_ref = args.ne_value
     if (args.Zbar_value):

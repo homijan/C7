@@ -46,9 +46,15 @@ XPOINT=0.06441 # in cm qCalder maximum
 #XPOINT=0.075 # in cm q nonlocal
 L=0.094
 ZBAR=2
-NE=5e20
 declare -a Zarray=("2")
+NE=5e20
 declare -a NIarray=("2.5e20") # ne = 5e20
+### Special case showing a qualitatively very good result of SNB, 
+### but with a terrifying q1 profile.
+#XPOINT=0.66
+#NE=2.5e19
+#declare -a NIarray=("1.25e19") # ne = 5e20
+
 #declare -a NIarray=("1e19")
 cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Te
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 940 #700 -s
