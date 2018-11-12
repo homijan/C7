@@ -42,59 +42,68 @@ declare -a NAMEarray=("case")
 ## Prepare data profiles.
 
 ### CASE 1 ###
-XPOINT=0.06441 # in cm qCalder maximum
+#XPOINT=0.06441 # in cm qCalder maximum
 #XPOINT=0.075 # in cm q nonlocal
 L=0.094
 ZBAR=2
-declare -a Zarray=("2")
+NI=2.5e20
 NE=5e20
-declare -a NIarray=("2.5e20") # ne = 5e20
+
 ### Special case showing a qualitatively very good result of SNB, 
 ### but with a terrifying q1 profile.
 #XPOINT=0.66
+#NI=1.25e19
 #NE=2.5e19
-#declare -a NIarray=("1.25e19") # ne = 5e20
 
-#declare -a NIarray=("1e19")
-cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Te
-python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 940 #700 -s
-cp _Te_Te_00110000.txt.txt $DIRroot/VFPdata/temperature.dat
-cd $DIRroot
-cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/qx
-python $DIRroot/VFPdata/loadPhilippegrace.py -f qx_00110000.txt -o _Q_ -cf 940 #700 -s
-cp _Q_qx_00110000.txt.txt $DIRroot/VFPdata/flux1.dat
-cd $DIRroot
-#cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Ex
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f Ex_00110000.txt -o _E_ -cf 940 -s
-#cp _E_Ex_00110000.txt.txt $DIRroot/VFPdata/Efield1.dat
-#cd $DIRroot
-cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
-## Heat flux maximum.
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
-python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F1_ --column 2 #-s
-cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
-## Preheat position
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F0_ #-s
-#python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F1_ --column 2 #-s
-#cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
-#cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
-
-## SNBE output.
-python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
-cd $DIRroot
+declare -a Pointsarray=("0.06441" "0.075")
+declare -a Namesarray=("maximum" "nonlocal")
 
 # get length of an array
-length=${#Zarray[@]}
+length=${#Pointsarray[@]}
 
 # use for loop to read all values and indexes
 for (( i=0; i<${length}; i++ ));
 do
 # assign iterated values
-ZBAR=${Zarray[$i]}
-NI=${NIarray[$i]}
-NAME=${NAMEarray[$i]}
-echo "ZBAR: " $ZBAR " NI: " $NI
+XPOINT=${Pointsarray[$i]}
+NAME=${Namesarray[$i]}
+
+echo "ZBAR: " $ZBAR " NI: " $NI "Point: " $XPOINT
+
+cd $DIRroot/VFPdata/Calder/z2/z2tanh50microns_Bfield0/Te
+python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_00110000.txt -o _Te_ -mx 1e-4 -my 1e3 -cf 940 #700 -s
+cp _Te_Te_00110000.txt.txt $DIRroot/VFPdata/temperature.dat
+cd $DIRroot/VFPdata/Calder/z2/z2tanh50microns_Bfield0/qx
+python $DIRroot/VFPdata/loadPhilippegrace.py -f qx_00110000.txt -o _Q_ -cf 940 #700 -s
+cp _Q_qx_00110000.txt.txt $DIRroot/VFPdata/flux1.dat
+#cd VFPdata/Calder/z2/z2tanh50microns_Bfield0/Ex
+#python $DIRroot/VFPdata/loadPhilippegrace.py -f Ex_00110000.txt -o _E_ -cf 940 -s
+#cp _E_Ex_00110000.txt.txt $DIRroot/VFPdata/Efield1.dat
+#cd $DIRroot
+cd $DIRroot/VFPdata/Calder/z2/z2tanh50microns_Bfield0/f
+## Heat flux maximum.
+if [ "$NAME" == "maximum" ]
+then
+echo $NAME
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt -o _F1_ --column 2 #-s
+cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_644.1mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+fi
+## Preheat position
+if [ "$NAME" == "nonlocal" ]
+then
+echo $NAME
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F0_ #-s
+python $DIRroot/VFPdata/loadPhilippegrace.py -f F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt -o _F1_ --column 2 #-s
+cp _F0_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F0distribution1.dat
+cp _F1_F0F1x_Calder_Zeq2_tanh_50mic_f0f1_1.10e-11_749.4mic.txt.txt $DIRroot/VFPdata/F1distribution1.dat
+fi
+
+## SNBE output.
+python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
+cd $DIRroot
+
 # Run C7.
 mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -Z $ZBAR -n0 $NUS0 -cl $CL -ni $NI -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.01 -Em $MAXITER -xn 0.0 | tee C7E.out
 
@@ -107,15 +116,27 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 # Perform analysis.
 cd $DIRanalysis
 # FLUX MAXIMUM DISTRIBUTION
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -ktit 'Kinetics at maximum point' --plotmultvTh 7 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+if [ "$NAME" == "maximum" ]
+then
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -hftit 'Heat flux Z = 2' -ktit 'Kinetics at maximum point' --plotmultvTh 7 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+fi
 # NONLOCAL DISTRIBUTION
-#python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -ktit 'Kinetics at preheat point' --plotmultvTh 14 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+if [ "$NAME" == "nonlocal" ]
+then
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Calder -lF2 SNB --pltshow --pltTe -SH -xp -lD1 Calder -lD2 SNB -hftit 'Heat flux Z = 2' -ktit 'Kinetics at preheat point' --plotmultvTh 14 -Tpts 0.075 0.06441 #--Efield --labelEfieldExt1 Calder
+fi
 
 # Safe figs.
 ### CASE 1 ###
 cp heatflux.png $DIRroot/VFPdata/C7_Calder_case1_heatflux.png
+if [ "$NAME" == "maximum" ]
+then
 cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_kinetics.png
-#cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_nonlocal_kinetics.png
+fi
+if [ "$NAME" == "nonlocal" ]
+then
+cp kinetics.png $DIRroot/VFPdata/C7_Calder_case1_nonlocal_kinetics.png
+fi
 
 cd $DIRroot
 done

@@ -50,6 +50,8 @@ parser.add_argument("-xp", "--usexpoint", action='store_true', help="Use an xpoi
 ## Faking arguments providing different labels than C7E and C7*.
 #parser.add_argument("-C7", "--C7", action='store_true', help="Display the C7 computation results by adding -C7/--C7 argument.")
 parser.add_argument("-ktit", "--kineticstitle", help="Title to use for kinetics output.")
+parser.add_argument("-hftit", "--heatfluxtitle", help="Title to use for heat flux output.")
+parser.add_argument("-Eftit", "--Efieldtitle", help="Title to use for E field output.")
 parser.add_argument("-C7", "--labelUseC7", help="Use -C7/--labelUseC7 to use and label the C7 calculated data.")
 parser.add_argument("-lF1", "--labelFluxExt1", help="Use -lF1/--labelFluxExt1 to use and label VFPdata/flux1.dat.")
 parser.add_argument("-lF2", "--labelFluxExt2", help="Use -lF2/--labelFluxExt2 to use and label VFPdata/flux2.dat.")
@@ -530,8 +532,9 @@ ax1.set_xlabel(r'z [$\mu$m]')
 ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
 if (args.pltTe):
    ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
-ax1.set_title(r'Heat flux Z = '+"{:.0f}".format(float(Zbar)))
-#ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
+ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
+if (args.heatfluxtitle):
+   ax1.set_title(args.heatfluxtitle)
 ## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
 if (args.labelUseC7):
    ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
@@ -561,7 +564,8 @@ if (args.Tpoints):
       ax2.plot(Te_x_points[i] * 1e4, Te_points[i], Tecolor+Te_points_markers[i], markersize=10)
 
 ## Apply x limits to display.
-ax1.set_xlim((xmin, xmax))
+if (args.xlimits):
+   ax1.set_xlim((xmin, xmax))
 fig.tight_layout()
 ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
 ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
@@ -656,6 +660,7 @@ if (AWBSstar):
    #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 
+"""
 ## q0 axis
 ax2 = ax1.twinx()
 log_min = -3.0
@@ -680,6 +685,8 @@ if (args.kinf0):
    #ax2.set_ylabel(r'$q_0 = m_e v^2/2\, v f_0 v^2$ [a.u.]')
 
 ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
+"""
+
 fig.tight_layout()
 for ext in ["png", "pdf", "eps"]:
    print("saving kinetics.%s" % (ext,))

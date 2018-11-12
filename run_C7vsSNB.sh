@@ -58,7 +58,7 @@ cd $DIRroot
 
 
 # Run C7.
-#mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 #-PCGo | tee C7E.out
+mpirun -np $NPROC C7 -p $PROBLEM -m data/segment01.mesh -rs $RS -tf 0.0 -ok $F1ORDER -ot $F0ORDER -no-vis -fa -print -sigma $SIGMA -cl $CL -L $L -xp $XPOINT -minG $MING -s 2 -cfl 1e10 -S0 1.0 -dE 0.00000001 -Em $MAXITER -xn 1 -PCGo | tee C7E.out
 
 cp results/tmp/C7_1_profiles.* results/fe_analysis/C7_data/
 cp results/tmp/C7_1_fe_point.txt results/fe_analysis/C7_data/fe_point_C7.txt
@@ -67,7 +67,7 @@ cp results/tmp/C7_1_fe_pointmax.txt results/fe_analysis/C7_data/fe_pointmax_C7.t
 #cp C7E.out $DIRanalysis$DIRout"P10_Z"$ZBAR"_"$NAME".output"
 # Perform analysis.
 cd $DIRanalysis
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 AP1 --labelFluxExt1 Impact --labelFluxExt2 SNB -lD2 SNB -xp --pltshow -pn -pZ -pT --plotmultvTh 14 -xlims 1100 1880 #-Tpts $XPOINT #--labelFluxExt3 local #-SH #--Efield #--vlimshow #--AWBSstar #--AWBSoriginal
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 20 --labelUseC7 AP1 --labelFluxExt1 Impact --labelFluxExt2 SNB -lD2 SNB -hftit 'Heat flux hohlraum' -ktit 'Kinetics at preheat point' -xp --pltshow -pn -pZ -pT --plotmultvTh 14 -xlims 1100 1880 #-Tpts $XPOINT #--labelFluxExt3 local #-SH #--Efield #--vlimshow #--AWBSstar #--AWBSoriginal
 
 # Safe figs.
 cp heatflux.png $DIRroot/VFPdata/C7_GdHohlraum_heatflux.png
