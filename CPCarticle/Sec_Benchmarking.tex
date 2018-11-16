@@ -251,7 +251,7 @@ proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic part of
 %  \item Brief description of the Impact code \figref{fig:C7_Impact_case3}.
 %\end{itemize}
 
-\begin{figure}[tbh]
+\begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_heatflux.png} \\
@@ -269,7 +269,7 @@ proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic part of
   \end{center} 
 \end{figure}
 
-\begin{figure}[tbh]
+\begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_heatflux.png} 
@@ -308,12 +308,13 @@ proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic part of
 %  \label{fig:C7_Aladin_case5}
 %  \end{center} 
 %\end{figure}
-\begin{figure}[tbh]
+\begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_Efield.png} \\
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png} \\
-	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_nonlocal_kinetics.png}
+	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_nonlocal_kinetics.png} 
     \end{tabular}
   \caption{  
   Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
@@ -385,52 +386,74 @@ $\text{Kn}^e = \frac{\mfpe}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
  $\text{Kn} = \frac{\mfpei}{L_{T_e}}$, because $\sqrt{\Zbar + 1}$ provides 
 a~better scaling of nonlocality with respect
 to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
-kept approximately the~same when varying $\Zbar$.
+kept approximately the~same when varying $\Zbar$ in 
+\figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
+and \figref{fig:C7_Aladin_case5}.
 In addition to the~heat flux profiles, we also show the~distribution function 
-details related to the~point of the~heat flux maximum (644 $\mu$m) 
+details related to the~approximate point of the~heat flux maximum (644 $\mu$m) 
 and to the~point of the~nonlocal transport effect (750 $\mu$m) in the~form of
 the~flux moment of EDFs anisotropic part \eqref{eq:q1}.
 The~nonlocal transport effect shows a~very good agreement with 
 previous results published in \cite{Sherlock_PoP2017}.
 
 In the~top plot of \figref{fig:C7_Aladin_case3} we show heat flux profiles
-computed by Aladin and AP1 corresponding to the~temperature $\Te$ profile 
-computed by Aladin for $\Zbar = 10$. The~EDFs $q_1$ at the~crossed point of 
+computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$ profile 
+computed by Aladin for $\Zbar = 10$. The~EDFs $q_1$ at the~trianlge point of 
 the~temperature profile is shown in the~middle plot, where a~very precise match
-between AP1 and Aladin can be observed, and $q_1$ at the~circled point 
+between AP1 and Aladin can be observed, and $q_1$ at the~circle point 
 of the~temperature profile is shown in the~bottom plot. In the~latter case
 AP1 shows a~very similar properties as Aladin with a~difference in magnitude
-corresponding to a~higher heat flux computed by AP1 at this point.
+corresponding to a~higher heat flux computed by AP1 at this point. 
 
-In the~top plot of \figref{fig:C7_Calder_case1} heat flux profiles
-computed by Calder and AP1 corresponding to the~temperature $\Te$ profile 
-computed by Calder are shown for $\Zbar = 2$. 
+The~top plot of \figref{fig:C7_Calder_case1} shows heat flux profiles
+computed by Calder, AP1, and SNB corresponding to the~temperature $\Te$ profile 
+computed by Calder for $\Zbar = 2$. 
 Very good match of $q_1$ can be seen between 
-AP1 and Calder at the~crossed point of the~temperature profile in the~middle 
-plot and $q_1$ at the~circled point of the~temperature profile is shown 
-in the~bottom plot. In the~latter case AP1 shows a~very similar properties 
-as Calder with a~difference in magnitude corresponding to a~higher heat flux 
-computed by AP1 at this point. In general, Calder exhibits a~lack of 
+AP1 and Calder at the~triangle point of the~temperature profile in the~middle 
+plot and $q_1$ at the~circle point of the~temperature profile is shown 
+in the~bottom plot. 
+%In the~latter case AP1 shows a~very similar properties 
+%as Calder. 
+In general, Calder exhibits a~lack of 
 return current (negative part of $q_1$), i.e. the~electron number is not 
 exactly conserved. This probably arises from the~nature of the~Monte Carlo 
 method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
 of charge conservation.
-
-Similar to \figref{fig:C7_Aladin_case3}, but for $\Zbar = 1$, 
-the~heat flux profiles, $q_1$ at the~heat flux maximum (crossed point) and
-at~the~nonlocal transport region (circled point) computed by Aladin and AP1 
-are shown in \figref{fig:C7_Aladin_case5}. It should be noted, 
+ 
+Heat flux profiles, electric field profiles, $q_1$ at the~heat flux maximum 
+(triangle point) and at~the~nonlocal transport region (circle point) 
+computed by Aladin, AP1, and SNB are shown in \figref{fig:C7_Aladin_case5} 
+for $\Zbar = 1$. The~AP1 EDF profiles provides a~reasonable match to 
+the~reference green line EDF by Aladin. It should be noted, 
 that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
-shown in \figref{fig:q1s_summary} and that AP1 compares very well
-to Aladin. We also add the~electric field profiles
-in the~top plot of \figref{fig:C7_Aladin_case5}. 
-One can see that $\E$ does not change much in magnitude, but
-it is displaced in direction down the~temperature gradient thus causing 
-a~significant modification compared to the~local $\E_L$ values.
-In general, a~very good performance of AP1 model equations 
-\eqref{eq:AP1f0}, \eqref{eq:AP1f1}, and \eqref{eq:AmpereKinetic} 
-(no B field in 1D) can be observed in all three cases when compared
-to the~computed results by Aladin and Calder.
+shown in \figref{fig:q1s_summary}, i.e. that AP1 tends to compute better
+kinetics then Aladin in this low $\Zbar$ case.
+%We also add the~electric field profiles
+%in the~top plot of \figref{fig:C7_Aladin_case5}. 
+%One can see that $\E$ does not change much in magnitude, but
+%it is displaced in direction down the~temperature gradient thus causing 
+%a~significant modification compared to the~local $\E_L$ values.
+
+SNB shows satisfactory results of the~heat flux profile in all three cases, 
+i.e. top plot in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
+and \figref{fig:C7_Aladin_case5}. However, one can observe that the~EDF 
+kinetic solution of SNB provides only a~qualitative image with respect to
+the~reference green line solution. This is illustrated for example in
+\figref{fig:C7_Aladin_case3}, where the~bottom plot highlights the~insufficient
+electric field treatment (no return current), and the~middle plot
+shows a~significantly receding solution at the~approximate heat flux maximum
+point. These~discrepancies can be attributed to the~use of an~inconsistent 
+electric field in the~case of SNB which uses $\E_L$. An~electric field 
+comparison is shown in \figref{fig:C7_Aladin_case5}, where it is shown that 
+the~local electric field treatment $\E_L$ used in SNB leads to 
+a~significant violation of the~plasma quasi-neutrality,
+i.e. a~non-zero current.
+The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
+and \eqref{eq:AmpereKinetic} in general show a~very good performance 
+in all three cases when compared to the~fully kinetic results 
+(green line) by Aladin and Calder, which can be assigned to the~consistent 
+treatment of $\E$ via nonlocal Ohm's law \eqref{eq:NonlocalOhm} in
+ \eqref{eq:AmpereKinetic} (no $\B$ field in 1D).
 
 In addition, the~Knudsen number Kn$^e$ has been varied among the~simulation 
 runs in order to address a~broad range of nonlocality of 
@@ -443,7 +466,7 @@ $s \in (1/2500, 1/25) \mu$m. Results showing the~heat flux maximum
 of an~extensive set of simulations of
 varying Kn$^e$ is shown in \figref{fig:Kn_results}.
  
-\begin{figure}[tbh]
+\begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{Kn_results.png}
@@ -548,7 +571,7 @@ of AP1, Impact, and SNB are also shown.
 \textit{Kn profile will be probably added}. One can observe an~overall good
 match among models in the~preheat region.
 
-\begin{figure}[tbh]
+\begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_GdHohlraum_heatflux.png}

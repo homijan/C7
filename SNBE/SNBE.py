@@ -127,6 +127,7 @@ if __name__ == "__main__":
     ps.add_argument( '-ninf', '--ne_inputfile', type = str, help = 'Electron density input file.' )
     ps.add_argument( '-Zinf', '--Zbar_inputfile', type = str, help = 'Mean ionization input file.' )
     ps.add_argument( '-Qo', '--Q_outname', type = str, help = 'Heat flux Q output file name.' )
+    ps.add_argument( '-Jo', '--J_outname', type = str, help = 'Current J output file name.' )
     ps.add_argument( '-F1o', '--F1_outname', type = str, help = 'F1 output file name.' )
     ps.add_argument( '-ne', '--ne_value', type = float, help = 'Electron density value.' )
     ps.add_argument( '-Z', '--Zbar_value', type = float, help = 'Mean ionization value.' )
@@ -287,7 +288,8 @@ if __name__ == "__main__":
             EDF_q1[gr][:] = me / 2.0 * v**2.0 * v * EDF_f1[gr][:] * v**2.0
             EDF_q1M[gr][:] = me / 2.0 * v**2.0 * v * EDF_f1M[gr][:] * v**2.0
             # Current moment.
-            EDF_j1[gr][:] = qe * v * (EDF_f1[gr][:] + EDF_f1M[gr][:]) * v**2.0
+            EDF_j1[gr][:] = v * (EDF_f1[gr][:] + EDF_f1M[gr][:]) * v**2.0
+            #EDF_j1[gr][:] = qe * v * (EDF_f1[gr][:] + EDF_f1M[gr][:]) * v**2.0
 
     # Heat flux integration of contributions from nonlocal and local EDF parts.
     Qnonlocal = 4.0 * np.pi / 3.0 * np.sum(EDF_q1, 0) * dv
@@ -330,6 +332,9 @@ if __name__ == "__main__":
     # Heat flux, x axis in microns.
     if (args.Q_outname):
         np.savetxt(args.Q_outname, np.transpose([xD * 1e4, Q_Wcm2]))
+    # Current, x axis in microns.
+    if (args.J_outname):
+        np.savetxt(args.J_outname, np.transpose([xD * 1e4, J]))
     # EDF.
     if (args.F1_outname):
         ## Find a spline for the data.

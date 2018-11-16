@@ -80,7 +80,7 @@ cp _F1_F0F1x_Aladin_Zeq1_tanh_50mic_5e20_B0_20ps_f0f1b_2.00e-11_580mic.txt.txt $
 fi
 
 ## SNBE output.
-python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
+python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -Jo $DIRroot/VFPdata/jSNB.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
 cd $DIRroot
 
 # Run C7.
@@ -100,12 +100,13 @@ fi
 ## NONLOCAL DISTRIBUTION
 if [ "$NAME" == "nonlocal" ]
 then
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB -hftit 'Heat flux Z = 1' -ktit 'Kinetics at preheat point' -lD1 Aladin -lD2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 #--Efield --labelEfieldExt1 Aladin
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB -hftit 'Heat flux Z = 1' -ktit 'Kinetics at preheat point' -lD1 Aladin -lD2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 --Efield --labelEfieldExt1 Aladin
 fi
 
 # Safe figs.
 ### CASE 5 ### Z = 1 for AWBS paper.
 cp heatflux.png $DIRroot/VFPdata/C7_Aladin_case5_heatflux.png
+cp Efield.png $DIRroot/VFPdata/C7_Aladin_case5_Efield.png
 if [ "$NAME" == "maximum" ]
 then
 cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_kinetics.png

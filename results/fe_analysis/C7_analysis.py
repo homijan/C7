@@ -5,7 +5,7 @@ from math import exp
 ## Fundamental physical constants in cgs. 
 kB = 1.6022e-12
 me = 9.1094e-28
-qe = 4.8032e-10
+qe = -4.8032e-10
 
 ## Number of processors used to run C7.
 Nproc = 8
@@ -102,6 +102,7 @@ def loadC7data(Nproc, file_base):
    print "Loading data from files:"
    for proc in range(Nproc):
       file = file_base+str(proc).zfill(maxProcOrder)
+      ## C7j_proc = f1*v^3
       C7x_proc, C7rho_proc, C7Te_proc, C7j_proc, C7Ex_proc, C7q_proc, C7corrE_proc, C7ne_proc, C7zbar_proc = np.loadtxt(file,  usecols=(0, 1, 2, 3, 4, 5, 6, 7, 8), unpack=True)
       C7x_raw.extend(C7x_proc)
       C7rho_raw.extend(C7rho_proc)
@@ -448,83 +449,35 @@ labelSH = 'SH'
 
 lwthick = 2
 
-"""
 ## Set labels.
-fig, ax1 = plt.subplots()
-ax1.set_xlabel(r'z [$\mu$m]')
-ax1.set_ylabel(r'$q_h$ [W/cm$^2$]')
-if (args.pltTe):
-   ax1.set_ylabel(r'$q_h$ [W/cm$^2$]'+r', $T_e\in$('+"{:.0f}".format(C7Te.min())+', '+"{:.0f}".format(C7Te.max())+') [eV]')
-ax1.set_title(r'Heat flux Z = '+"{:.1f}".format(float(Zbar)))
-#ax1.set_title(r'Heat flux (Z = '+"{:.1f}".format(float(Zbar))+r', $\lambda^e_{th}$='+"{:.4f}".format(mfp_ee*1e4)+r'[$\mu$m])')
-## Heat fluxes are displayed in W/cm2, i.e. energy is converted from ergs to J.
-if (args.labelUseC7):
-   ax1.plot(C7x_microns, C7q * 1e-7, C7Ecolor+'-', label=r'$q_h-$'+labelC7, lw=lwthick)
-
-if (args.labelFluxExt1):
-   ax1.plot(Q1xmicrons, Q1Wcm2, Ext1color+'-', label=r'$q_h-$'+args.labelFluxExt1, lw=lwthick)
-if (args.labelFluxExt2):
-   ax1.plot(Q2xmicrons, Q2Wcm2, Ext2color+'-', label=r'$q_h-$'+args.labelFluxExt2, lw=lwthick)
-if (args.labelFluxExt3):
-   ax1.plot(Q3xmicrons, Q3Wcm2, Ext3color+'-', label=r'$q_h-$'+args.labelFluxExt3, lw=lwthick)
-
-if (args.kinSH):
-   ax1.plot(C7x_microns, C7SHQ_analytic * 1e-7, SHcolor+'-.', label=r'$q_h-$'+labelSH)
-## Special treatment of temperature profile.
-q_ref = C7q
-if (args.kinSH):
-   q_ref = C7SHQ_analytic
-C7Te_scaled = C7Te*(q_ref.max() - q_ref.min())/(C7Te.max() - C7Te.min())
-C7Te_scaled = C7Te_scaled - (C7Te_scaled.max() - q_ref.max())
-if (args.pltTe):
-   ax1.plot(C7x_microns, C7Te_scaled * 1e-7, 'b:', label=r'$T_e$')
-## Special treatment of electron density profile.
-C7ne = C7ne / 1e20
-C7ne_scaled = C7ne*(q_ref.max() - q_ref.min())/(C7ne.max() - C7ne.min())
-C7ne_scaled = C7ne_scaled - (C7ne_scaled.max() - q_ref.max())
-if (args.pltne):
-   ax1.plot(C7x_microns, C7ne_scaled * 1e-7, 'g:', label=r'$n_e$')
-## Special treatment of ionization profile.
-C7zbar_scaled = C7zbar*(q_ref.max() - q_ref.min())/(C7zbar.max() - C7zbar.min())
-C7zbar_scaled = C7zbar_scaled - (C7zbar_scaled.max() - q_ref.max())
-if (args.pltZbar):
-   ax1.plot(C7x_microns, C7zbar_scaled * 1e-7, 'k:', label=r'$Z$')
-## Second Efield axis.
-ax2 = ax1.twinx()
-#if (vlimshow):
-#   ax2.set_ylabel(r'E [a.u.]'+r', $v_{lim}/v_{th}\in$('+"{:.1f}".format(C7corrE.min())+', '+"{:.0f}".format(C7corrE.max())+')' )
 if (args.Efield):
-   if (args.pltne):
-      ax2.set_ylabel(r'$E$ [V/m]'+r', $n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
-   else:
-      ax2.set_ylabel(r'$E$ [V/m]')
-else:
-   if (args.pltne):
-      ax2.set_ylabel(r'$n_e\in$('+"{:.0f}".format(C7ne.min())+', '+"{:.0f}".format(C7ne.max())+r') [10$^{20}$/cm$^3$]'+r', $Z\in$('+"{:.0f}".format(C7zbar.min())+', '+"{:.0f}".format(C7zbar.max())+r')')
-if (args.Efield):
+   fig, ax1 = plt.subplots()
+   ax1.set_xlabel(r'z [$\mu$m]')
+   ax1.set_ylabel(r'$E$ [V/m]')
+   ax1.set_title(r'Electric field Z = '+"{:.0f}".format(float(Zbar)))
    if (args.labelUseC7):
-      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'--', label=r'$E-$'+labelC7)
+      ax1.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7Ex, C7Ecolor+'-', label=r'$E-$'+labelC7, lw=lwthick)
    if (args.labelEfieldExt1):
       E1xmicrons, E1values = np.loadtxt('../../VFPdata/Efield1.dat',  usecols=(0, 1), unpack=True)
-      ax2.plot(E1xmicrons, -E1values, Ext1color+'--', label='$E-$'+args.labelEfieldExt1)
-
+      ax1.plot(E1xmicrons, E1values, Ext1color+'-', label='$E-$'+args.labelEfieldExt1, lw=lwthick)
    if (args.kinSH):
-      ax2.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+':', label=r'$E-$'+labelL)
-## Special treatment of the corrE showing the limit velocity/vTh 
-## to be affected by E field.
-#if (vlimshow):
-#   C7corrE_scaled = C7corrE*(C7Ex.max() - C7Ex.min())/(C7corrE.max() - C7corrE.min()) 
-#   C7corrE_scaled = C7corrE_scaled - (C7corrE_scaled.max() - C7Ex.max())
-#   ax2.plot(C7x_microns, me/qe*C7corrE_scaled, 'k-.', label=r'$v_{lim}/v_{th}$')
-fig.tight_layout()
-ax1.legend(loc='center left', fancybox=True, framealpha=0.8)
-ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
-for ext in ["png", "pdf", "eps"]:
-   print("saving heatflux.%s" % (ext,))
-   plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
-if (args.pltshow):
-   plt.show()
-"""
+      ax1.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+'-.', label=r'$E_L$', lw=lwthick)
+   ax2 = ax1.twinx()
+   ax2.set_ylabel(r'$j/q_e$ [a.u.]')
+   ## C7j = f1 * v^3
+   #ax2.plot(C7x_microns, C7j, 'k-.',label=r'$j-$'+labelC7, lw=lwthick)
+   ## jSNB = (f1M + df1) * v^3
+   jxmicrons, jSNB = np.loadtxt('../../VFPdata/jSNB.dat',  usecols=(0, 1), unpack=True)
+   ax2.plot(jxmicrons, jSNB, 'y--',label=r'$j/q_e-SNB$', lw=lwthick)
+   fig.tight_layout()
+   ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+   ax2.legend(loc='center left', fancybox=True, framealpha=0.8)
+   for ext in ["png", "pdf", "eps"]:
+      print("saving Efield.%s" % (ext,))
+      plt.savefig("Efield.%s" % (ext,), bbox_inches="tight")
+   if (args.pltshow):
+      plt.show()
+
 
 ## Set labels.
 fig, ax1 = plt.subplots()
