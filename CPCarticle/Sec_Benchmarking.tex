@@ -128,11 +128,14 @@ the~distribution function in \eqref{eq:LFP_model} is used
 \begin{eqnarray} 
 C^0_{ee}(\fzero) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
 \left[C(f_0)f_0+D(\fzero)\frac{\partial \fzero}{\partial \vmag}\right] ,
+\label{eq:C0_collision_operator}
 \\
 C(\fzero(\vmag)) &=& 4\pi\int_0^\vmag \fzero(u) u^2 \dI u ,
+\nonumber
 \\
 D(\fzero\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w \fzero(w) 
 \dI w \dI u .
+\nonumber
 \end{eqnarray}
 
 Impact and Aladin solve the system \eqref{eq:P1f0_Aladin} 
@@ -192,7 +195,7 @@ as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1})
   \nonumber \\
   \label{eq:SNBf1}
 \end{eqnarray}
-where the~magnetic field was nglected. The~underbraced part
+where the~magnetic field was neglected. The~underbraced part
 of \eqref{eq:SNBf1} defines the~local anisotropic term
 %where $\fone_M = \frac{\frac{\nuei^2}{\xi^2} \vect{F}_M 
 %+ \omegaB~\omegaB\cdot\vect{F}_M - \frac{\nuei}{\xi}~\omegaB \vect{\times} 
@@ -201,9 +204,9 @@ of \eqref{eq:SNBf1} defines the~local anisotropic term
 %+ \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
 %\frac{\fM}{\Te}\nabla\Te - \frac{\qe \fM}{\me\vth^2}\E\right)$.
 \begin{equation}
-  \fone_M = -\frac{\xi\vmag\fM}{\nuei}\left( \frac{\nabla\ed}{\ed} 
+  \fone_M = -\xi\mfpei\fM\left( \frac{\nabla\ed}{\ed} 
 + \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
-\frac{\nabla\Te}{\Te} - \frac{\qe}{\me\vth^2}\E\right).
+\frac{\nabla\Te}{\Te} - \frac{\qe\E}{\me\vth^2}\right).
   \label{eq:f1M}
 \end{equation}
 %One should notice, that the~local
@@ -211,42 +214,44 @@ of \eqref{eq:SNBf1} defines the~local anisotropic term
 %adjusts to the~local Lorentz electric field \eqref{app_eq:BGK_Efield}. 
 The~efficiency of SNB resides in omitting the~directional electric field 
 effect (crossed out terms in \eqref{eq:SNBf0} and \eqref{eq:SNBf1}), which
-leads to a~simple diffusion model 
+leads to a~simple diffusion model for $\delta\fzero$ 
 \begin{equation}
   \frac{1}{\mfpe^{SNB}}\delta\fzero 
   - \nabla\cdot\frac{\mfpei^{SNB}}{3}\nabla\delta\fzero =
-  \nabla\cdot\frac{\xi\mfpei}{3}\fM
-  \left( \frac{\nabla \ed}{\ed} + \frac{\nabla \Te}{\Te} \right)
+  \nabla\cdot\frac{\xi\mfpei}{3}\fM\frac{\nabla \Te}{\Te}
   ,
   \label{eq:SNB_model}
 \end{equation}
 where $\frac{1}{\mfpei^{SNB}} = 
 \frac{\nuei}{\xi\vmag} + \frac{|\qe\E|}{\frac{1}{2}\me\vmag^2}$ 
 and $\mfpe^{SNB} = \frac{\xi\vmag}{r \nue}$, and the~source term based on 
-$\fone_M$ simplifies by avoiding the~$\vmag$-dependent bracket and 
-the~electric field effect in \eqref{eq:f1M}. The~missing
+$\fone_M$ simplifies by avoiding the~electric field effect, density gradient 
+and the~$\vmag$-dependent bracket in \eqref{eq:f1M}. The~missing
 directional effect of $\E$ in \eqref{eq:SNB_model} is mimicked as 
 an~isotropic scattering in defintion of $\mfpei^{SNB}$ \cite{Schurtz_2000}.
 Consequently, the~real directional effect of the~electric field in SNB
-is reflected only via $\fone_M$. A~self consistent zero current condition 
-$\vect{j} = \qe \int \vmag (\fone_M + \delta\fone)~\dI\tilde{\vmag} = 0$ then
-defines the~actual value of the~electric field from \eqref{eq:SNBf1} as
-\begin{equation}
- \E = -\frac{\int \frac{\xi\vmag^2}{\nuei}\nabla
- \left(\fM + \delta\fzero\right)~\dI\tilde{\vmag}}
- {\int \frac{\xi\vmag}{\nuei}\frac{\qe}{\me}\pdv{\fM}{\vmag}
- ~\dI\tilde{\vmag} } 
- = \E_L - \frac{\int \frac{\vmag^2}{\nuei}\nabla
- \delta\fzero~\dI\tilde{\vmag}}
- {\frac{\qe}{\me}\int \frac{\vmag}{\nuei}\pdv{\fM}{\vmag}
- ~\dI\tilde{\vmag} } ,
- \label{eq:SNB_E} 
-\end{equation}
+is reflected only via $\fone_M$, where the~electric field is fixed to $\E_L$. 
+%A~self consistent zero current condition 
+%$\vect{j} = \qe \int \vmag (\fone_M + \delta\fone)~\dI\tilde{\vmag} = 0$ then
+%defines the~actual value of the~electric field from \eqref{eq:SNBf1} as
+%\begin{equation}
+% \E = -\frac{\int \frac{\xi\vmag^2}{\nuei}\nabla
+% \left(\fM + \delta\fzero\right)~\dI\tilde{\vmag}}
+% {\int \frac{\xi\vmag}{\nuei}\frac{\qe}{\me}\pdv{\fM}{\vmag}
+% ~\dI\tilde{\vmag} } 
+% = \E_L - \frac{\int \frac{\vmag^2}{\nuei}\nabla
+% \delta\fzero~\dI\tilde{\vmag}}
+% {\frac{\qe}{\me}\int \frac{\vmag}{\nuei}\pdv{\fM}{\vmag}
+% ~\dI\tilde{\vmag} } ,
+% \label{eq:SNB_E} 
+%\end{equation}
+
 In this paper we porpose to use $r = \frac{1}{2}$ in accordance with 
 \eqref{eq:qAWBS_approximation}. This choice gives 
 $\mfpe^{SNB} = \frac{\vmag}{2.097\nue}$ in the~case of $\Zbar = 1$, 
 which is in a~very good accordance with $\mfpe^{SNB} = \frac{\vmag}{2\nue}$ 
-proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic part of EDF then takes the~form $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
+proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic 
+part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 %\begin{itemize}
 %  \item Brief description of the Impact code \figref{fig:C7_Impact_case3}.
 %\end{itemize}
@@ -426,8 +431,11 @@ computed by Aladin, AP1, and SNB are shown in \figref{fig:C7_Aladin_case5}
 for $\Zbar = 1$. The~AP1 EDF profiles provides a~reasonable match to 
 the~reference green line EDF by Aladin. It should be noted, 
 that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
-shown in \figref{fig:q1s_summary}, i.e. that AP1 tends to compute better
-kinetics then Aladin in this low $\Zbar$ case.
+shown in \figref{fig:q1s_summary}, i.e. this may suggest that AP1 tends 
+to compute better kinetics in this low $\Zbar$ case then 
+the~isotropic collision operator
+\eqref{eq:C0_collision_operator} used by Aladin and Impact.
+
 %We also add the~electric field profiles
 %in the~top plot of \figref{fig:C7_Aladin_case5}. 
 %One can see that $\E$ does not change much in magnitude, but
@@ -440,14 +448,18 @@ and \figref{fig:C7_Aladin_case5}. However, one can observe that the~EDF
 kinetic solution of SNB provides only a~qualitative image with respect to
 the~reference green line solution. This is illustrated for example in
 \figref{fig:C7_Aladin_case3}, where the~bottom plot highlights the~insufficient
-electric field treatment (no return current), and the~middle plot
+electric field treatment (no return current). The~middle plot
 shows a~significantly receding solution at the~approximate heat flux maximum
-point. These~discrepancies can be attributed to the~use of an~inconsistent 
+point in all three cases of $\Zbar$. 
+These~discrepancies can be attributed to the~use of an~inconsistent 
 electric field in the~case of SNB which uses $\E_L$. An~electric field 
 comparison is shown in \figref{fig:C7_Aladin_case5}, where it is shown that 
-the~local electric field treatment $\E_L$ used in SNB leads to 
+the~local electric field treatment $\E_L$ used in SNB is especially 
+inapropriate in the~preheat region and consequently leads to 
 a~significant violation of the~plasma quasi-neutrality,
-i.e. a~non-zero current.
+i.e. a~non-zero current, where one can observe an~uncontrolled stream of 
+electrons in the~preheat and also an~overestimation of negative return current
+around the~heat flux maximum.
 The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
 and \eqref{eq:AmpereKinetic} in general show a~very good performance 
 in all three cases when compared to the~fully kinetic results 
@@ -484,9 +496,11 @@ varying Kn$^e$ is shown in \figref{fig:Kn_results}.
 \end{figure}
 When analyzing the~results of \figref{fig:Kn_results} we observed that 
 the~maximum of $q_1$ at the~maximum point tends to dicrease with increasing 
-Kn$^e$, however, never shifts much lower than 3 $\vth$, i.e. the~interval of
-electron velocities important for the~heat transport always belongs 
-to $3 \vth < \vmag <4 \vth$. We have also found 
+Kn$^e$ and that the~interval of electron velocities important for 
+the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
+refer to the~kinetics at maximum point in \figref{fig:C7_Aladin_case3}, 
+\figref{fig:C7_Calder_case1}, and \figref{fig:C7_Aladin_case5}. 
+We have also found 
 an~important observation related to the~stopping effect of electrons.
 It turns out, that the~force acting on electrons is dominated by directional
 electric field above some velocity limit $\vmag_{lim}$ and this limit drops 
@@ -496,7 +510,7 @@ As a~consequence, one can see that the~electrons responsible for the~heat flux
 ($3 \vth < \vmag <4 \vth$) are preferably affected by the~electric field
 rather than by collisions when Kn$^{e} > 10^{-1}$, since according to 
 \tabref{tab:vlim} collsions dominate stopping for $\vmag < 3.1 \vth$ 
-when Kn$^e = 0.1$ and even a~much lower value $\vmag < 1.8 \vth$ 
+when Kn$^e = 10^{-1}$ and even a~much lower value $\vmag < 1.8 \vth$ 
 when Kn$^e = 1.0$. This perfectly explains unsatisfactory results of the~AP1
 model for high Kn$^e$ shown in \figref{fig:Kn_results}. 
 Noticably, the~AP1 limited electric field effect (described in 
@@ -528,14 +542,16 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
 
 Yet another observation can be made when analysing $q_1$ 
 in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, and 
-\figref{fig:C7_Aladin_case5}. When comparing their middle and bottom plots,
-both velocity maxima of the~EDF correspond to approximately same velocity
-for each of the~cases, i.e. that the~electrons responsible for the~flux in
-the~bottom plot are those flux dominating electrons from the~heat flux
-maximum point shown in the~middle plot. Notice that different reference 
-temperatures and $\vth$ are used in the~middle and bottom plots. 
-This provides a~microscopic information
-about the~motion of electrons on the~nonlocal spatial scale. 
+\figref{fig:C7_Aladin_case5}. When comparing the~kietics at maximum and 
+preheat points, both velocity maxima of the~EDF correspond to approximately 
+same electron velocity. This means that the~electrons responsible for 
+the~flux in the~preheat region are those flux dominating electrons 
+from the~maximum point. This provides a~microscopic information
+about the~motion of electrons on the~nonlocal spatial scale, i.e. 
+a~quantification how far the~fast electrons from the~heat flux maximum 
+are transported before being slowed down significantly. 
+Notice that different reference temperatures and $\vth$ are used 
+in the~maximum and preheat plots.
 
 \begin{comment} % Simulations setup.
 In every simulation run of AP1 we used 250~velocity groups in order to avoid
@@ -563,13 +579,12 @@ corona $\lnc$ reaches 8, which, however, does not affect the~heat flux profile
 significantly. Plasma profiles at 20 nanoseconds of the~HYDRA simulation 
 were used (after spline smoothing) as the~initial conditions for 
 the~IMPACT run (in planar geometry).
-
 \figref{fig:Gd_VFP_10ps_heatflux} shows the~electron temperature $\Te$ 
-evolved during 10 ps by Impact, and the~electron density $\ed$ and 
-ionization $\Zbar$ profiles. Along with plasma profiles the~heat flux profiles
+evolved during 10 ps by Impact and the~electron density $\ed$ profile
+%and ionization $\Zbar$ profiles. 
+Along with plasma profiles the~heat flux profiles
 of AP1, Impact, and SNB are also shown. 
-\textit{Kn profile will be probably added}. One can observe an~overall good
-match among models in the~preheat region.
+%\textit{Kn profile will be probably added}. 
 
 \begin{figure}[htb]
   \begin{center}
@@ -587,6 +602,8 @@ match among models in the~preheat region.
   \end{center} 
 \end{figure}
 
+One can observe a~very good
+match between AP1 and Impact computations in the~preheat region.
 It is worth mentioning that in the~surroundings of the~heat flux maximum 
 ($\sim 1662 \mu$m) the~profiles of all plasma variables exhibit steep gradients 
 with a change from $T_e$ = 2.5 keV, $n_e$ = 5$\times$10$^{20}$ cm$^{−3}$, 
@@ -594,13 +611,20 @@ $\Zbar$ = 2 to $T_e$ = 0.3 keV, $n_e$ = 6$\times$10$^{21}$ cm$^{−3}$ ,
 $\Zbar$ = 44 across approximately 100 $\mu$m 
 (between 1600~$\mu$m and 1700~$\mu$m), starting at the~helium-gadolinium 
 interface.  
-In this region, we can see a~qualitative match between AP1 and Impact, however,
+In this region, we can see a~qualitative match between AP1 and Impact providing
+a~same sign of the~heat flux divergence contributing to hydro, however,
 we observe that the~electric field limit \appref{app:AP1limit} leads to 
 the~drop of the~AP1 heat flux on the~material interface, which then aligns to 
 the~Impact heat flux in the~corona appropriately. On the~other hand, 
-SNB exhibits a~significant heat flux overestimation in both
-the~steep gradients region and in the~plasma corona. We also attribute this
-to the~lack of proper action of the~electric field (the~directional effect) 
-in the~SNB approach.
+SNB exhibits a~significantly more diffused heat flux profile, and more 
+importantly, the~opposite sign of the~heat flux divergence compared to Impact
+(and AP1) in the~steep gradients region. In the~preheat region SNB slightly 
+overestimates the~heat flux. Nevertheless, it is important to stress that 
+SNB required only 25 velocity groups compared to 250 velocity groups used by
+Impact and AP1 for this ICF relevant plasma conditions, thus making it a~very
+efficient modeling approach even though its description of kinetics is rather
+qualitative.
+%We also attribute this to the~lack of proper action of the~electric field 
+%(the~directional effect) in the~SNB approach.
 
 %
