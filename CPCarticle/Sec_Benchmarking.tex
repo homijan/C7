@@ -365,8 +365,8 @@ in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
 %the temperature ramp and the ratio of the scalelength to mfp increases 
 %(i.e. the thermal transport slowly becomes more local). 
 
-The~total computational box size is 700 $\mu$m in the~case
-of Aladin and Impact and 1000 $\mu$m in the~case of Calder.
+The~total computational box size is 700 $\mu$m.
+%in the~case of Aladin and Impact and 1000 $\mu$m in the~case of Calder.
 We performed Aladin, Impact, and Calder simulations showing an~evolution of
 temperature starting from the~initial profile \eqref{eq:T_init}. 
 Due to the~initial distribution function being approximated by a~Maxwellian,
@@ -395,10 +395,10 @@ kept approximately the~same when varying $\Zbar$ in
 \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
 and \figref{fig:C7_Aladin_case5}.
 In addition to the~heat flux profiles, we also show the~distribution function 
-details related to the~approximate point of the~heat flux maximum (644 $\mu$m) 
-and to the~point of the~nonlocal transport effect (750 $\mu$m) in the~form of
+details related to the~approximate point of the~heat flux maximum (460 $\mu$m) 
+and to the~point of the~nonlocal preheat effect (580 $\mu$m) in the~form of
 the~flux moment of EDFs anisotropic part \eqref{eq:q1}.
-The~nonlocal transport effect shows a~very good agreement with 
+The~nonlocal preheat effect shows a~very good agreement with 
 previous results published in \cite{Sherlock_PoP2017}.
 
 In the~top plot of \figref{fig:C7_Aladin_case3} we show heat flux profiles
@@ -426,12 +426,13 @@ method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
 of charge conservation.
  
 Heat flux profiles, electric field profiles, $q_1$ at the~heat flux maximum 
-(triangle point) and at~the~nonlocal transport region (circle point) 
+(triangle point) and at~the~nonlocal preheat region (circle point) 
 computed by Aladin, AP1, and SNB are shown in \figref{fig:C7_Aladin_case5} 
 for $\Zbar = 1$. The~AP1 EDF profiles provides a~reasonable match to 
 the~reference green line EDF by Aladin. It should be noted, 
 that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
-shown in \figref{fig:q1s_summary}, i.e. this may suggest that AP1 tends 
+shown in \figref{fig:q1s_summary} where AP1 corresponds to AWBS and Aladin to
+BGK curve. This may suggest that AP1 tends 
 to compute better kinetics in this low $\Zbar$ case then 
 the~isotropic collision operator
 \eqref{eq:C0_collision_operator} used by Aladin and Impact.
@@ -542,7 +543,7 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
 
 Yet another observation can be made when analysing $q_1$ 
 in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, and 
-\figref{fig:C7_Aladin_case5}. When comparing the~kietics at maximum and 
+\figref{fig:C7_Aladin_case5}. When comparing the~kinetics at maximum and 
 preheat points, both velocity maxima of the~EDF correspond to approximately 
 same electron velocity. This means that the~electrons responsible for 
 the~flux in the~preheat region are those flux dominating electrons 
@@ -551,7 +552,11 @@ about the~motion of electrons on the~nonlocal spatial scale, i.e.
 a~quantification how far the~fast electrons from the~heat flux maximum 
 are transported before being slowed down significantly. 
 Notice that different reference temperatures and $\vth$ are used 
-in the~maximum and preheat plots.
+in the~maximum and preheat plots, 
+e.g. $\Te = 622$~eV and $\vmag_{q_1^{max}} = 3.24~\vth = 3.39\times10^9$~cm/s 
+at the~maximum point and $\Te = 192$~eV and 
+$\vmag_{q_1^{max}} = 5.95~\vth = 3.46\times10^9$~cm/s at the~preheat point
+in \figref{fig:C7_Aladin_case5}.
 
 \begin{comment} % Simulations setup.
 In every simulation run of AP1 we used 250~velocity groups in order to avoid
@@ -613,9 +618,10 @@ $\Zbar$ = 44 across approximately 100 $\mu$m
 interface.  
 In this region, we can see a~qualitative match between AP1 and Impact providing
 a~same sign of the~heat flux divergence contributing to hydro, however,
-we observe that the~electric field limit \appref{app:AP1limit} leads to 
-the~drop of the~AP1 heat flux on the~material interface, which then aligns to 
-the~Impact heat flux in the~corona appropriately. On the~other hand, 
+we observe that the~electric field limit shown in \appref{app:AP1limit} 
+leads to the~drop of the~AP1 heat flux on the~material interface, 
+which then closely aligns to the~Impact heat flux in the~corona. 
+On the~other hand, 
 SNB exhibits a~significantly more diffused heat flux profile, and more 
 importantly, the~opposite sign of the~heat flux divergence compared to Impact
 (and AP1) in the~steep gradients region. In the~preheat region SNB slightly 
