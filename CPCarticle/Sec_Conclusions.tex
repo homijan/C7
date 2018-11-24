@@ -1,29 +1,66 @@
 \section{Conclusions}
 \label{sec:Conclusions}
 
-\begin{itemize}
-  \item The~most important point is that we introduce a~collision operator, 
-    which is coherent with the full FP, i.e. no extra dependence on $\Zbar$.
-  \item Touch pros/contras of linearized FP in Aladin and Impact vs AWBS
-  \item Raise discussion about what is the weakest point of AP1 for high Kns: 
-    the~velocity limit or phenomenological Maxwellization?
-  \item Summarize useful outcomes related to plasma physics as
-    the competition between collisions and electric field in the electron 
-	stopping, then the knowledge about the nonlocal electron population 
-	(preheat electrons can be tracked back to the point of source according 
-	to their dominant velocity), and the last information about the~tendency 
-	of the~velocity maximum in $q_1$ with respect to $\Zbar$ and Kn$^e$.
-  \item Emphasize the~good results of Aladin (compared to Impact) and also
-    outstanding results of Calder while being PIC. 
-  \item Electric field plays an important role in nonlocal electron kinetics
-    and nonlocal Ohm's law provides the necessary equation to treat it properly.
-  \item In coherence with the latter, the dfdv must be treated properly in
-    nolocal electron kinetics, and so, AWBS can be included without any extra
-	effort thus making it way much suitable than BGK, which is outperformed
-	by AWBS when compared to FP.
+%\begin{itemize}
+  %\item The~most important point is that we introduce a~collision operator, 
+  %  which is coherent with the full FP, i.e. no extra dependence on $\Zbar$.
+  %\item Touch pros/contras of linearized FP in Aladin and Impact vs AWBS
+  %\item Raise discussion about what is the weakest point of AP1 for high Kns: 
+  %\item Summarize useful outcomes related to plasma physics as
+  %  the competition between collisions and electric field in the electron 
+  %	stopping, then the knowledge about the nonlocal electron population 
+  %	(preheat electrons can be tracked back to the point of source according 
+  %	to their dominant velocity), and the last information about the~tendency 
+  %	of the~velocity maximum in $q_1$ with respect to $\Zbar$ and Kn$^e$.
+  %\item Emphasize the~good results of Aladin (compared to Impact) and also
+  %  outstanding results of Calder while being PIC. 
+  %\item Electric field plays an important role in nonlocal electron kinetics
+  %  nonlocal Ohm's law provides the necessary equation to treat it properly.
+  %\item In coherence with the latter, the dfdv must be treated properly in
+  %  nolocal electron kinetics, and so, AWBS can be included without any extra
+  %  effort thus making it way much suitable than BGK, which is outperformed
+  %  by AWBS when compared to FP.
+%\end{itemize}
 
-\end{itemize}
-
+In conclusion, we have performed a~thorough analysis of the~AWBS transport 
+equation for electrons originally introduced in \cite{Sorbo_2015} and extended
+it by adding the~nonlocal version of Ohm's law.
+After properly redefining the~e-e colission term, we have shown that the~AWBS
+simplified linear form of the~Fokker-Planck collision operator keeps
+some important kinetic properties analyzed in local diffusive regime, 
+e.g. provides a~correct dependency 
+on $\Zbar$ (BGK requires an~additional fix) and inherently includes
+the~anisotropic part of the~distribution function $\fone$, which compares
+very well to the~full Fokker-Planck operator.
+Under nonlocal transport plasma conditions, we benchmarked AP1 against 
+the~reference VFP codes Aladin and Impact, collisional PIC code Calder, 
+and we also included the~standard nonlocal approach SNB.
+%It was shown in Sec. IV A that inclusion of this in KIPP and EIC
+%predicts a noticeably different nonlocal deviation (consider,
+%for example, the value b) than would be predicted by using
+%the phenomenological collision fix. 
+AP1 performed very well over all simulation cases while capturing the~important
+kinetic features compared to the~reference kinetic codes. 
+Furthermore, our extensive analysis of the~anisotropic part of the~EDF 
+provided by AP1 showed a~very good match to all Aladin, Impact, and Calder. 
+This suggests 
+a~promising AP1's capability in predicting general transport coefficients and 
+the~seeding of parameteric laser plasma instabilities sensitive 
+to the~Landau damping of longitudinal plasma waves 
+\cite{goldston1995introduction, Sorbo_2015},
+which is of great importance in ICF related plasmas 
+\cite{Kirkwood_NIFLPI_PPCF2013}.
+Other kinetic effects as perpendicular transport, e.g heat flow
+or magnetic field advection, ocurring in magnetised plasma  
+\cite{Walsh_Nernst_PRL2017} are introduced in
+AP1 via the~nonlocal Ohm's law, which in general, features the~essential way
+of coupling electromagnetic fields to plasma.
+On the~oher hand we observed an~inacurate kinetic results of 
+the~\textit{decelerating} AP1 computation for highly nonlocal plasma 
+conditions, which was explained by the~velocity limit applied to the~action
+of the~electric field. A~general (not only the~\textit{decelerating}) numerical
+solution of the~AP1 model, which avoids the~eletric field limit, 
+will be the~main focus of our future work.
 %LPI Kirkwood 2013 \cite{Kirkwood_NIFLPI_PPCF2013}
 %Nernst Walsh 2017 \cite{Walsh_Nernst_PRL2017}
 %Heat wave velocity measurement Schurtz 2007 \cite{Schurtz_2007}
