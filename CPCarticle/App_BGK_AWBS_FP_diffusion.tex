@@ -27,30 +27,27 @@ Consequently, if the~isotropic and anisotropic parts of
 \eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:BGK_model_1D} are 
 compared, one finds the~following equations 
 \begin{eqnarray}
-  \ft^0 &=& \fM + \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 ,
+  \ft^0 &=& \fM + \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 
+  + \frac{3\Zbar + 1}{2}f^2,
   \label{app_eq:BGK_f0} \\
   \ft^1 &=& - \frac{\mfpe}{\Zbar}
-  \left( \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right) . 
+  \left( \pdv{}{z}\left(f^0 - \frac{f^2}{2}\right) + \frac{\qe\Ez}{\me\vmag}\pdv{}{\vmag} \left(f^0 - \frac{f^2}{2}\right) \right) , 
   \label{app_eq:BGK_f1}
+  \\
+  f^2 &=& \frac{2 \mfpe}{9(\Zbar + 1)}
+  \left( 
+  \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 -  
+  \pdv{f^1}{z} - \frac{\qe\Ez}{\me\vmag}\pdv{f^1}{\vmag}
+  \right) ,
+  \label{app_eq:BGK_f2}
 \end{eqnarray}
 It is valid to assume that $\ft^0 = \fM$ from \eqref{app_eq:BGK_f0}. Then,
-\begin{equation}
-  \ft^1_{BGK} = - \frac{\mfpe}{\Zbar}
-  \left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right) . 
-  \label{app_eq:BGK_f1_fM}
-\end{equation}
 The~\textit{quasi-neutrality} constraint, corresponding to a~zero current 
 imposed by the~electric field reads
 \begin{equation}
-\vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0} .
+\vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0} ,
 \end{equation}
-In the~case of the BGK EDF, in particular its~anisotropic part 
-\eqref{app_eq:BGK_f1_fM}, the~zero current condition takes the~form
-\begin{equation}
-  2\pi\int_{-1}^{1} \int_{\vmag} \vmag \mu^2 \ft^1_{BGK}\, \dI\vmag\dI\mu = 0 ,
-  \nonumber
-\end{equation}
-which leads to the~electric field (same as the~classical Lorentz electric field
+leads to the~electric field (same as the~classical Lorentz electric field
 $\E_L$ \cite{Lorentz_1905})
 \begin{equation}
   \Ez = \frac{\me\vth^2}{\qe}\left(\frac{1}{L_{n_e}} 
@@ -63,7 +60,8 @@ It is worth mentioning, that the~deviation of $\ft^0$ from $\fM$ in
 where naturally arises the~Knudsen number 
 $Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$ comprising
 both contributions of electron density and temperature gradients, and that 
-a~multiplication of the~electron-electron collision contribution can be 
+
+Multiplication of the~electron-electron collision contribution can be 
 multiplied by a~constant in \eqref{app_eq:BGK_model_1D} without changing 
 the~resulting form of the~local anisotropic term \eqref{app_eq:BGK_f1},
 and consequently the~current and heat flux. This constant will be labeled $r$

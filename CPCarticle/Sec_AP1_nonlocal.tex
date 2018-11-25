@@ -13,14 +13,15 @@ consisting of the~isotropic part represented by the zeroth angular moment
 $\fzero = \frac{1}{4\pi}\int_{4\pi} \tilde{\ft} \dI\vn$ 
 and the~directional part represented by the~first angular moment 
 $\fone = \frac{3}{4\pi}\int_{4\pi} \vn
-\tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction (the~solid angle).
+\tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction.
 %It should be noticed, that \eqref{eq:P1approximation} represents 
 %a~multi-dimensional equivalent to \eqref{eq:f_approximation}, where 
 %the~following relations between the~spherical harmonics method
 %and the~moments method hold $\ft^0 = \frac{\fzero}{4\pi}$ and 
 %$\ft^1 = \frac{3}{4\pi}|\fone|$.
 Then, the~first two angular moments
-\cite{Shkarofsky_Particle_Kinetics_book_1966_24} applied to the~steady form of 
+\cite{Shkarofsky_Particle_Kinetics_book_1966_24} applied to the~stationary 
+form of 
 \eqref{eq:kinetic_equation} with collision operator \eqref{eq:AWBS_model} 
 (extended by \eqref{eq:qAWBS_approximation}) lead to the~model equations
 \begin{eqnarray}
@@ -42,21 +43,24 @@ where $\nuscat = \nuei + \frac{\nue}{2}$. The system of equations
 \eqref{eq:AP1f0} and \eqref{eq:AP1f1} is called the~{\bf AP1 model} 
 (AWBS + P1).  
 
-The~AP1 model gives us information about the~electron distribution function and
-a~macroscopic interpretation of the~microscopic EDF properties is of great
-importance providing the~bridge between kinetic and fluid description of 
+The~AP1 model gives us information about the~electron distribution function 
+%and
+%a~macroscopic interpretation of the~microscopic EDF properties is of great
+%importance 
+providing a~bridge between kinetic and fluid description of 
 plasma. For example the~\textit{flux} quantities as 
 electric current and heat flux due to the~motion of electrons
 \begin{equation}
-  \vect{j} = \frac{4\pi}{3}\qe \int \vmag \fone~\dI\tilde{\vmag},~~ 
-  \vect{q}_h = \frac{4\pi}{3}\frac{\me}{2} \int \vmag^3 \fone~\dI\tilde{\vmag},
+  \vect{j} = \frac{4\pi}{3}\qe \int \vmag \fone \vmag^2\dI\vmag,~~ 
+  \vect{q}_h = \frac{4\pi}{3}\frac{\me}{2} \int \vmag^3 \fone \vmag^2\dI\vmag,
   \nonumber
 \end{equation}
 where $\dI\tilde{\vmag} = \vmag^2\dI\vmag$ 
 the~spherical coordinates metric,
 are based on corresponding velocity moments (integrals) of the~first angular 
 moment of EDF. Consequently, the~explicit formula for the~first angular moment
-from \eqref{eq:AP1f1} (the~inversion inspired by \cite{Shkarofsky_1979_73})
+from \eqref{eq:AP1f1} 
+%(the~inversion inspired by \cite{Shkarofsky_1979_73})
 proves to be extremely useful
 \begin{equation}
   \fone = \frac{\nuscat^2 \vect{F}^* + \omegaB~\omegaB\cdot\vect{F}^* 
@@ -76,38 +80,42 @@ $\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero
 The~expression \eqref{eq:f1_explicit} becomes extremely useful when used
 to describe the~electron fluid momentum, i.e. the~current velocity moment
 %\begin{equation}
-%  \vect{j}(f, \vect{E}) = e \int \vmag \fone \vmag^2~\dI \vmag =
-%  e \int \vmag \frac{\E^*}
-%  {\nuei} \vmag^2~\dI \vmag ,
-%  \label{eq:NonlocalOhm}
+%  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2 \dI \vmag
+%  .
+%  \nonumber
 %\end{equation}
-\begin{multline}
-  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
-  - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \E^* 
-  + \omegaB~\omegaB\cdot\E^* - \nuei~\omegaB \vect{\times} \E^*}
-  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag} ,
-  \nonumber %\label{eq:NonlocalOhm}
-\end{multline}
-where $\E^* = \E~\pdv{\fzero}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fzero$ 
-is the~effective electric field in plasma. 
-This can be written as
+%\begin{multline}
+%  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
+%  - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \E^* 
+%  + \omegaB~\omegaB\cdot\E^* - \nuei~\omegaB \vect{\times} \E^*}
+%  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag} ,
+%  \nonumber %\label{eq:NonlocalOhm}
+%\end{multline}
+%where $\E^* = \E~\pdv{\fzero}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fzero$ 
+%is the~effective electric field in plasma. 
+can be written as
 \begin{equation}
   \vect{j}_{(f, \E, \B)} = \Iohm\pdv{\fzero}{\vmag}\E 
-  + \frac{\me}{\qe} \Iohm\vmag \nabla \fzero
+  + \frac{\me}{\qe} \Iohm\left(\vmag \nabla \fzero 
+  - \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} \right)  
   ,
   \label{eq:NonlocalOhm}
 \end{equation}
 where we used the~following notation 
-$\Iohm\vect{g} = - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \vect{g} 
-  + \omegaB~\omegaB\cdot\vect{g} - \nuei~\omegaB \vect{\times} \vect{g}}
-  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag}$ showing how $\Iohm$
+$\Iohm\vect{g} = - \frac{4\pi \qe^2}{3 \me} \int \vmag \frac{\nuscat^2 \vect{g} 
+  + \omegaB~\omegaB\cdot\vect{g} - \nuscat~\omegaB \vect{\times} \vect{g}}
+  {\nuscat (\omegaB^2 + \nuscat^2)}~\vmag^2 \dI \vmag$ showing 
+how the~operator $\Iohm$
 acts on a~general vector field $\vect{g}$.
 We refer to 
 \eqref{eq:NonlocalOhm} as to the~{\bf nonlocal Ohm's law}.
 The~need for a~nonlocal Ohm's law to accurately capture magnetic field 
 advection by the~Nernst effect has previously been demonstrated 
 \cite{Luciani85, Ridgers08, Brodrick18}, although a~full investigation 
-of how well our new Ohm's law captures this is beyond the~scope of this article.The~proper local asymptotic to the~standard Ohm's law  
+of how well our new Ohm's law captures this is beyond 
+the~scope of this article. 
+The~proper high $\Zbar$ ($\nue \ll \nuei$) local asymptotic to 
+the~standard Ohm's law  
 can be found when $\fzero\rightarrow\fM$ and weak magnetization 
 ($\omegaB \ll \nuei$) is considered. Then \eqref{eq:NonlocalOhm} simplifies to
 \begin{multline}
@@ -177,13 +185,13 @@ compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} when
 a~magnetic field is applied would require a~much more delicate analysis and 
 we leave it as a~future complementary work.
 
-It should be noted, that $\nue$-related terms in \eqref{eq:f1_explicit} 
-have been omitted in \eqref{eq:NonlocalOhm}, 
-since the~e-e collisions do not contribute 
-(cancel out when integrated over velocity) to the~momentum
-change, i.e. 
-$\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
-  - \frac{\nue}{2}\fone\right) \dI\tilde{\vmag} = 0$.
+%It should be noted, that $\nue$-related terms in \eqref{eq:f1_explicit} 
+%have been omitted in \eqref{eq:NonlocalOhm}, 
+%since the~e-e collisions do not contribute 
+%(cancel out when integrated over velocity) to the~momentum
+%change, i.e. 
+%$\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
+%  - \frac{\nue}{2}\fone\right) \dI\tilde{\vmag} = 0$.
 
 \begin{comment} % Ohm's law with B.
 \begin{eqnarray} 
@@ -238,7 +246,7 @@ the~density of plasma, $\vect{u}$ the~plasma fluid velocity, $\varepsilon_i$
 the~specific internal ion energy density, 
 and $\varepsilon_e$ the~specific internal 
 electron energy density,
-are modeled by the~Euler equations in Lagrangian frame 
+are modeled by the~Euler equations in the~Lagrangian frame 
 \cite{Holec_DGBGKT_2016, Holec_PoPNTH2018}
 \begin{eqnarray}
  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u}
@@ -288,10 +296,10 @@ the~SESAME equation of state tables
 
 The~magnetic and electric fields are modeled by Maxwell equations
 \begin{eqnarray}
-  \frac{1}{c}\frac{\dI \B}{\dI t} &=& - \nabla\vect{\times}\E
+  \frac{1}{c}\frac{\partial \B}{\partial t} &=& - \nabla\vect{\times}\E
   ,
   \label{eq:Faraday} \\
-  \frac{1}{c}\frac{\dI \E}{\dI t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
+  \frac{1}{c}\frac{\partial \E}{\partial t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
   \vect{j}_{(f, \E, \B)}
   ,
   \label{eq:Ampere}
@@ -304,13 +312,11 @@ We have explicitly written the~current and heat flux as dependent on
 electron kinetics, represented by the~electron distribution function $f$,
 and electric and magnetic fields. In principal, $\vect{j}_{(f, \E, \B)}$
 and $\vect{q}_{h(f, \E, \B)}$ can be referred to as the~\textit{kinetic closure}
-and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1},
-where $\fM$ is given on the~spatial profile of $\Te$ 
-governed by \eqref{eq:NTH_Te}.
-All quantities are defined in the~fluid frame in the aforementioned 
-Nonlocal-MHD model.
-%especially that 
-%$\nabla\vect{\times} \nabla \fzero \sim \nabla\vect{\times} \nabla p_e \sim \nabla \ed \vect{\times} \nabla \Te$
+and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1}.
+%where $\fM$ is given on the~spatial profile of $\Te$ 
+%governed by \eqref{eq:NTH_Te}.
+%All quantities are defined in the~fluid frame in the aforementioned 
+%Nonlocal-MHD model.
 
 \subsection{Numerical Implementation of the AWBS Electron Kinetics}
 \label{sec:Numerics}
@@ -318,7 +324,7 @@ Nonlocal-MHD model.
 It is well known, that as the~electron transport exhibits a~quasi-steady
 behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
 the~time scale of the~fluid. Consequently, Ampere's law \eqref{eq:Ampere} 
-usually takes a~quasi-steady form 
+takes a~quasi-steady form 
 $\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
 when used in hydrodynamics. Proceeding further, one can make use of 
 the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write 
@@ -383,13 +389,14 @@ The~strategy of solving
 $\ddv{\vfzero}{\vmag}$
 and $\ddv{\fone}{\vmag}$ along the~velocity magnitude. 
 This is done by starting the~integration
-from infinite velocity ($\vmag = 7 \vth^{max}$ is a~sufficiently high limit) 
+from the~maximum  velocity 
+($\vmag = 7 \vth^{max}$ is a~sufficiently high limit) 
 to zero velocity using the~Implicit Runge-Kutta method. The~value
 $\vth^{max}$ equals the~electron thermal velocity corresponding to the~maximum 
 electron temperature in the~current profile of plasma.
 It should be noted, that the~backward integration concept is crucial for 
 the~model, since it corresponds to the~deceleration of electrons due to 
 collisions \cite{Touati_2014}. Consequently, we refer to 
-\textit{decelerating} AP1 model, which however, leads to some limitations 
-described in \appref{app:AP1limit}. 
+\textit{decelerating} AP1 model, which however, leads to the~limitation of 
+the~electric field described in \appref{app:AP1limit}. 
 
