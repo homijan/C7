@@ -11,7 +11,7 @@
 An~approximate solution to the~so-called \textit{local diffusive regime} 
 of electron transport can be found, since the~\textit{diffusive regime}
 refers to a~low anisotropy given by the~projection $\mu$. i.e.
-modeled by the~lowest anisotropy form of EDF  
+modeled by the~P1 form of EDF  
 \begin{equation}
   \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \mu \ft^1(z, \vmag),
   \label{eq:f_approximation}
@@ -74,7 +74,7 @@ of a~collision operator \cite{BGK_1954}
 \begin{equation}
   C_{BGK}(\tilde{\ft})
   =
-  \nue(\tilde{\ft} - \fM)
+  \nue(\fM - \tilde{\ft})
   + \frac{\nuei + \nue}{2}
   \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} .
   \label{eq:BGK_model_1D}
@@ -106,32 +106,28 @@ the~BGK isotropic and anisotropic terms of \eqref{eq:f_approximation} to be
   \ft^0 &=& \fM ,
   % \frac{\vth^2}{\vmag^2}f^1 ,
   \label{eq:BGK_f0} \\
-  \ft^1 &=& - \frac{\mfpe}{\Zbar}
-  \left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right)
+  \ft^1 &=& - \frac{\mfpe}{\Zbar + 2}
+  \left( \pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag} \right) ,
   %\left( \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right) , 
   \label{eq:BGK_f1}
 \end{eqnarray}
 where 
-$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$
-and a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
+%$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$
+a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 When the~quasi-neutrality constraint imposed by $\E_L$
 \eqref{app_eq:BGK_Efield} is used, one finally obtains the~analytical BGK form 
-of \eqref{eq:f_approximation}
+of the~anisotropic term %\eqref{eq:f_approximation}
 \begin{equation}
-  \tilde{\ft}_{BGK} = \fM - \mu 
-  \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar}
-  \frac{\mfpe}{L_{T_e}}\fM , 
+  \ft^1 = - \mu 
+  \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar + 2}
+  \frac{\mfpe}{L_{T_e}}\fM
+  %\tilde{\ft}_{BGK} = \fM - \mu 
+  %\left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar + 2}
+  %\frac{\mfpe}{L_{T_e}}\fM 
+  . 
   \label{eq:BGK_approximation}
 \end{equation}
-which recovers the~Lorentz electron-ion collision gas model 
-\cite{Lorentz_1905}. It should be noticed that $\ft^0$ equilibrates to $\fM$ 
-as $O\left( Kn^2 \vmag/\vth \right)$ in \eqref{eq:BGK_f0}. 
-%and that  
-%$\ft^1 
-%%= \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar}Kn \fM 
-%\approx \vmag/\vth Kn$.
-
 The~details about the~BGK distribution function compared to other
 collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
@@ -171,10 +167,10 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   %+ Kn \frac{\vth^2}{\vmag^2}\frac{f^1}{\vmag} ,
   \label{eq:AWBS_f0} \\
   \pdv{f^1}{\vmag}  
-  - \frac{\Zbar + \zeta}{\vmag\zeta} f^1 &=& 
+  - \frac{\Zbar + \zeta_A}{\vmag\zeta_A} f^1 &=& 
   %\frac{\mfpe}{\vmag\zeta}
   %\left(\pdv{f^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
-  \frac{\mfpe}{\vmag\zeta}
+  \frac{\mfpe}{\vmag\zeta_A}
   \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) ,
   \label{eq:AWBS_f1} 
   %\\  
@@ -183,8 +179,8 @@ the~following equations governing the~AWBS isotropic and anisotropic terms of
   %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
   %\nonumber
 \end{eqnarray}
-where $\zeta$ represents a~scaling parameter defining the~modified
-e-e collision frequency as $\nue^* = \zeta \nue$.
+where $\zeta_A$ represents a~scaling parameter defining the~modified
+e-e collision frequency as $\nue^* = \zeta_A \nue$.
 A~detailed derivation of \eqref{eq:AWBS_f0} and \eqref{eq:AWBS_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 %One observes that $\ft^0$ goes to Maxwellian when 
@@ -199,9 +195,10 @@ in local diffusive regime to be
 %the~ordinary differential equation 
 %(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
-  \pdv{f^1}{\vmag} + \frac{\Zbar + \zeta}{\vmag\zeta}f^1
+  \pdv{f^1_{\text{AWBS}}}{\vmag} 
+  + \frac{\Zbar + \zeta_A}{\vmag\zeta_A}f^1_{\text{AWBS}}
   = \\
-  \frac{\mfpe}{\vmag\zeta}\left(\frac{1}{L_{n_e}} + 
+  \frac{\mfpe}{\vmag\zeta_A}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   \frac{1}{L_{T_e}} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   %\frac{\mfpe}{\vmag}\left(\frac{1}{n_e}\pdv{n_e}{z} + 
@@ -230,7 +227,7 @@ as $O(Kn^2)$ based on \eqref{eq:AWBS_f0}.
 \end{comment} % Substitute with Vladimir's analytical formula.
 
 The~details about the~AWBS distribution function compared to other
-collision operators and a~proper evaluation of the~scaling parameter $\zeta$
+collision operators and a~proper evaluation of the~scaling parameter $\zeta_A$
 can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{The~Fokker-Planck local diffusive electron transport}
@@ -244,7 +241,7 @@ can use the~explicit evaluation of the~electron distribution function
 published in \cite{SpitzerHarm_PR1953}, which takes the~following form
 \begin{multline}
   %\ft^1(\vmag, \mu) 
-  \ft^1(z, \vmag) = %\frac{\me^2}{4 \pi \qe^4\lnc} 
+  \ft^1_{\text{SH}} = %\frac{\me^2}{4 \pi \qe^4\lnc} 
   \frac{\vtwoh^4}{\Gamma\Zbar n_e}\\
   \left( 2\tilde{D}_T\left(\frac{\vmag}{\vtwoh}\right) 
   + \frac{3}{2}\frac{\gamma_T}{\gamma_E} 
@@ -296,31 +293,61 @@ under local diffusive conditions has been understood. By overcoming some
 delicate aspects of the~numerical solution to \eqref{eq:LFP_model} presented 
 in the~CSR paper \cite{CSR_1950}, the~effect of electron-electron collisions
 was properly quantified and the~correct dependence on $\Zbar$ of the~heat flux
-$\vect{q}$ was approximated as \cite{SpitzerHarm_PR1953, Epperlein_PoFB1991} 
+$\vect{q}$ was approximated as \cite{SpitzerHarm_PR1953} 
 \begin{equation}
   \vect{q} = \xi(\Zbar)~\vect{q}_L 
   = \frac{\Zbar + 0.24}{\Zbar + 4.2} \vect{q}_L ,
   \label{eq:qSH_approximation}
 \end{equation}
 where 
+$\xi$ the~$\Zbar$-dependence \cite{Epperlein_PoFB1991} approximation and
 $\vect{q}_L$
 %$\vect{q}_L = \kappa T_e^{\frac{5}{2}}\nabla T_e$ 
 is the~heat flux given 
-by the~Lorentz gas model \cite{Lorentz_1905} and 
-$\xi$ the~$\Zbar$-dependence approximation. In the~case of the~BGK operator 
+by the~Lorentz gas model \cite{Lorentz_1905} 
+\begin{equation}
+  \ft^1_{\text{Lorentz}} = - \mu 
+  \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar}
+  \frac{\mfpe}{L_{T_e}}\fM
+  . 
+  \label{eq:Lorentz_approximation}
+\end{equation}
+TODO 
+In the~case of the~BGK operator 
 and formula \eqref{eq:BGK_approximation}, the~correct dependence on 
 $\Zbar$ can be simply achieved by scaling the~e-e and e-i collision 
 frequencies as
+In order to recover the~Lorentz electron-ion collision gas model 
+\cite{Lorentz_1905}, we need ... 
 \begin{equation}
-  \nue^{BGK} = \frac{r\nue}{\xi},\quad \nuei^{BGK} = \frac{\nuei}{\xi}
+  r(\Zbar) = \frac{\zeta_B\Zbar}{\xi(\Zbar)(\Zbar + 2 \zeta_B)}
+  \label{eq:BGK_r_scaling}
+\end{equation}
+\begin{equation}
+  C_{BGK}(\tilde{\ft})
+  =
+  r \nue(\fM - \tilde{\ft})
+  + \frac{r}{\zeta_B}\frac{\nuei + \zeta_B\nue}{2}
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}
+  %\nue^{BGK} = \frac{r\nue}{\xi},\quad \nuei^{BGK} = \frac{\nuei}{\xi}
    ,
   \label{eq:BGK_scaling}
 \end{equation}
 which imposes a~correct value of heat flux \eqref{eq:qSH_approximation}. 
-The~constant $r$ in \eqref{eq:BGK_scaling} has no effect on the~local EDF as
-shown in \appref{app:DiffusiveKinetics} %\eqref{app_eq:BGK_model_1D}  
-and can be set accordingly, e.g. to better address the~nonlocal transport 
-behavior.
+The~constant $\zeta_B$ can be arbitrary in \eqref{eq:BGK_scaling} 
+while there is no effect on the~local 
+EDF
+\begin{equation}
+  \ft^1_{\text{BGK}} = - \mu 
+  \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{\zeta_B}{r(\Zbar)}
+  \frac{1}{\Zbar + 2\zeta_B}\frac{\mfpe}{L_{T_e}}\fM
+  ,
+  \label{eq:f1BGK_approximation}
+\end{equation}
+as shown in \appref{app:DiffusiveKinetics}.
+$\zeta_B$ can be set for example to better address the~nonlocal transport 
+behavior. \textit{$\zeta_B = 2$ gives $r(\infty) = 2$, 
+which makes sence compared to John's hohlraum.}
 
 \begin{table}
 \begin{center}
@@ -348,7 +375,7 @@ behavior.
 \end{center}
 \end{table}
 
-We have performed an~extensive computational analysis in the case of 
+We have performed an~extensive analysis in the case of 
 the~AWBS operator in order to obtain the~heat flux behavior while varying 
 $\Zbar$. As expected, the~heat flux magnitude did not match exactly 
 the~$\Zbar$-dependence \eqref{eq:qSH_approximation}, e.g. for $\Zbar=1$
@@ -356,9 +383,9 @@ the~AWBS heat flux was about 60$\%$ less than the~SH calculation, while
 there was a~perfect match in the case of $\Zbar\gg1$. By assuming that the~e-e
 collisions are responsible for this inadequacy, we searched for a~scaling of
 $\nue$ in \eqref{eq:AWBS_model}. Interestingly, we found an~almost constant
-scaling $\zeta$, i.e. with a~very weak dependence on $\Zbar$ as  
+scaling $\zeta_A$, i.e. with a~very weak dependence on $\Zbar$ as  
 \begin{equation}
-  \nue^* = \zeta(\Zbar)~\nue 
+  \nue^* = \zeta_A(\Zbar)~\nue 
   = \left(\frac{1}{2} + \phi(\Zbar)\right) \nue \approx \frac{\nue}{2} ,
   \label{eq:qAWBS_approximation}
 \end{equation}
@@ -386,14 +413,13 @@ the~flux moment in spherical coordinates of velocity
   q_1 = \frac{\me\vmag^2}{2}\vmag \ft^1 \vmag^2 .
   \label{eq:q1}
 \end{equation}
-%where $\ft_1$ is the~anisotropic part of the~distribution function, i.e.
-%$\ft_1 = \ft^1\mfpei$ ($\mu=1$) in the~local diffusive transport.
 In the~case of the~high $\Zbar$ plasma ($\Zbar = 116$), 
-AWBS exactly aligns with the~Lorentz gas limit. In the~opposite case of the~low
+AWBS exactly aligns with the~Lorentz gas limit \eqref{eq:Lorentz_approximation}.
+In the~opposite case of the~low
 $\Zbar$ Hydrogen plasma ($\Zbar = 1$), the~AWBS distribution function 
-approaches closely the~numerical SH solution. BGK takes 
-the~Lorentz gas distribution function form for any $\Zbar$ only taking into 
-account the~scaling \eqref{eq:BGK_scaling}.  
+approaches closely the~numerical SH solution. BGK \eqref{eq:BGK_scaling} takes 
+the~Lorentz gas distribution function for any $\Zbar$ 
+only scaled by $\xi$.  
 
 \begin{figure}[tbh]
   \begin{center}
