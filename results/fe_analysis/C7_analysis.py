@@ -75,7 +75,7 @@ if (args.plotmultvTh):
 
 if (args.xlimits):
    if (len(args.xlimits)!=2):
-      print "Input parameters xlimits must be exactly two!"
+      print("Input parameters xlimits must be exactly two!")
       quit()
    else:
       xmin = args.xlimits[0]
@@ -99,7 +99,7 @@ def loadC7data(Nproc, file_base):
    C7ne_raw = []
    C7zbar_raw = []
    ## Gather together the lists from each processors output.
-   print "Loading data from files:"
+   print("Loading data from files:")
    for proc in range(Nproc):
       file = file_base+str(proc).zfill(maxProcOrder)
       ## C7j_proc = f1*v^3
@@ -113,7 +113,7 @@ def loadC7data(Nproc, file_base):
       C7corrE_raw.extend(C7corrE_proc)
       C7ne_raw.extend(C7ne_proc)
       C7zbar_raw.extend(C7zbar_proc)
-      print file
+      print(file)
    ## Sort the lists with respect to the position x.
    sorted_indices = np.array(C7x_raw).argsort()
    C7x = np.array([C7x_raw[sorted_indices[j]] for j in range(len(C7x_raw))])
@@ -198,7 +198,7 @@ Te_LULI = 30.0
 ne_LULI = 1e20
 Zbar_LULI = 2.5
 mfp_LULI = (vTh(Te_LULI))**4.0/sigma_LULI/coulLog_LULI/ne_LULI/(Zbar_LULI+1.)**0.5
-print "mfp_LULI[microns] - vTh, 4*vTh: ", mfp_LULI * 1e4, mfp_LULI * 4.**4. * 1e4
+print("mfp_LULI[microns] - vTh, 4*vTh: ", mfp_LULI * 1e4, mfp_LULI * 4.**4. * 1e4)
 
 ###############################################################################
 #### FP equation diffusive regime #############################################
@@ -245,14 +245,14 @@ Zbar = splev(xp, zbartck, der=0)
 Ex_point = splev(xp, Etck, der=0)
 ## Ion density.
 ni = ne / Zbar
-print "ni/ne: ", ni , ne
+print("ni/ne: ", ni , ne)
 ## For more accurate Kn evaluate the "differential" of temperature.
 mfp_ei = vTh(Te)**4.0/sigma/coulLog/ni/Zbar/Zbar
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
 ## Evaluate the v limit due to Ex value.
 vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te) 
-print "xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh
+print("xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh)
 
 ## Multiples of thermal velocity setting the velocity space range.
 ml_max = 16.0
@@ -375,16 +375,16 @@ C7SHE_analytic = vTh(C7Te)**2.0*(C7gradne/C7ne + xi*C7gradTe/C7Te)
 ## Print comparison results ###########
 #######################################
 ## Show the Knudsen number
-print 'Kn_tot: ', Kn_tot, 'mfp_tot[microns]: ', mfp_tot*1e4
+print('Kn_tot: ', Kn_tot, 'mfp_tot[microns]: ', mfp_tot*1e4)
 #print 'Kn: ', Kn, 'mfp_tot[microns]: ', mfp_tot*1e4
-print 'Kn_flux, Kn_pete: ', Kn_flux, Kn_pete
+print('Kn_flux, Kn_pete: ', Kn_flux, Kn_pete)
 ## Print integrated values
-print "SHQ[erg/s/cm2]:              ", SHQ
-print "SHQ_analytic[erg/s/cm2]:     ", SHQ_analytic
-print "SHQ_pete[erg/s/cm2]:         ", SHQ_pete
-print "C7EQ[erg/s/cm2]:             ", C7EQ
-print "diffAWBSQ_corr[erg/s/cm2]:   ", AWBSQ_corr
-print "diffAWBSQ[erg/s/cm2]:        ", AWBSQ
+print("SHQ[erg/s/cm2]:              ", SHQ)
+print("SHQ_analytic[erg/s/cm2]:     ", SHQ_analytic)
+print("SHQ_pete[erg/s/cm2]:         ", SHQ_pete)
+print("C7EQ[erg/s/cm2]:             ", C7EQ)
+print("diffAWBSQ_corr[erg/s/cm2]:   ", AWBSQ_corr)
+print("diffAWBSQ[erg/s/cm2]:        ", AWBSQ)
 #print "SHJ:        ", SHJ
 #print "AWBSJ_corr: ", AWBSJ_corr
 #print "AWBSJ:      ", AWBSJ
@@ -585,14 +585,14 @@ if (args.labelDistributionExt2):
 fig, ax1 = plt.subplots()
 ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
 ax1.set_xlabel('v/vT')
-print "ne: ", ne
-print "Kn_ee: ", Kn_ee
-print "Kn_ei: ", Kn_ei
-print "Kn_LMV: ", Kn_LMV
+print("ne: ", ne)
+print("Kn_ee: ", Kn_ee)
+print("Kn_ei: ", Kn_ei)
+print("Kn_LMV: ", Kn_LMV)
 ## Evaluate the v limit due to Ex value.
 vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
-print "vlim/vTh: ", vlim_vTh
-print "Te[eV]: ", Te
+print("vlim/vTh: ", vlim_vTh)
+print("Te[eV]: ", Te)
 if (args.kineticstitle):
    ax1.set_title(args.kineticstitle)
 else:

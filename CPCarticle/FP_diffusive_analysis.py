@@ -57,7 +57,7 @@ GammaLv_ee = sigma * coulLogLv
 
 lambda_ei = vTh(Te)**4.0 / Gamma_ee / ne / (Zbar + 1.0)
 Kn_ei = lambda_ei * dTedz / Te
-print "Kn_ei: ", Kn_ei 
+print("Kn_ei: ", Kn_ei) 
 
 import argparse
 ## Create parser object.
@@ -377,7 +377,7 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
     Zs = [1.0, 2.0, 4.0, 10.0, 16.0]
     corrs = []
     for Z in Zs:
-        print "Z:", Z
+        print("Z:", Z)
         ## The case Z = 1 provides good distribution function in SH paper.
         ## In other cases the distribution function is not so convincing.
         # Get the original SH heat flux. 
@@ -396,34 +396,34 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         ## Find appropriate AWBS corr_nu matching the SH heat flux along j=0.
         corr_nu =  optimize.brentq(corr_nu_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, q_SH))
         corrs.append(corr_nu - 0.5)
-        print "corr_nu:", corr_nu 
+        print("corr_nu:", corr_nu) 
        
         ## Obtain the appropriate corr_E.
         corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu))
-        print "corr_E:", corr_E
+        print("corr_E:", corr_E)
 
         ## Double-check the corr_nu and corr_E results.
         f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
         j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
         q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
-        print "j_AWBS:", j_AWBS
-        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH)
+        print("j_AWBS:", j_AWBS)
+        print("(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH))
 
         ## General case of using corr_nu = 0.5 always.
         dcorr = corr_nu - 0.5
         corr_nu = 0.5
-        print "The case of always using corr_nu = 0.5!"
-        print "corr_nu deviation from 0.5 =", dcorr
+        print("The case of always using corr_nu = 0.5!")
+        print("corr_nu deviation from 0.5 =", dcorr)
         ## Obtain the appropriate corr_E.
         corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu))
-        print "corr_E:", corr_E
+        print("corr_E:", corr_E)
 
         ## Double-check the corr_nu and corr_E results.
         f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
         j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
         q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
-        print "j_AWBS:", j_AWBS
-        print "(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH) 
+        print("j_AWBS:", j_AWBS)
+        print("(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH))
 
     ## Find an analytic fit to corr_nu.
     Z = np.linspace(1, 100, 1000)  
@@ -432,7 +432,7 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
     u1 = popt[0]
     l0 = popt[3]
     l1 = popt[2]   
-    print "fit = (u0 + u1 * Z) / (l0 + l1 * Z), u0 ,u1, l0, l1:", u0, u1, l0, l1
+    print("fit = (u0 + u1 * Z) / (l0 + l1 * Z), u0 ,u1, l0, l1:", u0, u1, l0, l1)
 
     plt.plot(Zs, corrs, label='corr - 0.5')
     #plt.plot(Z, (u0 + u1 * Z) / (l0 + l1 * Z), label='delta fit')
@@ -467,7 +467,7 @@ y = (688.9*x + 114.4) / (x*x + 1038.0*x + 474.1)
 #y = rational(x, [688.9, 114.4], [1.0, 1038.0, 474.1])
 ynoise = y * (1.0 + np.random.normal(scale=0.01, size=x.shape))
 popt, pcov = curve_fit(rational2_3, x, ynoise)
-print popt
+print(popt)
 
 #plt.plot(x, y, label='original')
 #plt.plot(x, ynoise, '.', label='data')
@@ -601,7 +601,7 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     ## Fill BGK distributions, which correspond to the Lorentz gas model, when
     ## scaling (Z + 0.24) / (Z + 4.2) * (Z + 1) / Z is applied
     corrSH = (Z + 0.24) / (Z + 4.2)
-    print "(Z + 0.24) / (Z + 4.2): ", corrSH
+    print("(Z + 0.24) / (Z + 4.2): ", corrSH)
     #corrSH = SH_corr(Z)
     for i in range(0, N):
         mfpei = vs[i]**4.0 / G_ee / ne / Z
@@ -613,17 +613,17 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     return vs, fBGK1s, fAWBS1s, fSH19531s, jBGK1s, jAWBS1s, jSH19531s, qBGK1s, qAWBS1s, qSH19531s
 
 ### Vector product inversion :)
-print "Checking inversion of cross product with friction..."
+print("Checking inversion of cross product with friction...")
 nu = 10.1
 omegaB = np.array([0.2, -40.1, 1.0])
 f1 = np.array([1.0001, 2.01, 400.1])
 ## Now obtain the right hand side.
 v = nu * f1 + np.cross(omegaB, f1)
-print "f1:", f1
-print "v:", v
+print("f1:", f1)
+print("v:", v)
 
 f1_ = (nu**2.0 * v + np.inner(np.outer(omegaB, omegaB), v) - nu * np.cross(omegaB, v)) / nu / (np.inner(omegaB, omegaB) + nu**2.0)
-print "f1_:", f1_
+print("f1_:", f1_)
 
 ## Perform actual distribution evaluation for given Zbar
 N = 10000
@@ -641,16 +641,16 @@ jBGK = sum(jBGK1s)
 #jKIPP = sum(jKIPP1s)
 jAWBS = sum(jAWBS1s)
 jSH1953 = sum(jSH19531s)
-print "jBGK, jAWBS, jSH1953: ", jBGK, jAWBS, jSH1953
+print("jBGK, jAWBS, jSH1953: ", jBGK, jAWBS, jSH1953)
 qBGK = sum(qBGK1s)
 #qKIPP = sum(qKIPP1s)
 qAWBS = sum(qAWBS1s)
 qSH1953 = sum(qSH19531s)
-print "qBGK, qAWBS, qSH1953: ", qBGK, qAWBS, qSH1953
-print "|qBGK - qAWBS|/ qBGK: ", abs(qBGK - qAWBS) / qBGK 
+print("qBGK, qAWBS, qSH1953: ", qBGK, qAWBS, qSH1953)
+print("|qBGK - qAWBS|/ qBGK: ", abs(qBGK - qAWBS) / qBGK)
 qLvAWBS = sum(qLvAWBS1s)
 qLvBGK = sum(qLvBGK1s)
-print "|qLvBGK - qLvAWBS|/ qLvBGK: ", abs(qLvBGK - qLvAWBS) / qLvBGK
+print("|qLvBGK - qLvAWBS|/ qLvBGK: ", abs(qLvBGK - qLvAWBS) / qLvBGK)
 ## Plot SH and KIPP normalized distribution functions.
 vs_norm = vs / vTh(Te)
 #vs_norm = vs / (2.0**0.5*vTh(Te))

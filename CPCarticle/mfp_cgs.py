@@ -66,25 +66,25 @@ v_ion = vTi(A, Te)
 nu_ii = crs * me**2.0 / (A*mp)**2.0 * coulLog * ne * Zbar**3.0 / v_ion**3.0
 mfp_ii = v_ion / nu_ii
 
-#print "nu: ", nu_LMV, nu_
-#print "mfp[microns]: ", mfp * 1e4, mfp_ * 1e4 
-#print "C_nu, C_mfp: ", C_nu, C_mfp
-#print "f_B: ", f_B, f_B_ 
+#print("nu: ", nu_LMV, nu_)
+#print("mfp[microns]: ", mfp * 1e4, mfp_ * 1e4) 
+#print("C_nu, C_mfp: ", C_nu, C_mfp)
+#print("f_B: ", f_B, f_B_)
 
-print "ne[cm-3]: ", ne
-print "Te[eV]:   ", Te
-print "Zbar:     ", Zbar
-print "beta:     ", beta, "...electron thermal velocity multiple."
-print "B[tesla]: ", B_tesla
-print "A:        ", A
-print "mfp[microns] = C_mfp * beta^4 * Te^2 / ne / (Z+1)^0.5: "
-print mfp_ * 1e4
-print "radius[microns] = C_r * beta * Te^0.5 / B: "
-print radius_ * 1e4
-print "C_mfp, C_r: ", C_mfp * 1e4, C_r * 1e4
-print ""
-print "Electron velocity[km/s] (beta * thermal velocity):", beta * vTe(Te) / 1e4
-print "Ion thermal velocity[km/s]:", vTi(A, Te) / 1e4
-print ""
-print "Thermal mfpe_ii[microns]: ", mfp_ii * 1e4
-print "shock thickness[microns]: ", mfp_ii * (A * mp / me)**0.5 * 1e4
+print("ne[cm-3]: ", ne)
+print("Te[eV]:   ", Te)
+print("Zbar:     ", Zbar)
+print("beta:     ", beta, "...electron thermal velocity multiple.")
+print("B[tesla]: ", B_tesla)
+print("A:        ", A)
+print("mfp[microns] = C_mfp * beta^4 * Te^2 / ne / (Z+1)^0.5: ")
+print(mfp_ * 1e4)
+print("radius[microns] = C_r * beta * Te^0.5 / B: ")
+print(radius_ * 1e4)
+print("C_mfp, C_r: ", C_mfp * 1e4, C_r * 1e4)
+print("")
+print("Electron velocity[km/s] (beta * thermal velocity):", beta * vTe(Te) / 1e4)
+print("Ion thermal velocity[km/s]:", vTi(A, Te) / 1e4)
+print("")
+print("Thermal mfpe_ii[microns]: ", mfp_ii * 1e4)
+print("shock thickness[microns]: ", mfp_ii * (A * mp / me)**0.5 * 1e4)

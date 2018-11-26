@@ -71,7 +71,7 @@ if __name__ == "__main__":
    ys = []
 
    if (args.GraceFile):
-      print "Loading grace data..."
+      print("Loading grace data...")
       d = LoadGrace( args.filename )
       for i in range(0, len(d)):
          legend = d.legends()[i]
@@ -89,9 +89,9 @@ if __name__ == "__main__":
          ## Multiply x.
          if (args.xmultiply):
             x = x * args.xmultiply
-         print '# legend='
-         print legend 
-         print
+         print('# legend=')
+         print(legend) 
+         print()
          # Append data.
          legends.append(legend)
          xs.append(x)
