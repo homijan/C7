@@ -77,55 +77,48 @@ leads to the~electric field (same as the~classical Lorentz electric field
 $\E_L$ \cite{Lorentz_1905})
 \begin{equation}
   \Ez = \frac{\me\vth^2}{\qe}\left(\frac{1}{L_{n_e}} 
-  + \frac{5}{2}\frac{1}{L_{T_e}} \right) .
+  + \frac{5}{2}\frac{1}{L_{T_e}} \right) 
+  ,
   \label{app_eq:BGK_Efield}
 \end{equation}
+and the~anisotropic part of EDF takes the~form \eqref{eq:BGK_approximation}.
+
 It should be noticed that $\ft^0$ equilibrates to $\fM$ 
 as $O\left( Kn^2~\vmag/\vth \right)$, since one can show that
 $\frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 \sim Kn^2$ and  
 $f^2 \sim Kn^2~\vmag/\vth$, when $\ft^0 = \fM$ and $\Ez=\E_L$ in 
 \eqref{app_eq:BGK_f1} and \eqref{app_eq:BGK_f2}.
 
-TODO
-The~electron-electron collision contribution can be 
-multiplied by a~constant in \eqref{app_eq:BGK_model_1D} without changing 
-the~resulting form of the~local anisotropic term \eqref{app_eq:BGK_f1},
-and consequently the~current and heat flux. This constant will be labeled $r$
-as introduced in \cite{Brodrick_PoP2017} and the~BGK operator 
-\eqref{eq:BGK_model_1D} can be written as 
-$C_{BGK}(\ft) = \zeta_B \nue(\tilde{\ft} - \fM) + \frac{\nuei + \zeta_B \nue}{2}
-  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}$. 
-
 In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in 
 \eqref{eq:1D_kinetic_equation}, its action on \eqref{eq:f_approximation} reads
 \begin{eqnarray}
   \frac{1}{\vmag}C_{AWBS}(\tilde{\ft})
   &=& 
-  \frac{\vmag\zeta_A}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
+  \frac{\vmag r_A}{\mfpe} \pdv{}{\vmag}\left(\tilde{\ft} - \fM\right) 
   \nonumber \\
-  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{\zeta_A}{\mfpe}\right)
+  && + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{r_A}{\mfpe}\right)
   \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}  \nonumber \\
-  &=& \frac{\vmag\zeta_A}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
-  &&\, + \mu\left(\frac{\vmag\zeta_A}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+\zeta_A}{\mfpe}\ft^1\right) ,
+  &=& \frac{\vmag r_A}{\mfpe} \pdv{}{\vmag}\left(\ft^0 - \fM\right) \nonumber \\ 
+  &&\, + \mu\left(\frac{\vmag r_A}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar+r_A}{\mfpe}\ft^1\right) ,
   \label{app_eq:AWBS_model_1D}
 \end{eqnarray}
-where $\nue^* = \zeta_A \nue = \frac{\vmag\zeta_A}{\mfpe}$ with $\zeta_A$ being a~scaling
+where $\nue^* = r_A \nue = \frac{\vmag r_A}{\mfpe}$ with $r_A$ being a~scaling
 parameter of the~standard e-e collision frequency. Its purpose is to
 match AWBS heat flux to results obtained by Spitzer and Harm 
 \cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
 \secref{sec:FPDiffusiveRegime} shows that this match can be found with 
-a~constant $\zeta_A=0.5$.
+a~constant $r_A=0.5$.
 
 One finds the~following equations if the~isotropic and anisotropic parts of 
 \eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:AWBS_model_1D} are 
 compared 
 \begin{eqnarray}
   \pdv{}{\vmag}\left( \ft^0 -\fM\right) &=& 
-  \frac{\mfpe\qe\Ez}{\zeta_A\me\vmag^2}\frac{\ft^1}{\vmag} ,
+  \frac{\mfpe\qe\Ez}{r_A\me\vmag^2}\frac{\ft^1}{\vmag} ,
   \label{app_eq:AWBS_f0} \\
-  \frac{\vmag\zeta_A}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+\zeta_A}{\mfpe}\ft^1 &=&
+  \frac{\vmag r_A}{\mfpe} \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar + r_A}{\mfpe}\ft^1 &=&
   \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} .
   \label{app_eq:AWBS_f1} 
   %\\  
@@ -136,27 +129,7 @@ compared
 \end{eqnarray}
 If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
-\begin{equation}
-  \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar+\zeta_A}{\vmag\zeta_A}\ft^1 =
-  \frac{\mfpe}{\vmag\zeta_A} 
-  \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) .
-  \label{app_eq:AWBS_f1_fM}
-\end{equation}
-Even though it is not straightforward, the~electric field in 
-\eqref{app_eq:AWBS_f1_fM} (solved numerically) providing a~zero current 
-exactly matches \eqref{app_eq:BGK_Efield}. 
-
-%Consequently, the~deviation of
-%$\pdv{\ft^0}{\vmag}$ from $\pdv{\fM}{\vmag}$ in 
-%\eqref{app_eq:AWBS_f0} can be written as 
-%$Kn\frac{\vth^2}{\zeta\vmag^2}\frac{f^1}{\vmag}$.
-
-%Finally, it should be stressed, that the~concept of locality expressed as 
-%$Kn\ll1$ is crucial for our \textit{local diffusive regime} analysis, 
-%because it provides sufficient Maxwellization, i.e.  \eqref{app_eq:BGK_f0} and
-%\eqref{app_eq:AWBS_f0}, and correspondingly, \eqref{app_eq:BGK_f1_fM} 
-%and \eqref{app_eq:AWBS_f1_fM} are valid models.
+\eqref{eq:AWBS_f1}.
 
 \section{AP1 electric field limit}
 \label{app:AP1limit}

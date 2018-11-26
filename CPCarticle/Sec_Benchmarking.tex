@@ -84,8 +84,6 @@ tends to \eqref{eq:LFP_model} in the non-relativistic limit.
 The aforementioned model is solved in 3D by the PIC code CALDER. 
 \cite{Lefebvre_NF2003, Perez_PoP2012}.
 
-Brief description of the Calder code \figref{fig:C7_Calder_case1}.
-
 \textbf{Impact and Aladin VFP codes}
 
 The~PIC code is extremely expensive as the~collisions require the~description 
@@ -149,8 +147,6 @@ function as quasi steady with respect to the~time evolution of ion fluid,
 and of course, AP1 is using a~simple (linear) collision operator inherently
 coupled to ion fluid via $\fM$.
 
-Brief description of the Aladin code \figref{fig:C7_Aladin_case5}, \figref{fig:C7_Aladin_case3}.
-
 %%% CEA contribution ends
 
 \textbf{SNB approach}
@@ -171,9 +167,9 @@ approximation representing deviation from the~local BGK theory
 The~zero and first angular moment of electron transport equation 
 with scaled collision operator \eqref{eq:BGK_scaling}
 act on SNB approximation \eqref{eq:SNB_approximation} 
-as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1}) TODO
+as (similar to \eqref{eq:AP1f0} and \eqref{eq:AP1f1})
 \begin{eqnarray}
-  \frac{r \nue}{\xi}\delta\fzero &=&
+  r_B \delta\fzero &=&
   - \frac{\vmag}{3}\nabla\cdot\delta\fone
   - \frac{\vmag}{3}\nabla\cdot\fone_M
   \nonumber\\ 
@@ -224,7 +220,7 @@ leads to a~simple diffusion model for $\delta\fzero$
 \end{equation}
 where $\frac{1}{\mfpei^{SNB}} = 
 \frac{\nuei}{\xi\vmag} + \frac{|\qe\E|}{\frac{1}{2}\me\vmag^2}$ 
-and $\mfpe^{SNB} = \frac{\xi\vmag}{r \nue}$, and the~source term based on 
+and $\mfpe^{SNB} = \frac{\vmag}{r_B \nue}$, and the~source term based on 
 $\fone_M$ simplifies by avoiding the~electric field effect, density gradient 
 and the~$\vmag$-dependent bracket in \eqref{eq:f1M}. The~missing
 effect of $\E$ in \eqref{eq:SNB_model} is mimicked as 
@@ -246,15 +242,10 @@ is reflected only via $\fone_M$, where the~electric field is fixed to $\E_L$.
 % \label{eq:SNB_E} 
 %\end{equation}
 
-In this paper we porpose to use $\zeta_B = 2$ in accordance with 
-\eqref{eq:qAWBS_approximation}. This choice gives TODO
-$\mfpe^{SNB} = \frac{\vmag}{2.097\nue}$ in the~case of $\Zbar = 1$, 
-which is in a~very good accordance with $\mfpe^{SNB} = \frac{\vmag}{2\nue}$ 
-proposed in \cite{Brodrick_PoP2017}. The~explicit form of the~anistropic 
+We porpose to use $\zeta = 2$ giving $r_B(\Zbar\gg1) = 2$ which agrees 
+with $r=2$ proposed in \cite{Brodrick_PoP2017} for the~case of ICF relevant 
+plasma. The~explicit form of the~anistropic 
 part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
-%\begin{itemize}
-%  \item Brief description of the Impact code \figref{fig:C7_Impact_case3}.
-%\end{itemize}
 
 \begin{figure}[htb]
   \begin{center}
@@ -564,8 +555,6 @@ In every simulation run of AP1 we used 250~velocity groups in order to avoid
 numerical errors in modeling of the~electron kinetics. However, a~smaller 
 number of groups, e.g. 50, provides a~very similar results 
 (an~error around 10$\%$ in the~heat flux). 
-\textit{Here gather and provide a brief summary about the simulation input of
-Aladin, Impact, and Calder.}
 \end{comment} % Simulations setup.
 
 \subsection{Hohlraum problem}
