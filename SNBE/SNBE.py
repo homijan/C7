@@ -73,7 +73,10 @@ def SH_flux(xs, T, Z):
 ## SNB e-e and e-i mean free paths.
 def lambdae(v, n, Z):
     #return 2.0 * v / nue(v, n)
-    return xi(Z) * v / rr / nue(v, n) 
+    zeta = 2.0
+    rB = Z * zeta / xi(Z) / (Z + 2.0 * zeta)
+    return v / rB / nue(v, n)
+    #return xi(Z) * v / rr / nue(v, n) 
 def lambdaei(v, n, Z, E):
     mfpei = xi(Z) * v / nuei(v, n, Z)
     #SIMPLE
