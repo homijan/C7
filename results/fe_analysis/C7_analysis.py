@@ -404,6 +404,14 @@ figure = {'figsize' : '10, 6'} # a tuple in inches
 matplotlib.rc('font', **font)
 matplotlib.rc('figure', **figure)
 
+def unite_legends(axes):
+    h, l = [], []
+    for ax in axes:
+        tmp = ax.get_legend_handles_labels()
+        h.extend(tmp[0])
+        l.extend(tmp[1])
+    return h, l
+
 ## Given line styles.
 lsC7 = 'k--'
 lsC7E = 'b-.'
@@ -470,8 +478,21 @@ if (args.Efield):
    jxmicrons, jSNB = np.loadtxt('../../VFPdata/jSNB.dat',  usecols=(0, 1), unpack=True)
    ax2.plot(jxmicrons, jSNB, 'y--',label=r'$j/q_e-SNB$', lw=lwthick)
    fig.tight_layout()
-   ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
-   ax2.legend(loc='center left', fancybox=True, framealpha=0.8)
+   ## x-axis tight to data.
+   ax1.autoscale(axis='x', tight=True)
+   ## Apply x limits to display.
+   if (args.xlimits):
+      ax1.set_xlim((xmin, xmax))
+   ## Place legends.
+   ## Quite tricky manovers because of olot-time-sequence.
+   handles1, labels1 = unite_legends([ax1]) 
+   handles2, labels2 = unite_legends([ax2])
+   legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
+   legend2 = ax2.legend(handles2, labels2, loc='center left', fancybox=True, framealpha=0.8)
+   ax2.add_artist(legend1)
+   ax2.add_artist(legend2)
+   #ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+   #ax2.legend(loc='center left', fancybox=True, framealpha=0.8)
    for ext in ["png", "pdf", "eps"]:
       print("saving Efield.%s" % (ext,))
       plt.savefig("Efield.%s" % (ext,), bbox_inches="tight")
@@ -513,15 +534,25 @@ if (args.pltne):
    ax2.plot(C7x_microns, C7ne_scaled, 'k--', label=r'$n_e$', lw=lwthick)
 if (args.Tpoints):
    for i in range(len(Te_points)):
-      print "point, Te:", Te_x_points[i], Te_points[i]
+      print("point, Te:", Te_x_points[i], Te_points[i])
       ax2.plot(Te_x_points[i] * 1e4, Te_points[i], Tecolor+Te_points_markers[i], markersize=10)
 
+fig.tight_layout()
+## x-axis tight to data.
+ax1.autoscale(axis='x', tight=True)
 ## Apply x limits to display.
 if (args.xlimits):
    ax1.set_xlim((xmin, xmax))
-fig.tight_layout()
-ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
-ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
+## Place legends.
+## Quite tricky manovers because of olot-time-sequence.
+handles1, labels1 = unite_legends([ax1]) 
+handles2, labels2 = unite_legends([ax2])
+legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
+legend2 = ax2.legend(handles2, labels2, loc='upper right', fancybox=True, framealpha=0.8)
+ax2.add_artist(legend1)
+ax2.add_artist(legend2)
+#ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+#ax2.legend(loc='upper right', fancybox=True, framealpha=0.8)
 for ext in ["png", "pdf", "eps"]:
    print("saving heatflux.%s" % (ext,))
    plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
@@ -611,6 +642,8 @@ if (AWBSoriginal):
 if (AWBSstar):
    ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0), "g--", label=r'$q_1^{KIPP}$')
    #ax1.plot(p_v/vTh(Te), p_AWBSq_corr, "r"+"-.", label=r'$q_1^{AWBS^*}$')
+## x-axis tight to data.
+ax1.autoscale(axis='x', tight=True)
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 
 """
@@ -660,6 +693,8 @@ if (0):
       ax1.plot(p_v/vTh(Te), p_SHq * (3.0/8.0*p_v*p_v/vTh(Te)/vTh(Te) - 3.0*vTh(Te)*vTh(Te)/p_v/p_v - 2.0)/(p_v*p_v/vTh(Te)/vTh(Te)-8.0) / p_v / p_v / me * qe, "g--", label=r'$j_1^{KIPP}$')
    if (args.labelUseC7):
       ax1.plot(p_C7Ev/vTh(Te), p_C7Emehalff1v5 / (4.0*pi/3.0) / p_C7Ev / p_C7Ev / me * qe, C7Ecolor+'-', label=r'$j_1^{C7}$')
+   ## x-axis tight to data.
+   ax1.autoscale(axis='x', tight=True)
    ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
    for ext in ["png", "pdf", "eps"]:
       print("saving j_kinetics.%s" % (ext,))

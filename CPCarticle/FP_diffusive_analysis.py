@@ -21,6 +21,14 @@ figure = {'figsize' : '10, 6'} # a tuple in inches
 matplotlib.rc('font', **font)
 matplotlib.rc('figure', **figure)
 
+def unite_legends(axes):
+    h, l = [], []
+    for ax in axes:
+        tmp = ax.get_legend_handles_labels()
+        h.extend(tmp[0])
+        l.extend(tmp[1])
+    return h, l
+
 ## Fundamental physical constants in cgs. 
 kB = 1.6022e-12
 me = 9.1094e-28
@@ -666,22 +674,35 @@ ax1.plot(vs_norm, jBGK1s, 'g-.', label=r'$j_1-$BGK')
 ax1.plot(vs_norm, jAWBS1s, 'r--', label=r'$j_1-$AWBS')
 ax1.plot(vs_norm, jSH19531s, 'k', label=r'$j_1-$FP')
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+## x-axis tight to data.
+ax1.autoscale(axis='x', tight=True)
 ax1.set_title('Zbar '+str(Zbar))
 plt.show()
 fig, ax1 = plt.subplots()
 ax1.plot(vs_norm, qBGK1s, 'g-.', label=r'$q_1^{Z=1}$BGK')
 ax1.plot(vs_norm, qAWBS1s, 'r--', label=r'$q_1^{Z=1}$AWBS')
 ax1.plot(vs_norm, qSH19531s, 'k', label=r'$q_1^{Z=1}$SH')
-ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
 ax1.set_xlabel(r'$v / v_{th}$')
 ax1.set_ylabel(r'$q_1^{Z=1}$ [a.u.]')
 ax2 = ax1.twinx()
-ax2.plot(vs_norm, qLvAWBS1s, 'y', label=r'$q_1^{Z=116}$AWBS')
+ax2.plot(vs_norm, qLvAWBS1s, 'y--', label=r'$q_1^{Z=116}$AWBS')
 ax2.plot(vsLv_rough / vTh(Te), qLvBGK1s_rough, 'bx', label=r'$q_1^{Z=116}$Lorentz')
-ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
 ax2.set_ylabel(r'$q_1^{Z=116}$ [a.u.]')
 ax1.set_title('Distribution flux moment')
 fig.tight_layout()
+## x-axis tight to data.
+ax1.autoscale(axis='x', tight=True)
+## Place legends.
+## Quite tricky manovers because of olot-time-sequence.
+handles1, labels1 = unite_legends([ax1]) 
+handles2, labels2 = unite_legends([ax2])
+legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
+legend2 = ax2.legend(handles2, labels2, loc='lower right', fancybox=True, framealpha=0.8)
+ax2.add_artist(legend1)
+ax2.add_artist(legend2)
+#ax1.legend(loc='upper left', fancybox=True, framealpha=0.8)
+#ax2.legend(loc='lower right', fancybox=True, framealpha=0.8)
+
 for ext in ["png", "pdf", "eps"]:
    print("saving q1s.%s" % (ext,))
    plt.savefig("q1s.%s" % (ext,), bbox_inches="tight")
@@ -737,6 +758,7 @@ plt.xlabel(r'$\log_{10}$(Kn$^e$)')
 plt.ylabel(r'$\log_{10}(q/q_{SH})$')
 plt.legend(loc='lower left', fancybox=True, framealpha=0.8)
 plt.ylim((-2.0, 0.1))
+plt.xlim((-4.0, 0.0))
 plt.tight_layout()
 for ext in ["png", "pdf", "eps"]:
    print("saving Kn_results.%s" % (ext,))

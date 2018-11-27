@@ -253,7 +253,7 @@ if __name__ == "__main__":
     ## Solve SNB with E field relaxation.
     if (SIMPLE):
         E_iter_max = 1
-    print "Running SNBE on", N, "cells and", Ngr,"groups."
+    print("Running SNBE on", N, "cells and", Ngr,"groups.")
     for iter in range(E_iter_max):
         ## Calculate the electric field.   
         # Constant denominator in the E field definition.
