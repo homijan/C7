@@ -116,5 +116,27 @@ then
 cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case5_nonlocal_kinetics.png
 fi
 
+# Safe profiles.
+### CASE 5 ### Z = 1 for AWBS paper.
+# Electron temperature.
+cp $DIRroot/VFPdata/temperature.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_Te_Z1_ne5e20_tanh50_20ps.txt
+# Fluxes.
+cp flux0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_Qx_Z1_ne5e20_tanh50_20ps.txt
+cp $DIRroot/VFPdata/flux1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_Qx_Z1_ne5e20_tanh50_20ps.txt
+cp $DIRroot/VFPdata/flux2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_Qx_Z1_ne5e20_tanh50_20ps.txt
+# Distributions.
+if [ "$NAME" == "maximum" ]
+then
+cp F1distribution0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+fi
+if [ "$NAME" == "nonlocal" ]
+then
+cp F1distribution0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_q1x_Z1_ne5e20_tanh50_20ps_460mu.txt
+fi
+
 cd $DIRroot
 done

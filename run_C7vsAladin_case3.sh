@@ -57,7 +57,7 @@ cd VFPdata/Aladin/Aladin_cases4AWBSpaper/case3
 python $DIRroot/VFPdata/loadPhilippegrace.py -f Te_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Te_ -mx 1e-4 -my 1e3 #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _Q_ #-s
 python $DIRroot/VFPdata/loadPhilippegrace.py -f ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt -o _E_ #-m 0.33333334e-4 #-s
-## Copy the input data files to dedicated directory. 
+## Copy the input data files to dedicated directory.
 cp _Te_Te_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/temperature.dat
 cp _Q_FluxX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/flux1.dat
 cp _E_ElecX_Aladin_4milan_5e20_Z10_1.20e-11.txt.txt $DIRroot/VFPdata/Efield1.dat
@@ -103,7 +103,7 @@ fi
 # NONLOCAL DISTRIBUTION
 if [ "$NAME" == "nonlocal" ]
 then
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB -lD1 Aladin -lD2 SNB -hftit 'Heat flux Z = 10' -ktit 'Kinetics at preheat point' --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 --Efield --labelEfieldExt1 Aladin 
+python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB -lD1 Aladin -lD2 SNB -hftit 'Heat flux Z = 10' -ktit 'Kinetics at preheat point' --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 --Efield --labelEfieldExt1 Aladin
 fi
 
 # Safe figs.
@@ -117,6 +117,28 @@ fi
 if [ "$NAME" == "nonlocal" ]
 then
 cp kinetics.png $DIRroot/VFPdata/C7_Aladin_case3_nonlocal_kinetics.png
+fi
+
+# Safe profiles.
+### CASE 5 ### Z = 1 for AWBS paper.
+# Electron temperature.
+cp $DIRroot/VFPdata/temperature.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_Te_Z10_ne5e20_tanh50_20ps.txt
+# Fluxes.
+cp flux0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_Qx_Z10_ne5e20_tanh50_20ps.txt
+cp $DIRroot/VFPdata/flux1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_Qx_Z10_ne5e20_tanh50_20ps.txt
+cp $DIRroot/VFPdata/flux2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_Qx_Z10_ne5e20_tanh50_20ps.txt
+# Distributions.
+if [ "$NAME" == "maximum" ]
+then
+cp F1distribution0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
+fi
+if [ "$NAME" == "nonlocal" ]
+then
+cp F1distribution0.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinC7_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution1.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/Aladin_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
+cp $DIRroot/VFPdata/F1distribution2.dat $DIRroot/VFPdata/C7AladinCalderImpactSNB_data/AladinSNB_q1x_Z10_ne5e20_tanh50_12ps_460mu.txt
 fi
 
 cd $DIRroot

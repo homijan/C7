@@ -2,7 +2,7 @@ import numpy as np
 from math import pi
 from math import exp
 
-## Fundamental physical constants in cgs. 
+## Fundamental physical constants in cgs.
 kB = 1.6022e-12
 me = 9.1094e-28
 qe = -4.8032e-10
@@ -130,10 +130,10 @@ def loadC7data(Nproc, file_base):
 ## Load C7 data.
 C7x, C7rho, C7Te, C7j, C7Ex, C7q, C7corrE, C7ne, C7zbar = loadC7data(args.Nproc, 'C7_data/C7_1_profiles.')
 ###############################################################################
-########### Analysis of diffusive asymptotic of AWBS model #################### 
+########### Analysis of diffusive asymptotic of AWBS model ####################
 ###############################################################################
 ###############################################################################
-from scipy.interpolate import splev, splrep 
+from scipy.interpolate import splev, splrep
 ## Obtain a given point value and gradient of temperature.
 smooth = 0 # lower less smoothing
 ## Find a spline for the temperature data.
@@ -156,7 +156,7 @@ Te_x_points = []
 Te_points = []
 Te_points_markers = ['o', '^', 's', 'x', 'D', 'p']
 if (args.Tpoints):
-   for pt in args.Tpoints: 
+   for pt in args.Tpoints:
       Te_point = splev(pt, Tetck, der=0)
       Te_x_points.append(pt)
       Te_points.append(Te_point)
@@ -172,7 +172,7 @@ if (args.usexpoint):
    C7EQ = 0.0
    NC7E = C7Ev.size - 1
    for i in range(NC7E):
-      dC7Ev = C7Ev[i] - C7Ev[i+1] 
+      dC7Ev = C7Ev[i] - C7Ev[i+1]
       C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 else:
    C7Expoints, C7Ev, C7Emehalff1v5, C7Emehalff0v5 = np.loadtxt('C7_data/fe_pointmax_C7.txt',  usecols=(0, 1, 5, 6), unpack=True)
@@ -184,9 +184,9 @@ else:
       C7EQ = C7EQ + C7Emehalff1v5[i]*dC7Ev
 
 ###############################################################################
-########### AWBS diffusive asymptotic ######################################### 
+########### AWBS diffusive asymptotic #########################################
 ###############################################################################
-def vTh(T): 
+def vTh(T):
     return (kB*T/me)**0.5
 def fM(v, T):
     return ne/(vTh(T)**3.0*(2.0*pi)**1.5)*exp(-v**2.0/2.0/vTh(T)**2.0)
@@ -209,10 +209,10 @@ def RosenbluthPotentialsF0(vs, f0s):
     I0 = np.array(N)
     I2 = np.array(N)
     Jm1 = np.array(N)
-    return I0, I2, Jm1    
+    return I0, I2, Jm1
 def RosenbluthPotentialsF1(vs, f1s):
     N = len(vs) - 1
-    I1 = np.array(N) 
+    I1 = np.array(N)
     I3 = np.array(N)
     Jm2 = np.array(N)
     return I1, I3, Jm2
@@ -221,7 +221,7 @@ def RosenbluthPotentialsF1(vs, f1s):
 
 def solve_bweuler(v, f0, T, gradT, Z, E):
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     f1[0] = f0
     for i in range(N-1):
         dv = v[i+1] - v[i]
@@ -236,7 +236,7 @@ def solve_bweuler(v, f0, T, gradT, Z, E):
 xpoint = C7Expoint
 ## Evaluate at the given point xpoint.
 xp = np.array(xpoint)
-## Assign temperature, electron density and ionization profile values 
+## Assign temperature, electron density and ionization profile values
 ## for a further analysis.
 Te = splev(xp, Tetck, der=0)
 gradTe = splev(xp, Tetck, der=1)
@@ -251,7 +251,7 @@ mfp_ei = vTh(Te)**4.0/sigma/coulLog/ni/Zbar/Zbar
 Te0 = C7Te.min()
 dTe = abs(Te - Te0)
 ## Evaluate the v limit due to Ex value.
-vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te) 
+vlim_vTh = (3.0**0.5/2.0 * sigma*coulLog*ni*Zbar/abs(Ex_point))**0.5 / vTh(Te)
 print("xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex, vlim/vTh: ", xpoint, ni, ne, sigma, coulLog, Zbar, Te, gradTe, dTe, Ex_point, vlim_vTh)
 
 ## Multiples of thermal velocity setting the velocity space range.
@@ -259,7 +259,7 @@ ml_max = 16.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
 ## qH = me/Zbar/sigma/coulLog*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-## where mfp_ei = v**4/sigma/coulLog/ni/Zbar/Zbar, 
+## where mfp_ei = v**4/sigma/coulLog/ni/Zbar/Zbar,
 ## i.e. sigma corresponds to unit charges collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 #print "Zbar, corr:", Zbar, corr
@@ -279,7 +279,7 @@ sol = solve_bweuler(v, 0.0, Te, gradTe, Zbar, Efield)
 sol_corr = solve_bweuler(v, 0.0, Te, gradTe, cmag*Zbar, Efield)
 
 ###############################################################################
-########### Kinetic integration of AWBS and C7 ################################ 
+########### Kinetic integration of AWBS and C7 ################################
 ###############################################################################
 fM_analytic = np.zeros(N)
 SHf1 = np.zeros(N)
@@ -485,7 +485,7 @@ if (args.Efield):
       ax1.set_xlim((xmin, xmax))
    ## Place legends.
    ## Quite tricky manovers because of olot-time-sequence.
-   handles1, labels1 = unite_legends([ax1]) 
+   handles1, labels1 = unite_legends([ax1])
    handles2, labels2 = unite_legends([ax2])
    legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
    legend2 = ax2.legend(handles2, labels2, loc='center left', fancybox=True, framealpha=0.8)
@@ -545,7 +545,7 @@ if (args.xlimits):
    ax1.set_xlim((xmin, xmax))
 ## Place legends.
 ## Quite tricky manovers because of olot-time-sequence.
-handles1, labels1 = unite_legends([ax1]) 
+handles1, labels1 = unite_legends([ax1])
 handles2, labels2 = unite_legends([ax2])
 legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
 legend2 = ax2.legend(handles2, labels2, loc='upper right', fancybox=True, framealpha=0.8)
@@ -558,6 +558,10 @@ for ext in ["png", "pdf", "eps"]:
    plt.savefig("heatflux.%s" % (ext,), bbox_inches="tight")
 if (args.pltshow):
    plt.show()
+## Save the heat flux data.
+np.savetxt('flux0.dat', np.transpose([C7x_microns, C7q * 1e-7]))
+
+
 
 ###############################################################################
 ########### Kinetic SH, Diffusive AWBS and C7 comparison ######################
@@ -565,7 +569,7 @@ if (args.pltshow):
 ## Shrink the x axis appropriately.
 if (args.labelDistributionExt1):
    D1v, D1_f0 = np.loadtxt('../../VFPdata/F0distribution1.dat',  usecols=(0, 1), unpack=True)
-   D1v, D1_f1x = np.loadtxt('../../VFPdata/F1distribution1.dat',  usecols=(0, 1), unpack=True)  
+   D1v, D1_f1x = np.loadtxt('../../VFPdata/F1distribution1.dat',  usecols=(0, 1), unpack=True)
 if (args.labelDistributionExt2):
    #D2v, D2_f0 = np.loadtxt('../../VFPdata/F0distribution2.dat',  usecols=(0, 1), unpack=True)
    D2v, D2_f1x = np.loadtxt('../../VFPdata/F1distribution2.dat',  usecols=(0, 1), unpack=True)
@@ -645,6 +649,9 @@ if (AWBSstar):
 ## x-axis tight to data.
 ax1.autoscale(axis='x', tight=True)
 ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
+
+## Save the f1 distribution data.
+np.savetxt('F1distribution0.dat', np.transpose([p_C7Ev, p_C7Emehalff1v5 / (4.0*pi/3.0)]))
 
 """
 ## q0 axis

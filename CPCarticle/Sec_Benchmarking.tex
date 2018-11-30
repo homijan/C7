@@ -23,25 +23,6 @@ In addition, we compare the~SNB nonlocal transport model \cite{Schurtz_2000}
 used in hydrodynamic codes. 
 That is a~first time when a~collisional PIC code is used
 for benchmarking of nonlocal electron transport models. 
-%Their description follows in the~next section.
-
-%\begin{figure}[tbh]
-%  \begin{center}
-%    \begin{tabular}{c}
-%      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Impact_case3_heatflux.png} \\
-%      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Impact_case3_kinetics.png}
-%    \end{tabular}
-%  \caption{  
-%  Snapshot 12 ps. Left: correct steady solution of heat flux. 
-%  Right: correct comparison to kinetic profiles at point 437 $\mu$m by Impact.
-%  Velocity limit 4.0 $\vth$.
-%  }
-%  \label{fig:C7_Impact_case3}
-%  \end{center} 
-%\end{figure}
-
-%\subsection{Aladin, Impact, and Calder kinetic codes}
-%\label{sec:AladinImpactCaldercodes}
 
 %%% CEA contribution starts
 \textbf{Calder PIC code}
@@ -256,21 +237,42 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_heatflux.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_kinetics.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_nonlocal_kinetics.png}  
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} \\
+      %\includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_Efield.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png} \\
+	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_nonlocal_kinetics.png} 
     \end{tabular}
   \caption{  
-  Snapshot 12 ps. Top: correct steady solution of heat flux.  
+  Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
   Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Aladin. 
-  Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
+  Velocity limit 4.2 $\vth$ at temperature 622.4 eV.
   Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
-  Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
+  Velocity limit 9.1 $\vth$ at temperature 192.3 eV.
   }
-  \label{fig:C7_Aladin_case3}
+  \label{fig:C7_Aladin_case5}
+  %\label{fig:C7_Aladin_case5_nonlocal}
   \end{center} 
 \end{figure}
 
+\begin{figure}[htb]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_heatflux.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_kinetics.png} \\
+	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_nonlocal_kinetics.png} 
+    \end{tabular}
+  \caption{  
+  Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
+  Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Calder. 
+  Velocity limit 4.3 $\vth$ at temperature 622.4 eV.
+  Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Calder.
+  Velocity limit 8.5 $\vth$ at temperature 192.3 eV.
+  }
+  \label{fig:C7_Calder_case5}
+  \end{center} 
+\end{figure}
+
+\begin{comment} % Old Calder fig.
 \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
@@ -281,9 +283,6 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_nonlocal_kinetics.png}
     \end{tabular}
   \caption{  
-  %Snapshot 11 ps. Left: correct steady solution of heat flux. 
-  %Points 640 $\mu$m and 750 $\mu$m, corresponding velocity limit 3.8 $\vth$ 
-  %and 7.4 $\vth$ on temperatures 662.3 eV and 198.0 eV.
   Snapshot 11 ps. Top: correct steady solution of heat flux.  
   Middle: correct comparison to kinetic profiles at point 640 $\mu$m by Calder. 
   Velocity limit 3.8 $\vth$ at temperature 662.3 eV.
@@ -293,47 +292,28 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
   \label{fig:C7_Calder_case1}
   \end{center} 
 \end{figure}
+\end{comment} % Old Calder fig.
 
 \subsection{Heat-bath problem}  
 \label{sec:heatbath_test}
 
-%\begin{figure}[tbh]
-%  \begin{center}
-%    \begin{tabular}{c}
-%      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} \\
-%      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png}
-%    \end{tabular}
-%  \caption{  
-%  Snapshot 20 ps. Left: correct steady solution of heat flux. 
-%  Right: Aladins results are correct. Velocity limit 4.4 $\vth$..
-%  }
-%  \label{fig:C7_Aladin_case5}
-%  \end{center} 
-%\end{figure}
 \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_Efield.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png} \\
-	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_nonlocal_kinetics.png} 
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_heatflux.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_Efield.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_kinetics.png} \\
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_nonlocal_kinetics.png}  
     \end{tabular}
   \caption{  
-  Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
+  Snapshot 12 ps. Top: correct steady solution of heat flux.  
   Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Aladin. 
-  Velocity limit 4.2 $\vth$ at temperature 622.4 eV.
+  Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
   Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
-  Velocity limit 9.1 $\vth$ at temperature 192.3 eV.
-  %Snapshot 20 ps. Top: correct steady solution of heat flux. 
-  %Right: Aladins results are correct. Velocity limit 4.4 $\vth$.
-  %Snapshot 20 ps. AP1 kinetic profiles at point 580~$\mu$m corresponding to 
-  %a~highly nonlocal nature of the~heat flux %\figref{fig:C7_Aladin_case5} 
-  %and is in a~good agreement with
-  %\cite{Sherlock_PoP2017}. Velocity $max(q_1)$ = 6.0 $\vth$. 
-  %Velocity limit 9.0 $\vth$.
+  Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
+  TODO Fig reordered so change description, E field and current now in Z=10, maybe join Figs Aladin and Calder Z=1. 
   }
-  \label{fig:C7_Aladin_case5}
-  %\label{fig:C7_Aladin_case5_nonlocal}
+  \label{fig:C7_Aladin_case3}
   \end{center} 
 \end{figure}
 
@@ -378,7 +358,7 @@ ionisation were kept constant and uniform.
 The~Coulomb logarithm was held fixed throughout, $\lnc = 7.09$.
 
 We show AP1 results for various ionization states, namely $\Zbar= 10, 2, 1$ 
-in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
+in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
 and \figref{fig:C7_Aladin_case5} respectively, corresponding to 
 a~moderate nonlocality 
 (Kn$^e \sim 10^{-2}$) leading to a~rouhgly 50 $\%$ inhibition compared 
@@ -390,7 +370,7 @@ $\text{Kn}^e = \frac{\mfpe}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
 a~better scaling of nonlocality with respect
 to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
 kept approximately the~same when varying $\Zbar$ in 
-\figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
+\figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
 and \figref{fig:C7_Aladin_case5}.
 In addition to the~heat flux profiles, we also show the~distribution function 
 details related to the~approximate point of the~heat flux maximum (460 $\mu$m) 
@@ -409,7 +389,7 @@ of the~temperature profile is shown in the~bottom plot. In the~latter case
 AP1 shows a~very similar properties as Aladin with a~difference in magnitude
 corresponding to a~higher heat flux computed by AP1 at this point. 
 
-The~top plot of \figref{fig:C7_Calder_case1} shows heat flux profiles
+The~top plot of \figref{fig:C7_Calder_case5} shows heat flux profiles
 computed by Calder, AP1, and SNB corresponding to the~temperature $\Te$ profile 
 computed by Calder up to 11 ps for $\Zbar = 2$. 
 Very good match of $q_1$ can be seen between 
@@ -443,7 +423,7 @@ the~isotropic collision operator
 %a~significant modification compared to the~local $\E_L$ values.
 
 SNB shows satisfactory results of the~heat flux profile in all three cases, 
-i.e. top plot in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, 
+i.e. top plot in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
 and \figref{fig:C7_Aladin_case5}. However, one can observe that the~EDF 
 kinetic solution of SNB provides only a~qualitative image with respect to
 the~reference green line solution. This is illustrated for example in
@@ -500,7 +480,7 @@ the~maximum of $q_1$ at the~maximum point tends to decrease with increasing
 Kn$^e$ and that the~interval of electron velocities important for 
 the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
 refer to the~kinetics at maximum point in \figref{fig:C7_Aladin_case3}, 
-\figref{fig:C7_Calder_case1}, and \figref{fig:C7_Aladin_case5}. 
+\figref{fig:C7_Calder_case5}, and \figref{fig:C7_Aladin_case5}. 
 We have also found 
 an~important observation related to the~electron collisions.
 The~force acting on electrons is dominated by
@@ -543,7 +523,7 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
 \end{table}
 
 Yet another observation can be made when analysing the~anisotropic term $q_1$ 
-in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case1}, and 
+in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, and 
 \figref{fig:C7_Aladin_case5}. When comparing the~kinetics at maximum and 
 preheat points, both velocity maxima of the~EDF correspond to approximately 
 same electron velocity. This means that the~electrons responsible for 
