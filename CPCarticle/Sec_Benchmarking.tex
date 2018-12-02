@@ -211,7 +211,7 @@ and the~$\vmag$-dependent bracket in \eqref{eq:f1M}. The~missing
 effect of $\E$ in \eqref{eq:SNB_model} is accounted for by 
 an~isotropic scattering in definition of $\mfpei^{SNB}$ \cite{Schurtz_2000}.
 Consequently, the~effect of the~electric field in SNB
-is accounted for only via $\fone_M$, where the~electric field is i
+is accounted for only via $\fone_M$, where the~electric field is
 fixed to $\E_L$. 
 %A~self consistent zero current condition 
 %$\vect{j} = \qe \int \vmag (\fone_M + \delta\fone)~\dI\tilde{\vmag} = 0$ then
@@ -232,71 +232,55 @@ As shown previously, the~BGK collision operator \eqref{eq:BGK_scaling}
 provides one free parameter $\zeta$.
 We propose to use $\zeta = 2$ giving $r_B(\Zbar\gg1) = 2$ which agrees 
 with $r=2$ in SNB formulation proposed in \cite{Brodrick_PoP2017} 
-for the~case of ICF relevant plasma. The~explicit form of the~anisotropic 
+for the~case of ICF relevant plasma. We also have $r_B(\Zbar = 1) = 1.677$,
+which means that our pure kinetic derivation of SNB varies just slightly
+from a~constant value $r_B=2$ \cite{Brodrick_PoP2017}, yet it provides 
+slightly better results. The~explicit form of the~anisotropic 
 part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 
-\begin{figure}[htb]
+\begin{figure*}[htb]
   \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} \\
-      %\includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_Efield.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png} \\
+    \begin{tabular}{cc}
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_heatflux.png} 
+	  &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_heatflux.png} 
+	  \\ 
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_kinetics.png} 
+	  &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_kinetics.png} 
+	  \\
 	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case5_nonlocal_kinetics.png} 
-    \end{tabular}
+      &
+      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_nonlocal_kinetics.png}
+	\end{tabular}
   \caption{  
-  Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
-  Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Aladin. 
-  Velocity limit 4.2 $\vth$ at temperature 622.4 eV.
+  Snapshot 20 ps. Top: correct steady solution of heat flux. 
+  Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
+  by Aladin and Calder. 
+  Velocity limit 4.2/4.3 $\vth$ at temperature 622.4/611.3 eV.
   Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
-  Velocity limit 9.1 $\vth$ at temperature 192.3 eV.
+  Velocity limit 9.1/8.5 $\vth$ at temperature 192.3/202.4 eV.
   }
-  \label{fig:C7_Aladin_case5}
-  %\label{fig:C7_Aladin_case5_nonlocal}
+  \label{fig:C7_AladinCalder_case5}
   \end{center} 
-\end{figure}
-
-\begin{figure}[htb]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_heatflux.png} \\
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_kinetics.png} \\
-	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_nonlocal_kinetics.png} 
-    \end{tabular}
-  \caption{  
-  Snapshot 20 ps. Top: correct steady solution of heat flux and electric field. 
-  Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Calder. 
-  Velocity limit 4.3 $\vth$ at temperature 611.3 eV.
-  Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Calder.
-  Velocity limit 8.5 $\vth$ at temperature 202.4 eV.
-  }
-  \label{fig:C7_Calder_case5}
-  \end{center} 
-\end{figure}
-
-\begin{comment} % Old Calder fig.
-\begin{figure}[htb]
-  \begin{center}
-    \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_heatflux.png} 
-	  \\ 
-	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_kinetics.png}
-	  \\ 
-	  \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case1_nonlocal_kinetics.png}
-    \end{tabular}
-  \caption{  
-  Snapshot 11 ps. Top: correct steady solution of heat flux.  
-  Middle: correct comparison to kinetic profiles at point 640 $\mu$m by Calder. 
-  Velocity limit 3.8 $\vth$ at temperature 662.3 eV.
-  Bottom: correct comparison to kinetic profiles at point 750 $\mu$m by Calder.
-  Velocity limit 7.4 $\vth$ at temperature 198.0 eV.
-  }
-  \label{fig:C7_Calder_case1}
-  \end{center} 
-\end{figure}
-\end{comment} % Old Calder fig.
+\end{figure*}
 
 \subsection{Heat-bath problem}  
 \label{sec:heatbath_test}
+
+AP1 is compared to Calder, Aladin, Impact, and SNB by 
+calculating the~heat flow in the~case of a~homogeneous plasma
+with a~large temperature variation
+\begin{equation}
+  T_e(z) = 0.575 - 0.425 \tanh\left((z-450) s\right) ,
+  \label{eq:T_init}
+\end{equation}
+which exhibits a~steep gradient at the~point 450~$\mu$m 
+connecting a~hot bath ($T_e = 1$~keV) 
+and cold bath ($T_e = 0.17$~keV) and $s$ is the~parameter of steepness. 
+This test is referred to as a~simple non-linear heat-bath problem and
+originally was introduced in \cite{marocchino2013} and further investigated
+in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
 
 \begin{figure}[htb]
   \begin{center}
@@ -312,25 +296,11 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
   Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
   Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
   Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
-  TODO Fig reordered so change description, E field and current now in Z=10, maybe join Figs Aladin and Calder Z=1. 
+  TODO Fig reordered so change description, E field and current now in Z=10. 
   }
   \label{fig:C7_Aladin_case3}
   \end{center} 
 \end{figure}
-
-AP1 is compared to Calder, Aladin, Impact, and SNB by 
-calculating the~heat flow in the~case of a~homogeneous plasma
-with a~large temperature variation
-\begin{equation}
-  T_e(z) = 0.575 - 0.425 \tanh\left((z-450) s\right) ,
-  \label{eq:T_init}
-\end{equation}
-which exhibits a~steep gradient at the~point 450~$\mu$m 
-connecting a~hot bath ($T_e = 1$~keV) 
-and cold bath ($T_e = 0.17$~keV) and $s$ is the~parameter of steepness. 
-This test is referred to as a~simple non-linear heat-bath problem and
-originally was introduced in \cite{marocchino2013} and further investigated
-in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
 
 %Aladin and Impact simulations showed an evolution of the heat flow
 %from the local (due to initialising as a Maxwellian) to the
@@ -358,10 +328,9 @@ For all heat-bath simulations the electron density, Coulomb logarithm and
 ionisation were kept constant and uniform.
 The~Coulomb logarithm was held fixed throughout, $\lnc = 7.09$.
 
-We show AP1 results for various ionization states, namely $\Zbar= 10, 2, 1$ 
-in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
-and \figref{fig:C7_Aladin_case5} respectively, corresponding to 
-a~moderate nonlocality 
+We show AP1 results for two ionization states, namely $\Zbar= 1, 10$ 
+in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}, 
+respectively, corresponding to a~moderate nonlocality 
 (Kn$^e \sim 10^{-2}$) leading to a~rouhgly 50 $\%$ inhibition compared 
 to the~local SH heat flux maximum. The~original temperature profile steepness
 $s = 1/50 \mu$m.
@@ -371,8 +340,7 @@ $\text{Kn}^e = \frac{\mfpe}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
 a~better scaling of nonlocality with respect
 to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
 kept approximately the~same when varying $\Zbar$ in 
-\figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
-and \figref{fig:C7_Aladin_case5}.
+\figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}.
 In addition to the~heat flux profiles, we also show the~distribution function 
 details related to the~approximate point of the~heat flux maximum (460 $\mu$m) 
 and to the~point of the~nonlocal preheat effect (580 $\mu$m) in the~form of
@@ -380,7 +348,8 @@ the~flux moment of EDFs anisotropic part \eqref{eq:q1}.
 The~nonlocal preheat effect shows a~very good agreement with 
 previous results published in \cite{Sherlock_PoP2017}.
 
-In the~top plot of \figref{fig:C7_Aladin_case3} we show heat flux profiles
+In the~top plot of \figref{fig:C7_Aladin_case3} 
+we show heat flux profiles
 computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$ profile 
 computed by Aladin up to 12 ps for $\Zbar = 10$. 
 The~EDFs $q_1$ at the~point of the~approximate heat flux maximum (triangle) of
@@ -390,9 +359,9 @@ of the~temperature profile is shown in the~bottom plot. In the~latter case
 AP1 shows a~very similar properties as Aladin with a~difference in magnitude
 corresponding to a~higher heat flux computed by AP1 at this point. 
 
-The~top plot of \figref{fig:C7_Calder_case5} shows heat flux profiles
+The~top plot of \figref{fig:C7_AladinCalder_case5} shows heat flux profiles
 computed by Calder, AP1, and SNB corresponding to the~temperature $\Te$ profile 
-computed by Calder up to 11 ps for $\Zbar = 2$. 
+computed by Calder up to 11 ps for $\Zbar = 1$. 
 Very good match of $q_1$ can be seen between 
 AP1 and Calder at the~triangle point of the~temperature profile in the~middle 
 plot and $q_1$ at the~circle point of the~temperature profile is shown 
@@ -404,10 +373,10 @@ return current (negative part of $q_1$), i.e. the~electron number is not
 exactly conserved. This probably arises from the~nature of the~Monte Carlo 
 method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
 of charge conservation.
- 
 Heat flux profiles, electric field profiles, $q_1$ at the~heat flux maximum 
 (triangle point) and at~the~nonlocal preheat region (circle point) 
-computed by Aladin, AP1, and SNB are shown in \figref{fig:C7_Aladin_case5} 
+computed by Aladin, AP1, and SNB are shown 
+in \figref{fig:C7_AladinCalder_case5} 
 for $\Zbar = 1$. The~AP1 EDF profiles provides a~reasonable match to 
 the~reference green line EDF by Aladin. It should be noted, 
 that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
@@ -417,15 +386,9 @@ to compute better kinetics in this low $\Zbar$ case then
 the~isotropic collision operator
 \eqref{eq:C0_collision_operator} used by Aladin and Impact.
 
-%We also add the~electric field profiles
-%in the~top plot of \figref{fig:C7_Aladin_case5}. 
-%One can see that $\E$ does not change much in magnitude, but
-%it is displaced in direction down the~temperature gradient thus causing 
-%a~significant modification compared to the~local $\E_L$ values.
-
 SNB shows satisfactory results of the~heat flux profile in all three cases, 
-i.e. top plot in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, 
-and \figref{fig:C7_Aladin_case5}. However, one can observe that the~EDF 
+i.e. top plot \figref{fig:C7_AladinCalder_case5} 
+and \figref{fig:C7_Aladin_case3}. However, one can observe that the~EDF 
 kinetic solution of SNB provides only a~qualitative image with respect to
 the~reference green line solution. This is illustrated for example in
 \figref{fig:C7_Aladin_case3}, where the~bottom plot highlights the~insufficient
@@ -434,9 +397,9 @@ shows a~significantly receding solution at the~approximate heat flux maximum
 point in all three cases of $\Zbar$. 
 These~discrepancies can be attributed to the~use of an~inconsistent 
 electric field in the~case of SNB which uses $\E_L$. An~electric field 
-comparison is shown in \figref{fig:C7_Aladin_case5}, where it is shown that 
+comparison is shown in \figref{fig:C7_Aladin_case3}, where it is shown that 
 the~local electric field treatment $\E_L$ used in SNB is especially 
-inapropriate in the~preheat region and consequently leads to 
+inappropriate in the~preheat region and consequently leads to 
 a~significant violation of the~plasma quasi-neutrality,
 i.e. a~non-zero current, where one can observe an~uncontrolled stream of 
 electrons in the~preheat and also an~overestimation of negative return current
@@ -480,8 +443,8 @@ we observed that
 the~maximum of $q_1$ at the~maximum point tends to decrease with increasing 
 Kn$^e$ and that the~interval of electron velocities important for 
 the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
-refer to the~kinetics at maximum point in \figref{fig:C7_Aladin_case3}, 
-\figref{fig:C7_Calder_case5}, and \figref{fig:C7_Aladin_case5}. 
+refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5} 
+and \figref{fig:C7_Aladin_case3}. 
 We have also found 
 an~important observation related to the~electron collisions.
 The~force acting on electrons is dominated by
@@ -524,8 +487,8 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
 \end{table}
 
 Yet another observation can be made when analysing the~anisotropic term $q_1$ 
-in \figref{fig:C7_Aladin_case3}, \figref{fig:C7_Calder_case5}, and 
-\figref{fig:C7_Aladin_case5}. When comparing the~kinetics at maximum and 
+in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}. 
+When comparing the~kinetics at maximum and 
 preheat points, both velocity maxima of the~EDF correspond to approximately 
 same electron velocity. This means that the~electrons responsible for 
 the~flux in the~preheat region are those flux dominating electrons 
@@ -538,7 +501,7 @@ in the~maximum and preheat plots,
 e.g. $\Te = 622$~eV and $\vmag_{q_1^{max}} = 3.24~\vth = 3.39\times10^9$~cm/s 
 at the~maximum point and $\Te = 192$~eV and 
 $\vmag_{q_1^{max}} = 5.95~\vth = 3.46\times10^9$~cm/s at the~preheat point
-in \figref{fig:C7_Aladin_case5}.
+in \figref{fig:C7_AladinCalder_case5}.
 
 \begin{comment} % Simulations setup.
 In every run of AP1 we used 250~velocity groups in order to avoid

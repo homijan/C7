@@ -471,7 +471,7 @@ if (args.Efield):
    if (args.kinSH):
       ax1.plot(C7x_microns, 1./0.33333334e-4 * me/qe*C7SHE_analytic, SHcolor+'-.', label=r'$E_L$', lw=lwthick)
    ax2 = ax1.twinx()
-   ax2.set_ylabel(r'$j/q_e$ [a.u.]')
+   ax2.set_ylabel(r'$j/q_e$ [1/s cm$^{2}$]')
    ## C7j = f1 * v^3
    #ax2.plot(C7x_microns, C7j, 'k-.',label=r'$j-$'+labelC7, lw=lwthick)
    ## jSNB = (f1M + df1) * v^3
@@ -618,7 +618,7 @@ if (args.labelDistributionExt2):
    #   p_D2_fMv2[i] = fM(p_D2v[i], Te)*p_D2v[i]*p_D2v[i]
 ## Set labels.
 fig, ax1 = plt.subplots()
-ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [a.u.]')
+ax1.set_ylabel(r'$q_1 = m_e v^2/2\, v f_1 v^2$ [erg/cm$^3$]')
 ax1.set_xlabel('v/vT')
 print("ne: ", ne)
 print("Kn_ee: ", Kn_ee)

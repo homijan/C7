@@ -5,7 +5,7 @@ Te [eV]
 Qx [W/cm2]
 # Distribution function:
 v [cm/s]
-q1 [erg*s2/cm3]
+q1 [erg/cm3]
 
 # q1 is used, i.e. q1 = me/2 * f1 * v^5 
 # and q1 must relate to the heat flux as Q = 4pi/3 * int q1 dv.
