@@ -331,7 +331,7 @@ The~Coulomb logarithm was held fixed throughout, $\lnc = 7.09$.
 We show AP1 results for two ionization states, namely $\Zbar= 1, 10$ 
 in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}, 
 respectively, corresponding to a~moderate nonlocality 
-(Kn$^e \sim 10^{-2}$) leading to a~rouhgly 50 $\%$ inhibition compared 
+(Kn$^e \sim 10^{-2}$) leading to a~roughly 40 $\%$ inhibition compared 
 to the~local SH heat flux maximum. The~original temperature profile steepness
 $s = 1/50 \mu$m.
 It is preferable to use 
@@ -348,62 +348,72 @@ the~flux moment of EDFs anisotropic part \eqref{eq:q1}.
 The~nonlocal preheat effect shows a~very good agreement with 
 previous results published in \cite{Sherlock_PoP2017}.
 
-In the~top plot of \figref{fig:C7_Aladin_case3} 
-we show heat flux profiles
-computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$ profile 
-computed by Aladin up to 12 ps for $\Zbar = 10$. 
-The~EDFs $q_1$ at the~point of the~approximate heat flux maximum (triangle) of
-the~temperature profile is shown in the~middle plot, where a~very precise match
-between AP1 and Aladin can be observed, and $q_1$ at the~preheat point (circle)
-of the~temperature profile is shown in the~bottom plot. In the~latter case
-AP1 shows a~very similar properties as Aladin with a~difference in magnitude
-corresponding to a~higher heat flux computed by AP1 at this point. 
-
-The~top plot of \figref{fig:C7_AladinCalder_case5} shows heat flux profiles
-computed by Calder, AP1, and SNB corresponding to the~temperature $\Te$ profile 
-computed by Calder up to 11 ps for $\Zbar = 1$. 
-Very good match of $q_1$ can be seen between 
-AP1 and Calder at the~triangle point of the~temperature profile in the~middle 
-plot and $q_1$ at the~circle point of the~temperature profile is shown 
-in the~bottom plot. 
-%In the~latter case AP1 shows a~very similar properties 
-%as Calder. 
-In general, Calder exhibits a~lack of 
-return current (negative part of $q_1$), i.e. the~electron number is not 
-exactly conserved. This probably arises from the~nature of the~Monte Carlo 
-method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
-of charge conservation.
-Heat flux profiles, electric field profiles, $q_1$ at the~heat flux maximum 
-(triangle point) and at~the~nonlocal preheat region (circle point) 
-computed by Aladin, AP1, and SNB are shown 
-in \figref{fig:C7_AladinCalder_case5} 
-for $\Zbar = 1$. The~AP1 EDF profiles provides a~reasonable match to 
-the~reference green line EDF by Aladin. It should be noted, 
+The~top left plot of \figref{fig:C7_AladinCalder_case5} shows heat flux 
+profiles computed by Aladin, AP1, and SNB corresponding to the~temperature 
+$\Te$ profile computed by Aladin and the~top right plot of 
+\figref{fig:C7_AladinCalder_case5} shows heat flux profiles computed by Calder, 
+AP1, and SNB corresponding to the~temperature $\Te$ profile computed by Calder.
+Both kinetic simulations by Aladin and Calder evolved up to 20 ps for 
+$\Zbar = 1$. 
+%Very good match of $q_1$ can be seen between 
+%AP1 and Calder at the~triangle point of the~temperature profile in the~middle 
+%plot and $q_1$ at the~circle point of the~temperature profile is shown 
+%in the~bottom plot. 
+The~anisotropic part of EDF, in particular the~heat flux velocity moment $q_1$, 
+at the~heat flux maximum (triangle point) and at~the~nonlocal preheat region 
+(circle point) computed by AP1 and SNB, and by Aladin and Calder are shown 
+in the~middle. %in \figref{fig:C7_AladinCalder_case5} for $\Zbar = 1$. 
+The~AP1 EDF profiles provide a~reasonable match to 
+the~reference green line EDF by Aladin on the~left. It should be noted, 
 that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
 shown in \figref{fig:q1s_summary} where AP1 corresponds to AWBS and Aladin to
 BGK curve. This may suggest that AP1 tends 
 to compute better kinetics in this low $\Zbar$ case then 
 the~isotropic collision operator
 \eqref{eq:C0_collision_operator} used by Aladin and Impact.
+\textit{In general, Calder exhibits a~lack of 
+return current (negative part of $q_1$), i.e. the~electron number is not 
+exactly conserved. This probably arises from the~nature of the~Monte Carlo 
+method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
+of charge conservation.}
 
-SNB shows satisfactory results of the~heat flux profile in all three cases, 
-i.e. top plot \figref{fig:C7_AladinCalder_case5} 
-and \figref{fig:C7_Aladin_case3}. However, one can observe that the~EDF 
-kinetic solution of SNB provides only a~qualitative image with respect to
-the~reference green line solution. This is illustrated for example in
-\figref{fig:C7_Aladin_case3}, where the~bottom plot highlights the~insufficient
-electric field treatment (no return current). The~middle plot
-shows a~significantly receding solution at the~approximate heat flux maximum
-point in all three cases of $\Zbar$. 
+In the~top plot of \figref{fig:C7_Aladin_case3} we show heat flux profiles
+computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$ profile 
+computed by Aladin up to 12 ps for $\Zbar = 10$. Corresponding profiles of 
+a~self-consistently calculated electric fields by Aladin and AP1 
+(using the~nonlocal Ohm's law) are shown in the~higher middle plot.
+Also the~local theory based electric field $\E_L$ used by SNB is shown.
+The~EDFs $q_1$ at the~point of the~approximate heat flux maximum (triangle) of
+the~temperature profile is shown in the~lower middle plot, 
+where a~very precise match between AP1 and Aladin can be observed, 
+and $q_1$ at the~preheat point (circle) of the~temperature profile is shown 
+in the~bottom plot. In the~latter case
+AP1 shows a~very similar properties as Aladin with a~difference in magnitude
+corresponding to a~higher heat flux computed by AP1 at this point. 
+
+SNB shows very good results of the~heat flux profile in all three cases, 
+i.e. compared to Aladin and Calder in \figref{fig:C7_AladinCalder_case5} 
+and to Aladin in \figref{fig:C7_Aladin_case3}. 
+However, one can observe that the~EDF kinetic solution of SNB provides 
+only a~qualitative image with respect to the~reference green line solution. 
+This is illustrated for example in
+\figref{fig:C7_Aladin_case3}, where the~kinetics at preheat point plot 
+reveals an~insufficient electric field treatment (no return current). 
+The~kinetics at maximum point plot shows that the~solution SNB solution
+approaches closely the~local Lorentz$^*$ solution and that 
+significantly recedes from the~reference fully kinetic solution (green line).
+%at the~approximate heat flux maximum
+%point in all three cases of $\Zbar$. 
 These~discrepancies can be attributed to the~use of an~inconsistent 
 electric field in the~case of SNB which uses $\E_L$. An~electric field 
 comparison is shown in \figref{fig:C7_Aladin_case3}, where it is shown that 
-the~local electric field treatment $\E_L$ used in SNB is especially 
-inappropriate in the~preheat region and consequently leads to 
+the~local electric field treatment $\E_L$ used in SNB fails 
+in the~preheat region and consequently leads to 
 a~significant violation of the~plasma quasi-neutrality,
 i.e. a~non-zero current, where one can observe an~uncontrolled stream of 
 electrons in the~preheat and also an~overestimation of negative return current
 around the~heat flux maximum.
+
 The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
 and \eqref{eq:AmpereKinetic} in general show a~very good performance 
 in all three cases when compared to the~fully kinetic results 
@@ -446,14 +456,20 @@ the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
 refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5} 
 and \figref{fig:C7_Aladin_case3}. 
 We have also found 
-an~important observation related to the~electron collisions.
+an~important observation related to the~electron-electron collisions.
 The~force acting on electrons is dominated by
-electric field above some velocity limit $\vmag_{lim}$ and this limit drops 
+electric field above the~velocity limit
+\begin{equation}
+  \vmag_{lim} = \sqrt{\frac{\sqrt{3}\Gamma\me}{2\qe}\frac{n_e}{|\E|}}
+  ,
+  \label{eq:v_limit}
+\end{equation}
+and this limit drops 
 down significantly with increasing Knudsen number as can be seen 
 in \tabref{tab:vlim}. 
 As a~consequence, the~electrons responsible for the~heat flux
 ($3 \vth < \vmag <4 \vth$) are preferably affected by the~electric field
-rather than by collisions when Kn$^{e} > 10^{-1}$, since according to 
+rather than by collisions when Kn$^{e} > 10^{-1}$. According to 
 \tabref{tab:vlim} collsions dominate stopping for $\vmag < 3.1 \vth$ 
 when Kn$^e = 10^{-1}$ and even a~much lower value $\vmag < 1.8 \vth$ 
 when Kn$^e = 1.0$. This explains the~unsatisfactory results of 
@@ -461,7 +477,9 @@ the~\textit{decelerating} AP1
 model for high Kn$^e$ shown in \figref{fig:Kn_results}. 
 Notably, the~AP1 limited electric field effect (described in 
 \appref{app:AP1limit}) leads to a~steep increase of error with respect 
-to VFP code Aladin for Kn$^e > 10^{-1}$.
+to VFP code Aladin for Kn$^e > 10^{-1}$. 
+For example $\vmag_{lim}\sim 4.3\vth$ for the~maximum point EDF in 
+\figref{fig:C7_AladinCalder_case5}.
 
 \begin{table}
 \begin{center}
@@ -475,7 +493,7 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
   \end{tabular}
   \caption{
   Scan over varying nonlocality (Kn$^e$) showing the~limit of 
-  the~collision friction dominance over the~acceleration of electrons 
+  the~collision friction dominance over the~deceleration of electrons 
   due to the~electric field force. The~electric field effect is dominant
   for electrons with higher velocity than $\vmag_{lim}$ defined in 
   \eqref{eq:v_limit}. Kn$^e$ and $\vth$ are evaluated from the~same 
@@ -486,22 +504,22 @@ to VFP code Aladin for Kn$^e > 10^{-1}$.
 \end{center}
 \end{table}
 
-Yet another observation can be made when analysing the~anisotropic term $q_1$ 
-in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}. 
-When comparing the~kinetics at maximum and 
-preheat points, both velocity maxima of the~EDF correspond to approximately 
-same electron velocity. This means that the~electrons responsible for 
-the~flux in the~preheat region are those flux dominating electrons 
-from the~maximum point. This provides an~important information
-about the~microscopic motion of electrons on the~nonlocal spatial scale, i.e. 
-a~quantification how far the~fast electrons from the~heat flux maximum 
-are transported before being slowed down significantly. 
-Notice that different reference temperatures and $\vth$ are used 
-in the~maximum and preheat plots, 
-e.g. $\Te = 622$~eV and $\vmag_{q_1^{max}} = 3.24~\vth = 3.39\times10^9$~cm/s 
-at the~maximum point and $\Te = 192$~eV and 
-$\vmag_{q_1^{max}} = 5.95~\vth = 3.46\times10^9$~cm/s at the~preheat point
-in \figref{fig:C7_AladinCalder_case5}.
+%Yet another observation can be made when analysing the~anisotropic term $q_1$ 
+%in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}. 
+%When comparing the~kinetics at maximum and 
+%preheat points, both velocity maxima of the~EDF correspond to approximately 
+%same electron velocity. This means that the~electrons responsible for 
+%the~flux in the~preheat region are those flux dominating electrons 
+%from the~maximum point. This provides an~important information
+%about the~microscopic motion of electrons on the~nonlocal spatial scale, i.e. 
+%a~quantification how far the~fast electrons from the~heat flux maximum 
+%are transported before being slowed down significantly. 
+%Notice that different reference temperatures and $\vth$ are used 
+%in the~maximum and preheat plots, 
+%e.g. $\Te = 622$~eV and $\vmag_{q_1^{max}} = 3.24~\vth = 3.39\times10^9$~cm/s 
+%at the~maximum point and $\Te = 192$~eV and 
+%$\vmag_{q_1^{max}} = 5.95~\vth = 3.46\times10^9$~cm/s at the~preheat point
+%in \figref{fig:C7_AladinCalder_case5}.
 
 \begin{comment} % Simulations setup.
 In every run of AP1 we used 250~velocity groups in order to avoid

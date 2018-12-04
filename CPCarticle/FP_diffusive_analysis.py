@@ -721,8 +721,8 @@ qC7_AladinZ2 = np.array([3.2e13, 1.97e13, 9.11e12, 3.22e12, 1.69e12, 8.46e11, 1.
 
 #plt.plot(np.log10(Kn_AladinZ2), qC7_AladinZ2 / qSH_AladinZ2, 'b*', markersize=ms, label=r'$q^{Z=2}$AP1')
 #plt.plot(np.log10(Kn_AladinZ2), q_AladinZ2 / qSH_AladinZ2, 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
-plt.plot(np.log10(Kn_AladinZ2), np.log10(qC7_AladinZ2 / qSH_AladinZ2), 'b*', markersize=ms, label=r'$q^{Z=2}$AP1')
-plt.plot(np.log10(Kn_AladinZ2), np.log10(q_AladinZ2 / qSH_AladinZ2), 'rv', markersize=ms, label=r'$q^{Z=2}$Aladin')
+plt.plot(np.log10(Kn_AladinZ2), np.log10(qC7_AladinZ2 / qSH_AladinZ2), 'b*', markersize=ms, label=r'$q_h^{Z=2}$AP1')
+plt.plot(np.log10(Kn_AladinZ2), np.log10(q_AladinZ2 / qSH_AladinZ2), 'rv', markersize=ms, label=r'$q_h^{Z=2}$Aladin')
 
 Kn_Impact = np.array([4.9e-2, 3.8e-2, 1.9e-2, 1.3e-3])
 q_Impact = np.array([1.104e13, 9.8e12, 6.45e12, 6.98e11])
@@ -731,7 +731,7 @@ qC7_Impact = np.array([9.78e12, 8.82e12, 6.25e12, 6.88e11])
 
 #plt.plot(np.log10(Kn_Impact), q_Impact / qSH_Impact, 'go', markersize=ms, label=r'$q^{Z=2}$Impact')
 #plt.plot(np.log10(Kn_Impact), qC7_Impact / qSH_Impact, 'b*', markersize=ms)
-plt.plot(np.log10(Kn_Impact), np.log10(q_Impact / qSH_Impact), 'go', markersize=ms, label=r'$q^{Z=2}$Impact')
+plt.plot(np.log10(Kn_Impact), np.log10(q_Impact / qSH_Impact), 'go', markersize=ms, label=r'$q_h^{Z=2}$Impact')
 plt.plot(np.log10(Kn_Impact), np.log10(qC7_Impact / qSH_Impact), 'b*', markersize=ms)
 
 Kn_Calder = np.array([3.5e-2])
@@ -741,7 +741,7 @@ qC7_Calder = np.array([9.2e12])
 
 #plt.plot(np.log10(Kn_Calder), q_Calder / qSH_Calder, 'ks', markersize=ms, label=r'$q^{Z=2}$Calder')
 #plt.plot(np.log10(Kn_Calder), qC7_Calder / qSH_Calder, 'b*', markersize=ms)
-plt.plot(np.log10(Kn_Calder), np.log10(q_Calder / qSH_Calder), 'ks', markersize=ms, label=r'$q^{Z=2}$Calder')
+plt.plot(np.log10(Kn_Calder), np.log10(q_Calder / qSH_Calder), 'ks', markersize=ms, label=r'$q_h^{Z=2}$Calder')
 plt.plot(np.log10(Kn_Calder), np.log10(qC7_Calder / qSH_Calder), 'b*', markersize=ms)
 
 Kn_AladinZ10 = np.array([5.1e-3, 3.5e-2])

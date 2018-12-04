@@ -453,6 +453,7 @@ Ext3color = 'y'
 Tecolor = 'b'
 labelC7 = args.labelUseC7 #'AWBS-P1'
 labelL = r'Lorentz$^*$'
+#labelL = 'SH'
 labelSH = 'SH'
 
 lwthick = 2
