@@ -95,12 +95,12 @@ cd $DIRanalysis
 ## FLUX MAXIMUM DISTRIBUTION
 if [ "$NAME" == "maximum" ]
 then
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB -SH -lD1 Aladin -hftit 'Heat flux Z = 1' -ktit 'Kinetics at maximum point' --pltshow --pltTe -xp --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -lD2 SNB -Tpts 0.058 0.046
+    python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 --labelFluxExt1 Aladin -lF2 SNB -SH -lD1 Aladin -hftit 'Heat flux Z = 1' -ktit 'Kinetics at maximum point (triangle)' --pltshow --pltTe -xp --plotmultvTh 7 --Efield --labelEfieldExt1 Aladin -lD2 SNB -Tpts 0.058 0.046
 fi
 ## NONLOCAL DISTRIBUTION
 if [ "$NAME" == "nonlocal" ]
 then
-python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB -hftit 'Heat flux Z = 1' -ktit 'Kinetics at preheat point' -lD1 Aladin -lD2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 --Efield --labelEfieldExt1 Aladin
+    python C7_analysis.py -N $NPROC -s $SIGMA -cl $CL -fs 18 --labelUseC7 AP1 -lF1 Aladin -lF2 SNB -hftit 'Heat flux Z = 1' -ktit 'Kinetics at preheat pointi (circle)' -lD1 Aladin -lD2 SNB --pltshow --pltTe -xp -SH --plotmultvTh 14 -Tpts 0.058 0.046 --Efield --labelEfieldExt1 Aladin
 fi
 
 # Safe figs.

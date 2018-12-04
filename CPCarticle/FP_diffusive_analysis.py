@@ -29,12 +29,12 @@ def unite_legends(axes):
         l.extend(tmp[1])
     return h, l
 
-## Fundamental physical constants in cgs. 
+## Fundamental physical constants in cgs.
 kB = 1.6022e-12
 me = 9.1094e-28
 qe = 4.8032e-10
 
-def vTh(T): 
+def vTh(T):
     return (kB*T/me)**0.5
 def fM(n, T, v):
     return n/(vTh(T)**3.0*(2.0*pi)**1.5)*exp(-v**2.0/2.0/vTh(T)**2.0)
@@ -47,7 +47,7 @@ def dfMdz(n, T, dndz, dTdz, v):
 sigma = 8.1027575e17 ## Matching the SH diffusive flux.
 ## Coulomb logarithm.
 coulLog = 7.09
-coulLogLv = 7.45 
+coulLogLv = 7.45
 
 
 ## Some default values.
@@ -65,7 +65,7 @@ GammaLv_ee = sigma * coulLogLv
 
 lambda_ei = vTh(Te)**4.0 / Gamma_ee / ne / (Zbar + 1.0)
 Kn_ei = lambda_ei * dTedz / Te
-print("Kn_ei: ", Kn_ei) 
+print("Kn_ei: ", Kn_ei)
 
 import argparse
 ## Create parser object.
@@ -86,9 +86,9 @@ if (args.sigma):
 if (args.Zbar):
    Zbar = args.Zbar
 ###############################################################################
-########### Analysis of diffusive asymptotic of AWBS model #################### 
+########### Analysis of diffusive asymptotic of AWBS model ####################
 ###############################################################################
-############################################################################### 
+###############################################################################
 
 ###############################################################################
 #### FP equation diffusive regime #############################################
@@ -99,11 +99,11 @@ def RosenbluthPotentialsF0(vs, f0s):
     ## Define Rosenbluth potential arrays.
     I0 = np.zeros(N)
     I2 = np.zeros(N)
-    Jm1 = np.zeros(N) 
+    Jm1 = np.zeros(N)
     ## Integrate Rosenbluth potentials with zero starting values.
     ## Ascending potentials.
     I0[0] = 0.0
-    I2[0] = 0.0 
+    I2[0] = 0.0
     for i in range(1, N):
         #print i
         I0[i] = I0[i-1] + (f0s[i-1]*vs[i-1]**2.0 + f0s[i]*vs[i]**2.0) * dv / 2.0
@@ -120,8 +120,8 @@ def RosenbluthPotentialsF0(vs, f0s):
     ## The raight scale.
     I0 = 4.0 * pi * I0
     I2 = 4.0 * pi * I2
-    Jm1 = 4.0 * pi * Jm1        
-    return I0, I2, Jm1 
+    Jm1 = 4.0 * pi * Jm1
+    return I0, I2, Jm1
 
 def RosenbluthPotentialsF1(vs, f1s):
     ## Find number of cells and use equidistant velocity step.
@@ -130,11 +130,11 @@ def RosenbluthPotentialsF1(vs, f1s):
     ## Define Rosenbluth potential arrays.
     I1 = np.zeros(N)
     I3 = np.zeros(N)
-    Jm2 = np.zeros(N) 
+    Jm2 = np.zeros(N)
     ## Integrate Rosenbluth potentials with zero starting values.
     ## Ascending potentials.
     I1[0] = 0.0
-    I3[0] = 0.0 
+    I3[0] = 0.0
     for i in range(1, N):
         #print i
         I1[i] = I1[i-1] + (f1s[i-1]*vs[i-1]**3.0 + f1s[i]*vs[i]**3.0) * dv / 2.0
@@ -152,7 +152,7 @@ def RosenbluthPotentialsF1(vs, f1s):
     ## The raight scale.
     I1 = 4.0 * pi * I1
     I3 = 4.0 * pi * I3
-    Jm2 = 4.0 * pi * Jm2        
+    Jm2 = 4.0 * pi * Jm2
     return I1, I3, Jm2
 
 def FPcoefficientsF0(vs, f0s):
@@ -189,7 +189,7 @@ def FPtermsF0F1(vs, f0s, f1s, df0dzs, Ez, Gamma):
 
 def FPtermsFMF1(vs, fMs, f1s, df0dzs, Ez, T, Gamma):
     ## Compute Rosenbluth potentials using f1.
-    I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s) 
+    I1, I3, Jm2 = RosenbluthPotentialsF1(vs, f1s)
     ## Compute the explicit term of FP using fM and f1.
     d2fMdv2If1_dfMdvIf1 = - fMs * 1.0 / 15.0 / vs / vTh(T)**2.0 * (3.0 * vs**2.0 / vTh(T)**2.0 * (I3 + Jm2) - 5.0 * (I1 + Jm2))
     # Advection part of FP using fM.
@@ -201,7 +201,7 @@ def AllFokkerPlanckEquationTerms(vs, f0s, f1s, df0dzs, Ez, Gamma):
     ## The Fokker-Planck equation for electrons in diffusive regime
     ## can be written as
     ##
-    ## C2(f0) d2f1dv2 + C1(f0) * df1dv + (C0e(f0) + Ci) * f1 = 
+    ## C2(f0) d2f1dv2 + C1(f0) * df1dv + (C0e(f0) + Ci) * f1 =
     ## B2(f1) * d2f0dv2 + B1(f1) * df0dv + v * df0dz + Ez * df0dv
     ##
     ## Compute the coefficients of f1 terms.
@@ -228,7 +228,7 @@ def bdf_cf_equals_d(vs, b, c, d, f0):
     f = np.zeros(N)
     ## Set initial conditions for infinity->0 integration.
     f[N-1] = f0
-    # Perform backward Euler integration.   
+    # Perform backward Euler integration.
     for i in range(N-2, -1, -1):
         bb = b[i+1]
         cc = c[i+1]
@@ -236,7 +236,7 @@ def bdf_cf_equals_d(vs, b, c, d, f0):
         #bb = (b[i] + b[i+1]) / 2.0
         #cc = (c[i] + c[i+1]) / 2.0
         #dd = (d[i] + d[i+1]) / 2.0
-        f[i] = (dd + bb / dv * f[i+1]) / (cc + bb / dv) 
+        f[i] = (dd + bb / dv * f[i+1]) / (cc + bb / dv)
     return f
 
 def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
@@ -255,23 +255,23 @@ def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
     ## Set initial conditions for infinity->0 integration.
     f[N-1] = f0
     df[N-1] = df0
-    # Perform backward Euler integration.   
+    # Perform backward Euler integration.
     for i in range(N-2, -1, -1):
         aa = (a[i] + a[i+1]) / 2.0
         bb = (b[i] + b[i+1]) / 2.0
         cc = (c[i] + c[i+1]) / 2.0
         dd = (d[i] + d[i+1]) / 2.0
         df[i] = (dv * dd + aa * df[i+1] - dv * cc * f[i+1]) / (dv**2.0 * cc + aa + dv * bb)
-        f[i] = (dv * dd + aa * df[i+1] - (aa + dv * bb) * df[i]) / dv / cc 
+        f[i] = (dv * dd + aa * df[i+1] - (aa + dv * bb) * df[i]) / dv / cc
     return f, df
 #### FP equation diffusive regime #############################################
 ###############################################################################
 
 ###############################################################################
-########### AWBS diffusive asymptotic ######################################### 
+########### AWBS diffusive asymptotic #########################################
 #def AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
 #    N = len(v)
-#    f1 = np.zeros(N) 
+#    f1 = np.zeros(N)
 #    j1 = np.zeros(N)
 #    q1 = np.zeros(N)
 #    f1[N-1] = f0
@@ -281,13 +281,13 @@ def ad2f_bdf_cf_equals_d(vs, a, b, c, d, f0, df0):
 #        mfpei = vp**4.0 / Gamma_ee / ne / Z
 #        rhs = corr * Z * mfpei / (corr * Z + 1.0) * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
 #        rhs = rhs * fM(ne, Te, vp)
-#        f1[i-1] = (f1[i] * vp / (corr * Z + 1.0) / dv - rhs) /  (1.0 + vp / (corr * Z + 1.0) / dv) # ee iso 
+#        f1[i-1] = (f1[i] * vp / (corr * Z + 1.0) / dv - rhs) /  (1.0 + vp / (corr * Z + 1.0) / dv) # ee iso
 #        j1[i-1] = f1[i-1] * vp**3.0
 #        q1[i-1] = f1[i-1] * vp**5.0
 #    return f1, j1, q1
 def _AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     f1[N-1] = f0
@@ -297,13 +297,13 @@ def _AWBS_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
         mfpe = vp**4.0 / Gamma_ee / ne
         rhs = corr * mfpe / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
         rhs = rhs * fM(ne, Te, vp)
-        f1[i-1] = (- f1[i] / dv + rhs) /  (- (corr * Z + 1.) / vp - 1. / dv) 
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (corr * Z + 1.) / vp - 1. / dv)
         j1[i-1] = f1[i-1] * vp**3.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
 def HighVelocity_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     f1[N-1] = f0
@@ -313,61 +313,61 @@ def HighVelocity_distribution(v, f0, ne, Te, gradTe, Z, E, Gamma_ee, corr):
         mfpe = vp**4.0 / Gamma_ee / ne
         rhs = corr * mfpe / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - E / vTh(Te)**2.0)
         rhs = rhs * fM(ne, Te, vp)
-        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + 1. / 2.) / vp - 1. / dv) 
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + 1. / 2.) / vp - 1. / dv)
         j1[i-1] = f1[i-1] * vp**3.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
 
-## Correct AWBS diffusive limit distribution calculation! 
+## Correct AWBS diffusive limit distribution calculation!
 ## Using appropriate explicit values of corr_nu and corr_E.
 def AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0):
-    # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr. 
-    # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 = 
+    # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr.
+    # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 =
     # dfMdz + qe * E / me / v * dfMdv
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     # Integration starts from zero particle density for velocity -> infinity.
-    f0 = 0.0 
+    f0 = 0.0
     f1[N-1] = f0
     for i in range(N-1, 0, -1):
         dv = v[i] - v[i-1]
-        vp = v[i-1]  
+        vp = v[i-1]
         mfpe = vp**4.0 / Gamma_ee / ne
         rhs = mfpe / corr_nu / vp * ((vp**2.0 / 2.0 / vTh(Te)**2.0 - 1.5) * gradTe / Te - corr_E * E / vTh(Te)**2.0)
         rhs = rhs * fM(ne, Te, vp)
-        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + corr_nu) / corr_nu / vp - 1. / dv) 
+        f1[i-1] = (- f1[i] / dv + rhs) /  (- (Z + corr_nu) / corr_nu / vp - 1. / dv)
         j1[i-1] = f1[i-1] * vp**3.0
-        q1[i-1] = f1[i-1] * vp**5.0 
+        q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
 
 ## AWBS distribution calculation in order to seek for j=0 based on corr_E.
 def corr_E_AWBS_distribution(corr_E, v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu):
-    ## Compute the q1 AWBS distribution on velocities v. 
+    ## Compute the q1 AWBS distribution on velocities v.
     f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu, corr_E)
     ## Integrate heat flux along equidistant velocity.
     dv = v[1] - v[0]
-    j = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv    
+    j = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
     # Zero current condition.
     return j
 
-## AWBS distribution calculation in order to seek for q_AWBS = q_SH 
+## AWBS distribution calculation in order to seek for q_AWBS = q_SH
 ## based on corr_nu. The zero current condition j=0 holds.
 def corr_nu_AWBS_distribution(corr_nu, v, ne, Te, gradTe, Z, E, Gamma_ee, q_SH):
     #corr_E = 1.0
     corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu))
     #print "corr_E:", corr_E
-    ## Compute the q1 AWBS distribution on velocities v. 
+    ## Compute the q1 AWBS distribution on velocities v.
     f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu, corr_E)
     ## Integrate heat flux along equidistant velocity.
     dv = v[1] - v[0]
-    q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv    
+    q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
     return abs(q_AWBS) - abs(q_SH)
 
-## Usefull overall output from AWBS distribution calculation 
+## Usefull overall output from AWBS distribution calculation
 ## with respect to original SH1953 calculations.
-def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee): 
+def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
     ## Number of cells in velocity magnitude.
     #N = 10000
     ## Multiple of thermal velocity for min(v).
@@ -388,24 +388,24 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         print("Z:", Z)
         ## The case Z = 1 provides good distribution function in SH paper.
         ## In other cases the distribution function is not so convincing.
-        # Get the original SH heat flux. 
+        # Get the original SH heat flux.
         #f1SH1953, j1SH1953, q1SH1953 = SH_distribution(v, ne, Te, gradTe, Z, Gamma_ee)
         #q_SH1953 = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1SH1953) * dv
-        
+
         #Gamma_ee = sigma * coulLog
-        coulLog = Gamma_ee / sigma  
+        coulLog = Gamma_ee / sigma
         SHcorr = SH_corr(Z)
         ## SH computation was FP based up to Z = 4.
         if (Z > 4):
-            SHcorr = (Z + 0.24)/(Z + 4.2)  
+            SHcorr = (Z + 0.24)/(Z + 4.2)
         q_SH = - SHcorr * 1.31e10 / coulLog / Z * Te**2.5 * gradTe
         #print "q_SH1953:", q_SH1953
-        #print "q_SH:", q_SH 
+        #print "q_SH:", q_SH
         ## Find appropriate AWBS corr_nu matching the SH heat flux along j=0.
         corr_nu =  optimize.brentq(corr_nu_AWBS_distribution, 0.01, 1000.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, q_SH))
         corrs.append(corr_nu - 0.5)
-        print("corr_nu:", corr_nu) 
-       
+        print("corr_nu:", corr_nu)
+
         ## Obtain the appropriate corr_E.
         corr_E =  optimize.brentq(corr_E_AWBS_distribution, 0.1, 10.0, args=(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu))
         print("corr_E:", corr_E)
@@ -434,17 +434,17 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         print("(q_AWBS - q_SH) / q_SH:", abs((q_AWBS - q_SH) / q_SH))
 
     ## Find an analytic fit to corr_nu.
-    Z = np.linspace(1, 100, 1000)  
+    Z = np.linspace(1, 100, 1000)
     popt, pcov = curve_fit(rational2_2, Zs, corrs)
     u0 = popt[1]
     u1 = popt[0]
     l0 = popt[3]
-    l1 = popt[2]   
+    l1 = popt[2]
     print("fit = (u0 + u1 * Z) / (l0 + l1 * Z), u0 ,u1, l0, l1:", u0, u1, l0, l1)
 
     plt.plot(Zs, corrs, label='corr - 0.5')
     #plt.plot(Z, (u0 + u1 * Z) / (l0 + l1 * Z), label='delta fit')
-    plt.plot(Z, (-1.11 + 0.59 * Z) / (5.15 + 8.37 * Z), label='fit') 
+    plt.plot(Z, (-1.11 + 0.59 * Z) / (5.15 + 8.37 * Z), label='fit')
 
     #plt.plot(Z, rational2_2(Z, *popt), label='fit')
 
@@ -470,7 +470,7 @@ def rational2_3(x, p0, p1, q0, q1, q2):
 def rational2_2(x, p0, p1, q0, q1):
     return rational(x, [p0, p1], [q0, q1])
 
-x = np.linspace(0, 100, 300)  
+x = np.linspace(0, 100, 300)
 y = (688.9*x + 114.4) / (x*x + 1038.0*x + 474.1)
 #y = rational(x, [688.9, 114.4], [1.0, 1038.0, 474.1])
 ynoise = y * (1.0 + np.random.normal(scale=0.01, size=x.shape))
@@ -528,7 +528,7 @@ def gammaTovergammaE(Z):
 #print gammaTovergammaE(1.0), gammaTovergammaE(2.0), gammaTovergammaE(4.0), gammaTovergammaE(16.0), gammaTovergammaE(10000.0)
 def SH_distribution(v, ne, Te, gradTe, Z, Gamma_ee):
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     ## Apply very rough interpolation between Z=1 and Z=100.
@@ -583,7 +583,7 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     max_x_vTh = 7.0
     ## Define velocity magnitude discretization.
     vs = np.linspace(min_x_vTh * vTh(Te), max_x_vTh * vTh(Te), N)
-    ## Define f1, j1, and q1 distributions of BGK. 
+    ## Define f1, j1, and q1 distributions of BGK.
     fBGK1s = np.zeros(N)
     jBGK1s = np.zeros(N)
     qBGK1s = np.zeros(N)
@@ -641,7 +641,7 @@ FindAWBSdependenceOnZ(N, ne, Te, dTedz, Gamma_ee)
 vs, fBGK1s, fAWBS1s, fSH19531s, jBGK1s, jAWBS1s, jSH19531s, qBGK1s, qAWBS1s, qSH19531s = DistributionsOfZbar(N, ne, Te, dTedz, Zbar, Gamma_ee)
 ## Perform rough evaluation for ZbarLv for BGK model.
 vsLv_rough, fLvBGK1s_rough, fLvAWBS1s, fLvSH19531s, jLvBGK1s_rough, jLvAWBS1s, jLvSH19531s, qLvBGK1s_rough, qLvAWBS1s, qLvSH19531s = DistributionsOfZbar(30, ne, Te, dTedz, ZbarLv, GammaLv_ee)
-## Perform detailed evaluation for ZbarLv for AWBS model. 
+## Perform detailed evaluation for ZbarLv for AWBS model.
 vsLv, fLvBGK1s, fLvAWBS1s, fLvSH19531s, jLvBGK1s, jLvAWBS1s, jLvSH19531s, qLvBGK1s, qLvAWBS1s, qLvSH19531s = DistributionsOfZbar(N, ne, Te, dTedz, ZbarLv, GammaLv_ee)
 
 ## Integrate currents and fluxes.
@@ -683,18 +683,18 @@ ax1.plot(vs_norm, qBGK1s, 'g-.', label=r'$q_1^{Z=1}$BGK')
 ax1.plot(vs_norm, qAWBS1s, 'r--', label=r'$q_1^{Z=1}$AWBS')
 ax1.plot(vs_norm, qSH19531s, 'k', label=r'$q_1^{Z=1}$SH')
 ax1.set_xlabel(r'$v / v_{th}$')
-ax1.set_ylabel(r'$q_1^{Z=1}$ [a.u.]')
+ax1.set_ylabel(r'$q_1^{Z=1}$ [erg/cm$^3$]')
 ax2 = ax1.twinx()
 ax2.plot(vs_norm, qLvAWBS1s, 'y--', label=r'$q_1^{Z=116}$AWBS')
 ax2.plot(vsLv_rough / vTh(Te), qLvBGK1s_rough, 'bx', label=r'$q_1^{Z=116}$Lorentz')
-ax2.set_ylabel(r'$q_1^{Z=116}$ [a.u.]')
+ax2.set_ylabel(r'$q_1^{Z=116}$ [erg/cm$^3$]')
 ax1.set_title('Distribution flux moment')
 fig.tight_layout()
 ## x-axis tight to data.
 ax1.autoscale(axis='x', tight=True)
 ## Place legends.
 ## Quite tricky manovers because of olot-time-sequence.
-handles1, labels1 = unite_legends([ax1]) 
+handles1, labels1 = unite_legends([ax1])
 handles2, labels2 = unite_legends([ax2])
 legend1 = ax2.legend(handles1, labels1, loc='upper left', fancybox=True, framealpha=0.8)
 legend2 = ax2.legend(handles2, labels2, loc='lower right', fancybox=True, framealpha=0.8)
@@ -755,7 +755,7 @@ qC7_AladinZ10 = np.array([5.19e12, 6.97e11])
 plt.title('Nonlocality variation')
 plt.xlabel(r'$\log_{10}$(Kn$^e$)')
 #plt.ylabel(r'$q/q_{SH}$')
-plt.ylabel(r'$\log_{10}(q/q_{SH})$')
+plt.ylabel(r'$\log_{10}(q_h/q_{SH})$')
 plt.legend(loc='lower left', fancybox=True, framealpha=0.8)
 plt.ylim((-2.0, 0.1))
 plt.xlim((-4.0, 0.0))
@@ -814,7 +814,7 @@ ax1.legend(loc='upper right', fancybox=True, framealpha=0.8)
 ax1.set_title('Zbar '+str(Zbar))
 plt.show()
 
-## Right hand side of the diffusive electron Fokker-Planck equation. 
+## Right hand side of the diffusive electron Fokker-Planck equation.
 d2f0dv2If1_df0dvIf1, df0dz, Edf0dv = FPtermsF0F1(vs, fMs, f1s, dfMdzs, Ez_SH, Gamma_ee)
 d = d2f0dv2If1_df0dvIf1 + df0dz + Edf0dv
 
@@ -823,7 +823,7 @@ d2fMdv2If1_dfMdvIf1, dfMdz, EdfMdv = FPtermsFMF1(vs, fMs, f1s, dfMdzs, Ez_SH, Te
 dM = 0.0 * d2fMdv2If1_dfMdvIf1 + dfMdz + EdfMdv
 
 ## All the terms of the diffusive electron Fokker-Planck equation in order to
-## analyze the importance of the derivatives of f1 with respect to v, 
+## analyze the importance of the derivatives of f1 with respect to v,
 ## which are usually omitted in FP codes.
 f = f1s
 f = 0.0 * f
@@ -870,10 +870,10 @@ plt.show()
 ###############################################################################
 
 ###############################################################################
-########### AWBS diffusive asymptotic ######################################### 
+########### AWBS diffusive asymptotic #########################################
 def solve_bweuler(v, f0, ne, Te, gradTe, Z, E):
     N = len(v)
-    f1 = np.zeros(N) 
+    f1 = np.zeros(N)
     f1[0] = f0
     for i in range(N-1):
         dv = v[i+1] - v[i]
@@ -889,7 +889,7 @@ ml_max = 10.0
 ml_min = 0.05
 ## The heat flux after integration takes the form
 ## qH = me/Zbar/sigma/coulLog*128/(2*pi)**0.5*(kB/me)**(7/2)*T**(5/2)*gradT,
-## where mfp_ei = v**4/sigma/coulLog/ni/Zbar/Zbar, 
+## where mfp_ei = v**4/sigma/coulLog/ni/Zbar/Zbar,
 ## i.e. sigma corresponds to unit charges collisions.
 corr = (688.9*Zbar + 114.4)/(Zbar**2.0 + 1038*Zbar + 474.1)
 #print "Zbar, corr:", Zbar, corr
@@ -911,7 +911,7 @@ fBGK1s = solve_bweuler(v, 0.0, ne, Te, dTedz, cmag*Zbar, Efield)
 
 """
 ###############################################################################
-########### Kinetic integration of AWBS and C7 ################################ 
+########### Kinetic integration of AWBS and C7 ################################
 ###############################################################################
 fM_analytic = np.zeros(N)
 SHf1 = np.zeros(N)
