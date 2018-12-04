@@ -254,12 +254,20 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_nonlocal_kinetics.png}
 	\end{tabular}
   \caption{  
-  Snapshot 20 ps. Top: correct steady solution of heat flux. 
-  Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
-  by Aladin and Calder. 
-  Velocity limit 4.2/4.3 $\vth$ at temperature 622.4/611.3 eV.
-  Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
-  Velocity limit 9.1/8.5 $\vth$ at temperature 192.3/202.4 eV.
+  AP1 performance in a~low $\Zbar$ heat-bath problem compared to the~VFP code 
+  Aladin (left) and the~collisionl PIC code Calder (right). 
+  The~heat flux and temperature
+  profiles at 20 ps are shown in the~top plots also for AP1 and SNB.
+  Middle and bottom plots show a~kinetic detail of the~anisotropic part
+  of EDF (its flux velocity moment) at two different spatial points. 
+  The~results of the~local Lorentz gas theory scaled by the~SH correction
+  are also shown for reference.
+  %Snapshot 20 ps. Top: correct steady solution of heat flux. 
+  %Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
+  %by Aladin and Calder. 
+  %Velocity limit 4.2/4.3 $\vth$ at temperature 622.4/611.3 eV.
+  %Bottom: correct comparison to kinetic profiles at point 580 $\mu$m 
+  %by Aladin. Velocity limit 9.1/8.5 $\vth$ at temperature 192.3/202.4 eV.
   }
   \label{fig:C7_AladinCalder_case5}
   \end{center} 
@@ -267,7 +275,6 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 
 \subsection{Heat-bath problem}  
 \label{sec:heatbath_test}
-
 AP1 is compared to Calder, Aladin, Impact, and SNB by 
 calculating the~heat flow in the~case of a~homogeneous plasma
 with a~large temperature variation
@@ -281,7 +288,6 @@ and cold bath ($T_e = 0.17$~keV) and $s$ is the~parameter of steepness.
 This test is referred to as a~simple non-linear heat-bath problem and
 originally was introduced in \cite{marocchino2013} and further investigated
 in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
-
 \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
@@ -291,12 +297,20 @@ in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_nonlocal_kinetics.png}  
     \end{tabular}
   \caption{  
-  Snapshot 12 ps. Top: correct steady solution of heat flux.  
-  Middle: correct comparison to kinetic profiles at point 460 $\mu$m by Aladin. 
-  Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
-  Bottom: correct comparison to kinetic profiles at point 580 $\mu$m by Aladin.
-  Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
-  TODO Fig reordered so change description, E field and current now in Z=10. 
+  A~moderate $\Zbar$ heat-bath problem. The~temperature profile evolved 
+  up to 12 ps by Aladin.
+  Top plots show heat flux profiles and electric fields by AP1, Aladin, 
+  and SNB. The~resulting current of SNB using explicitly the~local electric 
+  field $\E_L$ is also shown. Botom plots show a~kinetic detail of
+  the~anisotropic part of EDF (its flux velocity moment) at two different 
+  spatial points by AP1 and SNB compared to Aladin. 
+  %Snapshot 12 ps. Top: correct steady solution of heat flux.  
+  %Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
+  %by Aladin. 
+  %Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
+  %Bottom: correct comparison to kinetic profiles at point 580 $\mu$m 
+  %by Aladin. Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
+  %TODO Fig reordered so change description, E field and current now in Z=10. 
   }
   \label{fig:C7_Aladin_case3}
   \end{center} 
@@ -432,20 +446,27 @@ the~length scale given by the~slope of the~temperature profile
 $s \in (1/2500, 1/25) \mu$m. Results showing the~heat flux maximum 
 of an~extensive set of simulations of
 varying Kn$^e$ is shown in \figref{fig:Kn_results}.
- 
-\begin{figure}[htb]
+ \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
       \includegraphics[width=\figscale\textwidth]{Kn_results.png}
     \end{tabular}
   \caption{  
-  Simulation results for the case $Z=2$ computed by AP1/Aladin/Impact/Calder.
-  Every point corresponds to the maximum heat flux in a "tanh" temperature 
-  simulation, which can be characterized by Kn. The range of 
-  $\log_{10}(\text{Kn})\in (0, -4)$ can be expressed as equivalent 
-  to the~electron density approximate range n$_e \in (1e19, 3.5e22)$ of 
-  the~50 $\mu$m slope tanh case. In the case of Kn = 0.56, 
-  $q_{Aladin} / q_{AP1}\approx 7.9$.}
+  The~heat-flux inhibition compared to the~local SH theory along varying
+  nonlocality (Kn$^e$) in the~heat bath problem. AP1 compares well to 
+  the~full kinetic simulations by Aladin, Impact, and Calder, up to 
+  Kn$^e \sim 10^{-1}$. For higher nonlocality \textit{decelerating} 
+  AP1 departs significanlty from the~reference solutions because of
+  the~electric field limiting in accordance with the~velocity limit in 
+  \tabref{tab:vlim}. 
+  %Simulation results for the case $Z=2$ computed by AP1/Aladin/Impact/Calder.
+  %Every point corresponds to the maximum heat flux in a "tanh" temperature 
+  %simulation, which can be characterized by Kn. The range of 
+  %$\log_{10}(\text{Kn})\in (0, -4)$ can be expressed as equivalent 
+  %to the~electron density approximate range n$_e \in (1e19, 3.5e22)$ of 
+  %the~50 $\mu$m slope tanh case. In the case of Kn = 0.56, 
+  %$q_{Aladin} / q_{AP1}\approx 7.9$.
+  }
   \label{fig:Kn_results}
   \end{center} 
 \end{figure}
@@ -458,14 +479,14 @@ refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5}
 and \figref{fig:C7_Aladin_case3}. 
 We have also found 
 an~important observation related to the~electron-electron collisions.
-The~force acting on electrons is dominated by
-electric field above the~velocity limit
+The~stopping force is dominated by
+the~electric field for electrons with velocity above the~velocity limit
 \begin{equation}
   \vmag_{lim} = \sqrt{\frac{\sqrt{3}\Gamma\me}{2\qe}\frac{n_e}{|\E|}}
   ,
   \label{eq:v_limit}
 \end{equation}
-and this limit drops 
+as shown in \appref{app:AP1limit} and this limit drops 
 down significantly with increasing Knudsen number as can be seen 
 in \tabref{tab:vlim}. 
 As a~consequence, the~electrons responsible for the~heat flux
@@ -564,9 +585,9 @@ of AP1, Impact, and SNB are also shown.
     \end{tabular}
   \caption{
   Heat flux profiles by AP1, Impact and SNB along 
-  the~electron temperature $\Te$, electron density $\ed$, 
-  and ionization $\Zbar$ profiles in a~laser-heated gadolinium hohlraum 
-  containing a helium gas-fill.
+  the~electron temperature $\Te$ and electron density $\ed$
+  profiles in a~laser-heated gadolinium hohlraum 
+  with a~helium gas-fill.
   }
   \label{fig:Gd_VFP_10ps_heatflux}
   \end{center} 
