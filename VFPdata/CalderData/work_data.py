@@ -75,11 +75,18 @@ Q_ = intOmega * dv * sum(f1_Cal)
 print("Q_460 [erg/s/cm2], Q_:", 1e7 * Q_460, Q_)
 print("scale:", scale)
 
-np.savetxt('Calder_f1_Z1_ne5e20_tanh50_20ps_460mu.txt', np.transpose([v_Cal, f1_Cal]))
+filename_Al = 'Aladin_cgs_f1z1_20ps_460mu.txt'
+v_Al, f1_Al = getdata(filename_Al)
+filename_Cald = 'Calder_cgs_f1z1_20ps_460mu.txt'
+v_Cald, f1_Cald = getdata(filename_Cald)
 
-plt.plot(x_Cal, f1_Cal, label='f1-460-Calder')
+plt.plot(v_Al, f1_Al, label='f1-460-Aladin')
+plt.plot(v_Cald, f1_Cald, label='f1-460-Calder')
+plt.plot(v_Cal, f1_Cal, label='f1-460-CalderTMP')
 plt.legend()
 plt.show()
+
+np.savetxt('Calder_f1_Z1_ne5e20_tanh50_20ps_460mu.txt', np.transpose([v_Cald, f1_Cald]))
 
 filename_Cal = 'Calder_f1z1_20ps_580mu.txt'
 x_Cal, f1_Cal = getdata(filename_Cal)
@@ -96,11 +103,18 @@ Q_ = intOmega * dv * sum(f1_Cal)
 print("Q_580 [erg/s/cm2], Q_:", 1e7 * Q_580, Q_)
 print("scale:", scale)
 
-np.savetxt('Calder_f1_Z1_ne5e20_tanh50_20ps_580mu.txt', np.transpose([v_Cal, f1_Cal]))
+filename_Al = 'Aladin_cgs_f1z1_20ps_580mu.txt'
+v_Al, f1_Al = getdata(filename_Al)
+filename_Cald = 'Calder_cgs_f1z1_20ps_580mu.txt'
+v_Cald, f1_Cald = getdata(filename_Cald)
 
-plt.plot(x_Cal, f1_Cal, label='f1-580-Calder')
+plt.plot(v_Al, f1_Al, label='f1-580-Aladin')
+plt.plot(v_Cald, f1_Cald, label='f1-580-Calder')
+plt.plot(v_Cal, f1_Cal, label='f1-580-CalderTMP')
 plt.legend()
 plt.show()
+
+np.savetxt('Calder_f1_Z1_ne5e20_tanh50_20ps_580mu.txt', np.transpose([v_Cald, f1_Cald]))
 
 ### Z=10
 filename_Cal = 'Calder_Te_Z10_ne5e20_tanh50_12ps.txt'
