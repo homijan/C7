@@ -254,14 +254,17 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Calder_case5_nonlocal_kinetics.png}
 	\end{tabular}
   \caption{  
-  AP1 performance in a~low $\Zbar$ heat-bath problem compared to the~VFP code 
+  AP1 performance in a~low-$\Zbar$ heat-bath problem compared to the~VFP code 
   Aladin (left) and the~collisionl PIC code Calder (right). 
   The~heat flux and temperature
   profiles at 20 ps are shown in the~top plots also for AP1 and SNB.
   Middle and bottom plots show a~kinetic detail of the~anisotropic part
   of EDF (its flux velocity moment) at two different spatial points. 
   The~results of the~local Lorentz gas theory scaled by the~SH correction
-  are also shown for reference.
+  are also shown for reference. An~excellent agreement in EDF between
+  AP1 (AWBS collision operator \eqref{eq:AWBS_model}) 
+  and Calder (full Landau-Fokker-Planck collision operator 
+  \eqref{eq:LFP_model}) is observed.
   %Snapshot 20 ps. Top: correct steady solution of heat flux. 
   %Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
   %by Aladin and Calder. 
@@ -297,7 +300,7 @@ in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
       \includegraphics[width=\figscale\textwidth]{../VFPdata/C7_Aladin_case3_nonlocal_kinetics.png}  
     \end{tabular}
   \caption{  
-  A~moderate $\Zbar$ heat-bath problem. The~temperature profile evolved 
+  A~moderate-$\Zbar$ heat-bath problem. The~temperature profile evolved 
   up to 12 ps by Aladin.
   Top plots show heat flux profiles and electric fields by AP1, Aladin, 
   and SNB. The~resulting current of SNB using explicitly the~local electric 
@@ -369,41 +372,44 @@ $\Te$ profile computed by Aladin and the~top right plot of
 AP1, and SNB corresponding to the~temperature $\Te$ profile computed by Calder.
 Both kinetic simulations by Aladin and Calder evolved up to 20 ps for 
 $\Zbar = 1$. 
-%Very good match of $q_1$ can be seen between 
-%AP1 and Calder at the~triangle point of the~temperature profile in the~middle 
-%plot and $q_1$ at the~circle point of the~temperature profile is shown 
-%in the~bottom plot. 
-The~anisotropic part of EDF, in particular the~heat flux velocity moment $q_1$, 
+The~anisotropic part of EDF, in particular, the~heat flux velocity moment $q_1$, 
 at the~heat flux maximum (triangle point) and at~the~nonlocal preheat region 
-(circle point) computed by AP1 and SNB, and by Aladin and Calder are shown 
-in the~middle. %in \figref{fig:C7_AladinCalder_case5} for $\Zbar = 1$. 
-The~AP1 EDF profiles provide a~reasonable match to 
-the~reference green line EDF by Aladin on the~left. It should be noted, 
-that the~difference in $q_1$ resembles to the~low $\Zbar$ trend
-shown in \figref{fig:q1s_summary} where AP1 corresponds to AWBS and Aladin to
-BGK curve. This may suggest that AP1 tends 
-to compute better kinetics in this low $\Zbar$ case then 
-the~isotropic collision operator
-\eqref{eq:C0_collision_operator} used by Aladin and Impact.
-\textit{In general, Calder exhibits a~lack of 
-return current (negative part of $q_1$), i.e. the~electron number is not 
-exactly conserved. This probably arises from the~nature of the~Monte Carlo 
-method used to solve \eqref{eq:LBB_model} and its sensitivity to Gauss law
-of charge conservation.}
+(circle point) computed by AP1 and SNB for the~temperature profiles by 
+Aladin and Calder, can be used as a~detailed comparison of four conceptually
+different models: the~full anisotropy form \eqref{eq:LFP_model} of 
+the~FP collision operator (Calder); the~isotropic form 
+\eqref{eq:C0_collision_operator} of the~FP collision operator (Aladin);
+the~simplified linear form \eqref{eq:AWBS_model} of the~FP collision operator
+(AWBS in AP1); 
+the~nonlocal electron transport model \eqref{eq:SNB_model} (SNB). 
+Excellent match of $q_1$ can be seen between 
+AP1 and Calder at the~both spatial points. On the~other hand, 
+the~AP1 profiles of EDF provide a~reasonable match to Aladin too, however,
+one observes a~deviation
+%, especially in the~middle plot, 
+which resembles to the~low $\Zbar$ trend shown in \figref{fig:q1s_summary}, 
+where AP1 corresponds to AWBS and Aladin to BGK curves. To summarize,
+various FP-like codes are compared in detail, in particular collisional PIC 
+for the first time, and all show a~very good match. 
+Furthermore, the~effect of the~anisotropy in the~collision model, 
+captured by AP1 and neglected by Aladin and Impact, proves to be important
+in the~low-$\Zbar$ plasma. 
 
-In the~top plot of \figref{fig:C7_Aladin_case3} we show heat flux profiles
-computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$ profile 
-computed by Aladin up to 12 ps for $\Zbar = 10$. Corresponding profiles of 
+In the~case $\Zbar = 10$, we show heat flux profiles
+computed by Aladin, AP1, and SNB corresponding to the~temperature $\Te$
+profile computed by Aladin up to 12 ps 
+in the~top plot of \figref{fig:C7_Aladin_case3}. 
+Corresponding profiles of 
 a~self-consistently calculated electric fields by Aladin and AP1 
 (using the~nonlocal Ohm's law) are shown in the~higher middle plot.
 Also the~local theory based electric field $\E_L$ used by SNB is shown.
-The~EDFs $q_1$ at the~point of the~approximate heat flux maximum (triangle) of
+EDF at the~point of the~approximate heat flux maximum (triangle) of
 the~temperature profile is shown in the~lower middle plot, 
 where a~very precise match between AP1 and Aladin can be observed, 
 and $q_1$ at the~preheat point (circle) of the~temperature profile is shown 
-in the~bottom plot. In the~latter case
-AP1 shows a~very similar properties as Aladin with a~difference in magnitude
-corresponding to a~higher heat flux computed by AP1 at this point. 
+in the~bottom plot. In the~latter case AP1 shows a~very similar properties 
+as Aladin with a~difference in magnitude corresponding to a~higher 
+heat flux computed by AP1 at this point. 
 
 SNB shows very good results of the~heat flux profile in all three cases, 
 i.e. compared to Aladin and Calder in \figref{fig:C7_AladinCalder_case5} 
@@ -615,10 +621,10 @@ of the~plasma up to the~point of the~heat flux maximum given by Impact
 importantly, the~opposite sign of the~heat flux divergence compared to Impact
 (and AP1) in the~steep gradients region close to the~material interface. 
 In the~preheat region SNB performs 
-very well same as AP1. Nevertheless, it is important to stress that 
+very well. Nevertheless, it is important to stress that 
 SNB required only 25 velocity groups compared to 250 velocity groups used by
 Impact and AP1 for this ICF relevant plasma conditions, thus making it a~very
-efficient modeling approach even though its description of kinetics is rather
+efficient modeling approach though its description of kinetics is rather
 qualitative.
 %We also attribute this to the~lack of proper action of the~electric field 
 %(the~directional effect) in the~SNB approach.
