@@ -1,3 +1,13 @@
+# The names of the files are self explaining.
+# Starting with the name of the code, which computed the temperature profile.
+# Then other files start with this code's name, where heat flux or 
+# the distribution function is computed along the temperature profile.
+# An example.
+# Temperature profile:
+# Calder_Te_Z1_ne5e20_tanh50_20ps.txt
+# Corresponding heat flux profile by C7:
+# CalderC7_Qx_Z1_ne5e20_tanh50_20ps.txt
+
 # Units used:
 # standard plasma profiles:
 x [microns]
