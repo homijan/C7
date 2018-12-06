@@ -1,9 +1,9 @@
-\section{The AWBS nonlocal transport model of electrons}
+\section{AWBS nonlocal transport model of electrons}
 \label{sec:AWBSnonlocal}
 
 In order to define a~nonlocal transport model of electrons, 
 we use the~AWBS collision operator and the~P1 angular 
-discretization of the~electron distribution function
+approximation of the~electron distribution function
 \begin{equation}
   \tilde{\ft}(\vect{x}, \vn, \vmag) = 
   \fzero(\vect{x}, \vmag) + \vn\cdot\fone(\vect{x}, \vmag) , 
@@ -55,8 +55,6 @@ electric current and heat flux due to the~motion of electrons
   \vect{q}_h = \frac{4\pi}{3}\frac{\me}{2} \int \vmag^3 \fone \vmag^2\dI\vmag,
   \nonumber
 \end{equation}
-where $\dI\tilde{\vmag} = \vmag^2\dI\vmag$ 
-the~spherical coordinates metric,
 are based on corresponding velocity moments (integrals) of the~first angular 
 moment of EDF. Consequently, the~explicit formula for the~first angular moment
 from \eqref{eq:AP1f1} 
@@ -77,7 +75,7 @@ $\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero
 
 \subsection{Nonlocal Ohm's Law}
 \label{sec:Efield}
-The~expression \eqref{eq:f1_explicit} becomes extremely useful when used
+Expression \eqref{eq:f1_explicit} is used
 to describe the~electron fluid momentum, i.e. the~current velocity moment
 %\begin{equation}
 %  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2 \dI \vmag
@@ -110,11 +108,10 @@ acts on a~general vector field $\vect{g}$.
 We refer to 
 \eqref{eq:NonlocalOhm} as to the~{\bf nonlocal Ohm's law}.
 The~need for a~nonlocal Ohm's law to accurately capture magnetic field 
-advection by the~Nernst effect has previously been demonstrated 
-\cite{Luciani85, Ridgers08, Brodrick18}, although a~full investigation 
-of how well our new Ohm's law captures this is beyond 
-the~scope of this article. 
-The~proper high $\Zbar$ ($\nue \ll \nuei$) local asymptotic to 
+advection due to the~Nernst effect has been demonstrated 
+\cite{Luciani85, Ridgers08, Brodrick18}. A~full investigation 
+of this new Ohm's law is beyond the~scope of this article. 
+The~high $\Zbar$ ($\nue \ll \nuei$) local asymptotic to 
 the~standard Ohm's law  
 can be found when $\fzero\rightarrow\fM$ and weak magnetization 
 ($\omegaB \ll \nuei$) is considered. Then \eqref{eq:NonlocalOhm} simplifies to
@@ -139,7 +136,7 @@ which can be directly compared to the~local fluid theory
   ,
   \label{eq:GeneralOhm} 
 \end{equation}
-while addressing properly the~local electric field $\E_{l}$ given by
+where the~local electric field $\E_{l}$ is given by
 the~pressure $p_e = \ed \kB \Te$,
 the~thermal force $\vect{R}_{\Te} = - \frac{3}{2} \ed \kB \nabla \Te$ 
 and the~local electrical conductivity 
@@ -162,9 +159,8 @@ based on \eqref{eq:NonlocalOhm}.
 The~local dependence of the~AP1 current \eqref{eq:AsymptoticOhm} 
 on electric field and gradients of $\ed$ and $\Te$ clearly demonstrates, 
 that \eqref{eq:GeneralOhm} is a~local version of \eqref{eq:NonlocalOhm}.
-This also implies that \eqref{eq:NonlocalOhm} provides a~very important 
-physics related to the~magnetic field source in terms of nonlocal 
-Biermann battery,
+This also implies that \eqref{eq:NonlocalOhm} provides 
+a~magnetic field source in terms of nonlocal Biermann battery,
 since the~curl on the~electric field 
 \eqref{eq:GeneralOhm} gives
 \begin{equation}
@@ -175,15 +171,14 @@ since the~curl on the~electric field
   .
   \label{eq:NonlocalBiermann}
 \end{equation}
-The~nonlocal Biermann battery equivalent \eqref{eq:NonlocalBiermann} 
+The~nonlocal Biermann battery effect \eqref{eq:NonlocalBiermann} 
 can lead to a~spontaneous magnetic field generation under uniform 
 density plasma profile as has been shown in \cite{Kingham_PRL2002}.
 %even in the~collisional case not considered PIC simulations
 
 A~local version of the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} 
-compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} when
-a~magnetic field is applied would require a~much more delicate analysis and 
-we leave it as a~future complementary work.
+compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} with
+a~magnetic field is deferred to a~future complementary work.
 
 %It should be noted, that $\nue$-related terms in \eqref{eq:f1_explicit} 
 %have been omitted in \eqref{eq:NonlocalOhm}, 
@@ -296,17 +291,18 @@ the~SESAME equation of state tables
 
 The~magnetic and electric fields are modeled by Maxwell equations
 \begin{eqnarray}
-  \frac{1}{c}\frac{\partial \B}{\partial t} &=& - \nabla\vect{\times}\E
+  \frac{1}{c}\frac{\partial \B}{\partial t} + \nabla\vect{\times}\E &=& 0 
   ,
   \label{eq:Faraday} \\
-  \frac{1}{c}\frac{\partial \E}{\partial t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
-  \vect{j}_{(f, \E, \B)}
-  ,
+  \nabla\vect{\times}\B - \frac{4\pi}{c} \vect{j}_{(f, \E, \B)} &=& 0
+  %\frac{1}{c}\frac{\partial \E}{\partial t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
+  %\vect{j}_{(f, \E, \B)}
+  .
   \label{eq:Ampere}
   %\frac{4\pi}{c}
   %\vect{j}(f, \vect{E}) &=& \nabla\vect{\times}\vect{B} ,
 \end{eqnarray}
-where the~initial state of $\B$ and $\E$ obeys the~Gauss's law.
+%where the~initial state of $\B$ and $\E$ obeys the~Gauss's law.
 
 We have explicitly written the~current and heat flux as dependent on
 electron kinetics, represented by the~electron distribution function $f$,
@@ -321,12 +317,13 @@ and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1}.
 \subsection{Numerical Implementation of the AWBS Electron Kinetics}
 \label{sec:Numerics}
 
-It is well known, that as the~electron transport exhibits a~quasi-steady
-behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
-the~time scale of the~fluid. Consequently, Ampere's law \eqref{eq:Ampere} 
-takes a~quasi-steady form 
-$\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
-when used in hydrodynamics. Proceeding further, one can make use of 
+%It is well known, that as the~electron transport exhibits a~quasi-steady
+%behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
+%the~time scale of the~fluid. Consequently, Ampere's law \eqref{eq:Ampere} 
+%takes a~quasi-steady form 
+%$\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
+%when used in hydrodynamics. 
+Proceeding further, one can make use of 
 the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write 
 a~\textit{fully kinetic form of Ampere's law} 
 governing the~electric field $\E$
@@ -387,7 +384,7 @@ definitions since it is out of the~scope of this article.
 The~strategy of solving 
 \eqref{eq:FEMAP1f0} and \eqref{eq:FEMAP1f1} resides in integrating 
 $\ddv{\vfzero}{\vmag}$
-and $\ddv{\fone}{\vmag}$ along the~velocity magnitude. 
+and $\ddv{\fone}{\vmag}$ along the~velocity axis. 
 This is done by starting the~integration
 from the~maximum  velocity 
 ($\vmag = 7 \vth^{max}$ is a~sufficiently high limit) 

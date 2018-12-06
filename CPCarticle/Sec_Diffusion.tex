@@ -8,16 +8,15 @@
 %e.g. \eqref{eq:AWBS_model}, can lead to efficient yet relatively
 %cheap computation cost predictions of real physics.
 
-An~approximate solution to the~so-called \textit{local diffusive regime} 
-of electron transport can be found, since the~\textit{diffusive regime}
-refers to a~low anisotropy given by the~projection $\mu$. i.e.
-modeled by the~P1 form of EDF  
+An~approximate solution to the~\textit{local diffusive regime} 
+of electron transport can be found, since it
+refers to a~low anisotropy modeled by the~P1 form of EDF  
 \begin{equation}
   \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \mu \ft^1(z, \vmag),
   \label{eq:f_approximation}
 \end{equation}
 where $z$ is the~spatial coordinate along the~axis $z$, $\vmag$ 
-the~magnitude of transport velocity. 
+the~magnitude of the~electron velocity. 
 %and $\mu = \cos\phi$, where $\phi$ 
 %is the~pitch angle with respect to the~axis $z$.
 
@@ -38,8 +37,8 @@ the~magnitude of transport velocity.
 %the~more steady the~solution. 
 
 The~approximate transport solution is then obtained when analyzing 
-the~action of the~time-steady form of \eqref{eq:kinetic_equation} in 1D 
-on the~approximation \eqref{eq:f_approximation} as
+the~stationary form of \eqref{eq:kinetic_equation} in one spatial dimenstion
+(1D) 
 \begin{equation}
   \mu\left(\pdv{\tilde{f}}{z} 
   + \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{f}}{\vmag}\right) 
@@ -52,9 +51,10 @@ on the~approximation \eqref{eq:f_approximation} as
 where $C$ is a~given collision operator including both e-e and e-i collisions.
 
 The~locality of transport is the~best expressed in terms of the~Knudsen number
-$Kn=\frac{\lambda}{L}$, where $\lambda$ is the~mean free path of electron and
+$\text{Kn}=\frac{\lambda}{L}$, where $\lambda$ is the~mean free path of electron and
 $L$ the~characteristic length scale of plasma. Consequently, plasma conditions
-characterized by $Kn\ll1$ exhibit a~local transport regime. This measure then
+characterized by $text{Kn}\ll1$ correspond to a~local transport regime. 
+This measure then
 play a~very important role in our analysis, where we use the~electron-electron
 and electron-ion mean free paths $\mfpe = \Zbar\mfpei = \frac{\vmag}{\nue}$,
 and the~density and temperature plasma scale lengths 
@@ -62,14 +62,14 @@ $L_{n_e} = n_e/\pdv{n_e}{z}$ and $L_{T_e} = T_e/\pdv{T_e}{z}$.
 
 In practice, the~Knudsen number of thermal electrons is often used as 
 a~measure of the~locality of transport corresponding to given plasma conditions,
-where $Kn(\vth)<0.001$ is considered the~limit of validity of 
+where $\text{Kn}(\vth)<0.001$ is considered the~limit of validity of 
 the~local transport theory \cite{LMV_1983_7}.
 
 
-\subsection{The~BGK local diffusive electron transport}
+\subsection{BGK local diffusive electron transport}
 \label{sec:BGKDiffusiveRegime}
 
-Bhatnagar, Gross, and Krook  introduced a~very simple form
+Bhatnagar, Gross, and Krook (BGK) introduced a~very simple form
 of a~collision operator \cite{BGK_1954}
 \begin{equation}
   C_{BGK}(\tilde{\ft})
@@ -99,7 +99,7 @@ and number of particles is often violated
 %to the~left hand side \eqref{eq:LHS_kinetic_equation}, the~corresponding terms
 %in $\mu$ are governed by the~following equations
 However, the~form of \eqref{eq:BGK_model_1D} provides a~simple analytical 
-treatment of local diffusive transport regime, when used in 
+treatment of the~local diffusive transport regime, when used in 
 \eqref{eq:1D_kinetic_equation}. As a~result, one finds a~simple form of
 the~BGK isotropic and anisotropic terms of \eqref{eq:f_approximation} to be
 \begin{eqnarray}
@@ -131,7 +131,7 @@ of the~anisotropic term %\eqref{eq:f_approximation}
 The~details about the~BGK distribution function compared to other
 collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
-\subsection{The~AWBS local diffusive electron transport}
+\subsection{AWBS local diffusive electron transport}
 \label{sec:AWBSDiffusiveRegime}
 %The~main object of this work presented in Sec~\ref{sec:AWBSmodel} simplifies
 %in 1D to a~relatively simple form of the~Boltzmann transport collision operator
@@ -230,10 +230,10 @@ The~details about the~AWBS distribution function compared to other
 collision operators and a~proper evaluation of the~scaling parameter $ r_A$
 can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
-\subsection{The~Fokker-Planck local diffusive electron transport}
+\subsection{Fokker-Planck local diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
 
-The~solution to the~1D transport equation \eqref{eq:1D_kinetic_equation}
+Solution to the~1D transport equation \eqref{eq:1D_kinetic_equation}
 using the~Fokker-Planck collision operator \eqref{eq:LFP_model}
 is very ambitious, as demonstrated in 
 \cite{Chandrasekhar_RMP1943, CSR_1950, Rosenbluth_PR1957}, fortunately, one 
@@ -256,7 +256,7 @@ TABLE~III in \cite{SpitzerHarm_PR1953}, and
 $\vtwoh = \sqrt{\frac{\kB T_e}{2\me}}$.
 
 One should be aware, that the~solution of \eqref{eq:1D_kinetic_equation}
-equipped with the~full FP collision operator reveals the~importance of
+with the~full FP collision operator reveals importance of
 e-e Coulomb collisions, which is emphasized in the~$\Zbar$ dependence 
 of the~distribution function, current, heat flux, electric field, etc.
 In particular, the latter exhibits the~following dependence 
@@ -291,8 +291,8 @@ and the~heat flux $\int \frac{\me |\vv|^2}{2} \vv \tilde{\ft} \, \dI\vv$
 in plasmas
 under local diffusive conditions has been understood. By overcoming some 
 delicate aspects of the~numerical solution to \eqref{eq:LFP_model} presented 
-in the~CSR paper \cite{CSR_1950}, the~effect of electron-electron collisions
-was properly quantified and the~correct dependence on $\Zbar$ of the~heat flux
+in \cite{CSR_1950}, the~effect of electron-electron collisions
+was quantified and dependence on $\Zbar$ of the~heat flux
 $\vect{q}$ was approximated as \cite{SpitzerHarm_PR1953} 
 \begin{equation}
   \vect{q} = \xi(\Zbar)~\vect{q}_L 
@@ -397,18 +397,18 @@ error (maximum 6$\%$) of the~heat flux modeled by
 \eqref{eq:AWBS_model} vs. SH results represented by 
 \eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
 with respect to original values presented in TABLE~III in 
-\cite{SpitzerHarm_PR1953}. It is worth mentioning, that the zero current 
+\cite{SpitzerHarm_PR1953}. The zero current 
 condition was imposed in all AWBS calculations, where
 the consistent electric field yield an~equal value to the~classical Lorentz
 value \eqref{app_eq:BGK_Efield} for any $\Zbar$. 
  
-Nevertheless, the~electron-electron collisions scaling 
+The~electron-electron collisions scaling 
 \cite{Epperlein_PoFB1991} represented by 
 \eqref{eq:qSH_approximation} provides only an~integrated information about
 the~heat flux magnitude. If one takes a~closer look at the~distribution
 function itself, the~conformity of the~modified AWBS collision operator
 is even more emphasized as can be seen in \figref{fig:q1s_summary} showing
-the~flux moment in spherical coordinates of velocity
+the~flux moment in function of the~absolute value of velocity
 \begin{equation}
   q_1 = \frac{\me\vmag^2}{2}\vmag \ft^1 \vmag^2 .
   \label{eq:q1}
@@ -421,8 +421,9 @@ approaches closely the~numerical SH solution \eqref{eq:f1_SH}.
 BGK \eqref{eq:BGK_scaling} takes 
 the~Lorentz gas distribution function for any $\Zbar$ 
 only scaled by $\xi$.  
-The~AWBS collision operator \eqref{eq:AWBS_model} (red dashed line) represented
-by a~derivative with respect to $\vmag$ provides 
+The~AWBS collision operator \eqref{eq:AWBS_model} (red dashed line) 
+%represented by a~derivative with respect to $\vmag$ 
+provides 
 a~significant improvement with respect to the~SH (Fokker-Planck) solution
 \eqref{eq:f1_SH} (solid black line) compared to the~simplest BGK model 
 \eqref{eq:f1BGK_approximation} (dashed-dot blue line) 

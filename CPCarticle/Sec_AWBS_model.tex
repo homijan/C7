@@ -42,8 +42,9 @@ angles, and $\nuei = \frac{\Zbar n_e \Gamma}{\vmag^3}$ is the~e-i
 collision frequency.
 
 The~e-e collision operator needs to be linearized for efficient computation.
-Fisch introduced a~linear form of $C_{ee}$ in \cite{Fisch_RMP1987} 
-in the~high-velocity limit ($\vmag\gg\vth$) electron collision operator
+Fisch introduced in \cite{Fisch_RMP1987} a~linear form of 
+the~electron-electron collision operator  
+in the~high-velocity limit ($\vmag\gg\vth$)
 \begin{multline}
   C_{H}(\ft) = \vmag \nue \pdv{}{\vmag}\left(\ft + 
   \frac{\vth^2}{\vmag}\pdv{f}{\vmag}\right) \\
@@ -54,7 +55,7 @@ in the~high-velocity limit ($\vmag\gg\vth$) electron collision operator
 \end{multline}
 where $\nue = \frac{n_e \Gamma}{\vmag^3}$ is the~e-e collision 
 frequency and $\vth = \sqrt{\frac{\kB T_e}{\me}}$ is the~electron thermal 
-velocity.
+velocity and $\kB$ is the~Boltzmann constant.
 The~linear form of $C_{H}$ arises from an~assumption that the~fast electrons 
 predominantly interact with the~thermal (slow) electrons, 
 which is an important simplification to the~form \eqref{eq:LFP_model}.
@@ -83,7 +84,8 @@ with the~collision operator \eqref{eq:AWBS_model}
 was introduced in \cite{Sorbo_2015, Sorbo_2016}. 
 
 In \eqref{eq:AWBS_model} we have introduced a~modified e-e collision frequency
-$\nue^*$ in order to address a~proper behavior with respect to $\Zbar$, which
+$\nue^*$ in order to account for a~dependence with respect to 
+the~ion charge $\Zbar$ of the~electron thermal conductivity. This issue
 is further analyzed in Section \ref{sec:DiffusiveKinetics} and promising 
 results compared to the~full FP operator are presented.
 

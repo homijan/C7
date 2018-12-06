@@ -24,17 +24,17 @@
 
 In conclusion, we have performed a~thorough analysis of the~AWBS transport 
 equation for electrons originally introduced in \cite{Sorbo_2015} and extended
-it by adding the~nonlocal version of Ohm's law.
-After properly redefining the~e-e collission term, we have shown that the~AWBS
+it by adding a~nonlocal version of Ohm's law.
+After redefining the~e-e collission term, we have shown that the~AWBS
 simplified linear form of the~Fokker-Planck collision operator keeps
-some important kinetic properties analyzed in local diffusive regime, 
-e.g. provides a~correct dependence 
-on $\Zbar$ (BGK requires an~additional fix) and inherently includes
+important kinetic properties in local diffusive regime. 
+It provides a~correct dependence 
+on the~ion charge $\Zbar$ (BGK requires an~additional fix) and inherently includes
 the~anisotropic part of the~distribution function $\fone$, which compares
 very well to the~full Fokker-Planck operator.
 Under nonlocal transport plasma conditions, we benchmarked AP1 against 
 the~reference VFP codes Aladin and Impact, collisional PIC code Calder, 
-and we also included the~standard nonlocal approach SNB. It was a~first time
+and the~standard nonlocal approach SNB. This is a~first time quantitative
 comparison of collisional PIC and VFP codes.
 %It was shown in Sec. IV A that inclusion of this in KIPP and EIC
 %predicts a noticeably different nonlocal deviation (consider,
@@ -56,19 +56,19 @@ which is of great importance in ICF related plasmas
 Other kinetic effects as perpendicular transport, e.g heat flow
 or magnetic field advection, occurring in magnetised plasma  
 \cite{Walsh_Nernst_PRL2017} are introduced in
-AP1 via the~nonlocal Ohm's law, which correctly recovers 
-the~generelized Ohm's law in its local diffusive asymptotic.
+AP1 via the~nonlocal Ohm's law, which recovers 
+the~generelized Ohm's law in the~local diffusive asymptotic limit.
 The~importance of the~nonlocal Ohm's law becomes obvious for Kn$^e > 10^{-1}$,
 where the~stopping of nonlocal electrons is rather due to the~electric field 
 effect than the~collisional friction.
-We have also shown a~slightly new formulation of SNB based on
+We have also shown a~new formulation of SNB based on
 the~scaled BGK collision operator \eqref{eq:BGK_scaling}, which performed
-really well in the~heat-bath problem and the~corresponding heat flux profile, 
-however, its EDF output is rather qualitative which also lead to 
+well in the~heat-bath problem and the~corresponding heat flux profile. 
+However, EDF output is rather qualitative which also lead to 
 non-precise results of the~hohlraum problem.
-On the~other hand we also observed an~inaccurate kinetic results of 
+We also observed an~inaccurate kinetic results of 
 the~\textit{decelerating} AP1 computation for highly nonlocal plasma 
-conditions, which was explained by the~velocity limit applied to the~action
+conditions, which is explained by the~velocity limit applied to the~action
 of the~electric field. 
 %A~general (not only the~\textit{decelerating}) numerical
 %solution of the~AP1 model

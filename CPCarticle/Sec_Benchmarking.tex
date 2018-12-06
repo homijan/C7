@@ -104,7 +104,7 @@ C^0_{ee}(\fzero) ,
 \label{eq:P1f1_Aladin}
 \end{eqnarray}
 where only the~isotropic part of the~distribution function in 
-in the~e-e collision integral \eqref{eq:LFP_model} is used as the~following
+the~e-e collision integral \eqref{eq:LFP_model} is used
 \begin{eqnarray} 
 C^0_{ee}(\fzero) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
 \left[C(f_0)f_0+D(\fzero)\frac{\partial \fzero}{\partial \vmag}\right] ,
@@ -336,8 +336,8 @@ We performed Aladin, Impact, and Calder simulations showing an~evolution of
 temperature starting from the~initial profile \eqref{eq:T_init}. 
 Due to the~initial distribution function being approximated by a~Maxwellian,
 the~first phase of the~simulation exhibits a~transient behavior of the~heat
-flux. After several ps the~distribution adjusts properly to its asymptotic form
-and the~heat flux profiles can be usefully compared. 
+flux. After several ps the~distribution adjusts to its asymptotic form
+and the~heat flux profiles can be compared. 
 We then take the temperature profiles from Aladin/Impact/Calder and compare 
 with AP1 and SNB models which calculate a~stationary heat flow
 for a~given temperature profile. 
@@ -345,15 +345,17 @@ For all heat-bath simulations the electron density, Coulomb logarithm and
 ionisation were kept constant and uniform.
 The~Coulomb logarithm was held fixed throughout, $\lnc = 7.09$.
 
-We show AP1 results for two ionization states, namely $\Zbar= 1, 10$ 
+We show AP1 results for two ionization states, namely $\Zbar = 1$ and 
+$\Zbar = 10$ 
 in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}, 
 respectively, corresponding to a~moderate nonlocality 
 (Kn$^e \sim 10^{-2}$) leading to a~roughly 40 $\%$ inhibition compared 
 to the~local SH heat flux maximum. The~original temperature profile steepness
 $s = 1/50 \mu$m.
 It is preferable to use 
-$\text{Kn}^e = \frac{\mfpe}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
- $\text{Kn} = \frac{\mfpei}{L_{T_e}}$, because $\sqrt{\Zbar + 1}$ provides 
+$\text{Kn}^e = \frac{\mfpe(\vth)}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
+ $\text{Kn} = \frac{\mfpei(\vth)}{L_{T_e}}$, 
+because $\sqrt{\Zbar + 1}$ provides 
 a~better scaling of nonlocality with respect
 to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
 kept approximately the~same when varying $\Zbar$ in 
@@ -483,16 +485,16 @@ Kn$^e$ and that the~interval of electron velocities important for
 the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
 refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5} 
 and \figref{fig:C7_Aladin_case3}. 
-We have also found 
-an~important observation related to the~electron-electron collisions.
-The~stopping force is dominated by
+%We have also found 
+%an~important observation related to the~electron-electron collisions.
+The~stopping force in \eqref{eq:AP1f0} and \eqref{eq:AP1f1} is dominated by
 the~electric field for electrons with velocity above the~velocity limit
 \begin{equation}
   \vmag_{lim} = \sqrt{\frac{\sqrt{3}\Gamma\me}{2\qe}\frac{n_e}{|\E|}}
   ,
   \label{eq:v_limit}
 \end{equation}
-as shown in \appref{app:AP1limit} and this limit drops 
+and this limit drops 
 down significantly with increasing Knudsen number as can be seen 
 in \tabref{tab:vlim}. 
 As a~consequence, the~electrons responsible for the~heat flux
@@ -508,6 +510,11 @@ Notably, the~AP1 limited electric field effect (described in
 to VFP code Aladin for Kn$^e > 10^{-1}$. 
 For example $\vmag_{lim}\sim 4.3\vth$ for the~maximum point EDF in 
 \figref{fig:C7_AladinCalder_case5}.
+
+Unfortunately, \eqref{eq:v_limit} also leads to a~limitation of 
+the~\textit{decelerating} AP1 model, where the~strength of the~stopping/accelerating effect due to the~electric field on electrons must always 
+be kept less than the~e-e collision friciton. Details are shown 
+in \appref{app:AP1limit}.
 
 \begin{table}
 \begin{center}
@@ -559,7 +566,7 @@ number of groups, e.g. 50, provides a~very similar results
 \subsection{Hohlraum problem}
 Additionally to the~steep temperature gradients, the~laser-heated plasma 
 experiments also involve steep density gradients and variation in ionization,
-which is a~dominant effect in multi-material hohlraums
+which are dominant effects in multi-material hohlraums
 at the interface between the helium gas-fill and 
 the ablated high $\Zbar$ plasma.
 
@@ -567,7 +574,7 @@ In~\cite{Brodrick_PoP2017}, a~kinetic simulation of laser pulse interaction
 with a gas filled hohlraum was presented. 
 Plasma profiles provided by a~HYDRA simulation in 1D
 geometry of a~laser-heated gadolinium hohlraum containing a~helium 
-gas at time of 20 ns were used as input for the~IMPACT 
+gas at time of 20 ns were used as input for the~Impact 
 \cite{Kingham_JCP2004} VFP code.  
 For simplicity, the Coulomb logarithm was treated as a
 constant $\lnc_{ei}$ = $\lnc_{ee}$ = 2.1484. In reality, in the~low-density 
@@ -602,23 +609,24 @@ of AP1, Impact, and SNB are also shown.
 One can observe a~very good
 match between AP1 and Impact computations in the~preheat region.
 It is worth mentioning that in the~surroundings of the~heat flux maximum 
-($\sim 1662 \mu$m) the~profiles of all plasma variables exhibit steep gradients 
+($\sim 1662~\mu$m) the~profiles of all plasma variables 
+exhibit steep gradients 
 with a change from $T_e$ = 2.5 keV, $n_e$ = 5$\times$10$^{20}$ cm$^{−3}$, 
 $\Zbar$ = 2 to $T_e$ = 0.3 keV, $n_e$ = 6$\times$10$^{21}$ cm$^{−3}$ , 
 $\Zbar$ = 44 across approximately 100 $\mu$m 
 (between 1600~$\mu$m and 1700~$\mu$m), starting at the~helium-gadolinium 
 interface.  
-In this region, we can see a~qualitative match between AP1 and Impact providing
-a~same sign of the~heat flux divergence contributing to hydro, however,
-we observe that the~electric field limitation explained in 
+In this region, we can see a~qualitative match between AP1 and Impact 
+providing a~same sign of the~heat flux divergence, however,
+the~electric field limitation explained in 
 \appref{app:AP1limit} leads to a~stronger drop of 
 the~\textit{decelerating} AP1 heat flux on the~material 
 interface, which then closely aligns to the~Impact heat flux in the~corona. 
 On the~other hand, 
 SNB overestimates significantly the~heat flux in the~lower density part 
-of the~plasma up to the~point of the~heat flux maximum given by Impact 
-(green line in \figref{fig:Gd_VFP_10ps_heatflux}), and more 
-importantly, the~opposite sign of the~heat flux divergence compared to Impact
+of plasma up to the~point of the~heat flux maximum given by Impact 
+(green line in \figref{fig:Gd_VFP_10ps_heatflux}). More 
+importantly, SNB shows the~opposite sign of the~heat flux divergence compared to Impact
 (and AP1) in the~steep gradients region close to the~material interface. 
 In the~preheat region SNB performs 
 very well. Nevertheless, it is important to stress that 
