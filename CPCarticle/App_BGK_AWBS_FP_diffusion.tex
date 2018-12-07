@@ -124,16 +124,39 @@ electron velocity ($v_{max} = 7\vth$) to zero
 (using 10$^5$ $\Delta v$ steps). The~\textit{quasi-neutrality} constraint
 leads to $\Ez = \E_L$ independently from $r_A$.
 
-However, an~analytic solution to
+However, an~analytic solution can be found to
 \begin{equation}
-  \pdv{\vmag^a \ft^1}{\vmag} = (b \vmag^{3+a} + c \vmag^{5+a}) 
-  \exp\left(-\frac{\vmag^2}{2\vth^2}\right)
+    \pdv{\vmag^a \ft^1}{\vmag} = \left(\frac{\vmag^{3+a}}{b} 
+    + \frac{\vmag^{5+a}}{c}\right) \exp\left(-\frac{\vmag^2}{2\vth^2}\right)
   ,
   \nonumber
 \end{equation}
-%This mimics a~particle deceleration due to collisions. The~correct numerical
-%solution of \eqref{eq:AWBS_f1_ODE} corresponds to an~appropriate value of 
-%$\Ez$ leading to a~zero current. 
+where 
+\begin{equation}
+  a = -\frac{\Zbar + r_A}{r_A},
+  ~b = \frac{\Gamma(2\pi)^{\frac{3}{2}}\vth^3 L_{\Te}}{4},
+  ~c = \Gamma(2\pi)^{\frac{3}{2}}2\vth^5 L_{\Te} .
+  \nonumber
+\end{equation}
+Then,
+\begin{equation}
+  \ft^1(\vmag) = \frac{\vth^2}{\vmag^a} \int_{\vmag}^\infty   
+  \left(\frac{\tilde{\vmag}^{2+a}}{b} + \frac{\tilde{\vmag}^{4+a}}{c}\right) 
+  \exp\left(-\frac{\tilde{\vmag}^2}{2\vth^2}\right) 
+    \frac{\tilde{\vmag}}{\vth^2} \dI \tilde{\vmag} , 
+  \nonumber
+\end{equation}
+Substitution $\hat{v} = \frac{\tilde{\vmag}^2}{2\vth^2}$ gives 
+$\dI\hat{v} = \frac{\tilde{\vmag}}{\vth^2} \dI \tilde{\vmag}$ and 
+$\tilde{\vmag} = \vth\sqrt{2\hat{v}}$.
+\begin{equation}
+  \ft^1(\vmag) = \frac{2^{\frac{4+a}{2}}
+  \vth^{6+a}}{\vmag^a} \int_{\frac{\vmag^2}{2\vth^2}}^\infty   
+    \left(\frac{{\hat{v}}^{\frac{4+a}{2}-1}}{2\vth^2 b} 
+    + \frac{{\hat{v}}^{\frac{6+a}{2}-1}}{c}\right) 
+    \exp\left(-\hat{v}\right) \dI \hat{v} , 
+  \nonumber
+\end{equation}
 
 Its purpose is to
 match AWBS heat flux to results obtained by Spitzer and Harm 

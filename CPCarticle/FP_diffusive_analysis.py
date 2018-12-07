@@ -342,6 +342,45 @@ def AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
 
+def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0):
+    # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr.
+    # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 =
+    # dfMdz + qe * E / me / v * dfMdv
+
+    N = len(v)
+    I = np.zeros(N)
+    f1 = np.zeros(N)
+    j1 = np.zeros(N)
+    q1 = np.zeros(N)
+    # Coefficients.
+    aa = - (Z + corr_nu) / corr_nu
+    bb_ = Gamma_ee * ne * corr_nu * Te / gradTe
+    bb = Gamma_ee * ne * corr_nu * 2.0 * vTh(Te)**2.0 * Te / gradTe
+    cc = - Gamma_ee * ne * corr_nu / (1.5 * gradTe / Te + E / vTh(Te)**2.0)
+    # TMP
+    vT = vTh(Te)
+    dd = ne/(vT**3.0*(2.0*pi)**1.5) #*exp(-v**2.0/2.0/vTh(T)**2.0)
+    dd_ = dd * vT**2.0 * (2.0**0.5*vT)**(aa + 2.0)
+    # Integration starts from zero particle density for velocity ~ infinity.
+    I[N-1] = 0.0
+    f1[N-1] = 0.0
+    for i in range(N-1, 0, -1):
+        vp = v[i-1]
+        dv = v[i] - v[i-1]
+        vp_ = vp**2.0 / 2.0 / vT**2.0
+        dv_ = vp / vT**2.0 * dv
+        #gg = (vp**(aa + 5.0) / bb + vp**(aa + 3.0) / cc) * fM(ne, Te, vp)
+        #I[i-1] = I[i] - dv * gg
+        #gg_ = dd * (vp**(aa + 4.0) / bb + vp**(aa + 2.0) / cc) * exp(-vp_) * vp
+        ## "upper" incomplete gamma function integral
+        ## g(v) = - \int_v^\infty (v^{0.5(a+4)}/b + v^{0.5(a+2)}/c) \exp(-v) dv
+        gg_ = (vp_**(0.5*(aa + 4.0)) / bb_ + vp_**(0.5*(aa + 2.0)) / cc) * exp(-vp_)
+        I[i-1] = I[i] - dv_ * dd_ * gg_
+        f1[i-1] = I[i-1] / vp**aa
+        j1[i-1] = f1[i-1] * vp**3.0
+        q1[i-1] = f1[i-1] * vp**5.0
+    return f1, j1, q1
+
 ## AWBS distribution calculation in order to seek for j=0 based on corr_E.
 def corr_E_AWBS_distribution(corr_E, v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu):
     ## Compute the q1 AWBS distribution on velocities v.
@@ -427,7 +466,8 @@ def FindAWBSdependenceOnZ(N, ne, Te, gradTe, Gamma_ee):
         print("corr_E:", corr_E)
 
         ## Double-check the corr_nu and corr_E results.
-        f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
+        f1, j1, q1 = AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
+        #f1, j1, q1 = AWBS_distribution(v, ne, Te, gradTe, Z, E_Lorentz, Gamma_ee, corr_nu, corr_E)
         j_AWBS = qe * 4.0 / 3.0 * np.pi * sum(j1) * dv
         q_AWBS = me / 2.0 * 4.0 / 3.0 * np.pi * sum(q1) * dv
         print("j_AWBS:", j_AWBS)
@@ -601,7 +641,8 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     ## Exact values for Z = 1
     #corr_nu = 0.45642791622
     #corr_E = 0.999946330759
-    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
+    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_analytic_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
+    #fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
     #corr = 1.7
     #fAWBS1s, jAWBS1s, qAWBS1s = HighVelocity_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
     ## Compute SH original distributions from the 1953 paper.
