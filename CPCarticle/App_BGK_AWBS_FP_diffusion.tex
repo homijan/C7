@@ -1,80 +1,69 @@
 \section{Analysis of local diffusive regime}
 \label{app:DiffusiveKinetics}
 
-In order to analyze the~local diffusive regime of BGK collision operator 
-\eqref{eq:BGK_model_1D}, we adopt the~P2 form of EDF
+In order to analyze the~local diffusive regime, 
+we use the~BGK collision operator 
+\eqref{eq:BGK_model_1D} 
 \begin{equation}
-  \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \mu \ft^1(z, \vmag)
-  + \frac{3 \mu^2 - 1}{2} \ft^2(z, \vmag),
-  \label{eq:P2_approximation}
-\end{equation} 
-where $\ft^2$ helps us to quantify the~validity of the~local transport regime.
-The~left hand side of \eqref{eq:1D_kinetic_equation} acts on 
-\eqref{eq:P2_approximation} as
-\begin{multline}
-  \mu\left(\pdv{\tilde{\ft}}{z} 
-  + \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{\ft}}{\vmag}\right) 
-  + \frac{\qe\Ez}{\me}\frac{1-\mu^2}{\vmag^2}\pdv{\tilde{\ft}}{\mu} = 
-  \frac{\qe\Ez}{\me\vmag^2} \ft^1
-  \\
-  + \mu\left[\pdv{}{z}\left(\ft^0 - \frac{\ft^2}{2} \right) 
-  + \frac{\qe\Ez}{\me\vmag}\pdv{}{\vmag}\left(\ft^0 - \frac{\ft^2}{2} \right) 
-  + \frac{3\qe\Ez}{\me\vmag^2} \ft^2 \right] 
-  \\
-  + \mu^2\left[\pdv{\ft^1}{z} 
-  + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^1}{\vmag} - \frac{\qe\Ez}{\me\vmag^2} \ft^1
-  \right] 
-  + O(\mu^3) .
-  \label{app_eq:LHS_kinetic_equation}
-\end{multline}
-The~action on \eqref{eq:P2_approximation} of the~BGK operator 
-\eqref{eq:BGK_model_1D} reads
-\begin{eqnarray}
-  \frac{1}{\vmag}C_{BGK}(\tilde{\ft})
-  &=&
+  \frac{1}{\vmag}C(\tilde{\ft})
+  =
   \frac{\fM - \tilde{\ft}}{\mfpe}
   + \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{1}{\mfpe}\right)
-  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} ,\nonumber\\
-  &=&  \frac{\fM - \ft^0}{\mfpe} + \frac{(3\Zbar + 4)\ft^2}{2 \mfpe}
-  \nonumber\\
-  &&- \mu \frac{\Zbar + 2}{\mfpe}\ft^1  
-  - \mu^2\frac{9(\Zbar + 1)}{2\mfpe}\ft^2.
+  \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} 
+  ,\nonumber
+\end{equation}
+to write explicitly \eqref{eq:1D_kinetic_equation} 
+for \eqref{eq:f_approximation} 
+\begin{multline}
+  %\mu\left(\pdv{\tilde{\ft}}{z} 
+  %+ \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{\ft}}{\vmag}\right) 
+  %+ \frac{\qe\Ez}{\me}\frac{1-\mu^2}{\vmag^2}\pdv{\tilde{\ft}}{\mu} = \\
+  \frac{\qe\Ez}{\me\vmag^2} \ft^1 
+  + \mu^2\left[\pdv{\ft^1}{z} 
+  + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^1}{\vmag} - \frac{\qe\Ez}{\me\vmag^2} \ft^1
+  \right] \\ 
+  + \mu\left[\pdv{\ft^0}{z} 
+  + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}\right] = 
+  %\label{app_eq:LHS_kinetic_equation}
+%\end{multline}
+%and the~right hand side  reads
+%\begin{eqnarray}
+  %\frac{1}{\vmag}C_{BGK}(\tilde{\ft})
+  %&=&
+  %\frac{\fM - \tilde{\ft}}{\mfpe}
+  %+ \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{1}{\mfpe}\right)
+  %\pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} ,\nonumber\\
+  \frac{\fM - \ft^0}{\mfpe} - \mu \frac{\Zbar + 2}{\mfpe}\ft^1
+  .
   \label{app_eq:BGK_model_1D}
-\end{eqnarray}
-Consequently, if the~isotropic and anisotropic parts of 
-\eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:BGK_model_1D} are 
-compared, one finds the~following equations 
+\end{multline}
+The~P1 form \eqref{eq:f_approximation} represents a~low anisotropy
+expansion to the~first to Legendre polynomials $P_0 = 1$ and $P_1 = \mu$, 
+where the~projection of a~function $f(\mu)$ 
+to a~Legendre polynomial $P_k(\mu)$ reads
+$\mathcal{P}_k(f) = \int_{-1}^1 P_k(\mu) f(\mu) \dI\mu$, in particular giving
+the~orthogonality $\mathcal{P}_0(P_1) = \mathcal{P}_1(P_0) = 0$.
+
+Consequently, the~projections of the~equation \eqref{app_eq:BGK_model_1D}, 
+i.e. $\mathcal{P}_0\eqref{app_eq:BGK_model_1D}$ 
+and $\mathcal{P}_1\eqref{app_eq:BGK_model_1D}$, define 
 \begin{eqnarray}
-  \ft^0 &=& \fM + \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 
-  + \frac{3\Zbar + 4}{2}f^2,
+    \ft^0 &=& \fM - \frac{\mfpe}{3}\left[\frac{2\qe\Ez}{\me\vmag^2} \ft^1 
+  + \pdv{\ft^1}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^1}{\vmag}\right]
+  ,
   \label{app_eq:BGK_f0} \\
   \ft^1 &=& - \frac{\mfpe}{\Zbar + 2}
-  \bigg[ \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}
-  + \frac{3\qe\Ez}{\me\vmag^2} \ft^2 
-  \nonumber\\
-  && - \frac{1}{2}\pdv{\ft^2}{z} - \frac{\qe\Ez}{2\me\vmag}\pdv{\ft^2}{\vmag}
-  \bigg] , 
+  \left[ \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right]
+  . 
   \label{app_eq:BGK_f1}
-  \\
-  f^2 &=& \frac{2 \mfpe}{9(\Zbar + 1)}
-  \left[ 
-  \frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 -  
-  \pdv{f^1}{z} - \frac{\qe\Ez}{\me\vmag}\pdv{f^1}{\vmag}
-  \right] .
-  \label{app_eq:BGK_f2}
 \end{eqnarray}
 It is valid to assume that $\ft^0 \approx \fM$, i.e. that $\fM \gg
-\frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 + \frac{3\Zbar + 1}{2}f^2$ 
-in \eqref{app_eq:BGK_f0} and $f^0\gg f^2$ in \eqref{app_eq:BGK_f1}, 
-for local transport conditions 
-$Kn\ll1$ and the~\textit{quasi-neutrality} constraint, corresponding to 
-a~zero current
-\begin{equation}
-j \equiv \frac{4\pi \qe}{3} \int \vmag f^1 \vmag^2 \dI\vmag = 0 ,
-%\vect{j} \equiv \qe \int \vv \tilde{\ft} \, \dI\vv = \vect{0} ,
-\end{equation}
-leads to the~electric field (same as the~classical Lorentz electric field
-$\E_L$ \cite{Lorentz_1905})
+\frac{\mfpe}{3}\left[\pdv{\ft^1}{z} +
+\frac{\qe\Ez}{\me\vmag^3}\pdv{\vmag^2\ft^1}{\vmag}\right]$ 
+in \eqref{app_eq:BGK_f0}. The~\textit{quasi-neutrality} constraint 
+\eqref{eq:j0_P1} applied to \eqref{app_eq:BGK_f1} along with 
+$\ft^0 = \fM$ leads to the~electric field 
+(same as the~classical Lorentz electric field $\E_L$ \cite{Lorentz_1905})
 \begin{equation}
   \Ez = \frac{\me\vth^2}{\qe}\left(\frac{1}{L_{n_e}} 
   + \frac{5}{2}\frac{1}{L_{T_e}} \right) 
@@ -82,15 +71,15 @@ $\E_L$ \cite{Lorentz_1905})
   \label{app_eq:BGK_Efield}
 \end{equation}
 and the~anisotropic part of EDF takes the~form \eqref{eq:BGK_approximation}.
-
 It should be noticed that $\ft^0$ equilibrates to $\fM$ 
-as $O\left( Kn^2~\vmag/\vth \right)$, since one can show that
-$\frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 \sim Kn^2$ and  
-$f^2 \sim Kn^2~\vmag/\vth$, when $\ft^0 = \fM$ and $\Ez=\E_L$ in 
-\eqref{app_eq:BGK_f1} and \eqref{app_eq:BGK_f2}.
+as $O\left( \text{Kn}^2\right)$ since $\ft^1 \sim \text{Kn} \fM$ 
+and $\mfpe \Ez \sim \text{Kn}$.
+%$\frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 \sim Kn^2$ and  
+%$f^2 \sim Kn^2~\vmag/\vth$, when $\ft^0 = \fM$ and $\Ez=\E_L$ in 
+%\eqref{app_eq:BGK_f1}.
 
-In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in 
-\eqref{eq:1D_kinetic_equation}, its action on \eqref{eq:f_approximation} reads
+The~AWBS operator \eqref{eq:AWBS_model} applied to 
+\eqref{eq:f_approximation} reads
 \begin{eqnarray}
   \frac{1}{\vmag}C_{AWBS}(\tilde{\ft})
   &=& 
@@ -104,22 +93,19 @@ In the~case of the~AWBS operator \eqref{eq:AWBS_model} used in
   \label{app_eq:AWBS_model_1D}
 \end{eqnarray}
 where $\nue^* = r_A \nue = \frac{\vmag r_A}{\mfpe}$ with $r_A$ being a~scaling
-parameter of the~standard e-e collision frequency. Its purpose is to
-match AWBS heat flux to results obtained by Spitzer and Harm 
-\cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
-\secref{sec:FPDiffusiveRegime} shows that this match can be found with 
-a~constant $r_A=0.5$.
-
-One finds the~following equations if the~isotropic and anisotropic parts of 
-\eqref{app_eq:LHS_kinetic_equation} and \eqref{app_eq:AWBS_model_1D} are 
-compared 
+parameter of the~standard e-e collision frequency. 
+The~$\mathcal{P}_0$ and $\mathcal{P}_1$ projections 
+of the~equation \eqref{app_eq:BGK_model_1D} using 
+\eqref{app_eq:AWBS_model_1D} instead of BGK then define
 \begin{eqnarray}
   \pdv{}{\vmag}\left( \ft^0 -\fM\right) &=& 
-  \frac{\mfpe\qe\Ez}{r_A\me\vmag^2}\frac{\ft^1}{\vmag} ,
+  \frac{\mfpe}{3}\left[\pdv{\ft^1}{z} +
+  \frac{\qe\Ez}{\me\vmag^3}\pdv{\vmag^2\ft^1}{\vmag}\right] ,
   \label{app_eq:AWBS_f0} \\
-  \frac{\vmag r_A}{\mfpe} \pdv{\ft^1}{\vmag} 
-  - \frac{\Zbar + r_A}{\mfpe}\ft^1 &=&
-  \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} .
+  \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar + r_A}{{\vmag r_A}}\ft^1 &=& \frac{\mfpe}{\vmag r_A}
+  \left[\pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}\right] 
+  .
   \label{app_eq:AWBS_f1} 
   %\\  
   %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
@@ -130,6 +116,31 @@ compared
 If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
 \eqref{eq:AWBS_f1}.
+
+Since there is no simple analytical formula for an~arbitrary $r_A$
+to solve \eqref{eq:AWBS_f1_ODE} for $\ft^1$, we adopt the~implicit Euler 
+numerical integration with $\Delta v < 0$, i.e. we integrate from high 
+electron velocity ($v_{max} = 7\vth$) to zero  
+(using 10$^5$ $\Delta v$ steps). The~\textit{quasi-neutrality} constraint
+leads to $\Ez = \E_L$ independently from $r_A$.
+
+However, an~analytic solution to
+\begin{equation}
+  \pdv{\vmag^a \ft^1}{\vmag} = (b \vmag^{3+a} + c \vmag^{5+a}) 
+  \exp\left(-\frac{\vmag^2}{2\vth^2}\right)
+  ,
+  \nonumber
+\end{equation}
+%This mimics a~particle deceleration due to collisions. The~correct numerical
+%solution of \eqref{eq:AWBS_f1_ODE} corresponds to an~appropriate value of 
+%$\Ez$ leading to a~zero current. 
+
+Its purpose is to
+match AWBS heat flux to results obtained by Spitzer and Harm 
+\cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
+\secref{sec:FPDiffusiveRegime} shows that this match can be found with 
+a~constant $r_A=\frac{1}{2}$.
+
 
 \section{AP1 electric field limit}
 \label{app:AP1limit}

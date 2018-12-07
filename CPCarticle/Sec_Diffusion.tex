@@ -49,6 +49,16 @@ the~stationary form of \eqref{eq:kinetic_equation} in one spatial dimenstion
   \label{eq:1D_kinetic_equation}
 \end{equation}
 where $C$ is a~given collision operator including both e-e and e-i collisions.
+Condition of plasma \textit{quasi-neutrality}, 
+represented by the~zero current 
+$\vect{j} \equiv \qe \int \vect{v} \ft \dI\vect{v} = \vect{0}$ 
+in the case of an~unmagnetised plasma in 1D according to \eqref{eq:Ampere}, 
+is for the~P1 \eqref{eq:f_approximation} expressed as
+\begin{equation}
+  \int \vmag f^1 \vmag^2 \dI\vmag = 0 ,
+  \label{eq:j0_P1}
+\end{equation}
+and is accounted for by the~effect of $\Ez$ in \eqref{eq:1D_kinetic_equation}.
 
 The~locality of transport is the~best expressed in terms of the~Knudsen number
 $\text{Kn}=\frac{\lambda}{L}$, where $\lambda$ is the~mean free path of electron and
@@ -115,9 +125,9 @@ where
 %$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$
 a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
-When the~quasi-neutrality constraint imposed by $\E_L$
-\eqref{app_eq:BGK_Efield} is used, one finally obtains the~analytical BGK form 
-of the~anisotropic term %\eqref{eq:f_approximation}
+When the~quasi-neutrality constraint \eqref{eq:j0_P1} imposed by $\E_L$
+\eqref{app_eq:BGK_Efield} is used, one finally obtains 
+the~analytical BGK form of the~anisotropic term %\eqref{eq:f_approximation}
 \begin{equation}
   \ft^1 = - \mu 
   \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar + 2}
@@ -226,8 +236,13 @@ that $\ft^1 \sim Kn \fM$ and that $\ft^0$ equilibrates to $\fM$
 as $O(Kn^2)$ based on \eqref{eq:AWBS_f0}.
 \end{comment} % Substitute with Vladimir's analytical formula.
 
+\textit{The zero current 
+condition was imposed in all AWBS calculations, where
+the consistent electric field yield an~equal value to the~classical Lorentz
+value \eqref{app_eq:BGK_Efield} for any $\Zbar$.}
+
 The~details about the~AWBS distribution function compared to other
-collision operators and a~proper evaluation of the~scaling parameter $ r_A$
+collision operators and a~proper evaluation of the~scaling parameter $r_A$
 can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{Fokker-Planck local diffusive electron transport}
@@ -258,7 +273,8 @@ $\vtwoh = \sqrt{\frac{\kB T_e}{2\me}}$.
 One should be aware, that the~solution of \eqref{eq:1D_kinetic_equation}
 with the~full FP collision operator reveals importance of
 e-e Coulomb collisions, which is emphasized in the~$\Zbar$ dependence 
-of the~distribution function, current, heat flux, electric field, etc.
+of the~distribution function, current, heat flux, 
+electric field according to \eqref{eq:j0_P1}, etc.
 In particular, the latter exhibits the~following dependence 
 \cite{SpitzerHarm_PR1953}
 \begin{equation}
@@ -397,10 +413,7 @@ error (maximum 6$\%$) of the~heat flux modeled by
 \eqref{eq:AWBS_model} vs. SH results represented by 
 \eqref{eq:qSH_approximation}. It should be noted that the~error is calculated 
 with respect to original values presented in TABLE~III in 
-\cite{SpitzerHarm_PR1953}. The zero current 
-condition was imposed in all AWBS calculations, where
-the consistent electric field yield an~equal value to the~classical Lorentz
-value \eqref{app_eq:BGK_Efield} for any $\Zbar$. 
+\cite{SpitzerHarm_PR1953}.  
  
 The~electron-electron collisions scaling 
 \cite{Epperlein_PoFB1991} represented by 
