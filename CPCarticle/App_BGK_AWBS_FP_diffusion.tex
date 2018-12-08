@@ -124,9 +124,30 @@ electron velocity ($v_{max} = 7\vth$) to zero
 (using 10$^5$ $\Delta v$ steps). The~\textit{quasi-neutrality} constraint
 leads to $\Ez = \E_L$ independently from $r_A$.
 
+\begin{eqnarray}
+  \ft^1(v) &=& - \frac{d}{\vmag^a} 
+  \int_{\frac{\vmag^2}{2\vth^2}}^\infty (b \tilde{v}^{\frac{a+6}{2} - 1} 
+  + c \tilde{v}^{\frac{a+4}{2} - 1}) \exp(-\tilde{v}) d\tilde{v} 
+  \nonumber\\
+  &=& - \frac{d}{\vmag^a} 
+  \left(b~G_{\left(\frac{a+6}{2}, \frac{\vmag^2}{2\vth^2}\right)}
+  + c~G_{\left(\frac{a+4}{2}, \frac{\vmag^2}{2\vth^2}\right)}\right)
+  ,
+  \nonumber
+\end{eqnarray}
+\begin{equation}
+    b = \frac{1}{L_{\Te}},
+	~ c = \frac{1}{L_{\ed}} - \frac{3}{2}\frac{1}{L_{\Te}} 
+	- \frac{\qe\Ez}{\me\vth^2},
+   ~d = \frac{2^{\frac{a + 2}{2}} \vth^{a + 1}}{r_A (2\pi)^{\frac{3}{2}} \Gamma}
+  ,
+  \nonumber
+\end{equation}
+
+\begin{comment}
 However, an~analytic solution can be found to
 \begin{equation}
-    \pdv{\vmag^a \ft^1}{\vmag} = \left(\frac{\vmag^{3+a}}{b} 
+	\pdv{\vmag^a \ft^1}{\vmag} = \left(\frac{\vmag^{3+a}}{b} 
     + \frac{\vmag^{5+a}}{c}\right) \exp\left(-\frac{\vmag^2}{2\vth^2}\right)
   ,
   \nonumber
@@ -163,7 +184,7 @@ match AWBS heat flux to results obtained by Spitzer and Harm
 \cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
 \secref{sec:FPDiffusiveRegime} shows that this match can be found with 
 a~constant $r_A=\frac{1}{2}$.
-
+\end{comment}
 
 \section{AP1 electric field limit}
 \label{app:AP1limit}

@@ -343,6 +343,8 @@ def AWBS_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0
     return f1, j1, q1
 
 def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, corr_E=1.0):
+    from scipy.special import gammaincc
+    from scipy.special import gamma
     # corr stands for nue^* = corr * nue, i.e. mfpe^* = mfpe / corr.
     # corr * v / mfpe * df1dv - (Z + corr) / mfpe * f1 =
     # dfMdz + qe * E / me / v * dfMdv
@@ -353,14 +355,16 @@ def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, c
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     # Coefficients.
-    aa = - (Z + corr_nu) / corr_nu
-    bb_ = Gamma_ee * ne * corr_nu * Te / gradTe
-    bb = Gamma_ee * ne * corr_nu * 2.0 * vTh(Te)**2.0 * Te / gradTe
-    cc = - Gamma_ee * ne * corr_nu / (1.5 * gradTe / Te + E / vTh(Te)**2.0)
+    aa = - (Z + corr_nu) / corr_nu 
+    #bb = Gamma_ee * ne * corr_nu * 2.0 * vTh(Te)**2.0 * Te / gradTe
+    #cc = - Gamma_ee * ne * corr_nu / (1.5 * gradTe / Te + E / vTh(Te)**2.0)
+    L_Te = Te / gradTe
+    bb_ = 1.0 / L_Te 
+    cc_ = - (1.5 / L_Te + E / vTh(Te)**2.0)
     # TMP
     vT = vTh(Te)
-    dd = ne/(vT**3.0*(2.0*pi)**1.5) #*exp(-v**2.0/2.0/vTh(T)**2.0)
-    dd_ = dd * vT**2.0 * (2.0**0.5*vT)**(aa + 2.0)
+    #dd = ne/(vT**3.0*(2.0*pi)**1.5) #*exp(-v**2.0/2.0/vTh(T)**2.0)
+    dd_ = vT**(aa + 1.0) * (2.0**0.5)**(aa + 2.0) / (2.0*pi)**1.5 / Gamma_ee / corr_nu
     # Integration starts from zero particle density for velocity ~ infinity.
     I[N-1] = 0.0
     f1[N-1] = 0.0
@@ -372,11 +376,17 @@ def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, c
         #gg = (vp**(aa + 5.0) / bb + vp**(aa + 3.0) / cc) * fM(ne, Te, vp)
         #I[i-1] = I[i] - dv * gg
         #gg_ = dd * (vp**(aa + 4.0) / bb + vp**(aa + 2.0) / cc) * exp(-vp_) * vp
-        ## "upper" incomplete gamma function integral
-        ## g(v) = - \int_v^\infty (v^{0.5(a+4)}/b + v^{0.5(a+2)}/c) \exp(-v) dv
-        gg_ = (vp_**(0.5*(aa + 4.0)) / bb_ + vp_**(0.5*(aa + 2.0)) / cc) * exp(-vp_)
-        I[i-1] = I[i] - dv_ * dd_ * gg_
-        f1[i-1] = I[i-1] / vp**aa
+        ## "upper" incomplete gamma function (integral)
+        ## g(v) = - d \int_v^\infty (b v^{\frac{a+4}{2}} + c v^{\frac{a+2}{2}}) 
+        ## \exp(-v) dv
+        
+#gg_ = (bb_ * vp_**(0.5*(aa + 6.0)-1.0) + cc_ * vp_**(0.5*(aa + 4.0)-1.0)) * exp(-vp_)
+        #I[i-1] = I[i] - dv_ * dd_ * gg_
+        #f1[i-1] = I[i-1] / vp**aa
+        g1 = gamma(0.5*(aa + 6.0)) * gammaincc(0.5*(aa + 6.0), vp_)
+        g2 = gamma(0.5*(aa + 4.0)) * gammaincc(0.5*(aa + 4.0), vp_)
+        I_ = - dd_ * (bb_ *  g1 + cc_ * g2)
+        f1[i-1] = I_ / vp**aa
         j1[i-1] = f1[i-1] * vp**3.0
         q1[i-1] = f1[i-1] * vp**5.0
     return f1, j1, q1
