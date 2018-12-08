@@ -115,26 +115,33 @@ of the~equation \eqref{app_eq:BGK_model_1D} using
 \end{eqnarray}
 If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
-\eqref{eq:AWBS_f1}.
-
-Since there is no simple analytical formula for an~arbitrary $r_A$
-to solve \eqref{eq:AWBS_f1_ODE} for $\ft^1$, we adopt the~implicit Euler 
-numerical integration with $\Delta v < 0$, i.e. we integrate from high 
-electron velocity ($v_{max} = 7\vth$) to zero  
-(using 10$^5$ $\Delta v$ steps). The~\textit{quasi-neutrality} constraint
-leads to $\Ez = \E_L$ independently from $r_A$.
-
-\begin{eqnarray}
-  \ft^1(v) &=& - \frac{d}{\vmag^a} 
+\eqref{eq:AWBS_f1}, which can be simplified to the~form
+\begin{equation}
+  \pdv{\vmag^a \ft^1}{\vmag} = 
+  \frac{\mfpe \vmag^{a-1}}{r_A}
+  \left( b~\frac{\vmag^2}{2 \vth^2} + c\right)\fM ,
+  \nonumber %\label{app_eq:AWBS_f1_ODE}
+\end{equation}
+with an~integral solution (using $\ft^1(\infty) = 0$)
+\begin{equation}
+  \ft^1(v) = - \frac{d}{\vmag^a} 
   \int_{\frac{\vmag^2}{2\vth^2}}^\infty (b \tilde{v}^{\frac{a+6}{2} - 1} 
   + c \tilde{v}^{\frac{a+4}{2} - 1}) \exp(-\tilde{v}) d\tilde{v} 
-  \nonumber\\
-  &=& - \frac{d}{\vmag^a} 
-  \left(b~G_{\left(\frac{a+6}{2}, \frac{\vmag^2}{2\vth^2}\right)}
-  + c~G_{\left(\frac{a+4}{2}, \frac{\vmag^2}{2\vth^2}\right)}\right)
   ,
-  \nonumber
-\end{eqnarray}
+  \label{app_eq:gammaInt}
+\end{equation}
+where the~analytical solution to \eqref{app_eq:gammaInt} can be obtained 
+in the~form of upper incomplete gamma function shown 
+in~\secref{sec:AWBSDiffusiveRegime}, where the~coefficients 
+$a, b, c,$ and $d$ are defined. 
+However, since the~analytical formula \eqref{eq:AWBS_analytic_solution} 
+is valid for $a>-4$, we also adopt the~implicit Euler 
+numerical integration with $\Delta v < 0$, where we integrate from high 
+electron velocity ($v_{max} = 7\vth$) to zero  
+(using 10$^5$ $\Delta v$ steps). The~numerical approach is used for the~case
+of $\Zbar > 1.5$ and $r_A = \frac{1}{2}$.
+
+\begin{comment}
 \begin{equation}
     b = \frac{1}{L_{\Te}},
 	~ c = \frac{1}{L_{\ed}} - \frac{3}{2}\frac{1}{L_{\Te}} 
@@ -143,8 +150,6 @@ leads to $\Ez = \E_L$ independently from $r_A$.
   ,
   \nonumber
 \end{equation}
-
-\begin{comment}
 However, an~analytic solution can be found to
 \begin{equation}
 	\pdv{\vmag^a \ft^1}{\vmag} = \left(\frac{\vmag^{3+a}}{b} 

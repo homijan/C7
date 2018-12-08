@@ -205,8 +205,8 @@ in local diffusive regime to be
 %the~ordinary differential equation 
 %(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
-  \pdv{f^1_{\text{AWBS}}}{\vmag} 
-  - \frac{\Zbar +  r_A}{\vmag r_A}f^1_{\text{AWBS}}
+  \pdv{\ft^1}{\vmag} 
+  - \frac{\Zbar +  r_A}{\vmag r_A}\ft^1
   = \\
   \frac{\mfpe}{\vmag r_A}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
@@ -216,34 +216,30 @@ in local diffusive regime to be
   %\frac{1}{T}\pdv{T}{z} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   \label{eq:AWBS_f1_ODE}
 \end{multline}
-which can be solved analytically by using quadratures
+The~solution of \eqref{eq:AWBS_f1_ODE} can be found in terms of 
+upper incomplete gamma function $\tilde{\Gamma}$ 
+(see \appref{app:DiffusiveKinetics})
 \begin{equation}
-  \text{Vladimir's analytical formula} .
-  \label{eq:VT_quadratures}
+  \ft^1_{\text{AWBS}} = - \frac{d}{\vmag^a} 
+  \left(b~\tilde{\Gamma}{\left(\frac{a+6}{2}, \frac{\vmag^2}{2\vth^2}\right)}
+  + c~\tilde{\Gamma}{\left(\frac{a+4}{2}, \frac{\vmag^2}{2\vth^2}\right)}\right)
+  ,
+  \label{eq:AWBS_analytic_solution}
 \end{equation}
-\begin{comment} % Substitute with Vladimir's analytical formula.
-Since there is no simple analytical formula for $\ft^1$ solving 
-\eqref{eq:AWBS_f1_ODE}, we adopt the~implicit Euler numerical integration
-with $\Delta v < 0$, i.e. we integrate from high electron velocity 
-($v_{max} = 7\vth$) to the~velocity equal to zero (using 10$^4$ steps). 
-This mimics a~particle deceleration due to collisions. The~correct numerical
-solution of \eqref{eq:AWBS_f1_ODE} corresponds to an~appropriate value of 
-$\Ez$ leading to a~zero current. 
-%Interestingly, this numerical value matches
-%precisely the~Spitzer electric field \eqref{app_eq:BGK_Efield}.
-As in the~BGK case, the~numerical solution of \eqref{eq:AWBS_f1_ODE} reveals
-that $\ft^1 \sim Kn \fM$ and that $\ft^0$ equilibrates to $\fM$ 
-as $O(Kn^2)$ based on \eqref{eq:AWBS_f0}.
-\end{comment} % Substitute with Vladimir's analytical formula.
+where 
+$a = -\frac{\Zbar + r_A}{r_A}$, $b = \frac{1}{L_{\Te}}$, 
+$c = \frac{1}{L_{\ed}} - \frac{3}{2}\frac{1}{L_{\Te}} 
+- \frac{\qe\Ez}{\me\vth^2}$, and
+$d = \frac{2^{\frac{a + 2}{2}} \vth^{a + 1}}{r_A (2\pi)^{\frac{3}{2}} \Gamma}$.
+Nevertheless, a~numerical solution of \eqref{eq:AWBS_f1_ODE} needs to be 
+adopted for higher $\Zbar$  (see \appref{app:DiffusiveKinetics}).
+The~\textit{quasi-neutrality} constraint \eqref{eq:j0_P1} applied to
+$\ft^1_{\text{AWBS}}$ leads to $\Ez = \E_L$ \eqref{app_eq:BGK_Efield} 
+independently from $\Zbar$ and $r_A$. 
 
-\textit{The zero current 
-condition was imposed in all AWBS calculations, where
-the consistent electric field yield an~equal value to the~classical Lorentz
-value \eqref{app_eq:BGK_Efield} for any $\Zbar$.}
-
-The~details about the~AWBS distribution function compared to other
-collision operators and a~proper evaluation of the~scaling parameter $r_A$
-can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
+%The~details about the~AWBS distribution function compared to other
+%collision operators and a~proper evaluation of the~scaling parameter $r_A$
+%can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{Fokker-Planck local diffusive electron transport}
 \label{sec:FPDiffusiveRegime}

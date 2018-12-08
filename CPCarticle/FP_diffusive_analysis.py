@@ -651,8 +651,10 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     ## Exact values for Z = 1
     #corr_nu = 0.45642791622
     #corr_E = 0.999946330759
-    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_analytic_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
-    #fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
+    fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
+    if (Z <= 1.5):
+        print("Using upper incomplete gamma function, Z:", Z)
+        fAWBS1s, jAWBS1s, qAWBS1s = AWBS_analytic_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E) 
     #corr = 1.7
     #fAWBS1s, jAWBS1s, qAWBS1s = HighVelocity_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
     ## Compute SH original distributions from the 1953 paper.
