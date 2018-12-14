@@ -1,0 +1,1242 @@
+%% This template can be used to write a paper for
+%% Computer Physics Communications using LaTeX.
+%% For authors who want to write a computer program description,
+%% an example Program Summary is included that only has to be
+%% completed and which will give the correct layout in the
+%% preprint and the journal.
+%% The `elsarticle' style is used and more information on this style
+%% can be found at 
+%% http://www.elsevier.com/wps/find/authorsview.authors/elsarticle.
+%%
+%%
+%\documentclass[preprint,12pt]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% if you use PostScript figures in your article
+%% use the graphics package for simple commands
+%% \usepackage{graphics}
+%% or use the graphicx package for more complicated commands
+%\usepackage{graphicx}
+%% or use the epsfig package if you prefer to use the old commands
+%% \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+%\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% Additional needed packages.
+%\usepackage{amsmath}
+%\usepackage{verbatim}
+%\usepackage{color}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+%\usepackage{lineno}
+%\usepackage{hyperref}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+
+%% This list environment is used for the references in the
+%% Program Summary
+%%
+%\newcounter{bla}
+%\newenvironment{refnummer}{%
+%\list{[\arabic{bla}]}%
+%{\usecounter{bla}%
+% \setlength{\itemindent}{0pt}%
+% \setlength{\topsep}{0pt}%
+% \setlength{\itemsep}{0pt}%
+% \setlength{\labelsep}{2pt}%
+% \setlength{\listparindent}{0pt}%
+% \settowidth{\labelwidth}{[9]}%
+% \setlength{\leftmargin}{\labelwidth}%
+% \addtolength{\leftmargin}{\labelsep}%
+% \setlength{\rightmargin}{0pt}}}
+% {\endlist}
+
+%\journal{Computer Physics Communications}
+
+% ****** Start of file aipsamp.tex ******
+%
+%   This file is part of the AIP files in the AIP distribution for REVTeX 4.
+%   Version 4.1 of REVTeX, October 2009
+%
+%   Copyright (c) 2009 American Institute of Physics.
+%
+%   See the AIP README file for restrictions and more information.
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.1
+%
+% It also requires running BibTeX. The commands are as follows:
+%
+%  1)  latex  aipsamp
+%  2)  bibtex aipsamp
+%  3)  latex  aipsamp
+%  4)  latex  aipsamp
+%
+% Use this file as a source of example code for your aip document.
+% Use the file aiptemplate.tex as a template for your document.
+%\documentclass[%
+% aip,
+%%jmp,%
+%%bmf,%
+% sd,%
+%%rsi,%
+% amsmath,amssymb,
+%%preprint,%
+% reprint,%
+%%author-year,%
+%%author-numerical,%
+%]{revtex4-1}
+
+% Use this file as a source of example code for your aip document.
+% Use the file aiptemplate.tex as a template for your document.
+\documentclass[
+ aps,
+ jmp,
+ amsmath,amssymb,
+ twocolumn,
+% preprint,%
+% reprint,%
+%author-year,%
+%author-numerical,%
+]{revtex4-1}
+
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+\usepackage{verbatim}
+%\usepackage{subfloat}
+%\usepackage{subcaption}
+%\usepackage{placeins}
+%\usepackage{caption}
+%\captionsetup{font=scriptsize}
+\usepackage{color}
+
+%\usepackage{lineno}
+\usepackage{hyperref}
+% use st command to strike out text
+\usepackage{soul}
+\usepackage[makeroom]{cancel}
+
+\include{C7_commands}
+
+\newcommand{\figref}[1]{FIG.~\ref{#1}}
+\newcommand{\refeq}[1]{\eqref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\appref}[1]{Appendix~\ref{#1}}
+\newcommand{\tabref}[1]{TABLE~\ref{#1}}
+\newcommand{\figscale}{0.48}
+
+
+\begin{document}
+
+\preprint{AIP/123-QED}
+
+\title[AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion]{AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion}% Force line breaks with \\
+%\thanks{Footnote to title of article.}
+
+%\author{Authors}
+\author{M. Holec}
+ \email{holec1@llnl.gov}
+ \affiliation{
+Center for Applied Scientific Computing, Lawrence Livermore National
+Laboratory, P.O. Box 808, L-561, Livermore, CA 94551, USA.
+ }
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{P. Loiseau}
+ \affiliation{
+ CEA, DAM, DIF, F-91297 Arpajon Cedex, France.
+}
+
+\author{J. P. Brodrick}
+ \affiliation{
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
+}
+
+\author{D. Del Sorbo}
+ \affiliation{
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
+}
+
+\author{A. Debayle}
+ \affiliation{
+ CEA, DAM, DIF, F-91297 Arpajon Cedex, France.
+}
+
+\author{V. Tikhonchuk}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{J.-L. Feugeas}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{Ph. Nicolai}
+ \affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+\author{B. Dubroca}
+\affiliation{
+Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\ 
+UMR 5107, F-33405 Talence, France.
+}
+
+
+\author{C. P. Ridgers}
+ \affiliation{
+York Plasma Institute, Department of Physics, University of York,\\ 
+Heslington, York, YO10 5DD, UK.
+}
+
+\author{R. J. Kingham}
+ \affiliation{
+Plasma Physics Group, Blackett Laboratory, Imperial College,\\ 
+London SW7 2BW, United Kingdom.
+}
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
+
+\begin{abstract}
+The~interaction of lasers with plasmas very often leads to nonlocal transport 
+conditions, where the classical hydrodynamic model fails to describe 
+important microscopic physics related to highly mobile particles. 
+In this study we analyze and further propose a~modification of 
+the~Albritton-Williams-Bernstein-Swartz collision operator 
+Phys. Rev. Lett 57, 1887 (1986)
+for the~nonlocal electron transport 
+under conditions relevant to ICF. The~electron distribution function
+provided by this modification exhibits some very desirable properties 
+when compared to the~full Fokker-Planck operator in the~local diffusive regime,
+and also performs very well when benchmarked against Vlasov-Fokker-Planck 
+and collisional PIC codes in the~nonlocal transport regime, where we find that
+the~effect of the~electric field via the~nonlocal Ohm's law is an~essential 
+ingredient in order to capture the~electron kinetics properly.
+ %CPR comment - could benefit from a clearer description of what the main results are, preferably with numbers
+\end{abstract}
+
+\pacs{Valid PACS appear here}% PACS, the Physics and Astronomy
+                             % Classification Scheme.
+
+\keywords{kinetics; nonlocal electron transport; laser-heated plasmas; hydrodynamics, Ohm's law.}%Use showkeys class option if keyword display desired
+
+\maketitle
+
+
+%%
+%% Start line numbering here if you want
+%%
+% \linenumbers
+
+%\pagebreak
+%\tableofcontents
+%\pagebreak
+%% main text
+%\section{}
+%\label{}
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+
+\input{Sec_Intro}
+\input{Sec_AWBS_model}
+\input{Sec_Diffusion}
+\input{Sec_AP1_nonlocal}
+\input{Sec_Benchmarking}
+\input{Sec_Conclusions}
+
+\begin{acknowledgments}
+C.~P.~Ridgers would like to acknowledge funding from EPSRC (grant EP/M011372/1). This work has been carried out within the framework of the EUROfusion Consortium and has received funding from the Euratom research and training programme 2014–2018 under grant agreement No 633053 (project reference CfP-AWP17-IFE-CCFE-01). The views and opinions expressed herein do not necessarily reflect those of the European Commission.
+
+This work was partially supported by the project ELITAS (ELI Tools for Advanced Simulation) CZ.02.1.01/0.0/0.0/16$\_$013/0001793 from the European Regional Development Fund.
+
+This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344.
+
+This document was prepared as an account of work sponsored by an agency of the United States government. Neither the United States government nor Lawrence Livermore National Security, LLC, nor any of their employees makes any warranty, expressed or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represents that its use would not infringe privately owned rights. Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States government or Lawrence Livermore National Security, LLC. The views and opinions of authors expressed herein do not necessarily state or reflect those of the United States government or Lawrence Livermore National Security, LLC, and shall not be used for advertising or product endorsement purposes.
+\end{acknowledgments}
+
+\appendix
+\input{App_BGK_AWBS_FP_diffusion}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{NTH}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use elsarticle-num.bst.
+
+\clearpage
+
+\end{document}
+
+%% Old stuff goes to appendix 
+\appendix
+\section{The~Fokker-Planck equation}
+\label{sed:FP}
+%Use equation Hu (1, 2, 3) in text, (10), which puts together (4, 5, 7),
+%and	write definitions (11, 12) using (5, 7, 13) and after define (6, 8)
+%and to close write (31) from Tzoufras.
+\begin{equation}
+  \pdv{\ft}{t} + \vv\cdot\gx \ft + (\tE + \vv\times\tB) \cdot\gv \ft =
+  - \gv \cdot \sum_{\pb}\vect{S}_c^{\tob} ,
+  \nonumber
+\end{equation}
+where the~collision flux of test particles (labeled $\ft$) colliding on field
+particles (labeled $\fb$) takes the~Landau-Fokker-Planck (LFP) form
+\begin{equation}
+  \vect{S}_c^{\tob} = \Gamma^{\tob}\int \gv\gv\vs \cdot \left[ 
+  \ft(\vv)\frac{m_\pt}{m_\pb}\gvb \fb(\vvb) - \fb(\vvb)\gv \ft(\vv)
+  \right]\, \dI\vvb , \nonumber 
+  %&=& \vect{F}^{\tob}(\fb)\, \ft - \matr{D}^{\tob}(\fb)\cdot\gv\ft ,
+  \nonumber
+\end{equation} 
+where $\Gamma^{\tob} = \frac{4\pi\Zbar_\pt^2\Zbar_\pb^2 q^4 \lnc}{m_\pt^2}$, $\vs = \vv - \vvb$, and 
+$\frac{\MI}{\vsmag} - \frac{\vs\vs}{\vsmag^3} = \gv\gv\vs$ was used.
+%The friction and diffusion coefficients of collision flux are then defined as
+%\begin{eqnarray}
+%  \vect{F}^{\tob}(\fb) &=& \frac{1}{m_\pb} 
+%  \int \gv\gv\vs\cdot\gvb \fb(\vvb)\,\dI\vvb = -\Gamma^{\tob}\gv 
+%  \Rh(\vv) ,
+%  \nonumber \\
+%  \matr{D}^{\tob}(\fb) &=& \frac{1}{m_\pt} 
+%  \gv\gv\int \vs \fb(\vvb)\,\dI\vvb = -\Gamma^{\tob}\gv\gv \Rg(\vv) ,
+%  \nonumber
+%\end{eqnarray}
+The~LFP integral collision model can written in the~form introduced by 
+Rosenbluth 1957
+\begin{equation}
+  \left(\pdv{\ft}{t}\right)_{\pb} = - \gv \cdot \vect{S}_c^{\tob} = 
+  - \Gamma^{\tob} \left[ \gv\cdot\left(\ft \gv\Rhb\right)
+  - \frac{\gv\gv:\left(\ft \gv\gv\Rgb \right)}{2}\right] ,
+  \label{eq:FP_Rosenbluth}
+\end{equation}
+where $\left(\pdv{\ft}{t}\right)_{\pb}$ expresses the~rate of change in 
+the~distribution function of test particles $\ft$ due to collisions with
+background field particles (distribution function $\fb$) and
+where the~complicated nature of collisions is modeled by the~Rosenbluth 
+potentials 
+\begin{equation}
+  \Rhb(\vv) = \frac{m_\pt + m_\pb}{m_\pb}
+  \int \frac{\fb(\vvb)}{|\vv - \vvb|}\, \dI\vvb ,
+  \quad \Rgb(\vv) = \int \fb(\vvb)|\vv - \vvb|\, \dI\vvb ,
+  \nonumber
+\end{equation}
+which have the following properties
+\begin{equation}
+  \gv\cdot\gv \Rhb = 
+  -4\pi \frac{m_\pt + m_\pb}{m_\pb} \Gamma^{\tob}\fb ,\quad
+  \gv\cdot\gv \Rgb = 
+  2 \frac{m_\pb}{m_\pt + m_\pb} \Rhb .
+  \nonumber
+\end{equation}
+The~Rosenbluth equation \refeq{eq:FP_Rosenbluth} can be further rewritten
+according to $[$Longmire, Conrad L. : Elementary Plasma Physics. Intersci. Pub., 1963$]$ as
+\begin{equation}
+  \left(\pdv{\ft}{t}\right)_c = \sum_{\pb} \Gamma^{\tob} 
+  \left[ 4\pi \frac{m_{\pt}}{m_\pb} \fb \ft 
+  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rhb\cdot\gv \ft 
+  + \frac{\gv\gv\Rgb : \gv\gv \ft}{2} \right] ,
+  \label{eq:FP_Longmire}
+\end{equation}
+which was also published in Shkarofsky 1966 and used in Tzoufras 2011.
+
+%\subsection{Spherical harmonics expansion}
+%\label{sec:FP_spherical_harmonics}
+%Write Hu (14, 15) and full (1) in spherical coordinates. Then explicitly write
+%(17, 18, 23, 24, 25). Further define spherical harmonics expansion and 
+%from Tzoufras (34, 35, 36, 37).
+
+\subsection{The linearized Fokker-Planck equation for low anisotropy}
+\label{sec:FP_linear}
+Define the anisotropic perturbation as in Tzoufras and then use the equations
+(32, 33) and the harmonic expansions (38, 39, 40) and the most importantly (41)
+for one-kind particles. Finally, write explicitly (41) for the case $f_1^0$
+and write set of integrals $I, J$ and constants $C_1, .., C_6$,
+which will be used to calculate FP equation solution for diffusive conditions.
+
+If we write the~distribution function as its isotropic and anisotropic parts, 
+i.e. $\ft = \ft_0 + \delta\ft$ and $\fb = \fb_0 + \delta\fb$, 
+then the~linearized LFP operator for low anisotropy of order 
+$O(\delta\ft^2, \delta\fb^2)$ reads 
+\begin{eqnarray}
+  \frac{1}{\Gamma^{\tob}} \left(\pdv{\ft_0}{t}\right)_{\pb} &=&  
+  4\pi \frac{m_{\pt}}{m_\pb} \fb_0 \ft_0 
+  + \frac{m_\pb - m_\pt}{m_\pt + m_\pb} \gv\Rh(\fb_0)\cdot\gv \ft \nonumber \\ 
+  &&+ \frac{\gv\gv\Rg(\fb_0) : \gv\gv \ft_0}{2} ,
+  \label{eq:FP_f0} \\ 
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\delta\ft}{t}\right)_{\pb} &=&  
+  4\pi \frac{m_{\pt}}{m_\pb} 
+  \left(\fb_0\delta\ft + \ft_0\delta\fb\right) \nonumber \\ 
+  &&+ \frac{m_\pb - m_\pt}{m_\pt + m_\pb} 
+  \left(\gv\Rh(\fb_0)\cdot\gv \delta\ft + \gv\ft_0\cdot\gv\Rh(\delta\fb)\right)
+  \nonumber \\ 
+  &&+ \frac{\gv\gv\Rg(\fb_0) : \gv\gv \delta\ft}{2} 
+  + \gv\gv \ft_0 : \frac{\gv\gv\Rg(\delta\fb)}{2} .
+  \label{eq:FP_deltaf} 
+\end{eqnarray}
+
+\begin{eqnarray}
+  \ft &=& \ft_0 + \sum_{l=1}^\infty\sum_{m=-l}^l \ft^m_l(\vmag) 
+  P_l^{|m|}(\cos \theta) \exp^{i m \phi} ,
+  \nonumber \\ 
+  \fb &=& \fb_0 + \sum_{l=1}^\infty\sum_{m=-l}^l \fb^m_l(\vmag) 
+  P_l^{|m|}(\cos \theta) \exp^{i m \phi} ,
+  \nonumber
+\end{eqnarray}
+
+\begin{eqnarray}
+  I_j(\fb_l^m) &=& \frac{4\pi}{\vmag^j} \int_0^\vmag \fb_l^m(u) u^{j+2}
+  \, \dI u ,
+  \nonumber \\
+  J_j(\fb_l^m) &=& \frac{4\pi}{\vmag^j} \int_\vmag^\infty 
+  \fb_l^m(u) u^{j+2}\, \dI u ,
+  \nonumber
+\end{eqnarray}
+
+\begin{equation}
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\ft_0}{t}\right)_{\pb} =
+  \frac{1}{3\vmag^2}\pdv{}{\vmag}\left[\frac{3 m_\pt}{m_\pb} 
+  \ft_0 I_0(\fb_0) + \vmag \left( I_2(\fb_0) + J_{-1}(\fb_0)\right)
+  \pdv{\ft_0}{\vmag} \right] ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \frac{1}{\Gamma^{\tob}}\left(\pdv{\ft_l^m}{t}\right)_{\pb} = 
+  4\pi\frac{m_\pt}{m_\pb} \left[\fb_0 \ft_l^m + \ft_0 \fb_l^m \right] 
+  \\
+  + \frac{m_\pt-m_\pb}{m_\pb \vmag^2} \left[ \pdv{\ft_0}{\vmag}
+  \left(\frac{l+1}{2 l+1} I_l(\fb_l^m) 
+  - \frac{l}{2 l +1} J_{-1-l}(\fb_l^m)\right) 
+  + I_0(\fb_0)\pdv{\ft_l^m}{\vmag}\right] 
+  \\
+  + \frac{I_2(\fb_0) + J_{-1}(\fb_0)}{3\vmag}
+  \frac{\partial^2 \ft_l^m}{\partial\vmag^2} + 
+  \frac{-I_2(\fb_0) + 2 J_{-1}(\fb_0) + 3 I_0(\fb_0)}{3\vmag^2}
+  \pdv{\ft_l^m}{\vmag}
+  \\
+  - \frac{l(l+1)}{2}
+  \frac{-I_2(\fb_0) + 2 J_{-1}(\fb_0) + 3 I_0(\fb_0)}{3\vmag^3} \ft_l^m 
+  \\
+  \frac{1}{2 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[C_1 I_{l+2}(\fb_l^m) + C_1 J_{-l-1}(\fb_l^m) + C_2 I_l(\fb_l^m) 
+  + C_2 J_{1-l}(\fb_l^m) \right]
+  \\
+  \frac{1}{\vmag^2} \pdv{\ft_0}{\vmag}
+  \left[C_3 I_{l+2}(\fb_l^m) + C_4 J_{1-l}(\fb_l^m) + C_5 J_{-l-1}(\fb_l^m) 
+  + C_6 I_l(\fb_l^m) \right]
+  \label{eq:FP_flm}
+\end{multline}
+\begin{eqnarray}
+  C_1 = \frac{(l+1)(l+2)}{(2l+1)(2l+3)}, 
+  C_2 = -\frac{(l-1)l}{(2l +1)(2l-1)},
+  C_3 = -\frac{l(l+1)/2 + (l+1)}{(2l+1)(2l+3)},
+  \nonumber \\
+  C_4 = \frac{l(l+1)/2 - l}{(2l+1)(2l-1)},
+  C_5 = \frac{(l+2) - l(l+1)/2}{(2l+1)(2l+3)}, 
+  C_6 = \frac{l(l+1)/2 + (l-1)}{(2l+1)(2l-1)}, 
+  \nonumber
+\end{eqnarray}
+
+In the~case of massive background particles $m_\pt / m_\pb << 1$ in equilibrium
+and comparable temperatures $T_\pb\approx T_\pb$, 
+i.e. slow-non-moving background, 
+the~isotropic distribution function can be approximated by 
+$\fb_0^{slow} = n_{slow} \delta(\vmag) / (4\pi\vmag^2)$, 
+and since all integrals 
+$I_j(\fb_0^{slow}), J_j(\fb_0^{slow})$ vanish except 
+$I_0(\fb_0^{slow}) = n_{slow}$, equation \refeq{eq:FP_flm} reduces to 
+\begin{equation}
+  \frac{1}{\Gamma^{\pt/slow}}\left(\pdv{\ft_l^m}{t}\right)_{slow} = 
+  - \frac{l(l+1)}{2}
+  \frac{n_{slow}}{\vmag^3} \ft_l^m 
+  \label{eq:FP_flm_slow}
+\end{equation} 
+where $n_{slow}$ is the~density of slow massive particles. Consequently, 
+the~effect of collisions on slow massive particles leads to scattering but no
+change in velocity, i.e. energy, of test particles.
+
+\subsection{Plasma Fokker-Planck equation in diffusive regime}
+\begin{equation}
+  \left(\pdv{\ft_0}{t}\right)_{e} =
+  \frac{\Gamma^{e/e}}{3\vmag^2}\pdv{}{\vmag}\left[3 
+  \ft_0 I_0(\ft_0) + \vmag \left( I_2(\ft_0) + J_{-1}(\ft_0)\right)
+  \pdv{\ft_0}{\vmag} \right] ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \left(\pdv{\ft_l^m}{t}\right)_{e} = \Gamma^{e/e} \Bigg[
+  8\pi \ft_0 \ft_l^m  
+  - \frac{l(l+1)}{2}
+  \frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^3} \ft_l^m
+  \\
+  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+  \frac{\partial^2 \ft_l^m}{\partial\vmag^2} + 
+  \frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^2}
+  \pdv{\ft_l^m}{\vmag} 
+  \\
+  + \frac{1}{2 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[C_1 I_{l+2}(\ft_l^m) + C_1 J_{-l-1}(\ft_l^m) + C_2 I_l(\ft_l^m) 
+  + C_2 J_{1-l}(\ft_l^m) \right]
+  \\
+  + \frac{1}{\vmag^2} \pdv{\ft_0}{\vmag}
+  \left[C_3 I_{l+2}(\ft_l^m) + C_4 J_{1-l}(\ft_l^m) + C_5 J_{-l-1}(\ft_l^m) 
+  + C_6 I_l(\ft_l^m) \right] \Bigg]
+\end{multline}
+
+\begin{equation}
+  C_1 = \frac{2}{5}, 
+  C_2 = 0,
+  C_3 = -\frac{1}{5},
+  C_4 = 0,
+  C_5 = \frac{2}{15}, 
+  C_6 = \frac{1}{3}, 
+  \nonumber
+\end{equation}
+
+%\begin{multline}
+%  \frac{1}{\Gamma^{e/e}}\left(\pdv{\ft_1}{t}\right)_{e} = 
+%  8\pi \ft_0 \ft_1  
+%  - \frac{-I_2(\ft_0) + 2 J_{-1}(\ft_0) + 3 I_0(\ft_0)}{3\vmag^3} \ft_1
+%  \\
+%  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+%  \frac{\partial^2 \ft_1}{\partial\vmag^2} + 
+%  \frac{-I_2(\ft_0) + 2 J_{-1}(\ft_0) + 3 I_0(\ft_0)}{3\vmag^2}
+%  \pdv{\ft_1}{\vmag} 
+%  \\
+%  + \frac{1}{5 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+%  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+%  + \frac{1}{15 \vmag^2} \pdv{\ft_0}{\vmag}
+%  \left[5 I_1(\ft_1) - 3 I_{3}(\ft_1) + 2 J_{-2}(\ft_1) 
+%  \right]
+%\end{multline}
+
+\begin{multline}
+  \left(\pdv{\ft_1}{t}\right)_{e+i} = \Gamma^{e/e}\Bigg[
+  8\pi \ft_0 \ft_1  
+  - \left[\frac{3 I_0(\ft_0) - I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^3} +
+  \frac{\Zbar n_e}{\vmag^3}\right] \ft_1
+  \\
+  +   \frac{3 I_0(\ft_0) -I_2(\ft_0) + 2 J_{-1}(\ft_0)}{3\vmag^2}
+  \pdv{\ft_1}{\vmag}
+  + \frac{I_2(\ft_0) + J_{-1}(\ft_0)}{3\vmag}
+  \frac{\partial^2 \ft_1}{\partial\vmag^2} 
+  \\
+  + \frac{1}{5 \vmag} \frac{\partial^2 \ft_0}{\partial\vmag^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  + \frac{1}{15 \vmag^2} \pdv{\ft_0}{\vmag}
+  \left[5 I_1(\ft_1) - 3 I_{3}(\ft_1) + 2 J_{-2}(\ft_1) 
+  \right] \Bigg]
+\end{multline}
+
+\begin{equation}
+  \ft \approx \fM + \cos(\theta) \mfpei(\vmag) 
+  \left[\frac{\vmag^2}{2\vth^2} - 4 + D\left(\vmag\right) \right] \fM ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \vmag\pdv{\fM}{z} - \frac{\vmag\tEz}{\vth^2}\fM = \Gamma^{e/e}\Bigg[
+  8\pi \fM \ft_1  
+  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM) + 3 \Zbar n_e}{3\vmag^3} \ft_1
+  \\
+  +   \frac{3 I_0(\fM) -I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^2}
+  \pdv{\ft_1}{\vmag}
+  + \frac{I_2(\fM) + J_{-1}(\fM)}{3\vmag}
+  \frac{\partial^2 \ft_1}{\partial\vmag^2} 
+  \\
+  + \frac{\fM}{15 \vmag\vth^2} \left[\frac{3\vmag^2}{\vth^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  - 5 \left[I_1(\ft_1) + J_{-2}(\ft_1)\right]
+  \right] \Bigg]
+  \nonumber
+\end{multline}
+
+\begin{multline} 
+  \left[\frac{I_2(\fM) + J_{-1}(\fM)}{3\vmag}\right]
+  \frac{\partial^2 \ft_1}{\partial\vmag^2}
+  + \left[\frac{3 I_0(\fM) -I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^2}\right]
+  \pdv{\ft_1}{\vmag}
+  \\ 
+  + \left[8\pi \fM  - \frac{3 I_0(\fM) - I_2(\fM) + 2 J_{-1}(\fM)}{3\vmag^3}
+  - \frac{\Zbar n_e}{\vmag^3} \right] \ft_1 =
+  \\
+  \frac{1}{\Gamma^{e/e}}
+  \left[\vmag\pdv{\fM}{z} - \frac{\vmag\tEz}{\vth^2}\fM\right]
+  - \frac{\fM}{15 \vmag\vth^2} \left[\frac{3\vmag^2}{\vth^2}
+  \left[I_{3}(\ft_1) + J_{-2}(\ft_1)\right]
+  - 5 \left[I_1(\ft_1) + J_{-2}(\ft_1)\right]
+  \right]
+  \label{eq:FP_f1_diffusive}
+\end{multline}
+
+\begin{equation} 
+  a \frac{\partial^2 \ft_1}{\partial\vmag^2} + b \pdv{\ft_1}{\vmag} + c \ft_1 
+  = d
+  \nonumber
+\end{equation}
+
+Integration of \refeq{eq:FP_f1_diffusive} from $\infty \rightarrow 0$
+\begin{eqnarray}
+  a^{n-0.5} \frac{df^n - df^{n-1}}{ - \Delta \vmag} &=& b^{n-0.5} df^{n-1} 
+  + c^{n-0.5} \ft_1^{n-1} + d^{n-0.5} ,
+  \nonumber \\
+  \frac{\ft_1^n - \ft_1^{n-1}}{- \Delta \vmag} &=& df^{n-1} ,
+  \nonumber
+\end{eqnarray}
+\begin{eqnarray}
+  \left(\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}\right) df^{n-1} 
+  - c^{n-0.5} \ft_1^{n-1}&=&  d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n,
+  \nonumber \\
+  - df^{n-1} + \frac{1}{\Delta \vmag} \ft_1^{n-1} &=&  
+  \frac{1}{\Delta \vmag} \ft_1^n ,
+  \nonumber
+\end{eqnarray}
+
+\begin{equation}
+  \begin{bmatrix}
+    - c^{n-0.5}  &
+	\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}
+    \\
+	\frac{c^{n-0.5}}{\Delta \vmag} & -c^{n-0.5} 
+  \end{bmatrix}
+  \begin{bmatrix}
+    \ft_1^{n-1} \\
+    df^{n-1}
+  \end{bmatrix}
+  =  
+  \begin{bmatrix}
+    d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \\
+    \frac{c^{n-0.5}}{\Delta \vmag} \ft_1^n
+  \end{bmatrix}   ,
+  \nonumber
+\end{equation}
+
+\begin{multline}
+  \begin{bmatrix}
+    - c^{n-0.5}  &
+	\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5} 
+    \\
+	0 & 
+	\frac{1}{\Delta \vmag}
+	\left(\frac{a^{n-0.5}}{\Delta \vmag} - b^{n-0.5}\right) - c^{n-0.5} 
+  \end{bmatrix}
+  \begin{bmatrix}
+    \ft_1^{n-1} \\
+    df^{n-1}
+  \end{bmatrix}
+  =  \\
+  \begin{bmatrix}
+    d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \\
+    \frac{1}{\Delta \vmag} \left(c^{n-0.5}\ft_1^n + 
+	d^{n-0.5} + \frac{a^{n-0.5}}{\Delta \vmag} df^n \right) 
+  \end{bmatrix}   ,
+  \nonumber
+\end{multline}
+
+\begin{eqnarray}
+  a^n &=& \frac{I^n_2(\fM) + J^n_{-1}(\fM)}{3\vmag^n} ,
+  \nonumber \\
+  b^n &=& \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM)}{3{\vmag^n}^2} ,
+  \nonumber \\
+  c^n &=& 8\pi \fM^n  - \frac{3 I^n_0(\fM) - I^n_2(\fM) + 2 J^n_{-1}(\fM)}
+  {3{\vmag^n}^3} - \frac{\Zbar n_e}{{\vmag^n}^3},
+  \nonumber \\
+  d^n &=& \frac{1}{\Gamma^{e/e}}
+  \left[\vmag^n\pdv{\fM^n}{z} - \frac{\vmag^n\tEz}{\vth^2}\fM^n\right]
+  \nonumber \\
+  &&- \frac{\fM^n}{15 \vmag^n\vth^2} \left[\frac{3{\vmag^n}^2}{\vth^2}
+  \left[I^n_{3}(\ft_1) + J^n_{-2}(\ft_1)\right]
+  - 5 \left[I^n_1(\ft_1) + J^n_{-2}(\ft_1)\right] \right]
+  \nonumber
+\end{eqnarray}
+
+\begin{eqnarray}
+  I^n_0(g) = 4\pi \int_0^{\vmag^n} g(u) u^{2}
+  \, \dI u ,\quad
+  I^n_1(g) = \frac{4\pi}{\vmag^n} \int_0^{\vmag^n} g(u) u^{3}
+  \, \dI u ,
+  \nonumber \\
+  I^n_2(g) = \frac{4\pi}{{\vmag^n}^2} \int_0^{\vmag^n} g(u) u^{4}
+  \, \dI u ,\quad 
+  I^n_3(g) = \frac{4\pi}{{\vmag^n}^3} \int_0^{\vmag^n} g(u) u^{5}
+  \, \dI u ,
+  \nonumber \\
+  J^n_{-1}(g) = 4\pi\vmag^n \int_{\vmag^n}^\infty 
+  g(u) u\, \dI u ,\quad
+  J^n_{-2}(g) = 4\pi{\vmag^n}^2 \int_{\vmag^n}^\infty 
+  g(u) \, \dI u ,
+  \nonumber
+\end{eqnarray}
+
+\section{AWBS-P1 modeling of laser heated plasmas}\label{sec:OOE_AWBSP1}
+\subsection{Model equations}
+The~AWBS electron transport equation reads
+\begin{multline}
+  \vmag\vn\cdot\nabla f + \tE\cdot\vn \pdv{f}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  =
+  \vmag \nue \pdv{}{\vmag}\left(f - f_M\right) 
+  + (\nuei + \nue) (\fzero - f) ,
+  \nonumber \label{eq:AWBS_model}
+\end{multline}
+where $\nue$ is the~electron-electron collision frequency, 
+$\nuei$ is the~electron-ion collision frequency, and $\nuei = \Zbar \nue$.
+
+In order to eliminate the~dimensions of the~above transport problem 
+the~first-two-moment model based on approximation 
+\begin{equation}
+  f = \frac{\fzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone , 
+  \nonumber \label{eq:OOE_P1approximation}
+\end{equation}
+can be adopted and reads
+\begin{eqnarray}
+  \nue\vmag\pdv{}{\vmag}\left(\fzero - \tfM \right) &=&
+  \vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
+  \nonumber \label{eq:OOE_P1f0}\\
+  \nue\vmag\pdv{}{\vmag}\fone - \nutot\fone &=& 
+  \vmag\nabla\cdot\left(\MA\fzero\right) + 
+  \tE\cdot\pdv{\left(\MA\fzero\right)}{\vmag} + \tB\times\fone ,
+  \nonumber \label{eq:OOE_P1f1}
+\end{eqnarray}
+where $\tfM = 4\pi \fM$ and the~closure matrix takes the~form
+\begin{equation}
+  \MA = \frac{1}{3}\MI .
+  \nonumber \label{eq:OOE_P1closure}
+\end{equation}
+
+Since in the~laser heated plasmas the~Knudsen number 
+Kn$ = \frac{\vth}{\nu_t(\vth) L} \in (0, 1)$, i.e. the~collisionality in 
+the~kinetics of electrons plays always an~important effect for thermal-like 
+particles, the~electron distribution 
+function can be treated as out-of-equilibrium approximation 
+\begin{equation}
+  f = \fM + \daf ,
+  \label{eq:OOE_outofeq}
+\end{equation}  
+where the~consequent AWBS model reads
+\begin{multline}
+  \vmag\vn\cdot\nabla (\fM + \daf) + \tE\cdot\vn \pdv{\fM}{\vmag} 
+  + \tE\cdot\vn \pdv{\daf}{\vmag} 
+  + \frac{\tE\cdot\vect{e}_\phi 
+  - \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{\daf}{\phi}
+  = \\
+  \vmag \nue \pdv{\daf}{\vmag} 
+  + (\nuei + \nue) (\fzero - \fM - \daf) ,
+  \label{eq:OOE_AWBS_model}
+\end{multline}
+or its P1 approximation equivalent
+\begin{equation}
+  f = \frac{4\pi \fM + \dafzero}{4\pi} + \frac{3}{4\pi}\vn\cdot\fone .
+  \label{eq:OOE_P1outofeq}
+\end{equation}
+where the~moment model reads
+\begin{eqnarray}
+  \nue\vmag\pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag} + \frac{2}{\vmag}\tE\cdot\fone , 
+  \label{eq:OOE_P1f0}\\
+  \nue\vmag\pdv{\fone}{\vmag} - \nutot\fone &=& 
+  \frac{\vmag}{3}\nabla\dafzero + 
+  \frac{\tE}{3}\pdv{\dafzero}{\vmag} + \tB\times\fone 
+  \nonumber \\
+  & & + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} .
+  \label{eq:OOE_P1f1}
+\end{eqnarray}
+
+\subsection{A~consistent treatment of $\tE$ field}
+\label{sec:OOE_E_treatment}
+The~plasma conditions providing an~appropriate electric field
+are the~best expressed via the~definition of current
+\begin{equation}
+  \vect{q}_c(\vect{x}) = \intv
+  \vmag\fone(\vect{x}) \vmag^2\, \dI\vmag , 
+  \nonumber 
+\end{equation}
+which can be directly expressed from \refeq{eq:OOE_P1f1} as
+\begin{equation}
+  %\frac{\vect{j}}{\qe} = 
+  \vect{q}_c =
+  \intv \left(\frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}
+  - \frac{\vmag^2}{3\nutot}\nabla\left(\tfM + \dafzero\right) - 
+  \frac{\vmag}{3\nutot}\pdv{\left(\tfM + \dafzero\right)}{\vmag}\tE
+  \right) \vmag^2\, \dI\vmag ,
+  \label{eq:OOE_P1current}
+\end{equation}
+where the $\B$ field and $\E$ field scattering effect (angular) have been 
+omitted.  
+
+Then, the~current can be easily evaluated based on
+\begin{eqnarray}
+  a_0(\vect{x}) &=& \intv\frac{\vmag}{3 \nutot} \pdv{\left(\tfM + \dafzero\right)}{\vmag}(\vect{x})
+  \vmag^2\, \dI\vmag , \nonumber \\
+  \vect{b}_{0}(\vect{x}) &=& \intv\left(  
+  \frac{\vmag^2}{3 \nutot}\nabla\left(\tfM(\vect{x}) + \dafzero(\vect{x})\right)
+  - \frac{\nue\vmag^2}{\nutot}\pdv{\fone}{\vmag}(\vect{x})
+  \right)\vmag^2\, \dI\vmag , \nonumber 
+\end{eqnarray}
+%Alors, treat $a_0, \vect{b}_{0}, \vect{b}_1$ as grid functions, 
+%where it is obvious to express 
+%$\pdv{a_0}{\vmag}, \pdv{\vect{b}_{0}}{\vmag}, \pdv{\vect{b}_1}{\vmag}$ in 
+%ImplicitSolve().
+as the~following generalization of the~Ohm's law
+\begin{equation}
+  \vect{q}_c(\vect{x}) 
+  = -\vect{b}_{0}(\vect{x}) 
+  - a_{0}(\vect{x})\tE(\vect{x}) ,
+  \nonumber \label{eq:OOE_HOFcurrent}
+\end{equation}
+where one needs the~actual distribution function $f$ values.
+
+%\begin{equation}
+%  \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} 
+%  - \frac{\vect{q}_c(\vect{x})}{a_{0}(\vect{x})}
+%   + \frac{\vect{b}_{1}(\vect{x})}{a_{0}(\vect{x})}\times\tB(\vect{x}) ,
+%  \nonumber \label{eq:OOE_HOFcurrent}
+%\end{equation}
+
+It is straightforward to find the~\textit{zero current} formula for 
+the~electric field
+\begin{equation}
+  \tE(\vect{x}) = -\frac{\vect{b}_{0}(\vect{x})}{a_{0}(\vect{x})} .
+  \label{eq:OOE_E_j0}
+\end{equation}
+
+\subsection{AWBS model analysis}
+\label{sec:OOE_AWBS_model_analysis}
+The~AWBS transport equation can be written as the~following
+\begin{multline}
+  \left(\vmag \nue - \tE\cdot\vn\right)\pdv{\daf}{\vmag} 
+  %+ \frac{\tE\cdot\vect{e}_\phi 
+  %- \vmag\tB\cdot\vect{e}_\theta}{\vmag}\pdv{f}{\phi}
+  =
+  \vmag\vn\cdot\nabla (\fM + \daf) + \tE\cdot\vn\pdv{\fM}{\vmag} 
+  + (\nuei + \nue) (\fM + \daf - \fzero) ,
+  \label{eq:OOE_AWBS_model_analysis}
+\end{multline}
+in order to stress the~effect of force applied to electrons, i.e. the~effect
+of friction described by $\nue$ and the~Lorentz force effect via $\tE$, 
+and their competition.
+
+The~same reformulation can be written for the~moment AWBS model
+\begin{eqnarray}
+  \pdv{\dafzero}{\vmag} &=&
+  \frac{1}{\nue\vmag}\left(\vmag\nabla\cdot\fone + \tE\cdot
+  \pdv{\fone}{\vmag}\right) , 
+  \nonumber\\
+  \nue\vmag\pdv{\fone}{\vmag} - \nutot\fone &=& 
+  \frac{\vmag}{3}\nabla\dafzero + 
+  \frac{\tE}{3}\pdv{\dafzero}{\vmag}
+  + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} ,
+  \nonumber
+\end{eqnarray}
+and it takes the~following form
+\begin{equation}
+  \left(\nue\vmag\MI - \frac{\tE\tE}{3 \nue\vmag}\right)\cdot
+  \pdv{\fone}{\vmag} = 
+  \frac{\vmag}{3}\nabla\dafzero + \frac{\tE}{3 \nue}\nabla\cdot\fone
+  + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} 
+  + \nutot\fone ,
+  \nonumber \label{eq:OOE_P1AWBS_model_analysis}
+\end{equation}
+which is especially instructive in 1D
+\begin{equation}
+  \left(\nue\vmag - \frac{\tEz^2}{3 \nue\vmag}\right)
+  \pdv{\fonez}{\vmag} = 
+  \frac{\vmag}{3}\pdv{\dafzero}{z} + \frac{\tEz}{3 \nue}\pdv{\fonez}{z}
+  + \frac{\vmag}{3}\pdv{\tfM}{z} + \frac{\tEz}{3}\pdv{\tfM}{\vmag} 
+  + \nutot\fonez ,
+  \label{eq:OOE_P1AWBS_model_1Danalysis}
+\end{equation}
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  \sqrt{3} \nue > \frac{|\tEz|}{\vmag} .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+
+\begin{equation}
+  \pdv{\fonez}{\vmag} = 
+  \frac{3 \nue\vmag}{3 (\nue\vmag)^2 - \tEz^2}
+  \left(
+  \frac{\vmag}{3}\pdv{\dafzero}{z} + \frac{\tEz}{3 \nue}\pdv{\fonez}{z}
+  + \frac{\vmag}{3}\pdv{\tfM}{z} + \frac{\tEz}{3}\pdv{\tfM}{\vmag} 
+  + \nutot\fonez\right) ,
+  \label{eq:OOE_P1AWBS_model_1Danalysis}
+\end{equation}
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  3(\nue\vmag)^2 - \tEz^2 \neq 0 ,
+  \nonumber
+\end{equation}
+or a~numerical stability formulation
+because it gives a \textit{"reverse-time-like evolution"} condition
+\begin{equation}
+  |3(\nue\vmag)^2 - \tEz^2| > \epsilon .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+which can be obtained from
+\begin{equation}
+  \left(3(\nue\vmag)^2 - \tEz^2\right)^2 - \epsilon^2 = 0 .
+  \label{eq:OOE_reverse_time_condition}
+\end{equation}
+
+\subsection{\textit{"Reverse-time-like evolution"} model by splitting}
+\label{sec:OOE_stable_splitting}
+Full separation of advection and E field
+\begin{eqnarray}
+  \nue\vmag \pdv{\fone^{\nue}}{\vmag} &=& 
+  \frac{\vmag}{3}\nabla\dafzero^{\nue}
+  + \frac{\vmag}{3}\nabla\tfM + \nutot\fone^{\nue} ,
+  \nonumber \\
+  \frac{\tE\tE}{3 \nue\vmag}\cdot
+  \pdv{\fone^{\tE}}{\vmag} &=& -\frac{\tE}{3 \nue}\nabla\cdot\fone^{\tE} 
+  - \frac{\tE}{3}\pdv{\tfM}{\vmag},
+  \nonumber
+\end{eqnarray}
+or separation of stable "bulk" E field effect and implicit E field effect
+\begin{eqnarray}
+  \nue\vmag \pdv{\fone^{\nue}}{\vmag} &=& 
+  \frac{\vmag}{3}\nabla\dafzero^{\nue}
+  + \frac{\vmag}{3}\nabla\tfM + \nutot\fone^{\nue} 
+  + \frac{\tE}{3}\pdv{\tfM}{\vmag},
+  \nonumber \\
+  \frac{\tE\tE}{3 \nue\vmag}\cdot
+  \pdv{\fone^{\tE}}{\vmag} &=& -\frac{\tE}{3 \nue}\nabla\cdot\fone^{\tE} ,
+  \nonumber
+\end{eqnarray}
+and the~complete effect of diffusion in velocity space reads
+\begin{equation}
+  \pdv{\fone}{\vmag} = \pdv{\fone^{\nue}}{\vmag} + \pdv{\fone^{\tE}}{\vmag} ,
+  \nonumber
+\end{equation}
+
+\begin{comment}
+\begin{multline}
+  \IV_{\left(\MA \cdot \tE\right)} \cdot
+  \left[
+  \frac{1}{\vmag} \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} 
+  + \IM^{0^{-1}}_{(\nue)} \cdot \left( \ID^T_{\left(\MI\right)} 
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)} \right)\cdot  
+  \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right)\right] = \\
+  -\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM}{\vmag} .
+  \nonumber
+\end{multline}
+\end{comment}
+
+\subsection{\textit{"Friction"} model}
+\label{sec:OOE_stable_splitting}
+\newcommand{\nuE}{\nu_{\tE}}
+In order to obey \refeq{eq:OOE_reverse_time_condition}, an~additional friction
+$\nu_{\tE}$ can be introduced as
+\begin{eqnarray}
+  |\tE| &=& |\tE^*| + \nuE \vmag  ,
+  \nonumber \\
+  \nue + \nuE &=& \frac{|\tE^*|}{\vmag} ,
+  \nonumber
+\end{eqnarray}
+which is then applied to perturbation $\dafzero$ as
+\begin{eqnarray}
+  \left(\nue + \nuE\right) \vmag \pdv{\dafzero}{\vmag} &=&
+  \vmag\nabla\cdot\fone + \tE^*\cdot\pdv{\fone}{\vmag} , 
+  \nonumber\\
+  \left(\nue + \frac{\nuE}{3}\right) \vmag\pdv{\fone}{\vmag} - \nutot\fone &=& 
+  \frac{\vmag}{3}\nabla\dafzero + 
+  \frac{\tE^*}{3}\pdv{\dafzero}{\vmag}
+  + \frac{\vmag}{3}\nabla\tfM + \frac{\tE}{3}\pdv{\tfM}{\vmag} .
+  \nonumber
+\end{eqnarray}
+
+\begin{comment} % Implicit fully-discrete scheme
+\subsection{Implicit fully-discrete scheme}
+\label{sec:OOE_impl_fullydiscrete_scheme}
+The moment P1 model \refeq{eq:OOE_P1f0}, \refeq{eq:OOE_P1f1} can be written 
+in a~semi-discrete form
+\begin{eqnarray}
+  \IM^0_{(\nue)} \cdot \pdv{\davfzero}{\vmag}  
+  &=& 
+  \left(\ID^T_{\left(\MI\right)}
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}\right) \cdot \fone
+  + \frac{1}{\vmag}\IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} ,  
+  \nonumber \label{eq:OOE_semiM1hosf0} \\
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  &=& 
+  - \ID_{\left(\MA\right)}\cdot\davfzero
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero}{\vmag}
+  + \frac{1}{\vmag}\left(
+  \IM^1_{\left( \nutot \right)} + \IB_{\left( \tB \right)}  
+  \right) \cdot \fone
+  \nonumber\\
+  & & - \ID_{\left(\MA\right)}\cdot \tvfM
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM}{\vmag} .
+  \label{eq:OOE_semiM1hosf1}
+\end{eqnarray}
+It is convenient to define
+\begin{equation}
+  \matr{DIVE} = \ID^T_{\left(\MI\right)} 
+  + \frac{2}{\vmag^2}\IV^T_{\left(\tE\right)}.
+  \nonumber
+\end{equation}
+The next step goes towards implicit Runge-Kutta method (DIRK).
+Then, a~very effective inversion in the~L2 space can be formally performed
+\begin{equation}
+  \pdv{\davfzero}{\vmag}  
+  = \frac{1}{\vmag}
+  \IM^{0^{-1}}_{(\nue)} \cdot \IV^T_{\left(\tE\right)} \cdot 
+  \pdv{\fone}{\vmag} 
+  + \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot  
+  \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right) .
+  \label{eq:OOE_fullP1hosf0}
+\end{equation}
+The~first moment equation in the DIRK framework reads
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\davfzero}{\vmag}
+  - \ID_{\left(\MA\right)}\cdot \left(\tvfM^n + \davfzero^n 
+  + \Delta\vmag\pdv{\davfzero}{\vmag}\right)\\ 
+  + \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \left(\fone^n 
+  + \Delta\vmag\pdv{\fone}{\vmag}\right)
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag} .
+  \label{eq:OOE_semiM1hosf1}
+\end{multline}
+Finally, one can eliminate $\pdv{\davfzero}{\vmag}$, 
+which leads to the~final form
+\begin{multline}
+  \IM^1_{(\nue)} \cdot \pdv{\fone}{\vmag}  
+  = 
+  \left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot 
+  \left(\frac{1}{\vmag} \IV^T_{\left(\tE\right)} 
+  + \Delta\vmag \matr{DIVE}
+  \right)
+  \cdot \pdv{\fone}{\vmag}
+  \\
+  +\frac{\Delta\vmag}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \pdv{\fone}{\vmag} + 
+  \frac{1}{\vmag}\left(\IB_{\left( \tB \right)} 
+  + \IM^1_{\left( \nutot \right)}\right) 
+  \cdot \fone^n
+  + \frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)} \cdot
+  \pdv{\tvfM^n}{\vmag}
+  \\ 
+  +\left(\frac{1}{\vmag}\IV_{\left(\MA \cdot \tE\right)}
+  - \Delta\vmag \ID_{\left(\MA\right)} \right) \cdot
+  \IM^{0^{-1}}_{(\nue)} \cdot \matr{DIVE}\cdot\fone^n 
+  - \ID_{\left(\MA\right)}\cdot\left(\tvfM^n + \davfzero^n\right),
+  \label{eq:OOE_fullP1hosf1}
+\end{multline}
+where the~only unknown is $\pdv{\fone}{\vmag}$. Once \refeq{eq:OOE_fullP1hosf1}
+is solved the~completion of the~solution 
+$[\pdv{\davfzero}{\vmag}, \pdv{\fone}{\vmag}]$ is achieved by evaluating 
+\refeq{eq:OOE_fullP1hosf0}.
+\cite{Dobrev_Kolev_Rieben-High-order_curvilinear_finite_element_methods_for_Lagrangian_hydrodynamics}
+\end{comment} % Implicit fully-discrete scheme
+
+\section{Simulation results}\label{sec:results}
+Three cases:
+\begin{itemize}
+  \item constant $n_e = 5\times10^{20}$ [1/cm$^3$], constant $\Zbar = 4$, 
+  $T_e$ temperature profile taken from Impact simulation at 12 ps, see Figure 1
+  %\figref{fig:Philippe_VFP_12ps}
+  \item $n_e, T_e, \Zbar$ profiles taken from HYDRA simulation of Gadolinium
+  hohlraum at 10 ps, see Figure 2 and Figure 3
+  %\figref{fig:Gd_VFP_10ps_heatflux} and \figref{fig:Gd_VFP_10ps_kinetics} 
+  \item Detail of distribution function under diffusive conditions of hydrogen 
+  raising the~question of potentially outstanding properties of AWBS, since
+  the uncorrected AWBS result is very close to KIPP full collision operator,
+  see Figure 4 (consult Eq. (41) in Tzoufras OSHUN JCP 2011) 
+\end{itemize}
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_heatflux_12ps.png} \\ 
+      \includegraphics[width=1.0\textwidth]{../VFPdata/C7_kinetics_12ps.png}
+    \end{tabular}
+  \caption{
+  Philippe's preferred test $\Zbar = 4$ at 12 ps.  
+  }
+  \end{center}
+  \label{fig:Philippe_VFP_12ps}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} \\
+      %\includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/diffusion_fluxes_10ps.png} 
+      %\includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/fluxes_Efield_10ps.png} \\ 
+      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/diffusion_fluxes_Efield_10ps.png} 
+    \end{tabular}
+  \caption{
+  }
+  \end{center}
+  \label{fig:Gd_VFP_10ps_heatflux}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+       \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/kinetics_10ps_xpointmax.png} \\ 
+      \includegraphics[width=1.0\textwidth]{../VFPdata/GD_Hohlraum/kinetics_10ps_xpoint_1605microns.png}
+    \end{tabular}
+  \caption{
+  Kinetics profiles for max(flux) point and 1605 microns point for the case of 10ps VFP temperature profile, ne and Z Hydra profiles. 
+  }
+  \end{center}
+  \label{fig:Gd_VFP_10ps_kinetics}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{../VFPdata/KIPP_q_kinetics.png} \\
+      \includegraphics[width=1.0\textwidth]{../VFPdata/KIPP_j_kinetics.png}
+    \end{tabular}
+  \caption{KIPP (by Johnathan) vs AWBS using 
+  $\mfpei^* = \frac{\Zbar + 0.24}{\Zbar + 4.2}\mfpei, \Zbar=1, 
+  \vth = \sqrt{\frac{\kB T_e}{\me}}$ 
+  $f_1^{SH} = -\mfpei^*(v) \left(\frac{v^2}{2 \vth^2} - 4\right) 
+  \frac{\vn\cdot\nabla T_e}{T_e} \fM,\quad 
+  f_1^{KIPP} = -\mfpei^*(v) \left(\frac{3}{16}\frac{v^2}{\vth^2} - 1 
+  - \frac{3}{2}\frac{\vth^2}{v^2} \right) 
+  \frac{\vn\cdot\nabla T_e}{T_e} \fM$.
+  }
+  \end{center}
+  \label{fig:}
+\end{figure}
+
+\begin{figure}[tbh]
+  \begin{center}
+    \begin{tabular}{c}
+      \includegraphics[width=1.0\textwidth]{../results/fe_analysis/figs/P5_diffusive_heatflux_Z1_decelerating_Ezerothiter.png} \\
+      \includegraphics[width=1.0\textwidth]{../results/fe_analysis/figs/P5_diffusive_heatflux_Z1_accelerating_Ezerothiter.png}
+    \end{tabular}
+  \caption{
+  Decelerating (top) vs. accelerating (bottom) computations. 
+  Zeroth E field iteration, i.e.
+  no E field effect, of the diffusion regime conditions.
+  }
+  \end{center}
+  \label{fig:}
+\end{figure}
+
+\clearpage
+
+%\begin{figure}[tbh]
+%  \begin{center}
+%    \begin{tabular}{c}
+%      \includegraphics[width=0.55\textwidth]{../results/fe_analysis/figs/AWBScorrection_fit.png} 
+%    \end{tabular}
+%  \caption{
+%  Analytic fit to the~Z correction 
+%  ($\nue^* = \frac{688.9 \Zbar + 114.4}{\Zbar^2 + 
+%  1038 \Zbar + 474.1} \nue$, where $\nue = \nuei / \Zbar$) 
+%  of the~diffusion asymptotic of AWBS with respect to SH.
+%  }
+%  \end{center}
+%  \label{fig:}
+%\end{figure}
+
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+%% \appendix
+
+%% \section{}
+%% \label{}
+
+%% References
+%%
+%% Following citation commands can be used in the body text:
+%% Usage of \cite is as follows:
+%%   \cite{key}         ==>>  [#]
+%%   \cite[chap. 2]{key} ==>> [#, chap. 2]
+%%
+
+%% References with bibTeX database:
+
+\bibliographystyle{elsarticle-num}
+\bibliography{NTH}
+
+%% Authors are advised to submit their bibtex database files. They are
+%% requested to list a bibtex style file in the manuscript if they do
+%% not want to use elsarticle-num.bst.
+
+%% References without bibTeX database:
+
+% \begin{thebibliography}{00}
+
+%% \bibitem must have the following form:
+%%   \bibitem{key}...
+%%
+
+% \bibitem{}
+
+% \end{thebibliography}
+
+
+\end{document}
+
+%%
+%% End of file 
