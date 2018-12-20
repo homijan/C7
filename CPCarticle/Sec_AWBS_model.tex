@@ -21,18 +21,18 @@ $C_{ee}$ is the~Fokker-Planck form published by Landau \cite{Landau_1936}
   C_{FP}(\ft) =
   %\Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
   %\ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb ,
-  \gv\cdot\frac{\Gamma}{2}\int \matr{U}(\vv - \vvb) \cdot \left(
+  \Gamma~\gv\cdot\int \matr{U}(\vv - \vvb) \cdot \left(
   \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb ,
   \label{eq:LFP_model}
 \end{equation}
 where $\Gamma = \frac{4\pi\qe^4\lnc}{\me^2}$, $\lnc$ is the~Coulomb logarithm,
-and $\matr{U}(\vv - \vvb) = \frac{\matr{I} - (\vv - \vvb)\otimes (\vv - \vvb)}{|\vv - \vvb|}$.
+and $\matr{U}(\vv - \vvb) = \frac{1}{|\vv - \vvb|}\left(\matr{I} - \frac{(\vv - \vvb)\otimes (\vv - \vvb)}{|\vv - \vvb|^2}\right)$.
 The~e-i collision operator in principle also depends 
 on the~ion density function, i.e. $C_{ei}(\ft, \ft_i)$, however it 
 can be expressed in a~simpler form independent from $\ft_i$
 since massive ions are considered 
 to be motionless compared to electrons during a collision. 
-The~scattering operator accounts
+The~operator then accounts
 for the~change of electron velocity without change in the~velocity magnitude
 , i.e. angular scattering. 
 It is expressed in spherical coordinates as
