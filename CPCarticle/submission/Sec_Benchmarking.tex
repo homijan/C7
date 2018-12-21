@@ -113,7 +113,7 @@ C^0_{ee}(\fzero) &=& \frac{\Gamma}{v^2}\frac{\partial}{\partial \vmag}
 C(\fzero(\vmag)) &=& 4\pi\int_0^\vmag \fzero(u) u^2 \dI u ,
 \nonumber
 \\
-D(\fzero\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w \fzero(w) 
+D(\fzero(\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w \fzero(w) 
 \dI w \dI u .
 \nonumber
 \end{eqnarray}
@@ -249,9 +249,8 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
 	  &
       \includegraphics[width=\figscale\textwidth]{C7_Calder_case5_kinetics.png} 
 	  \\
-	  \includegraphics[width=\figscale\textwidth]{C7_Aladin_case5_nonlocal_kinetics.png} 
-      &
-      \includegraphics[width=\figscale\textwidth]{C7_Calder_case5_nonlocal_kinetics.png}
+ \includegraphics[width=\figscale\textwidth]{C7_Aladin_case5_nonlocal_kinetics.png} 
+      &  \includegraphics[width=\figscale\textwidth]{C7_Calder_case5_nonlocal_kinetics.png}
 	\end{tabular}
   \caption{  
   AP1 performance in a~low-$\Zbar$ heat-bath problem compared to the~VFP code 
@@ -350,8 +349,9 @@ $\Zbar = 10$
 in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}, 
 respectively, corresponding to a~moderate nonlocality 
 (Kn$^e \sim 10^{-2}$) leading to a~roughly 40 $\%$ inhibition compared 
-to the~local SH heat flux maximum. The~original temperature profile steepness
-$s = 1/50 \mu$m.
+to the~local SH heat flux maximum. 
+A~constant $\ed = 5\times10^{20}$ cm$^{-3}$ is held throughout the~simulation 
+and the~original temperature profile steepness $s = 1/50 \mu$m.
 It is preferable to use 
 $\text{Kn}^e = \frac{\mfpe(\vth)}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
  $\text{Kn} = \frac{\mfpei(\vth)}{L_{T_e}}$, 
@@ -514,7 +514,7 @@ For example $\vmag_{lim}\sim 4.3\vth$ for the~maximum point EDF in
 
 Unfortunately, \eqref{eq:v_limit} also leads to a~limitation of 
 the~\textit{decelerating} AP1 model, where the~strength of the~stopping/accelerating effect due to the~electric field on electrons must always 
-be kept less than the~e-e collision friciton. Details are shown 
+be kept less than the~e-e collision friction. Details are shown 
 in \appref{app:AP1limit}.
 
 \begin{table}
