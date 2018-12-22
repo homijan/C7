@@ -1,129 +1,3 @@
-%% This template can be used to write a paper for
-%% Computer Physics Communications using LaTeX.
-%% For authors who want to write a computer program description,
-%% an example Program Summary is included that only has to be
-%% completed and which will give the correct layout in the
-%% preprint and the journal.
-%% The `elsarticle' style is used and more information on this style
-%% can be found at 
-%% http://www.elsevier.com/wps/find/authorsview.authors/elsarticle.
-%%
-%%
-%\documentclass[preprint,12pt]{elsarticle}
-
-%% Use the option review to obtain double line spacing
-%% \documentclass[preprint,review,12pt]{elsarticle}
-
-%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
-%% for a journal layout:
-%% \documentclass[final,1p,times]{elsarticle}
-%% \documentclass[final,1p,times,twocolumn]{elsarticle}
-%% \documentclass[final,3p,times]{elsarticle}
-%% \documentclass[final,3p,times,twocolumn]{elsarticle}
-%% \documentclass[final,5p,times]{elsarticle}
-%% \documentclass[final,5p,times,twocolumn]{elsarticle}
-
-%% if you use PostScript figures in your article
-%% use the graphics package for simple commands
-%% \usepackage{graphics}
-%% or use the graphicx package for more complicated commands
-%\usepackage{graphicx}
-%% or use the epsfig package if you prefer to use the old commands
-%% \usepackage{epsfig}
-
-%% The amssymb package provides various useful mathematical symbols
-%\usepackage{amssymb}
-%% The amsthm package provides extended theorem environments
-%% \usepackage{amsthm}
-
-%% Additional needed packages.
-%\usepackage{amsmath}
-%\usepackage{verbatim}
-%\usepackage{color}
-
-%% The lineno packages adds line numbers. Start line numbering with
-%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
-%% for the whole article with \linenumbers after \end{frontmatter}.
-%\usepackage{lineno}
-%\usepackage{hyperref}
-
-%% natbib.sty is loaded by default. However, natbib options can be
-%% provided with \biboptions{...} command. Following options are
-%% valid:
-
-%%   round  -  round parentheses are used (default)
-%%   square -  square brackets are used   [option]
-%%   curly  -  curly braces are used      {option}
-%%   angle  -  angle brackets are used    <option>
-%%   semicolon  -  multiple citations separated by semi-colon
-%%   colon  - same as semicolon, an earlier confusion
-%%   comma  -  separated by comma
-%%   numbers-  selects numerical citations
-%%   super  -  numerical citations as superscripts
-%%   sort   -  sorts multiple citations according to order in ref. list
-%%   sort&compress   -  like sort, but also compresses numerical citations
-%%   compress - compresses without sorting
-%%
-%% \biboptions{comma,round}
-
-% \biboptions{}
-
-%% This list environment is used for the references in the
-%% Program Summary
-%%
-%\newcounter{bla}
-%\newenvironment{refnummer}{%
-%\list{[\arabic{bla}]}%
-%{\usecounter{bla}%
-% \setlength{\itemindent}{0pt}%
-% \setlength{\topsep}{0pt}%
-% \setlength{\itemsep}{0pt}%
-% \setlength{\labelsep}{2pt}%
-% \setlength{\listparindent}{0pt}%
-% \settowidth{\labelwidth}{[9]}%
-% \setlength{\leftmargin}{\labelwidth}%
-% \addtolength{\leftmargin}{\labelsep}%
-% \setlength{\rightmargin}{0pt}}}
-% {\endlist}
-
-%\journal{Computer Physics Communications}
-
-% ****** Start of file aipsamp.tex ******
-%
-%   This file is part of the AIP files in the AIP distribution for REVTeX 4.
-%   Version 4.1 of REVTeX, October 2009
-%
-%   Copyright (c) 2009 American Institute of Physics.
-%
-%   See the AIP README file for restrictions and more information.
-%
-% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
-% as well as the rest of the prerequisites for REVTeX 4.1
-%
-% It also requires running BibTeX. The commands are as follows:
-%
-%  1)  latex  aipsamp
-%  2)  bibtex aipsamp
-%  3)  latex  aipsamp
-%  4)  latex  aipsamp
-%
-% Use this file as a source of example code for your aip document.
-% Use the file aiptemplate.tex as a template for your document.
-%\documentclass[%
-% aip,
-%%jmp,%
-%%bmf,%
-% sd,%
-%%rsi,%
-% amsmath,amssymb,
-%%preprint,%
-% reprint,%
-%%author-year,%
-%%author-numerical,%
-%]{revtex4-1}
-
-% Use this file as a source of example code for your aip document.
-% Use the file aiptemplate.tex as a template for your document.
 \documentclass[
  aps,
  jmp,
@@ -162,31 +36,17 @@
 \newcommand{\figscale}{0.48}
 
 \newcommand{\pdv}[2]{\frac{\partial{#1}}{\partial{#2}}}
-%\newcommand{\fp}[2]{\pdv{#1}{#2}}
-%\newcommand{\pdwc}[3]{\left(\fp{#1}{#2}\right)_{#3}}
-%\newcommand{\ppdv}[3]{\displaystyle \frac{\partial^2 #1}{\partial #2\partial #3}}
-%\newcommand{\ppdv}[3]{\frac{\partial^2 #1}{\partial #2\partial #3}}
-%\newcommand{\oover}[1]{\ensuremath{\frac{1}{#1}}}
-
 \newcommand{\vect}[1]{\boldsymbol{#1}}
 \newcommand{\matr}[1]{\mathbf{#1}}
 \newcommand{\dI}{\text{d}}
 \newcommand{\odv}[2]{\frac{\dI #1}{\dI #2}}
 \newcommand{\ddv}[2]{\odv{#1}{#2}}
-%\newcommand{\christ}[3]{\genfrac{\{}{\}}{0pt}{}{#1}{#2 #3}}
-%\newcommand{\christ}[3]{\Gamma^{#1}_{#2 #3}}
-%\newcommand{\ddv}[2]{\frac{\Delta #1}{\Delta #2}}
-%\newcommand{\collpdv}[2]{\pdv{#1}{#2}\Big|_{coll}}
-%\newcommand{\mfp}{\lambda}
-%\newcommand{\tmfp}{\tilde{\lambda}}
 \newcommand{\mfpe}{\lambda_e}
 \newcommand{\mfpei}{\lambda_{ei}}
 \newcommand{\Zbar}{Z}
 \newcommand{\nue}{\nu_{e}}
 \newcommand{\nuei}{\nu_{ei}}
-%\newcommand{\nutot}{\nu_{t}}
 \newcommand{\nuscat}{\nu_{scat}}
-%\newcommand{\tnuscat}{\tilde{\nu}_{scat}}
 \newcommand{\vmag}{v}
 \newcommand{\vth}{v_{th}}
 \newcommand{\vtwoh}{v_{2 th}}
@@ -194,76 +54,33 @@
 \newcommand{\E}{\vect{E}}
 \newcommand{\B}{\vect{B}}
 \newcommand{\omegaB}{\vect{\omega}_{B}}
-%\newcommand{\tE}{\vect{\tilde{E}}}
 \newcommand{\Ez}{E_z}
-%\newcommand{\tEz}{\tilde{E}_z}
-%\newcommand{\tB}{\vect{\tilde{B}}}
 \newcommand{\qe}{q_e}
 \newcommand{\me}{m_e}
 \newcommand{\Te}{T_e}
 \newcommand{\Ti}{T_i}
 \newcommand{\ed}{n_e}
 \newcommand{\kB}{k_B}
-%\newcommand{\crs}{\sigma}
 \newcommand{\fM}{f_M}
-%\newcommand{\tfM}{\tilde{f}_M}
-%\newcommand{\tvfM}{\vect{\tilde{f}_M}}
-%\newcommand{\daf}{\delta f}
 \newcommand{\fzero}{f_0}
-%\newcommand{\dafzero}{\delta f_0}
-%\newcommand{\dafone}{\delta f_1}
 \newcommand{\vfzero}{\vect{f_0}}
-%\newcommand{\davfzero}{\vect{\delta f_0}}
 \newcommand{\fone}{{\vect{f_1}}}
 \newcommand{\fonez}{f_{1_z}}
-%\newcommand{\SM}{\vect{S}_M}
-%\newcommand{\MI}{\matr{I}}
-%\newcommand{\MA}{\matr{A}}
-%\newcommand{\intO}{\int_{\Omega}}
-%\newcommand{\intv}{\int_{\vmag}}
-%\newcommand{\IM}{\boldsymbol{\mathcal{M}}}
-%\newcommand{\ID}{\boldsymbol{\mathcal{D}}}
-%\newcommand{\IV}{\boldsymbol{\mathcal{V}}}
-%\newcommand{\IB}{\boldsymbol{\mathcal{B}}}
-%\newcommand{\anisomega}{\fone/\fzero}
-%\newcommand{\acl}{\vect{M}_{\left(\anisomega\right)}}
-
-%\newcommand{\Wzero}{\psi}
-%\newcommand{\Wone}{\matr{w}}
-%\newcommand{\Wcurl}{\vect{W_c}}
-%\newcommand{\Wdiv}{\vect{W_d}}
-
-%\newcommand{\pt}{t}
-%\newcommand{\pb}{b}
-%\newcommand{\tob}{\pt/\pb}
-%\newcommand{\vs}{\vect{s}}
-%\newcommand{\vsmag}{s}
 \newcommand{\vv}{\vect{v}}
 \newcommand{\vvb}{\tilde{\vect{v}}}
 \newcommand{\gv}{\nabla_{\vv}}
 \newcommand{\gvb}{\nabla_{\vvb}}
 \newcommand{\gx}{\nabla_{\vect{x}}}
 \newcommand{\ft}{f}
-%\newcommand{\fb}{\tilde{f}}
-%\newcommand{\ft}{f_{\pt}}
-%\newcommand{\fb}{f_{\pb}}
 \newcommand{\lnc}{\text{ln}\Lambda}
-%\newcommand{\Rg}{g}
-%\newcommand{\Rh}{h}
-%\newcommand{\Rgb}{\Rg_{\pb}}
-%\newcommand{\Rhb}{\Rh_{\pb}}
-
 \newcommand{\Iohm}{\matr{J}_{Ohm}}
-
 
 \begin{document}
 
 \preprint{AIP/123-QED}
 
-\title[AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion]{AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion}% Force line breaks with \\
-%\thanks{Footnote to title of article.}
+\title[AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion]{AWBS kinetic modeling of electrons with nonlocal Ohm's law in plasmas relevant to inertial confinement fusion}
 
-%\author{Authors}
 \author{M. Holec}
  \email{holec1@llnl.gov}
  \affiliation{
@@ -325,7 +142,6 @@ Centre Lasers Intenses et Applications, Universite de Bordeaux-CNRS-CEA,\\
 UMR 5107, F-33405 Talence, France.
 }
 
-
 \author{C. P. Ridgers}
  \affiliation{
 York Plasma Institute, Department of Physics, University of York,\\ 
@@ -356,44 +172,16 @@ and also performs very well when benchmarked against Vlasov-Fokker-Planck
 and collisional PIC codes in the~nonlocal transport regime, where we find that
 the~effect of the~electric field via the~nonlocal Ohm's law is an~essential 
 ingredient in order to capture the~electron kinetics properly.
- %CPR comment - could benefit from a clearer description of what the main results are, preferably with numbers
 \end{abstract}
 
-\pacs{Valid PACS appear here}% PACS, the Physics and Astronomy
-                             % Classification Scheme.
+\pacs{Valid PACS appear here}
 
 \keywords{kinetics; nonlocal electron transport; laser-heated plasmas; hydrodynamics, Ohm's law.}%Use showkeys class option if keyword display desired
 
 \maketitle
 
-
-%%
-%% Start line numbering here if you want
-%%
-% \linenumbers
-
-%\pagebreak
-%\tableofcontents
-%\pagebreak
-%% main text
-%\section{}
-%\label{}
-%---------------------------------------------------------------------
-%---------------------------------------------------------------------
-
-%\input{Sec_Intro}
 \section{Introduction}
 \label{sec:Intro}
-%In dealing with the nonequilibrium properties of
-%systems whose particles obey an inverse-square law
-%of interaction, it is convenient to make use of the fact
-%that under most circumstances small-angle collisions
-%are much more important than collisions resulting in
-%large momentum changes. This leads to the method
-%often used for treating such systems, in which one
-%expands the collision integrand of the Boltzmann change per
-%equation in powers of the momentum collision.
-
 The~first modern attempts at kinetic modeling of plasma can be traced back 
 to the~fifties, when Cohen, Spitzer, and Routly (CSR) \cite{CSR_1950} 
 demonstrated that the~effect of Coulomb collisions between electrons and ions 
@@ -404,28 +192,14 @@ by Jeans in \cite{Jeans_BOOK1929} and
 Chandrasekhar \cite{Chandrasekhar_RMP1943} 
 proposed to use the~diffusion equation model of the~Vlasov-Fokker-Planck type 
 (VFP)~\cite{Planck_1917}.
-%CPR comment - do you need to start so far back in the history of plasma kinetic theory?
 
-
-%A more generally valid approach to the problem of
-%treating changes in a distribution function resulting
-%each of which from frequently occurring "events",
-%produces a small change in the momentum of a particle,
-%is to use the Fokker-Planck equation \cite{Planck_1917}, 
-%which has been discussed by Spitzer and collaborators 
-%\cite{SpitzerHarm_PR1953} . 
 A~classical paper by Spitzer and H\"arm (SH) 
 \cite{SpitzerHarm_PR1953} provides the~computation of 
 the~electron distribution function (EDF) in a~plasma (from low to high $\Zbar$)
 with a~temperature gradient accounting for e-e and e-i collisions.
 The~resulting expressions for current and heat flux are widely used in plasma 
 hydrodynamic models.
-%used the formalism of the VFP equation to evaluate the collision terms of 
-%the~Boltzmann equation under the assumptions that 
-%(a) the events producing changes in particle momenta
-%are two-body interactions described by the associated
-%differential scattering cross sections, and 
-%(b) that 
+
 The~distribution function based on the spherical harmonics method in 
 its first approximation (P1) \cite{Jeans_MNRAS1917} is of the form 
 $f^0+\mu f^1$, where $f^0$ and $f^1$ 
@@ -442,20 +216,11 @@ the~mean free path of electrons. It is worth mentioning, that electrons having
 and that those faster than 6 times the~thermal velocity can be completely 
 neglected in this local theory.
 
-%It is the purpose of this paper to present the mechanics 
-%of two-body collisions in a somewhat simplified
-%form, and to derive the Fokker-Planck equation for an function. 
-%From this general arbitrary distribution equation such special cases 
-%as those of Chandrasekhar and Spitzer may easily be obtained. 
-%For more complex situations the equation is suitable for integration by an
-%electronic computer \cite{Rosenbluth_PR1957}.
-
 The~actual cornerstone of the~modern VFP simulations was set in place
 by Rosenbluth \cite{Rosenbluth_PR1957}, when he derived a~simplified form 
 of the~VFP equation for a~finite expansion of the~distribution function,
 where all the~terms are computed according to plasma conditions, including
 $f^0$, which of course needs to tend to the~Maxwell-Boltzmann distribution.
-% CPR comment - again not sure you need to go back this far in history.
 Consequently, the~pioneering work on numerical solution of the~VFP equation
 \cite{Bell_1981_83, Matte_1982_86} revealed the~importance of the~nonlocal
 electron transport in laser-heated plasmas. 
@@ -470,47 +235,6 @@ around the peak of the temperature gradient, and a~nonlocal preheat
 ahead of the main heat wave front, naturally appear. 
 These effects are attributed to significant deviations 
 of $f^0$ from Maxwellian distribution.
-
-
-%Previously the Vlasov-Fokker-Planck (VFP) equation has been solved
-%numerically ignoring magnetic fields in 1-D (1 spatial dimension) 
-%\cite{Bell_1981_83, Matte_1982_86} to address heatflow down steep temperature 
-%gradients in unmagnetised plasma. Under these conditions the classical, fluid
-%description of transport \cite{SpitzerHarm_PR1953, Braginskii_1965_3}, 
-%which makes the local approximation, 
-%breaks down. They found that nonlocal effects are responsible for 
-%thermal transport inhibition \cite{Bell_1981_83}.
-
-%Particle-in-cell (PIC) codes \cite{PIC_Birdsall_Langdon_1985}
-%%\cite{Dawson_PoF1962, PIC_Birdsall_Langdon_1985} 
-%%and Vlasov codes $[23]$ 
-%are fully kinetic and are ideally suited to collisionless plasmas. 
-%Typically PIC codes tend to use explicit methods and consequently require a
-%time step small enough to resolve the fastest frequency present in the problem.
-%They also suffer from the so called "finite grid instability" 
-%\cite{PIC_Birdsall_Langdon_1985} 
-%whereby the plasma numerically heats up until the electron debye length is
-%resolved by the grid. These limitations mean that multidimensional, explicit, 
-%PIC cannot readily simulate the low temperature, high density plasma 
-%created inlaser–solid interactions. 
-%%PIC codes utilising implicit methods do exist 
-%%$[24]$. Implicitness greatly relaxes the time step constraint and mitigates 
-%%the effects of the finite grid instability, so that lower temperatures 
-%%and higher densities can be dealt with. 
-%One spatial dimension PIC codes with electron–ion collisions have successfully 
-%been applied to fast electron transport through solid density plasma 
-%\cite{Guerin_PPCF1999, Perez_PoP2012}. 
-%%Two spatial dimension PIC codes with electron collisions also exist, both
-%%explicit $[25]$ and implicit $[26]$. 
-
-%Explicit 2-D PIC is unable to access conditions where collisions dominate for
-%the bulk of the electrons, though. Even though implicit methods overcome 
-%this particular problem, the PIC method in general struggles to adequately 
-%resolve the distribution function in a given cell when a realistic sized, 
-%2-D problem is addressed. 
-%Statistical noise and under resolution of 
-%the electron distribution lead to an inaccurate treatment of collisions and 
-%can overwhelm real physical effects present.
 
 Nevertheless, numerical solution of the~VFP equation even in the~Rosenbluth
 formalism remains very challenging computationally, because the~e-e collision
@@ -541,7 +265,6 @@ Aladin and Impact \cite{Kingham_JCP2004}, and PIC code Calder
 laser generated plasma conditions are studied. Finally, the~most important
 outcomes of our research are concluded in Section \ref{sec:Conclusions}. 
 
-%\input{Sec_AWBS_model}
 \section{The~AWBS kinetic model}
 \label{sec:AWBSmodel}
 
@@ -638,7 +361,6 @@ the~ion charge $\Zbar$ of the~electron thermal conductivity. This issue
 is further analyzed in Section \ref{sec:DiffusiveKinetics} and promising 
 results compared to the~full FP operator are presented.
 
-%\input{Sec_Diffusion}
 \section{BGK, AWBS, and Fokker-Planck models in local diffusive regime}
 \label{sec:DiffusiveKinetics}
 An~approximate solution to the~\textit{local diffusive regime} 
@@ -650,24 +372,6 @@ refers to a~low anisotropy modeled by the~P1 form of EDF
 \end{equation}
 where $z$ is the~spatial coordinate along the~axis $z$, $\vmag$ 
 the~magnitude of the~electron velocity. 
-%and $\mu = \cos\phi$, where $\phi$ 
-%is the~pitch angle with respect to the~axis $z$.
-
-%In the~words of mathematics this corresponds to the~first 
-%order expansion in $\mfpei$ and $\mu$ of the~distribution function as
-%\begin{equation}
-%  \tilde{\ft}(z, \vmag, \mu) = \ft^0(z, \vmag) + \ft^1(z, \vmag) \mfpei\mu ,
-%  \label{eq:f_approximation}
-%\end{equation}
-%where $z$ is the~spatial coordinate along the~axis $z$, $\vmag$ the~magnitude 
-%of transport velocity, and 
-%$\mfpei = \frac{\vmag}{\nuei} = \frac{\vmag^4}{\Zbar n_e \Gamma}$.
-%In other words, one can say that by evaluating numerically $\tilde{\ft}$
-%in \eqref{eq:f_approximation}, we accept some error of the~order 
-%$O(\mfpei^2) + O(\mu^2)$. The~expansion in a~small parameter $\mfpei$ is also
-%coherent with a~time-steady approximation due to the~relation between the~mean
-%free path and collision frequency, where the~higher the~collision frequency 
-%the~more steady the~solution. 
 
 The~approximate transport solution is then obtained when analyzing 
 the~stationary form of \eqref{eq:kinetic_equation} in one spatial dimenstion
@@ -729,18 +433,6 @@ In particular, the~conservation of kinetic energy, momentum,
 and number of particles is often violated 
 \cite{Shkarofsky_Particle_Kinetics_book_1966_24}.
 
-%of the~Boltzmann transport collision 
-%operator, because of two reasons: a) it can be treated analytically in 
-%the~local diffusive regime; and b) it represents the~so-called phenomenological
-%collision operator by explicitly using the~Maxwell-Boltzmann equilibrium 
-%distribution $\fM$, which proves to be very useful in coupling of the~nonlocal 
-%electron transport to hydrodynamics.
-
-%If one applies the~action of the~right hand side, i.e. of 
-%\eqref{eq:BGK_model_1D}, 
-%on the~approximation \eqref{eq:f_approximation} and sets the~result to be equal 
-%to the~left hand side \eqref{eq:LHS_kinetic_equation}, the~corresponding terms
-%in $\mu$ are governed by the~following equations
 However, the~form of \eqref{eq:BGK_model_1D} provides a~simple analytical 
 treatment of the~local diffusive transport regime, when used in 
 \eqref{eq:1D_kinetic_equation}. As a~result, one finds a~simple form of
@@ -754,13 +446,11 @@ the~BGK isotropic and anisotropic terms of \eqref{eq:f_approximation} to be
   %\left( \pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag} \right) , 
   \label{eq:BGK_f1}
 \end{eqnarray}
-where 
-%$Kn = \frac{\mfpe}{L_{n_e}} + \frac{5}{2}\frac{\mfpe}{L_{T_e}}$
-a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
+where a~detailed derivation of \eqref{eq:BGK_f0} and \eqref{eq:BGK_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
 When the~quasi-neutrality constraint \eqref{eq:j0_P1} imposed by $\E_L$
 \eqref{app_eq:BGK_Efield} is used, one finally obtains 
-the~analytical BGK form of the~anisotropic term %\eqref{eq:f_approximation}
+the~analytical BGK form of the~anisotropic term
 \begin{equation}
   \ft^1 = - \mu 
   \left( \frac{\vmag^2}{2 \vth^2} - 4\right)\frac{1}{\Zbar + 2}
@@ -776,67 +466,31 @@ collision operators can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
 
 \subsection{AWBS local diffusive electron transport}
 \label{sec:AWBSDiffusiveRegime}
-%The~main object of this work presented in Sec~\ref{sec:AWBSmodel} simplifies
-%in 1D to a~relatively simple form of the~Boltzmann transport collision operator
-%(compared to \eqref{eq:LFP_model})
-%\begin{equation}
-%  C_{AWBS}(f)
-%  = 
-%  \vmag \nue^* \pdv{}{\vmag}\left(f - \fM\right) %\\
-%  + \frac{\nuei + \nue^*}{2}\pdv{}{\mu}(1 - \mu^2)\pdv{f}{\mu} .
-%  \label{eq:AWBS_model_1D}
-%\end{equation}
 Similarly to the~BGK model, the~AWBS collision operator \ref{eq:AWBS_model} 
 explicitly uses equilibration to the~Maxwell-Boltzmann distribution $\fM$. 
 On the~other hand, AWBS originates from $C_H$, which is derived from 
 the~full FP operator \eqref{eq:LFP_model}. This makes the~AWBS operator 
 to be superior to the~BGK operator, which is considered a~purely
 phenomenological model.
-%and also, 
-%makes it a~very attractive model of the~nonlocal electron
-%transport to be coupled to hydrodynamics via the~plasma electron temperature 
-%and density.
 
-%A~qualitative information about the~AWBS model is obtained while repeating
-%the~action on \eqref{eq:f_approximation} by the~left hand side 
-%\eqref{eq:LHS_kinetic_equation} and by the~right hand side 
-%\eqref{eq:AWBS_model_1D} and setting the~equality. The~corresponding terms
-%in $\mu$ are then governed by the~following equations
 If \eqref{eq:AWBS_model} is used in \eqref{eq:1D_kinetic_equation}, one obtains
 the~following equations governing the~AWBS isotropic and anisotropic terms of 
 \eqref{eq:f_approximation}
 \begin{eqnarray}
   \pdv{f^0}{\vmag} &=& \pdv{\fM}{\vmag} ,
-  %+ Kn \frac{\vth^2}{\vmag^2}\frac{f^1}{\vmag} ,
   \label{eq:AWBS_f0} \\
   \pdv{f^1}{\vmag}  
   - \frac{\Zbar +  r_A}{\vmag r_A} f^1 &=& 
-  %\frac{\mfpe}{\vmag\zeta}
-  %\left(\pdv{f^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{f^0}{\vmag}\right) ,
   \frac{\mfpe}{\vmag r_A}
   \left(\pdv{\fM}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\fM}{\vmag}\right) ,
   \label{eq:AWBS_f1} 
-  %\\  
-  %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
-  %- \frac{\Zbar + 1}{\Zbar} f^1 &=&
-  %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
-  %\nonumber
 \end{eqnarray}
 where $ r_A$ represents a~scaling parameter defining the~modified
 e-e collision frequency as $\nue^* =  r_A \nue$.
 A~detailed derivation of \eqref{eq:AWBS_f0} and \eqref{eq:AWBS_f1} 
 can be found in Appendix~\ref{app:DiffusiveKinetics}.
-%One observes that $\ft^0$ goes to Maxwellian when 
-%the~local regime of transport is settled. 
-%Indeed, according to equation~\eqref{eq:AWBS_f0} the~derivative 
-%$\pdv{\ft^0}{\vmag}\rightarrow\pdv{\fM}{\vmag}$  when $Kn\ll1$ for any 
-%electron velocity, thus leading to $\ft^0\rightarrow\fM$.
 Consequently, one finds the~AWBS model equation for $\ft^1$ 
 in local diffusive regime to be
-%i.e. $\ft^0 = \fM + O(\mfpei^2)$, however, the~$\ft^1$ does not have 
-%a~straightforward analytic formula. In reality, $\ft^1$ arises from 
-%the~ordinary differential equation 
-%(by inserting $\fM$ into \eqref{eq:AWBS_f1})
 \begin{multline}
   \pdv{\ft^1}{\vmag} 
   - \frac{\Zbar +  r_A}{\vmag r_A}\ft^1
@@ -844,9 +498,6 @@ in local diffusive regime to be
   \frac{\mfpe}{\vmag r_A}\left(\frac{1}{L_{n_e}} + 
   \left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
   \frac{1}{L_{T_e}} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
-  %\frac{\mfpe}{\vmag}\left(\frac{1}{n_e}\pdv{n_e}{z} + 
-  %\left( \frac{\vmag^2}{2 \vth^2} - \frac{3}{2}\right)
-  %\frac{1}{T}\pdv{T}{z} - \frac{\qe\Ez}{\me\vth^2}\right)\fM .
   \label{eq:AWBS_f1_ODE}
 \end{multline}
 The~solution of \eqref{eq:AWBS_f1_ODE} can be found in terms of 
@@ -870,10 +521,6 @@ The~\textit{quasi-neutrality} constraint \eqref{eq:j0_P1} applied to
 $\ft^1_{\text{AWBS}}$ leads to $\Ez = \E_L$ \eqref{app_eq:BGK_Efield} 
 independently from $\Zbar$ and $r_A$. 
 
-%The~details about the~AWBS distribution function compared to other
-%collision operators and a~proper evaluation of the~scaling parameter $r_A$
-%can be found in Section~\ref{sec:SummaryDiffusiveKinetics}.
-
 \subsection{Fokker-Planck local diffusive electron transport}
 \label{sec:FPDiffusiveRegime}
 
@@ -884,8 +531,7 @@ is very ambitious, as demonstrated in
 can use the~explicit evaluation of the~electron distribution function
 published in \cite{SpitzerHarm_PR1953}, which takes the~following form
 \begin{multline}
-  %\ft^1(\vmag, \mu) 
-  \ft^1_{\text{SH}} = %\frac{\me^2}{4 \pi \qe^4\lnc} 
+  \ft^1_{\text{SH}} =
   \frac{\vtwoh^4}{\Gamma\Zbar n_e}\\
   \left( 2\tilde{D}_T\left(\frac{\vmag}{\vtwoh}\right) 
   + \frac{3}{2}\frac{\gamma_T}{\gamma_E} 
@@ -916,16 +562,6 @@ In particular, the latter exhibits the~following dependence
 which for $\Zbar\gg1$ corresponds to the~classical Lorentz electric field 
 \eqref{app_eq:BGK_Efield}.
 
-%In the~case of high $\Zbar$ limit, $\gamma_T \rightarrow 1$,
-%$\gamma_E \rightarrow 1$, $d_E(x) = x^4$, and $d_T(x) = x^4 (2.5 - x^2)/2$
-%\cite{SpitzerHarm_PR1953}, which leads to the~standard Lorentz gas model
-%\begin{equation}
-%   f_1(\vmag, \theta) = \cos(\theta) \frac{\me^2}{4 \pi e^4\lnc} 
-%  \frac{\vmag^4}{\Zbar}\left( 4 - \frac{\vmag^2}{\vtwoh^2} \right) 
-%  \frac{\fM(\vmag)}{n_e}\frac{\nabla T}{T}  ,
-%  \label{eq:f1_Lorentz} 
-%\end{equation} 
-
 \subsection{Summary of the~BGK, AWBS, and Fokker-Planck local diffusive 
 transport}
 \label{sec:SummaryDiffusiveKinetics}
@@ -947,7 +583,6 @@ $\vect{q}$ was approximated as \cite{SpitzerHarm_PR1953, Epperlein_PoFB1991}
 where 
 $\xi$ is the~$\Zbar$-dependence \cite{Epperlein_PoFB1991} approximation and
 $\vect{q}_L$
-%$\vect{q}_L = \kappa T_e^{\frac{5}{2}}\nabla T_e$ 
 is the~heat flux given 
 by the~Lorentz gas model \cite{Lorentz_1905} 
 \begin{equation}
@@ -975,7 +610,6 @@ of BGK
   r_B \nue(\fM - \tilde{\ft})
   + \frac{r_B}{\zeta}\frac{\nuei + \zeta\nue}{2}
   \pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu}
-  %\nue^{BGK} = \frac{r\nue}{\xi},\quad \nuei^{BGK} = \frac{\nuei}{\xi}
    ,
   \label{eq:BGK_scaling}
 \end{equation}
@@ -991,14 +625,11 @@ the~local EDF of \eqref{eq:BGK_scaling}
 which is identical to $\xi \ft^1_{\text{Lorentz}}$ for any value of $\zeta$.
 One should notice that $r_B(\Zbar\gg1) = \zeta$, i.e. $\zeta$ can be adjusted 
 appropriately for example to better address the~transport in nonlocal regime.
-%\textit{$\zeta = 2$ gives $r_B(\Zbar\gg1) = \zeta$, 
-%which makes sence compared to John's hohlraum.}
 
 \begin{table}
 \begin{center}
   \begin{tabular}{c|ccccc}
     \hline\hline\\
-    %$\Zbar$ & $1$ & $2$ & $4$ & $16$ & $\infty$ \\\\
     & $\,\Zbar=1\,$ & $\,\Zbar=2\,$ & $\,\Zbar=4\,$ & $\,\Zbar=16\,$ & $\,\Zbar=116\,$ \\\\
     \hline\\
     $\bar{\Delta}\vect{q}_{AWBS}$ & 0.057 & 0.004 & 0.037 & 0.021 & 0.004 \\\\
@@ -1090,7 +721,6 @@ in \figref{fig:q1s_summary}.
   \end{center} 
 \end{figure}
 
-%\input{Sec_AP1_nonlocal}
 \section{AWBS nonlocal transport model of electrons}
 \label{sec:AWBSnonlocal}
 
@@ -1107,11 +737,6 @@ $\fzero = \frac{1}{4\pi}\int_{4\pi} \tilde{\ft} \dI\vn$
 and the~directional part represented by the~first angular moment 
 $\fone = \frac{3}{4\pi}\int_{4\pi} \vn
 \tilde{\ft} \dI\vn$, where $\vn$ is the~transport direction.
-%It should be noticed, that \eqref{eq:P1approximation} represents 
-%a~multi-dimensional equivalent to \eqref{eq:f_approximation}, where 
-%the~following relations between the~spherical harmonics method
-%and the~moments method hold $\ft^0 = \frac{\fzero}{4\pi}$ and 
-%$\ft^1 = \frac{3}{4\pi}|\fone|$.
 Then, the~first two angular moments
 \cite{Shkarofsky_Particle_Kinetics_book_1966_24} applied to the~stationary 
 form of 
@@ -1137,9 +762,6 @@ where $\nuscat = \nuei + \frac{\nue}{2}$. The system of equations
 (AWBS + P1).  
 
 The~AP1 model gives us information about the~electron distribution function 
-%and
-%a~macroscopic interpretation of the~microscopic EDF properties is of great
-%importance 
 providing a~bridge between kinetic and fluid description of 
 plasma. For example the~\textit{flux} quantities as 
 electric current and heat flux due to the~motion of electrons
@@ -1151,7 +773,6 @@ electric current and heat flux due to the~motion of electrons
 are based on corresponding velocity moments (integrals) of the~first angular 
 moment of EDF. Consequently, the~explicit formula for the~first angular moment
 from \eqref{eq:AP1f1} 
-%(the~inversion inspired by \cite{Shkarofsky_1979_73})
 proves to be extremely useful
 \begin{equation}
   \fone = \frac{\nuscat^2 \vect{F}^* + \omegaB~\omegaB\cdot\vect{F}^* 
@@ -1170,20 +791,6 @@ $\vect{F}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero
 \label{sec:Efield}
 Expression \eqref{eq:f1_explicit} is used
 to describe the~electron fluid momentum, i.e. the~current velocity moment
-%\begin{equation}
-%  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2 \dI \vmag
-%  .
-%  \nonumber
-%\end{equation}
-%\begin{multline}
-%  \vect{j}_{(f, \E, \B)} = \qe \int \vmag \fone \vmag^2~\dI \vmag = \\
-%  - \frac{\qe^2}{\me} \int \vmag \frac{\nuei^2 \E^* 
-%  + \omegaB~\omegaB\cdot\E^* - \nuei~\omegaB \vect{\times} \E^*}
-%  {\nuei (\omegaB^2 + \nuei^2)}~\dI \tilde{\vmag} ,
-%  \nonumber %\label{eq:NonlocalOhm}
-%\end{multline}
-%where $\E^* = \E~\pdv{\fzero}{\vmag} + \frac{\me}{\qe}\vmag \nabla \fzero$ 
-%is the~effective electric field in plasma. 
 can be written as
 \begin{equation}
   \vect{j}_{(f, \E, \B)} = \Iohm\pdv{\fzero}{\vmag}\E 
@@ -1218,8 +825,7 @@ can be found when $\fzero\rightarrow\fM$ and weak magnetization
   ,
   \label{eq:AsymptoticOhm}
 \end{multline}
-which can be directly compared to the~local fluid theory 
-%represented by the~\textit{generalized Ohm's law} 
+which can be directly compared to the~local fluid theory  
 \begin{equation}
   \E = \matr{\sigma}(\fzero)^{-1} \vect{j} 
   - \frac{\nabla P (\fzero)}{\qe \ed}
@@ -1267,56 +873,10 @@ since the~curl on the~electric field
 The~nonlocal Biermann battery effect \eqref{eq:NonlocalBiermann} 
 can lead to a~spontaneous magnetic field generation under uniform 
 density plasma profile as has been shown in \cite{Kingham_PRL2002}.
-%even in the~collisional case not considered PIC simulations
 
 A~local version of the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} 
 compared to the~\textit{generalized Ohm's law} \eqref{eq:GeneralOhm} with
 a~magnetic field is deferred to a~future complementary work.
-
-%It should be noted, that $\nue$-related terms in \eqref{eq:f1_explicit} 
-%have been omitted in \eqref{eq:NonlocalOhm}, 
-%since the~e-e collisions do not contribute 
-%(cancel out when integrated over velocity) to the~momentum
-%change, i.e. 
-%$\int \vmag \left( \vmag\frac{\nue}{2}\pdv{\fone}{\vmag}
-%  - \frac{\nue}{2}\fone\right) \dI\tilde{\vmag} = 0$.
-
-\begin{comment} % Ohm's law with B.
-\begin{eqnarray} 
-  \E &=&  
-  \frac{\nabla p_e - \vect{R}_{\Te}}{\qe \ed}
-  +~~~~~~~~ 
-  \frac{\vect{j}}{\sigma} 
-  ~~~~~~-~~~~~~ 
-  \frac{\vect{j}\vect{\times}\B}{\qe\ed c} 
-  ,
-  \nonumber \\
-  %\E 
-  %&=& 
-  %\frac{\int \vmag^2 \nabla \fzero \vmag^2\, \dI \vmag}
-  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag}
-  %+  
-  %\frac{\int \vmag \nuei\fone \vmag^2\, \dI \vmag}
-  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag} 
-  %+ 
-  %\frac{\int \vmag \fone\times\B \vmag^2\, \dI \vmag}
-  %{\int \vmag \pdv{\fzero}{\vmag} \vmag^2\, \dI \vmag} 
-  %.
-  %\nonumber
-  \frac{\qe}{\me}\E 
-  &=& 
-  \frac{\int \vmag^2 \nabla \fzero~\dI \tilde{\vmag}}
-  {\int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}}
-  +  
-  \frac{\int \vmag \nuei\fone~\dI \tilde{\vmag}}
-  {\int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}} 
-  + 
-  \frac{\qe\int \vmag \fone\vect{\times}\B~\dI \tilde{\vmag}}
-  {\me c \int \vmag \pdv{\fzero}{\vmag}~\dI \tilde{\vmag}} 
-  .
-  \nonumber
-\end{eqnarray}
-\end{comment} % Ohm's law with B.
 
 \subsection{AWBS Nonlocal Magneto-Hydrodynamics}
 \label{sec:ANTH}
@@ -1350,8 +910,7 @@ are modeled by the~Euler equations in the~Lagrangian frame
  - G(\Ti - \Te)
  ,  
  \label{eq:NTH_Ti}\\
- \rho~C_{V_e} \frac{\dI \Te}{\dI t}
-  %+ \frac{\dI \epsilon_R}{\dI t} 
+ \rho~C_{V_e} \frac{\dI \Te}{\dI t} 
   &=& 
  \left(\rho^2 C_{\Te} - p_e \right) \nabla\cdot\vect{u}  
  + G(T_i - \Te)
@@ -1374,10 +933,6 @@ $C_{V_i} = \frac{\partial \varepsilon_i}{\partial \Ti}$,
 $C_{\Ti} = \pdv{\varepsilon_i}{\rho}$,
 $C_{V_e} = \frac{\partial \varepsilon_e}{\partial \Te}$, 
 $C_{\Te} = \pdv{\varepsilon_e}{\rho}$
-%$\frac{\partial \varepsilon_e}{\partial T_e}$,
-%$\frac{\partial \varepsilon_i}{\partial T_i}$,
-%$\frac{\partial \varepsilon_e}{\partial \rho}$,
-%$\frac{\partial \varepsilon_i}{\partial \rho}$ 
 are obtained from an~equation of state (EOS), e.g.
 the~SESAME equation of state tables
 \cite{T4_SESAME_83, Lyon_SESAME_EOS_database-TechRep-92}.
@@ -1388,34 +943,19 @@ The~magnetic and electric fields are modeled by Maxwell equations
   ,
   \label{eq:Faraday} \\
   \nabla\vect{\times}\B - \frac{4\pi}{c} \vect{j}_{(f, \E, \B)} &=& 0
-  %\frac{1}{c}\frac{\partial \E}{\partial t} &=& \nabla\vect{\times}\B - \frac{4\pi}{c}
-  %\vect{j}_{(f, \E, \B)}
   .
   \label{eq:Ampere}
-  %\frac{4\pi}{c}
-  %\vect{j}(f, \vect{E}) &=& \nabla\vect{\times}\vect{B} ,
 \end{eqnarray}
-%where the~initial state of $\B$ and $\E$ obeys the~Gauss's law.
 
 We have explicitly written the~current and heat flux as dependent on
 electron kinetics, represented by the~electron distribution function $f$,
 and electric and magnetic fields. In principal, $\vect{j}_{(f, \E, \B)}$
 and $\vect{q}_{h(f, \E, \B)}$ can be referred to as the~\textit{kinetic closure}
 and is provided by the~{\bf AP1 model} \eqref{eq:AP1f0} and \eqref{eq:AP1f1}.
-%where $\fM$ is given on the~spatial profile of $\Te$ 
-%governed by \eqref{eq:NTH_Te}.
-%All quantities are defined in the~fluid frame in the aforementioned 
-%Nonlocal-MHD model.
 
 \subsection{Numerical Implementation of the AWBS Electron Kinetics}
 \label{sec:Numerics}
 
-%It is well known, that as the~electron transport exhibits a~quasi-steady
-%behavior, the~same holds for the~electric field in \eqref{eq:Ampere} on 
-%the~time scale of the~fluid. Consequently, Ampere's law \eqref{eq:Ampere} 
-%takes a~quasi-steady form 
-%$\frac{4\pi}{c} \vect{j}_{(f, \E, \B)} = \nabla\vect{\times}\B$
-%when used in hydrodynamics. 
 Proceeding further, one can make use of 
 the~{\bf nonlocal Ohm's law} \eqref{eq:NonlocalOhm} to write 
 a~\textit{fully kinetic form of Ampere's law} 
@@ -1490,7 +1030,6 @@ collisions \cite{Touati_2014}. Consequently, we refer to
 \textit{decelerating} AP1 model, which however, leads to the~limitation of 
 the~electric field described in \appref{app:AP1limit}. 
 
-%\input{Sec_Benchmarking}
 \section{Benchmarking the~AWBS nonlocal transport model}
 \label{sec:BenchmarkingAWBS}
 Having shown several encouraging properties of the~AWBS transport 
@@ -1523,12 +1062,6 @@ for benchmarking of nonlocal electron transport models.
 The~particle evolution in the~phase-space, including small angle 
 binary collisions, is described with 
 the~Maxwell equations \eqref{eq:Faraday}, \eqref{eq:Ampere}
-%\begin{eqnarray}
-%&&\nabla\cdot \mathbf{E}=\sum_\alpha \frac{q_\alpha}{\varepsilon_0} n_{\alpha},\\
-%&&\nabla\cdot \mathbf{B}=0,\\
-%&&\nabla\vect{\times} \mathbf{E}+\frac{\partial \mathbf{B}}{\partial t}=0,\\
-%&&\nabla\vect{\times} \mathbf{B}-\mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}=\mu_0\sum_\alpha\mathbf{j}_{\alpha},\label{maxw}
-%\end{eqnarray}
 coupled with the~ion and electron Vlasov equations with 
 the~Landau-Beliaev-Budker collisions integral (LBB)
 \cite{Landau_1936, Beliaev_SPD1956} 
@@ -1553,9 +1086,6 @@ with $\gamma=\sqrt{1+\mathbf{p}^2}$, $\gamma^\prime=\sqrt{1+\mathbf{p}^{\prime 2
 The momemtum $\mathbf{p}_\alpha$ ($\mathbf{p}_\beta$) is normalized to 
 $m_\alpha c$ (resp. $m_\beta c$). The~collision operator \eqref{eq:LBB_model} 
 tends to \eqref{eq:LFP_model} in the non-relativistic limit.
-%described in Appendix~\ref{app:CalderKinetics}. 
-%The~latter is the~relativistic version of the~collision operator 
-%introduced in \eqref{eq:LFP_model}. 
 The aforementioned model is solved in 3D by the PIC code CALDER. 
 \cite{Lefebvre_NF2003, Perez_PoP2012}.
 
@@ -1565,21 +1095,8 @@ PIC simulations are extremely expensive as the~collisions require description
 of the~velocity space in 3 dimensions. Yet, a~reduction of dimensions can be 
 done by developing the~distribution function in a~Cartesian tensor series, 
 equivalent to expansion in the spherical harmonics \cite{Johnston_PR1960}.
-%as follows:\textit{CPR comment - Cartesian tensors are the same as spherical harmonics to first order}
-%\begin{equation}
-%  f(t,\mathbf{x},\vv) = f_0(t,\mathbf{x},\vmag) 
-%  + \vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)
-%  +\vn\otimes\vn:\matr{f}_2(t,\mathbf{x},\vmag)+... .
-%  \label{Pn}
-%\end{equation}
-%where $v=|\mathbf{v}|$, $\Omega=\mathbf{v}/v$. 
-%A P$_n$ model refers to 
-%neglecting orders higher than $\matr{f}_n$. 
 The~first order form corresponds to the~P1 approximation 
 \eqref{eq:P1approximation} and coupled with
-%distribution function 
-%approximation $f(t,\mathbf{x},\vv)\approx f_0(t,\mathbf{x},\vmag)
-%+\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with 
 the~Landau-Fokker-Planck collisional operator 
 \eqref{eq:LFP_model} leads to the P$_1$-VFP model 
 \cite{Johnston_PR1960, Kingham_JCP2004}:
@@ -1636,9 +1153,6 @@ approximation representing deviation from the~local BGK theory
   + \vn\cdot\left(\fone_M + \delta\fone\right) . 
   \label{eq:SNB_approximation}
 \end{equation}
-%where $\fone_M = - \xi\mfpei\left( \frac{\vmag^2}{2 \vth^2} - 4\right)\fM
-%\frac{\nabla \Te}{\Te}$ is obtained from the~diffusive solution 
-%\eqref{eq:BGK_approximation} with \eqref{eq:BGK_scaling}.
 Equations for the~zero and first angular moments follow from 
 the~electron transport equation with scaled collision operator 
 \eqref{eq:BGK_scaling}
@@ -1670,21 +1184,12 @@ according to the~SNB approximation \eqref{eq:SNB_approximation}
 where the~magnetic field was neglected, the~under-braced part
 of \eqref{eq:SNBf1} when $\delta\fzero$ and $\delta \fone$ are zero
 defines the~local anisotropic term
-%where $\fone_M = \frac{\frac{\nuei^2}{\xi^2} \vect{F}_M 
-%+ \omegaB~\omegaB\cdot\vect{F}_M - \frac{\nuei}{\xi}~\omegaB \vect{\times} 
-%\vect{F}_M}{\frac{\nuei}{\xi} \left(\omegaB^2 + \frac{\nuei^2}{\xi^2}\right)}$
-%, where $\vect{F}_M = -\vmag \left( \frac{\fM}{\ed}\nabla\ed 
-%+ \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
-%\frac{\fM}{\Te}\nabla\Te - \frac{\qe \fM}{\me\vth^2}\E\right)$.
 \begin{equation}
   \fone_M = -\xi\mfpei\fM\left( \frac{\nabla\ed}{\ed} 
 + \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
 \frac{\nabla\Te}{\Te} - \frac{\qe\E}{\me\vth^2}\right) ,
   \label{eq:f1M}
 \end{equation}
-%One should notice, that the~local
-%EDF contribution cancels out in \eqref{eq:SNBf1} when the~electric field 
-%adjusts to the~local Lorentz electric field \eqref{app_eq:BGK_Efield}. 
 and the~efficiency of SNB resides in omitting the~electric field 
 effect (crossed out terms in \eqref{eq:SNBf0} and \eqref{eq:SNBf1}), which
 leads to a~simple diffusion equation for the~correction to the~isotropic 
@@ -1706,20 +1211,6 @@ an~isotropic scattering in definition of $\mfpei^{SNB}$ \cite{Schurtz_2000}.
 Consequently, the~effect of the~electric field in SNB
 is accounted for only via $\fone_M$, where the~electric field is
 fixed to $\E_L$. 
-%A~self consistent zero current condition 
-%$\vect{j} = \qe \int \vmag (\fone_M + \delta\fone)~\dI\tilde{\vmag} = 0$ then
-%defines the~actual value of the~electric field from \eqref{eq:SNBf1} as
-%\begin{equation}
-% \E = -\frac{\int \frac{\xi\vmag^2}{\nuei}\nabla
-% \left(\fM + \delta\fzero\right)~\dI\tilde{\vmag}}
-% {\int \frac{\xi\vmag}{\nuei}\frac{\qe}{\me}\pdv{\fM}{\vmag}
-% ~\dI\tilde{\vmag} } 
-% = \E_L - \frac{\int \frac{\vmag^2}{\nuei}\nabla
-% \delta\fzero~\dI\tilde{\vmag}}
-% {\frac{\qe}{\me}\int \frac{\vmag}{\nuei}\pdv{\fM}{\vmag}
-% ~\dI\tilde{\vmag} } ,
-% \label{eq:SNB_E} 
-%\end{equation}
 
 As shown previously, the~BGK collision operator \eqref{eq:BGK_scaling}
 provides one free parameter $\zeta$.
@@ -1757,12 +1248,6 @@ part of EDF then reads $\fone = \fone_M - \mfpei^{SNB}\nabla\delta\fzero$.
   AP1 (AWBS collision operator \eqref{eq:AWBS_model}) 
   and Calder (full Landau-Fokker-Planck collision operator 
   \eqref{eq:LFP_model}) is observed.
-  %Snapshot 20 ps. Top: correct steady solution of heat flux. 
-  %Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
-  %by Aladin and Calder. 
-  %Velocity limit 4.2/4.3 $\vth$ at temperature 622.4/611.3 eV.
-  %Bottom: correct comparison to kinetic profiles at point 580 $\mu$m 
-  %by Aladin. Velocity limit 9.1/8.5 $\vth$ at temperature 192.3/202.4 eV.
   }
   \label{fig:C7_AladinCalder_case5}
   \end{center} 
@@ -1799,31 +1284,12 @@ in  \cite{Sorbo_2015, Sorbo_2016, Sherlock_PoP2017, Brodrick_PoP2017}.
   field $\E_L$ is also shown. Botom plots show a~kinetic detail of
   the~anisotropic part of EDF (its flux velocity moment) at two different 
   spatial points by AP1 and SNB compared to Aladin. 
-  %Snapshot 12 ps. Top: correct steady solution of heat flux.  
-  %Middle: correct comparison to kinetic profiles at point 460 $\mu$m 
-  %by Aladin. 
-  %Velocity limit 3.3 $\vth$ at temperature 569.2 eV.
-  %Bottom: correct comparison to kinetic profiles at point 580 $\mu$m 
-  %by Aladin. Velocity limit 13.1 $\vth$ at temperature 159.4 eV.
-  %TODO Fig reordered so change description, E field and current now in Z=10. 
   }
   \label{fig:C7_Aladin_case3}
   \end{center} 
 \end{figure}
 
-%Aladin and Impact simulations showed an evolution of the heat flow
-%from the local (due to initialising as a Maxwellian) to the
-%nonlocal, with a reduced peak, over an initial transient
-%phase (over which the temperature ramp flattened somewhat). 
-%The transient phase was considered over when the
-%ratio of the VFP heat flow to the expected local heat
-%flow stopped decreasing. After the transient phase this
-%ratio begins to slowly increase as the thermal conduction flattens 
-%the temperature ramp and the ratio of the scalelength to mfp increases 
-%(i.e. the thermal transport slowly becomes more local). 
-
-The~total computational box size is 700 $\mu$m.
-%in the~case of Aladin and Impact and 1000 $\mu$m in the~case of Calder.
+The~total computational box size is 700~$\mu$m.
 We performed Aladin, Impact, and Calder simulations showing an~evolution of
 temperature starting from the~initial profile \eqref{eq:T_init}. 
 Due to the~initial distribution function being approximated by a~Maxwellian,
@@ -1867,7 +1333,8 @@ $\Te$ profile computed by Aladin and the~top right plot of
 AP1, and SNB corresponding to the~temperature $\Te$ profile computed by Calder.
 Both kinetic simulations by Aladin and Calder evolved up to 20 ps for 
 $\Zbar = 1$. 
-The~anisotropic part of EDF, in particular, the~heat flux velocity moment $q_1$, 
+The~anisotropic part of EDF, in particular, 
+the~heat flux velocity moment $q_1$, 
 at the~heat flux maximum (triangle point) and at~the~nonlocal preheat region 
 (circle point) computed by AP1 and SNB for the~temperature profiles by 
 Aladin and Calder, can be used as a~detailed comparison of four conceptually
@@ -1960,13 +1427,6 @@ varying Kn$^e$ is shown in \figref{fig:Kn_results}.
   AP1 departs significanlty from the~reference solutions because of
   the~electric field limiting in accordance with the~velocity limit in 
   \tabref{tab:vlim}. 
-  %Simulation results for the case $Z=2$ computed by AP1/Aladin/Impact/Calder.
-  %Every point corresponds to the maximum heat flux in a "tanh" temperature 
-  %simulation, which can be characterized by Kn. The range of 
-  %$\log_{10}(\text{Kn})\in (0, -4)$ can be expressed as equivalent 
-  %to the~electron density approximate range n$_e \in (1e19, 3.5e22)$ of 
-  %the~50 $\mu$m slope tanh case. In the case of Kn = 0.56, 
-  %$q_{Aladin} / q_{AP1}\approx 7.9$.
   }
   \label{fig:Kn_results}
   \end{center} 
@@ -1978,8 +1438,6 @@ Kn$^e$ and that the~interval of electron velocities important for
 the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
 refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5} 
 and \figref{fig:C7_Aladin_case3}. 
-%We have also found 
-%an~important observation related to the~electron-electron collisions.
 According to simulations,
 the~stopping force in \eqref{eq:AP1f0} and \eqref{eq:AP1f1} is dominated by
 the~electric field for electrons with velocity above the~velocity limit
@@ -2033,23 +1491,6 @@ in \appref{app:AP1limit}.
 \end{center}
 \end{table}
 
-%Yet another observation can be made when analysing the~anisotropic term $q_1$ 
-%in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}. 
-%When comparing the~kinetics at maximum and 
-%preheat points, both velocity maxima of the~EDF correspond to approximately 
-%same electron velocity. This means that the~electrons responsible for 
-%the~flux in the~preheat region are those flux dominating electrons 
-%from the~maximum point. This provides an~important information
-%about the~microscopic motion of electrons on the~nonlocal spatial scale, i.e. 
-%a~quantification how far the~fast electrons from the~heat flux maximum 
-%are transported before being slowed down significantly. 
-%Notice that different reference temperatures and $\vth$ are used 
-%in the~maximum and preheat plots, 
-%e.g. $\Te = 622$~eV and $\vmag_{q_1^{max}} = 3.24~\vth = 3.39\times10^9$~cm/s 
-%at the~maximum point and $\Te = 192$~eV and 
-%$\vmag_{q_1^{max}} = 5.95~\vth = 3.46\times10^9$~cm/s at the~preheat point
-%in \figref{fig:C7_AladinCalder_case5}.
-
 \begin{comment} % Simulations setup.
 In every run of AP1 we used 250~velocity groups in order to avoid
 numerical errors in modeling of the~electron kinetics. However, a~smaller 
@@ -2074,21 +1515,15 @@ For simplicity, the Coulomb logarithm was treated as a
 constant $\lnc_{ei}$ = $\lnc_{ee}$ = 2.1484. In reality, in the~low-density 
 corona $\lnc$ reaches 8, which, however, does not affect the~heat flux profile 
 significantly. 
-%Plasma profiles at 20 nanoseconds of the~HYDRA simulation 
-%were used (after spline smoothing) as the~initial conditions for 
-%the~IMPACT run (in planar geometry).
 \figref{fig:Gd_VFP_10ps_heatflux} shows the~electron temperature $\Te$ 
-evolved during 10 ps by Impact and the~electron density $\ed$ profile
-%and ionization $\Zbar$ profiles. 
+evolved during 10 ps by Impact and the~electron density $\ed$ profile.
 Along with plasma profiles the~heat flux profiles
-of AP1, Impact, and SNB are also shown. 
-%\textit{Kn profile will be probably added}. 
+of AP1, Impact, and SNB are also shown.  
 
 \begin{figure}[htb]
   \begin{center}
     \begin{tabular}{c}
-      \includegraphics[width=\figscale\textwidth]{C7_GdHohlraum_heatflux.png}
-	  %\includegraphics[width=\figscale\textwidth]{../VFPdata/GD_Hohlraum/fluxes_10ps.png} 
+      \includegraphics[width=\figscale\textwidth]{C7_GdHohlraum_heatflux.png} 
     \end{tabular}
   \caption{
   Heat flux profiles by AP1, Impact and SNB along 
@@ -2129,7 +1564,6 @@ Impact and AP1 for this ICF relevant plasma conditions, thus making it a~very
 efficient modeling approach though its description of kinetics is rather
 qualitative.
 
-%\input{Sec_Conclusions}
 \section{Conclusions}
 \label{sec:Conclusions}
 In conclusion, we have performed a~thorough analysis of the~AWBS transport 
@@ -2187,7 +1621,6 @@ This document was prepared as an account of work sponsored by an agency of the U
 \end{acknowledgments}
 
 \appendix
-%\input{App_BGK_AWBS_FP_diffusion}
 \section{Analysis of local diffusive regime}
 \label{app:DiffusiveKinetics}
 
@@ -2205,24 +1638,12 @@ we use the~BGK collision operator
 to write explicitly \eqref{eq:1D_kinetic_equation} 
 for \eqref{eq:f_approximation} 
 \begin{multline}
-  %\mu\left(\pdv{\tilde{\ft}}{z} 
-  %+ \frac{\qe\Ez}{\me\vmag}\pdv{\tilde{\ft}}{\vmag}\right) 
-  %+ \frac{\qe\Ez}{\me}\frac{1-\mu^2}{\vmag^2}\pdv{\tilde{\ft}}{\mu} = \\
   \frac{\qe\Ez}{\me\vmag^2} \ft^1 
   + \mu^2\left[\pdv{\ft^1}{z} 
   + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^1}{\vmag} - \frac{\qe\Ez}{\me\vmag^2} \ft^1
   \right] \\ 
   + \mu\left[\pdv{\ft^0}{z} 
   + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}\right] = 
-  %\label{app_eq:LHS_kinetic_equation}
-%\end{multline}
-%and the~right hand side  reads
-%\begin{eqnarray}
-  %\frac{1}{\vmag}C_{BGK}(\tilde{\ft})
-  %&=&
-  %\frac{\fM - \tilde{\ft}}{\mfpe}
-  %+ \frac{1}{2}\left(\frac{\Zbar}{\mfpe} + \frac{1}{\mfpe}\right)
-  %\pdv{}{\mu}(1 - \mu^2)\pdv{\tilde{\ft}}{\mu} ,\nonumber\\
   \frac{\fM - \ft^0}{\mfpe} - \mu \frac{\Zbar + 2}{\mfpe}\ft^1
   .
   \label{app_eq:BGK_model_1D}
@@ -2264,9 +1685,6 @@ and the~anisotropic part of EDF takes the~form \eqref{eq:BGK_approximation}.
 It should be noticed that $\ft^0$ equilibrates to $\fM$ 
 as $O\left( \text{Kn}^2\right)$ since $\ft^1 \sim \text{Kn} \fM$ 
 and $\mfpe \Ez \sim \text{Kn}$.
-%$\frac{\mfpe\qe\Ez}{\me\vmag^2}f^1 \sim Kn^2$ and  
-%$f^2 \sim Kn^2~\vmag/\vth$, when $\ft^0 = \fM$ and $\Ez=\E_L$ in 
-%\eqref{app_eq:BGK_f1}.
 
 The~AWBS operator \eqref{eq:AWBS_model} applied to 
 \eqref{eq:f_approximation} reads
@@ -2297,11 +1715,6 @@ of the~equation \eqref{app_eq:BGK_model_1D} using
   \left[\pdv{\ft^0}{z} + \frac{\qe\Ez}{\me\vmag}\pdv{\ft^0}{\vmag}\right] 
   .
   \label{app_eq:AWBS_f1} 
-  %\\  
-  %\frac{\vmag}{\Zbar}\pdv{f^1}{\vmag} + \frac{4}{\Zbar}f^1 
-  %- \frac{\Zbar + 1}{\Zbar} f^1 &=&
-  %\pdv{f^0}{z} + \frac{\tilde{E}_z}{\vmag}\pdv{f^0}{\vmag}
-  %\nonumber
 \end{eqnarray}
 If we assume that $\pdv{\ft^0}{\vmag} = \pdv{\fM}{\vmag}$, i.e. $\ft^0 = \fM$,
 the~anisotropic part of the~AWBS operator is governed by the~equation
@@ -2331,56 +1744,6 @@ electron velocity ($v_{max} = 7\vth$) to zero
 (using 10$^5$ $\Delta v$ steps). The~numerical approach is used for the~case
 of $\Zbar > 1.5$ and $r_A = \frac{1}{2}$.
 
-\begin{comment}
-\begin{equation}
-    b = \frac{1}{L_{\Te}},
-	~ c = \frac{1}{L_{\ed}} - \frac{3}{2}\frac{1}{L_{\Te}} 
-	- \frac{\qe\Ez}{\me\vth^2},
-   ~d = \frac{2^{\frac{a + 2}{2}} \vth^{a + 1}}{r_A (2\pi)^{\frac{3}{2}} \Gamma}
-  ,
-  \nonumber
-\end{equation}
-However, an~analytic solution can be found to
-\begin{equation}
-	\pdv{\vmag^a \ft^1}{\vmag} = \left(\frac{\vmag^{3+a}}{b} 
-    + \frac{\vmag^{5+a}}{c}\right) \exp\left(-\frac{\vmag^2}{2\vth^2}\right)
-  ,
-  \nonumber
-\end{equation}
-where 
-\begin{equation}
-  a = -\frac{\Zbar + r_A}{r_A},
-  ~b = \frac{\Gamma(2\pi)^{\frac{3}{2}}\vth^3 L_{\Te}}{4},
-  ~c = \Gamma(2\pi)^{\frac{3}{2}}2\vth^5 L_{\Te} .
-  \nonumber
-\end{equation}
-Then,
-\begin{equation}
-  \ft^1(\vmag) = \frac{\vth^2}{\vmag^a} \int_{\vmag}^\infty   
-  \left(\frac{\tilde{\vmag}^{2+a}}{b} + \frac{\tilde{\vmag}^{4+a}}{c}\right) 
-  \exp\left(-\frac{\tilde{\vmag}^2}{2\vth^2}\right) 
-    \frac{\tilde{\vmag}}{\vth^2} \dI \tilde{\vmag} , 
-  \nonumber
-\end{equation}
-Substitution $\hat{v} = \frac{\tilde{\vmag}^2}{2\vth^2}$ gives 
-$\dI\hat{v} = \frac{\tilde{\vmag}}{\vth^2} \dI \tilde{\vmag}$ and 
-$\tilde{\vmag} = \vth\sqrt{2\hat{v}}$.
-\begin{equation}
-  \ft^1(\vmag) = \frac{2^{\frac{4+a}{2}}
-  \vth^{6+a}}{\vmag^a} \int_{\frac{\vmag^2}{2\vth^2}}^\infty   
-    \left(\frac{{\hat{v}}^{\frac{4+a}{2}-1}}{2\vth^2 b} 
-    + \frac{{\hat{v}}^{\frac{6+a}{2}-1}}{c}\right) 
-    \exp\left(-\hat{v}\right) \dI \hat{v} , 
-  \nonumber
-\end{equation}
-
-Its purpose is to
-match AWBS heat flux to results obtained by Spitzer and Harm 
-\cite{SpitzerHarm_PR1953} obtained for any $\Zbar$. 
-\secref{sec:FPDiffusiveRegime} shows that this match can be found with 
-a~constant $r_A=\frac{1}{2}$.
-\end{comment}
-
 \section{AP1 electric field limit}
 \label{app:AP1limit}
 
@@ -2393,8 +1756,6 @@ $\pdv{\fzero}{\vmag}$ or $\pdv{\fonez}{\vmag}$.
 In the~case of elimination of $\pdv{\fzero}{\vmag}$ 
 one obtains the~following equation
 \begin{multline}
-  %\frac{2}{3\vmag\nue} 
-  %\left(\left(\sqrt{3}\vmag\frac{\nue}{2}\right)^2 - \Ez^2\right)  
   \left(\vmag\frac{\nue}{2} - \frac{2\qe^2\Ez^2}{3\me^2\vmag\nue}\right) 
   \pdv{\fonez}{\vmag} 
   =
@@ -2471,10 +1832,6 @@ and the~compensation of the~electric field effect via its angular term.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{NTH}
-
-%% Authors are advised to submit their bibtex database files. They are
-%% requested to list a bibtex style file in the manuscript if they do
-%% not want to use elsarticle-num.bst.
 
 \clearpage
 
