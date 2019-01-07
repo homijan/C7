@@ -144,10 +144,11 @@
 \useinnertheme{rectangles}
 %\useoutertheme{infolines} 
 
-\title[Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas, HZDR, 2018]{
-Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
-\textit{Serious Numerics for Serious Physics}}
-\author[Milan~Holec]{{\large Milan~Holec}}
+\title[AWBS electrons kinetic modeling with nonlocal Ohm’s law\\ in plasmas relevant to inertial confinement fusion]{AWBS kinetic modeling of electrons with nonlocal Ohm’s law\\ in plasmas relevant to inertial confinement fusion
+%\\
+%\textit{Serious Numerics for Serious Physics}
+}
+\author[Milan~Holec]{{\large Milan~Holec, Dario Del Sorbo}}
 %\institute[US JAK]{
 %         {\large CELIA, University of Bordeaux,\\ 
 %		 33405 Talence, France
@@ -157,17 +158,17 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
 %         }
 
 \date{
-	%\begin{figure}
-    %\begin{center}
-	%\begin{tabular}{ccc} 
-	%\includegraphics[width=0.3\textwidth]{../../figs_NTH/results/OmegaLaser/material_77.png}
-	%&
-	%\includegraphics[width=0.3\textwidth]{../../figs_NTH/results/OmegaLaser/nonlocalI1z_77.png}
-	%&
-	%\includegraphics[width=0.3\textwidth]{../../figs_NTH/results/OmegaLaser/nonlocalI1x_77.png}
-	%\end{tabular}
-	%\end{center}
-	%\end{figure}
+	\begin{figure}
+    \begin{center}
+	\begin{tabular}{ccc} 
+	\includegraphics[width=0.3\textwidth]{../figures/material_77.png}
+	&
+	\includegraphics[width=0.3\textwidth]{../figures/nonlocalI1z_77.png}
+	&
+	\includegraphics[width=0.3\textwidth]{../figures/nonlocalI1x_77.png}
+	\end{tabular}
+	\end{center}
+	\end{figure}
 	\begin{tabular}{c}	
 	LLNL - ClubMED,\\
 	Livermore, CA,\\
@@ -195,20 +196,18 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
  \titlepage
 \end{frame}
 
-\begin{frame}
-  \tableofcontents
-\end{frame}
+%\begin{frame}
+%  \tableofcontents
+%\end{frame}
 
 \section{Introduction to Nonlocal Magneto-Hydrodynamic model (Nonlocal-MHD)}
 
-\subsection{Radiation-Hydrodyanmics}
-
-\subsection{Nonlocal electron transport}
+%\subsection{Nonlocal electron transport}
 \newcommand{\edf}{\colorimportant{f}}
 \begin{frame}
 \begin{center}
-{\large Radiation-Hydrodynamic model of plasma}
-\begin{block}{Boltzmann transport equation}
+{\huge Hydrodynamic model of plasma}
+\begin{block}{Fokker-Planck/Boltzmann transport equation}
 \begin{equation}
   \frac{\partial \edf}{\partial t} + 
   \vect{v}\cdot\nabla_x \edf + \frac{q_e}{m_e}\left(\vect{E}
@@ -220,21 +219,21 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
   \vect{v}-\vect{v}')}{|\vect{v}-\vect{v}'|^3}
   \big(\nabla_{\vect{v}} \edf(\vect{v}) f(\vect{v}') - 
   \edf(\vect{v}) \nabla_{\vect{v}} f(\vect{v}')\big) \dI \vect{v}'
-  \nonumber
+  \label{eq:FP}
   %C(\edf, \edf)
   %\nonumber
 \end{equation}
 \end{block}
-\begin{block}{Fluid equations in Lagrangian frame}
+\begin{block}{Fluid equations in Lagrangian frame (velocity space moments of \eqref{eq:FP})}
 \begin{eqnarray}
 	\frac{\dI \rho}{\dI t} &=& - \rho \nabla\cdot\vect{U}%\, ,
 	\label{lagrange_ei_mass_equation} \nonumber\\
 	\rho \frac{\dI \vect{U}}{\dI t} 
-	&=& \nabla\cdot\matr{\sigma}%\, ,
+    &=& \nabla\cdot\matr{\sigma} + \vect{j}\times\B%\, ,
 	\label{lagrange_ei_momentum_equation} \nonumber\\
 	\rho\frac{\dI \varepsilon}{\dI t} &=& 
 	\matr{\sigma}:\nabla\vect{U}
-	- \nabla\cdot\left(\vect{q}_e + \vect{q}_R \right)%\, ,
+	- \nabla\cdot\vect{q}_e%\, ,
 	\label{lagrange_i_energy_equation} \nonumber
 \end{eqnarray}
 \end{block}
@@ -245,24 +244,29 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
 	(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3 \approx -\matr{I} p 
 	+ \tilde{\matr{\sigma}}(\nabla \vect{U})
 	\label{stress_tensor}\nonumber\\
-	\vect{q}_e &=& \frac{\rho}{2} 
+	\vect{q}_e &=& \frac{\me}{2} 
 	\int |\vect{v} - \vect{U}|^2
 	(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3 \approx 
-	\frac{\rho}{2} 
+	\frac{\me}{2} 
 	\int_{4\pi}\vect{n}\int_0^\infty 
 	|\vect{v}|^5 \edf\, \dI |\vect{v}|\, \dI \vect{n}
 	\approx -\kappa(T^{2.5})\nabla T 
-	\label{heat_flux_vector} \nonumber \\
-	\vect{q}_R &=& \int_{4\pi} \vect{n} \int_\nu I^{~p}_\nu\, \dI \nu\, 
-	\dI \vect{n} \approx - \int_\nu \frac{c}{\chi_\nu} \nabla ( f_\nu E_\nu) 
-    \, \dI \nu
-	\label{radiation_flux_vector} \nonumber
+	\label{heat_flux_vector} \nonumber
+    \\
+    \vect{j} &=& \qe 
+	\int(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3
+    \nonumber
+    %\\
+	%\vect{q}_R &=& \int_{4\pi} \vect{n} \int_\nu I^{~p}_\nu\, \dI \nu\, 
+	%\dI \vect{n} \approx - \int_\nu \frac{c}{\chi_\nu} \nabla ( f_\nu E_\nu) 
+    %\, \dI \nu
+	%\label{radiation_flux_vector} \nonumber
 \end{eqnarray}
 \end{block}
 \end{center}
 \end{frame}
 
-%\begin{comment} % SH
+\begin{comment} % SH
 \begin{frame}
 \begin{center}
 Spitzer-Harm electron diffusion
@@ -329,15 +333,55 @@ $\lambda_{ei}$ the~electron mean free path when scattered on ions.
 \end{equation}
 \end{center}
 \end{frame}
-%\end{comment} % SH
+\end{comment} % SH
 
 \begin{frame}
 \begin{center}
-%{\Huge \textit{Nonlocal-MHD}}
+{\huge Local diffusive transport regime}
+\begin{block}{Collision operators}
+    \begin{eqnarray}
+        C_{FP} &=& \Gamma_{ee}\int \gv\gv(\vv - \vvb) \cdot \left(
+        \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
+        + \frac{\nuei}{2} 
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \\
+        C_{BGK} &=& \nue(\fM - \ft)
+        + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \\
+        C_{FP0} &=& 
+        v \nue\frac{\partial}{\partial v}
+        \left[C(\fzero)\fzero
+        + D(\fzero)\frac{\partial \fzero}{\partial v}\right]
+        + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \\
+        C_{AWBS} &=& \vmag \frac{\nue}{2}
+        \pdv{}{\vmag}\left(\ft - \fM\right)
+        + \frac{\nuei + \frac{\nue}{2}}{2} 
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)       
+    \end{eqnarray}
+\end{block}
 
 \begin{tabular}{c}
 \includegraphics[width=0.5\textwidth]{../figures/q1s.png}
 \end{tabular}
+\begin{tabular}{c|ccccc}
+    %\hline
+    %$\Zbar$ & $1$ & $2$ & $4$ & $16$ & $\infty$ \\\\
+    & $\,Z=1\,$ & $\,Z=2\,$ & $\,Z=4\,$ & $\,Z=16\,$ & $\,Z=116\,$ 
+	\\
+    \hline
+    $\bar{\Delta}\mathbf{q}_{AWBS}$ & 0.057 & 0.004 & 0.037 & 0.021 & 0.004 \\
+    %\hline\\
+    %$\phi(Z)$ & -0.037 & -0.003 & 0.04 & 0.058 & 0.065 \\\\ 
+    %\hline
+\end{tabular}
+
+%Z-dependence of electron distribution function (heat flux moment) by AWBS, Spitzer and Harm, and VFP operator $C^{FP}_{ee}(\fzero) = 
+%v \nue\frac{\partial}{\partial v}
+%\left[C(\fzero)\fzero+D(\fzero)\frac{\partial \fzero}{\partial v}\right]$. 
+AWBS provides excellent results for any Z.
 
 \end{center}
 \end{frame}
@@ -345,7 +389,7 @@ $\lambda_{ei}$ the~electron mean free path when scattered on ions.
 \newcommand{\fs}{0.33}
 \begin{frame}
 \begin{center}
-%{\Huge \textit{Nonlocal-MHD}}
+{\huge Nonlocal electron transport regime - PIC/VFP0/AWBS}
 
 \begin{tabular}{ccc}
 \includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_heatflux.png}
@@ -360,105 +404,159 @@ $\lambda_{ei}$ the~electron mean free path when scattered on ions.
 &
 \includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics.png}
 \end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+{\huge Electron velocity limit - friction vs. $\vect{E}$ stopping}
+\begin{equation}
+  \pdv{\ft}{t} + \vv\cdot\nabla \ft + 
+  \frac{\qe}{\me}\left(\E + \frac{\vv}{c}\vect{\times}\B\right)
+  \cdot\pdv{\ft}{\Omega} =  
+  \left(\vmag \frac{\nue}{2} -  \frac{\qe}{\me}~\vv\cdot\E \right)
+  \pdv{\ft}{\vmag} - \vmag \frac{\nue}{2}\pdv{\fM}{\vmag}
+  + \frac{\nuei +\frac{\nue}{2}}{2} \frac{\partial^2\ft}{\partial\Omega^2},
+  \nonumber\label{eq:kinetic_equation}
+\end{equation}
+\begin{tabular}{c|ccccc}
+    \hline\hline\\
+    %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
+    Kn$^e$ & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
+    \hline\\
+    $v_{lim} / v_{th}$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
+    \hline\hline
+\end{tabular} 
+
+\begin{tabular}{c}
+\includegraphics[width=0.5\textwidth]{../figures/Kn_results.png}
+\end{tabular}
+
+$\vect{E}$ stopping overtakes collisions for Kn$>0.1$.
 
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
-%{\Huge \textit{Nonlocal-MHD}}
+%{\huge NIF relevant conditions}
+
+{\large NIF hohlraum - plasma profiles provided by HYDRA}
 
 \begin{tabular}{c}
 \includegraphics[width=0.5\textwidth]{../figures/C7_GdHohlraum_heatflux.png}
 \end{tabular}
 
+{\large SNB approach}
+\begin{equation}
+  \tilde{\ft} = 
+  \fM + \delta\fzero 
+  + \Omega\cdot\left(\fone_M + \delta\fone\right) . 
+  \nonumber\label{eq:SNB_approximation}
+\end{equation}
+\begin{equation}
+    \fone_M = -\frac{\Zbar + 0.24}{\Zbar + 4.2}\mfpei\fM\left( \frac{\nabla\ed}{\ed} 
+  + \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
+  \frac{\nabla\Te}{\Te} - \frac{\qe\E_L}{\me\vth^2}\right) ,
+  \qquad\E_L = \frac{\me\vth^2}{\qe}\left(\frac{\nabla\ed}{\ed} 
+  + \frac{5}{2}\frac{\nabla\Te}{\Te} \right)
+  \nonumber
+\end{equation}
+
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
-{\large Nonlocal electron transport $\&$ Maxwell equations}  
-\begin{block}{AWBS electron transport equation}
+{\Huge Nonlocal Ohm's law}
+
+We found that the~quality of the~electric field evaluation is essential for 
+a~correct plasma modeling 
+\begin{block}{Nonlocal current in plasma}
 \begin{equation}
-  %\frac{1}{|\vect{v}|}\frac{\partial f}{\partial t} + 
-  \vect{v}\cdot\nabla_{\vect{x}} f +
-  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
-  = 
-  v \frac{\nu_e}{2} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
-  + \left(\nu_{ei} + \frac{\nu_e}{2}\right) \left(f_0 - f\right)
-  \nonumber
+  \vect{j}(f, \vect{E}) = e \int v \fone v^2~\dI v = 
+  e \int v \frac{\nuei^2 \vect{E}^* 
+  + \omegaB~\omegaB\cdot\vect{E}^* + \nuei~\omegaB \times \vect{E}^*}
+  {\nuei (\omegaB^2 + \nuei^2)} v^2~\dI v ,
+  \label{eq:NonlocalOhm}
 \end{equation}
 \end{block}
-\begin{equation}
-  \frac{\partial f}{\partial t} + 
-  \vect{v}\cdot\nabla_{\vect{x}} f +
-  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
-  = 
-  v \frac{\nu_e}{2} \frac{\partial }{\partial v}
-  \left( F(f_0) f_0 + D(f_0)\frac{\partial f_0}{\partial v}\right)
-  + \nu_{ei} \left(f_0 - f\right)
-  \nonumber
-\end{equation}
+where $\vect{E}^* = \vmag\frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag\nabla\fzero 
+ - \frac{\qe}{\me}\E\pdv{\fzero}{\vmag}$ 
+is an effective electric field in plasma. 
+A~comparison to the \textit{Generalized Ohm's law} shows a~correct local 
+behavior of \eqref{eq:NonlocalOhm}, especially that 
+$\nabla\times \nabla \fzero \sim \nabla\times \frac{\nabla p_e}{\ed} \sim \nabla n_e \times \nabla T_e$
+
 \begin{block}{Generalized Ohm's law vs. nonlocal Ohm's law}
-\begin{eqnarray}
-  %\vect{E} + \frac{v_i}{c}\times\vect{B} &=&  
+\begin{eqnarray} 
   \vect{E} &=&  
-  \left(\vect{R}_T -\nabla p_e\right)\quad~~ + ~\quad\qquad 
-  \frac{\vect{j}}{\sigma}\qquad\quad ~+
-  \qquad \vect{j}\times\vect{B}
+  \left(\vect{R}_T -\nabla p_e\right)\quad + ~~~~~\quad\qquad 
+  \frac{\vect{j}}{\sigma}\qquad\quad ~~~~+
+  \qquad \vect{j}\times\vect{B} ,
   \nonumber \\
-  \vect{E} \int v \pdv{f_0}{v} v^2\, \dI v 
+  \vect{E} \vmag \frac{\qe}{\me}\pdv{\fzero}{\vmag} 
   &=& 
-  \int v^2 \nabla f_0 v^2\, \dI v~~~ +~~  \int v \nu_{ei}\fone v^2\, \dI v 
-  ~+~~ \int v \fone\times\vect{B} v^2\, \dI v
-  %\\
-  %\vect{E}\cdot \sum_{\Delta v^g} \int_{4\pi}\matr{V}_E\cdot\vect{f} 
+  ~~~~\vmag^2 \nabla\fzero ~~~~~~~~~ 
+  +~~~  \vmag^2 \frac{\nue}{2}\pdv{\fone}{\vmag} - \vmag \nuei\fone 
+  ~~~+~~~ v \fone\times\frac{\qe}{\me c}\vect{B}.
+  %\vect{E} \int v \pdv{\fzero}{v} v^2\, \dI v 
   %&=& 
-  %- \sum_{\Delta v^g} \int_{4\pi} \matr{D}\cdot |\vect{v}|\vect{f}~ 
-  %-~ \sum_{\Delta v^g} \int_{4\pi} 
-  % k_{|\vect{v}|}\matr{M}\cdot |\vect{v}| \vect{f}
-  %~-~ \sum_{\Delta v^g} \int_{4\pi} 
-  % \matr{B}\times\matr{V}_B\cdot |\vect{v}| \vect{f} 
-  %\nonumber 
+  %\int v^2 \nabla \fzero v^2\, \dI v~~~ +~~  \int v \nuei\fone v^2\, \dI v 
+  %~~~+~~ \int v \fone\times\vect{B} v^2\, \dI v .
+  \nonumber
 \end{eqnarray}
 \end{block}
+
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+{\huge Nonlocal-MHD}  
+
 \begin{eqnarray}
-  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\partial \vect{B}}{\partial t}
-  \quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in fluid frame}) 
+  \text{HYDRODYNAMICS} && \nonumber \\
+  && \nonumber \\
+  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u} , 
+  \nonumber\\ 
+  \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla (p_i + p_e) 
+  + \vect{j}(f, \vect{E}) \times \vect{B}, 
+  \nonumber\\   
+  \rho \left(\frac{\partial \varepsilon_i}{\partial T_i}\frac{\dI T_i}{\dI t} 
+  +\frac{\partial \varepsilon_i}{\partial \rho}\frac{\dI \rho}{\dI t}\right)
+  &=& 
+  - p_i\nabla\cdot\vect{u} - G(T_i - T_e) , 
+  \nonumber\\
+  \rho \left(\frac{\partial \varepsilon_e}{\partial T_e}\frac{\dI T_e}{\dI t}
+  +\frac{\partial \varepsilon_e}{\partial \rho}\frac{\dI \rho}{\dI t}\right)
+  %+ \frac{\dI \epsilon_R}{\dI t} 
+  &=& 
+  - p_e \nabla\cdot\vect{u} - \nabla\cdot\vect{q}_e(f) + 
+  G(T_i - T_e) + Q_{\text{IB}}(\vect{E}_L) , 
+  \nonumber \\
+  && \nonumber \\
+  && \nonumber \\
+  \text{MAXWELL EQUATIONS} && \nonumber \\
+  && \nonumber \\
+  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\dI \vect{B}}{\dI t} ,
+  %\quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in the fluid frame})
   \nonumber \\
   \nabla\times\vect{B} &=& \frac{4\pi}{c}
-  \vect{j}\qquad\qquad\,\, (\text{quasi-neutrality} 
-  \nabla\cdot\vect{j} = 0) 
-  \nonumber
-  \\
-  \vect{j} &=& C(\vect{E}, f) \qquad\quad (\text{from nonlocal electron transport  model (1)})
-  \nonumber
+  \vect{j}(f, \vect{E}) ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
+  \nonumber \\
+  && \nonumber \\
+  %&& \nonumber \\
+  \text{AWBS KINETICS OF ELECTRONS} && \nonumber \\
+  && \nonumber \\
+  \pdv{f}{t} + \vect{v}\cdot\nabla f +
+  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
+  &=& 
+  v \frac{\nue}{2} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
+  + \frac{\nuei + \frac{\nue}{2}}{2} \frac{\partial^2 f}{\partial \Omega^2} .
+  \nonumber \label{eq:AWBS}
 \end{eqnarray}
-%Applying generalized Ohm's and Ampere's laws, we get
-%\begin{equation}
-%  %\nabla\times\tilde{\vect{E}} = 
-%   \nabla\times\vect{E} = 
-%  \nabla\times\left(
-%  \frac{1}{e n_e}\left(\vect{R}_T -\nabla p_e\right) + 
-%  \frac{c}{e n_e \sigma 4\pi}\nabla\times\vect{B} 
-%  - \frac{\tilde{\vect{j}}}{e n_e \sigma} + 
-%  \frac{1}{e n_e c}\vect{j}\times\vect{B}\right)
-%  \nonumber
-%\end{equation}
 
-%\begin{block}{Maxwell Equations for Hydrodynamics - dynamo equation for 
-%nonlocal magnetic field source}
-%\begin{equation}
-%  \frac{1}{c}\frac{\partial \vect{B}}{\partial t} = 
-%  - \nabla\times\frac{1}{e n_e c}\vect{j}\times\vect{B}
-%  - \nabla\times\frac{c}{e n_e \sigma 4\pi}\nabla\times\vect{B}
-%  - \nabla\times \left(
-%  \frac{\sum_{\Delta v^g} \int_{4\pi} \matr{D}\cdot |\vect{v}|\vect{f}}
-%  {\sum_{\Delta v^g} \int_{4\pi}\matr{V}_E\cdot\vect{f}}\right)
-%  \nonumber
-%\end{equation}
-%\end{block}
-%\let\thefootnote\relax\footnote{Kingham and Bell PRL 2002}
 \end{center}
 \end{frame}
 
