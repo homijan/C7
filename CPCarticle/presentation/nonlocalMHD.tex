@@ -219,21 +219,21 @@
   \vect{v}-\vect{v}')}{|\vect{v}-\vect{v}'|^3}
   \big(\nabla_{\vect{v}} \edf(\vect{v}) f(\vect{v}') - 
   \edf(\vect{v}) \nabla_{\vect{v}} f(\vect{v}')\big) \dI \vect{v}'
-  \label{eq:FP}
+  \label{eq:FP} .
   %C(\edf, \edf)
   %\nonumber
 \end{equation}
 \end{block}
 \begin{block}{Fluid equations in Lagrangian frame (velocity space moments of \eqref{eq:FP})}
 \begin{eqnarray}
-	\frac{\dI \rho}{\dI t} &=& - \rho \nabla\cdot\vect{U}%\, ,
+	\frac{\dI \rho}{\dI t} &=& - \rho \nabla\cdot\vect{U} ,
 	\label{lagrange_ei_mass_equation} \nonumber\\
 	\rho \frac{\dI \vect{U}}{\dI t} 
-    &=& \nabla\cdot\matr{\sigma} + \vect{j}\times\B%\, ,
+    &=& \nabla\cdot\matr{\sigma} + \vect{j}\times\B ,
 	\label{lagrange_ei_momentum_equation} \nonumber\\
 	\rho\frac{\dI \varepsilon}{\dI t} &=& 
 	\matr{\sigma}:\nabla\vect{U}
-	- \nabla\cdot\vect{q}_e%\, ,
+	- \nabla\cdot\vect{q}_e .
 	\label{lagrange_i_energy_equation} \nonumber
 \end{eqnarray}
 \end{block}
@@ -242,7 +242,7 @@
 	\matr{\sigma} &=& -\rho
 	\int (\vect{v}-\vect{U})\otimes
 	(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3 \approx -\matr{I} p 
-	+ \tilde{\matr{\sigma}}(\nabla \vect{U})
+	+ \tilde{\matr{\sigma}}(\nabla \vect{U}) ,
 	\label{stress_tensor}\nonumber\\
 	\vect{q}_e &=& \frac{\me}{2} 
 	\int |\vect{v} - \vect{U}|^2
@@ -250,11 +250,11 @@
 	\frac{\me}{2} 
 	\int_{4\pi}\vect{n}\int_0^\infty 
 	|\vect{v}|^5 \edf\, \dI |\vect{v}|\, \dI \vect{n}
-	\approx -\kappa(T^{2.5})\nabla T 
+	\approx -\kappa(T^{2.5})\nabla T ,
 	\label{heat_flux_vector} \nonumber
     \\
     \vect{j} &=& \qe 
-	\int(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3
+	\int(\vect{v}-\vect{U})\, \edf\, \dI \vect{v}^3 .
     \nonumber
     %\\
 	%\vect{q}_R &=& \int_{4\pi} \vect{n} \int_\nu I^{~p}_\nu\, \dI \nu\, 
@@ -343,23 +343,23 @@ $\lambda_{ei}$ the~electron mean free path when scattered on ions.
         C_{FP} &=& \Gamma_{ee}\int \gv\gv(\vv - \vvb) \cdot \left(
         \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
         + \frac{\nuei}{2} 
-        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
         \\
         C_{BGK} &=& \nue(\fM - \ft)
         + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
-        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
         \\
         C_{FP0} &=& 
         v \nue\frac{\partial}{\partial v}
         \left[C(\fzero)\fzero
         + D(\fzero)\frac{\partial \fzero}{\partial v}\right]
         + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
-        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
         \\
         C_{AWBS} &=& \vmag \frac{\nue}{2}
         \pdv{}{\vmag}\left(\ft - \fM\right)
         + \frac{\nuei + \frac{\nue}{2}}{2} 
-        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right)       
+        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right).      
     \end{eqnarray}
 \end{block}
 
@@ -416,7 +416,7 @@ AWBS provides excellent results for any Z.
   \cdot\pdv{\ft}{\Omega} =  
   \left(\vmag \frac{\nue}{2} -  \frac{\qe}{\me}~\vv\cdot\E \right)
   \pdv{\ft}{\vmag} - \vmag \frac{\nue}{2}\pdv{\fM}{\vmag}
-  + \frac{\nuei +\frac{\nue}{2}}{2} \frac{\partial^2\ft}{\partial\Omega^2},
+  + \frac{\nuei +\frac{\nue}{2}}{2} \frac{\partial^2\ft}{\partial\Omega^2} .
   \nonumber\label{eq:kinetic_equation}
 \end{equation}
 \begin{tabular}{c|ccccc}
@@ -451,7 +451,7 @@ $\vect{E}$ stopping overtakes collisions for Kn$>0.1$.
 \begin{equation}
   \tilde{\ft} = 
   \fM + \delta\fzero 
-  + \Omega\cdot\left(\fone_M + \delta\fone\right) . 
+  + \Omega\cdot\left(\fone_M + \delta\fone\right) , 
   \nonumber\label{eq:SNB_approximation}
 \end{equation}
 \begin{equation}
@@ -459,7 +459,7 @@ $\vect{E}$ stopping overtakes collisions for Kn$>0.1$.
   + \left( \frac{\vmag^2}{2\vth^2} - \frac{3}{2}\right)
   \frac{\nabla\Te}{\Te} - \frac{\qe\E_L}{\me\vth^2}\right) ,
   \qquad\E_L = \frac{\me\vth^2}{\qe}\left(\frac{\nabla\ed}{\ed} 
-  + \frac{5}{2}\frac{\nabla\Te}{\Te} \right)
+  + \frac{5}{2}\frac{\nabla\Te}{\Te} \right) .
   \nonumber
 \end{equation}
 
