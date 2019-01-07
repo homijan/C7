@@ -32,68 +32,49 @@
 %\usepackage{RT_woutmeshate}
 \usepackage{xmpmulti}
 
-\newcommand{\vsp}[1]{\vspace{#1mm}}
-\newcommand{\DOF}[1]{\mathtt{#1}} 
-\newcommand{\HdO}{\mathbf{H}(\text{div},\Omega)} 
-\newcommand{\RTO}{\mathbf{RT}_0(\tilde{\Omega})} 
-\newcommand{\PiRT}{\Pi^{\mathbf{RT}}} 
-\newcommand{\PiP}{\Pi^P} 
-\newcommand{\Pie}{\Pi^e} 
-\newcommand{\basisRT}{\aleph^{\mathbf{RT}}} 
-\newcommand{\basisP}{\aleph^P} 
-\newcommand{\rectmesh}{\mathtt{RECT} } 
-\newcommand{\sinmesh}{\mathtt{SIN} } 
-\newcommand{\randmesh}{\mathtt{RAND} } 
-\newcommand{\tabscale}{0.6} 
-\newcommand{\figscale}{0.87} 
-\newcommand{\dI}{\text{d}}
+\newcommand{\pdv}[2]{\frac{\partial{#1}}{\partial{#2}}}
 \newcommand{\vect}[1]{\boldsymbol{#1}}
-\newcommand{\matr}{\mathbf}
-\newcommand{\uR}{u_R} 
-\newcommand{\nablax}{\nabla_{\vect{x}}}
-\newcommand{\nablav}{\nabla_{\vect{v}}}
+\newcommand{\matr}[1]{\mathbf{#1}}
+\newcommand{\dI}{\text{d}}
+\newcommand{\odv}[2]{\frac{\dI #1}{\dI #2}}
+\newcommand{\ddv}[2]{\odv{#1}{#2}}
+\newcommand{\mfpe}{\lambda_e}
+\newcommand{\mfpei}{\lambda_{ei}}
+\newcommand{\Zbar}{Z}
+\newcommand{\nue}{\nu_{e}}
+\newcommand{\nuei}{\nu_{ei}}
+\newcommand{\nuscat}{\nu_{scat}}
+\newcommand{\vmag}{v}
+\newcommand{\vth}{v_{th}}
+\newcommand{\vtwoh}{v_{2 th}}
+\newcommand{\vn}{\vect{n}}
+\newcommand{\E}{\vect{E}}
+\newcommand{\B}{\vect{B}}
+\newcommand{\omegaB}{\vect{\omega}_{B}}
+\newcommand{\Ez}{E_z}
+\newcommand{\qe}{q_e}
+\newcommand{\me}{m_e}
+\newcommand{\Te}{T_e}
+\newcommand{\Ti}{T_i}
+\newcommand{\ed}{n_e}
+\newcommand{\kB}{k_B}
+\newcommand{\fM}{f_M}
+\newcommand{\fzero}{f_0}
+\newcommand{\vfzero}{\vect{f_0}}
+\newcommand{\fone}{{\vect{f_1}}}
+\newcommand{\fonez}{f_{1_z}}
+\newcommand{\vv}{\vect{v}}
+\newcommand{\vvb}{\tilde{\vect{v}}}
+\newcommand{\gv}{\nabla_{\vv}}
+\newcommand{\gvb}{\nabla_{\vvb}}
+\newcommand{\gx}{\nabla_{\vect{x}}}
+\newcommand{\ft}{f}
+\newcommand{\lnc}{\text{ln}\Lambda}
+\newcommand{\Iohm}{\matr{J}_{Ohm}}
 
-\newcommand{\Er}{u}
-\newcommand{\Eh}{u_H}
-\newcommand{\Cv}{\text{Cv}}
-
-\newcommand{\Ox}{\Omega_{\vect{x}}}
-\newcommand{\Orz}{\Omega_{rz}}
-\newcommand{\Gx}{\Gamma_{\vect{x}}}
-\newcommand{\Grz}{\Gamma_{rz}}
-\newcommand{\Oa}{\Omega_{\vect{\vartheta}}}
-\newcommand{\OTheta}{\Omega_{\Theta}}
-\newcommand{\OPhi}{\Omega_{\Phi}}
-\newcommand{\OThetaPhi}{\Omega_{\Theta\Phi}}
-\newcommand{\Ot}{\Omega_t}
-
-\newcommand{\pp}{p}
-\newcommand{\kpp}{k_{\pp}}
-\newcommand{\ST}{S(T)}
-\newcommand{\FF}{\vect{n}\ff}
-\newcommand{\nn}{n}
-
-%\newcommand{\fo}{\tilde{f}}
-\newcommand{\ff}{I}
-\newcommand{\fo}{f_e}
-\newcommand{\ffe}{f_e}
-\newcommand{\ffi}{f_i}
-%\newcommand{\ffion}{f_i}
-\newcommand{\lncoul}{\ln \Lambda}
-\newcommand{\vSG}{v_T}
-
-\newcommand{\hscale}{0.5}
-
-\definecolor{lightbrown}{rgb}{.8,.5,.1}
-\definecolor{sky}{rgb}{0,.6,1}
-\newcommand{\colorsky}[1]{ {\color{sky} #1} }
-\newcommand{\colorphotons}[1]{ {\color{blue} #1} }
-\newcommand{\colorelectrons}[1]{ {\color{sky} #1} }
+\newcommand{\vsp}[1]{\vspace{#1mm}}
 \newcommand{\colorimportant}[1]{ {\color{purple} #1} }
 
-\newcommand{\colorTi}[1]{ {\color{blue} #1} }
-\newcommand{\colorf}[1]{ {\color{sky} #1} }
-\newcommand{\colorTe}[1]{ {\color{red} #1} }
 
 %\newenvironment{variableblock}[3]{%
 %  \setbeamercolor{block body}{#2}
@@ -246,14 +227,14 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
 \end{block}
 \begin{block}{Fluid equations in Lagrangian frame}
 \begin{eqnarray}
-	\frac{\dI \rho}{\dI t} &=& - \rho \nablax\cdot\vect{U}%\, ,
+	\frac{\dI \rho}{\dI t} &=& - \rho \nabla\cdot\vect{U}%\, ,
 	\label{lagrange_ei_mass_equation} \nonumber\\
 	\rho \frac{\dI \vect{U}}{\dI t} 
-	&=& \nablax\cdot\matr{\sigma}%\, ,
+	&=& \nabla\cdot\matr{\sigma}%\, ,
 	\label{lagrange_ei_momentum_equation} \nonumber\\
 	\rho\frac{\dI \varepsilon}{\dI t} &=& 
-	\matr{\sigma}:\nablax\vect{U}
-	- \nablax\cdot\left(\vect{q}_e + \vect{q}_R \right)%\, ,
+	\matr{\sigma}:\nabla\vect{U}
+	- \nabla\cdot\left(\vect{q}_e + \vect{q}_R \right)%\, ,
 	\label{lagrange_i_energy_equation} \nonumber
 \end{eqnarray}
 \end{block}
@@ -281,7 +262,7 @@ Nonlocal Magneto-Hydrodynamic Model and Its Applications to Laser Plasmas\\
 \end{center}
 \end{frame}
 
-\begin{comment} % SH
+%\begin{comment} % SH
 \begin{frame}
 \begin{center}
 Spitzer-Harm electron diffusion
@@ -348,48 +329,51 @@ $\lambda_{ei}$ the~electron mean free path when scattered on ions.
 \end{equation}
 \end{center}
 \end{frame}
-\end{comment} % SH
+%\end{comment} % SH
 
-\newcommand{\fsize}{0.335}
-\newcommand{\ffsize}{0.33}
+\begin{frame}
+\begin{center}
+%{\Huge \textit{Nonlocal-MHD}}
 
-\renewcommand{\vect}[1]{\boldsymbol{#1}}
-\renewcommand{\matr}[1]{\mathbf{#1}}
-\renewcommand{\dI}{\text{d}}
-\newcommand{\pdv}[2]{\frac{\partial{#1}}{\partial{#2}}}
-\newcommand{\odv}[2]{\frac{\dI #1}{\dI #2}}
-\newcommand{\ddv}[2]{\odv{#1}{#2}}
-%\renewcommand{\ddv}[2]{\frac{\Delta #1}{\Delta #2}}
-\newcommand{\nue}{\nu_{e}}
-\newcommand{\nutot}{\nu_{t}}
-\newcommand{\vmag}{v}
-\newcommand{\vn}{\vect{n}}
-\newcommand{\E}{\vect{E}}
-\newcommand{\B}{\vect{B}}
-\newcommand{\tE}{\vect{\tilde{E}}}
-\newcommand{\tB}{\vect{\tilde{B}}}
-\newcommand{\qe}{q_e}
-\newcommand{\me}{m_e}
-\newcommand{\fM}{f_M}
-\newcommand{\fzero}{f_0}
-\newcommand{\vfzero}{\vect{f}_0}
-\newcommand{\fone}{\vect{f}_1}
-\newcommand{\SM}{\vect{S}_M}
-\newcommand{\MI}{\matr{I}}
-\newcommand{\MA}{\matr{A}}
-\newcommand{\intO}{\int_{\Omega}}
-\newcommand{\IM}{\boldsymbol{\mathcal{M}}}
-\newcommand{\ID}{\boldsymbol{\mathcal{D}}}
-\newcommand{\IV}{\boldsymbol{\mathcal{V}}}
-\newcommand{\IB}{\boldsymbol{\mathcal{B}}}
-\newcommand{\acl}{\vect{M}_{\left(\fone/\fzero\right)}}
+\begin{tabular}{c}
+\includegraphics[width=0.5\textwidth]{../figures/q1s.png}
+\end{tabular}
 
+\end{center}
+\end{frame}
 
-%\subsection{Nonlocal transport in MHD}
-\newcommand{\ftwo}{\boldsymbol{f}_2}
-\newcommand{\pv}{\frac{\partial}{\partial v}}
-\newcommand{\nuee}{\nu_{ee}}
-\newcommand{\nut}{\nu_{tot}}
+\newcommand{\fs}{0.33}
+\begin{frame}
+\begin{center}
+%{\Huge \textit{Nonlocal-MHD}}
+
+\begin{tabular}{ccc}
+\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_heatflux.png}
+&
+\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_kinetics.png}
+&
+\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_nonlocal_kinetics.png}
+\\
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_heatflux.png}
+&
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_kinetics.png}
+&
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics.png}
+\end{tabular}
+
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+%{\Huge \textit{Nonlocal-MHD}}
+
+\begin{tabular}{c}
+\includegraphics[width=0.5\textwidth]{../figures/C7_GdHohlraum_heatflux.png}
+\end{tabular}
+
+\end{center}
+\end{frame}
 
 \begin{frame}
 \begin{center}
@@ -667,15 +651,6 @@ Electron closure relations
  \includegraphics<3>[height=\RThscale\textheight]{../../figs_NTH/RT_figs/merged_GLVis_s40.png}
  \includegraphics<4>[height=\RThscale\textheight]{../../figs_NTH/RT_figs/merged_GLVis_s59.png}
 \end{tabular}
- %\includegraphics<1>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s01.png}
- %\includegraphics<2>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s10.png}
- %\includegraphics<3>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s20.png}
- %\includegraphics<4>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s30.png}
- %\includegraphics<5>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s40.png}
- %\includegraphics<6>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s50.png}
- %\includegraphics<7>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s60.png}
- %\includegraphics<8>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s70.png}
- %\includegraphics<9>[height=\hscale\textheight]{../RT_figs/merged_GLVis_s79.png}
 \end{center}
 \end{frame}
 \end{comment} % CurvelinearHydro
