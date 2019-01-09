@@ -136,6 +136,7 @@ if __name__ == "__main__":
     ps.add_argument( '-pt', '--EDF_outpoint', type = float, help = 'Output point of EDF.' )
     ## A no value argument solution.
     ps.add_argument("-s", "--plotshow", action='store_true', help="Provide plots of kinetic simulation related quantities.")
+    ps.add_argument("-nE", "--noEfield", action='store_true', help="Run calculation with no E field.")
     # Read args.
     args = ps.parse_args()
     # Reflect appropriate arguments.
@@ -279,7 +280,10 @@ if __name__ == "__main__":
             D[:] = coeff_D(v, ne_xD, Zbar_xD, E_xD)
             A[:] = coeff_A(v, ne, Zbar)
             S[:] = coeff_S(x, v, ne, Te, Zbar, E)
-            f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, E_xD) 
+            if (args.noEfield):
+                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, 0.33 * E_xD)
+            else:
+                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, E_xD) 
 
             f, df0dx = IsolatedDiffusionProblem(D, A, S, dx)
             # Scaling, since diffusion solver uses D to evaluate q.

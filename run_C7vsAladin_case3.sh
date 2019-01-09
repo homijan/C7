@@ -81,6 +81,10 @@ cp _F1_F0F1x_Aladin_Zeq10_tanh_50mic_5e20_B0_1.20e-11_580mic.txt.txt $DIRroot/VF
 fi
 
 ## SNBE output.
+# First artificial run with no E field.
+python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -Jo $DIRroot/VFPdata/jSNB.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT --noEfield
+cp $DIRroot/VFPdata/jSNB.dat $DIRroot/VFPdata/jSNB0.dat
+# Now correct run.
 python $DIRroot/SNBE/SNBE.py -ne $NE -Z $ZBAR -Tinf $DIRroot/VFPdata/temperature.dat -Qo $DIRroot/VFPdata/flux2.dat -Jo $DIRroot/VFPdata/jSNB.dat -F1o $DIRroot/VFPdata/F1distribution2.dat -pt $XPOINT
 cd $DIRroot
 

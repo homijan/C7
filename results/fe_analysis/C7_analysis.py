@@ -477,7 +477,9 @@ if (args.Efield):
    #ax2.plot(C7x_microns, C7j, 'k-.',label=r'$j-$'+labelC7, lw=lwthick)
    ## jSNB = (f1M + df1) * v^3
    jxmicrons, jSNB = np.loadtxt('../../VFPdata/jSNB.dat',  usecols=(0, 1), unpack=True)
-   ax2.plot(jxmicrons, jSNB, 'y--',label=r'$j/q_e-SNB$', lw=lwthick)
+   jxmicrons0, jSNB0 = np.loadtxt('../../VFPdata/jSNB0.dat',  usecols=(0, 1), unpack=True)
+   ax2.plot(jxmicrons, jSNB, color='magenta', linestyle='dashed',label=r'$j-SNB$', lw=lwthick)
+   ax2.plot(jxmicrons0, jSNB0, 'y--',label=r'$j-no\, E$', lw=lwthick)
    fig.tight_layout()
    ## x-axis tight to data.
    ax1.autoscale(axis='x', tight=True)
