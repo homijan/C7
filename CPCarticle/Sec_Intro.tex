@@ -33,7 +33,8 @@ proposed to use the~diffusion equation model of the~Vlasov-Fokker-Planck type
 A~classical paper by Spitzer and H\"arm (SH) 
 \cite{SpitzerHarm_PR1953} provides the~computation of 
 the~electron distribution function (EDF) in a~plasma (from low to high $\Zbar$)
-with a~temperature gradient accounting for e-e and e-i collisions.
+with a~temperature gradient accounting for electron-electron (e-e) and 
+electron-ion (e-i) collisions.
 The~resulting expressions for current and heat flux are widely used in plasma 
 hydrodynamic models.
 %used the formalism of the VFP equation to evaluate the collision terms of 
@@ -47,13 +48,13 @@ its first approximation (P1) \cite{Jeans_MNRAS1917} is of the form
 $f^0+\mu f^1$, where $f^0$ and $f^1$ 
 are isotropic and $\mu$, is the direction cosine between the particle 
 velocity and the~temperature gradient. It should be emphasized that
-the~SH solution assumes a~small perturbation of equilibrium, i.e. that 
+the~SH solution assumes a~small perturbation from equilibrium, i.e. that 
 $f^0$ is the~Maxwell-Boltzmann distribution and $\mu f^1$ represents 
 a~very small anisotropic deviation. 
 This approximation holds for $L_T\gg\mfpe$, 
 a~condition which is often invalid in laser plasmas, 
 where $L_T$ is the~temperature length scale and $\mfpe$ 
-the~mean free path of electrons. It is worth mentioning, that electrons having
+the~mean free path of electrons. Note that electrons having
 3 to 4 times the~thermal velocity are dominantly responsible for heat-flow
 and that those faster than 6 times the~thermal velocity can be completely 
 neglected in this local theory.
@@ -130,7 +131,8 @@ of $f^0$ from Maxwellian distribution.
 
 Nevertheless, numerical solution of the~VFP equation even in the~Rosenbluth
 formalism remains very challenging computationally, because the~e-e collision
-integral is nonlinear. More simple linear forms of e-e collision operator
+opereator is nonlinear due to its intrego-differential nature. 
+More simple linear forms of e-e collision operator
 are needed. Although some VFP simulations on experimentally relevant timescales 
 have been performed (for recent examples see 
 \cite{Hawreliak04,Ridgers08,Willingale10,Bissell10,Joglekar14,Joglekar16,Henchen_PRL2018}, 
@@ -138,14 +140,15 @@ an extensive review has been conducted by Thomas et al. \cite{Thomas13}),
 their relative computational inefficiency severely limits the range of 
 simulations that can be performed.
 
-It is the~purpose of this paper to use an~efficient alternative 
+The~purpose of this paper is to use an~efficient alternative 
 to a full solution of the VFP equation introduced in \cite{Sorbo_2015}
 to accurately calculate nonlocal transport, 
 based on the~Albritton-Williams-Bernstein-Swartz 
 collision operator (AWBS) \cite{AWBS_PRL1986}.
 In Section \ref{sec:AWBSmodel} we propose a~modified form of 
-the~AWBS collision operator. Its important properties are further
-presented in Section \ref{sec:DiffusiveKinetics} with the~emphasis on its
+the~AWBS collision operator. The~important properties of this operator 
+are further presented in Section \ref{sec:DiffusiveKinetics} 
+with the~emphasis on its
 comparison to the~full VFP solution in the~local diffusive regime.
 In \secref{sec:AWBSnonlocal} we define a~full model of electron kinetics and 
 the~way of discretizing the~electron phase-space and also
@@ -154,5 +157,5 @@ Section \ref{sec:BenchmarkingAWBS} focuses on the~performance of the~AWBS
 transport equation model compared to modern kinetic codes including VFP codes
 Aladin and Impact \cite{Kingham_JCP2004}, and PIC code Calder 
 \cite{Perez_PoP2012}, where the~cases related to real
-laser generated plasma conditions are studied. Finally, the~most important
+laser-generated plasma conditions are studied. Finally, the~most important
 outcomes of our research are concluded in Section \ref{sec:Conclusions}. 

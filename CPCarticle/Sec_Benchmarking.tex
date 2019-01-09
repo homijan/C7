@@ -89,7 +89,7 @@ The~first order form corresponds to the~P1 approximation
 %+\vn\cdot \vect{f}_1(t,\mathbf{x},\vmag)$ coupled with 
 the~Landau-Fokker-Planck collisional operator 
 \eqref{eq:LFP_model} leads to the P$_1$-VFP model 
-\cite{Johnston_PR1960, Kingham_JCP2004}:
+\cite{Johnston_PR1960, Kingham_JCP2004, CEA-Aladin}:
 \begin{eqnarray}
 \frac{\partial \fzero}{\partial t}+\frac{\vmag}{3}\nabla \cdot \fone
 +\frac{\qe}{3\me\vmag^2}\frac{\partial}{\partial \vmag}(\vmag^2\E\cdot \fone)
@@ -118,7 +118,8 @@ D(\fzero(\vmag)) &=& \frac{4\pi}{\vmag}\int_0^\vmag u^2\int_u^\infty w \fzero(w)
 \nonumber
 \end{eqnarray}
 
-The~codes Impact and Aladin solve the system \eqref{eq:P1f0_Aladin} 
+The~codes Impact \cite{Kingham_JCP2004} and Aladin \cite{CEA-Aladin} 
+solve the system \eqref{eq:P1f0_Aladin} 
 and \eqref{eq:P1f1_Aladin} with the Maxwell equations  
 \eqref{eq:Faraday} and \eqref{eq:Ampere} in two spatial dimensions, 
 assuming immobile ions.
