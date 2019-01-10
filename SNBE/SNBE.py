@@ -75,7 +75,7 @@ def lambdae(v, n, Z):
     #return v / 2.0 / nue(v, n)
     zeta = 2.0
     rB = Z * zeta / xi(Z) / (Z + 2.0 * zeta)
-    return v / rB / nue(v, n) 
+    return v / rB / nue(v, n)
 def lambdaei(v, n, Z, E):
     mfpei = xi(Z) * v / nuei(v, n, Z)
     #SIMPLE
@@ -83,7 +83,7 @@ def lambdaei(v, n, Z, E):
         mfpei = 1.0 / (nuei(v, n, Z) / xi(Z) / v + abs(qe * E) / 0.5 / me / v**2)
     return mfpei
 def dlambdaeidv(v, n, Z, E):
-    return xi(Z) * 4.0 * v**3.0 / Gamma / n 
+    return xi(Z) * 4.0 * v**3.0 / Gamma / n
 
 ## SNBE scheme coefficients.
 # Diffusion solver returns solution of d[Ddfdx]dx - A * f = S
@@ -99,7 +99,7 @@ def coeff_S(xs, v, n, T, Z, E):
         grad = f1_grad_simple(xs, v, n, T)
         E_f1M[:] = 0.0
     f1 = xi(Z) * v / nuei(v, n, Z) / 3.0 * fM(v, n, T) * grad
-    div_f1 = dfdx(xs, f1) 
+    div_f1 = dfdx(xs, f1)
     # Revert sign due to the diffusion solver.
     return - div_f1 + E_f1M
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     N = 400
     # Number of energy groups "v-cells".
     Ngr = 250
-    # Reference values for density and ionization.    
+    # Reference values for density and ionization.
     ne_ref = 5e20
     Zbar_ref = 10.0
     # A reference point for the distribution function output.
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     # Spatial range.
     x_min = 0.0
     x_max = 700.0 * mictocm
-    
+
     ## If input files provided.
     # Computational domain is set according to the Te input file.
     if (args.Te_inputfile):
@@ -168,7 +168,7 @@ if __name__ == "__main__":
         xx_TT = data[:, 0]
         TT = data[:, 1]
         x_min = min(xx_TT)
-        x_max = max(xx_TT) 
+        x_max = max(xx_TT)
     if (args.ne_inputfile):
         #filename = 'ne.dat'
         data = np.array(np.loadtxt(args.ne_inputfile))
@@ -187,13 +187,13 @@ if __name__ == "__main__":
     dx = xD[1] - xD[0]
     # Cell centered values.
     x = np.linspace(x_min - dx/2.0, x_max + dx/2.0, N)
-    
+
     ## Diffusion scheme coefficients.
     D = np.zeros(N-1)
     A = np.zeros(N)
     S = np.zeros(N)
     f1M = np.zeros(N-1)
-    ## Distribution function. 
+    ## Distribution function.
     EDF_df0dx = np.zeros((Ngr, N-1))
     EDF_f1 = np.zeros((Ngr, N-1))
     EDF_f1M = np.zeros((Ngr, N-1))
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     Te_xD = 1e3 * (0.575 - 0.425 * np.tanh((xD - 450.0 * mictocm) * s / mictocm))
     #plt.plot(xD, Te_xD)
     #plt.show()
-    
+
     # Mapped plasma profiles from input files.
     if (args.Te_inputfile):
         Te = map_f(xx_TT, TT, x)
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     # Index of the x_point.
     index_point = int((x_point - x_min) / dx)
     vTh_point = vTh(Te_xD[index_point])
- 
+
     ## Velocity space range.
     v_max_global = 7.0 * vTh(max(Te))
     # Equidistant stepping.
@@ -239,12 +239,12 @@ if __name__ == "__main__":
     v_min = dv / 2.0
     v_max = v_max_global - dv / 2.0
     # v-space discretization.
-    v_grs = np.linspace(v_min, v_max, Ngr) 
+    v_grs = np.linspace(v_min, v_max, Ngr)
 
     ## Electric field structures.
     # Reference Lorentz electric field.
     E_L = me / qe * vTh(Te)**2.0 * (dfdx(x, ne) / ne + 2.5 * dfdx(x, Te) / Te)
-    E_L_xD = me / qe * vTh(Te_xD)**2.0 * (dfdx(xD, ne_xD) / ne_xD + 2.5 * dfdx(xD, Te_xD) / Te_xD)  
+    E_L_xD = me / qe * vTh(Te_xD)**2.0 * (dfdx(xD, ne_xD) / ne_xD + 2.5 * dfdx(xD, Te_xD) / Te_xD)
     ## Constant denominator in E field definition.
     E_denom_xD = np.zeros(N-1)
     # Nonlocal perturbation of E field.
@@ -258,32 +258,32 @@ if __name__ == "__main__":
         E_iter_max = 1
     print("Running SNBE on", N, "cells and", Ngr,"groups.")
     for iter in range(E_iter_max):
-        ## Calculate the electric field.   
+        ## Calculate the electric field.
         # Constant denominator in the E field definition.
         E_denom_xD[:] = 0.0
-        for gr in range(Ngr): 
+        for gr in range(Ngr):
             v = v_grs[gr]
             E_denom_xD[:] += qe / me * lambdaei(v, ne_xD, Zbar_xD, E_xD) * dfMdv(v, ne_xD, Te_xD) * v**2.0 * dv
         # Nonlocal contribution in the E field definition.
         deltaE_xD[:] = 0.0
-        for gr in range(Ngr): 
+        for gr in range(Ngr):
             v = v_grs[gr]
             deltaE_xD[:] += - v * lambdaei(v, ne_xD, Zbar_xD, E_xD) * EDF_df0dx[gr][:] * v**2.0 * dv / E_denom_xD
         # Actual value of the electric field.
-        E_xD = E_L_xD + deltaE_xD 
+        E_xD = E_L_xD + deltaE_xD
         # Map E_xD on x mesh.
         E = map_f(xD, E_xD, x)
 
-        # Diffusion solver over the entire velocity space. 
-        for gr in range(Ngr): 
+        # Diffusion solver over the entire velocity space.
+        for gr in range(Ngr):
             v = v_grs[gr]
             D[:] = coeff_D(v, ne_xD, Zbar_xD, E_xD)
             A[:] = coeff_A(v, ne, Zbar)
             S[:] = coeff_S(x, v, ne, Te, Zbar, E)
             if (args.noEfield):
-                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, 0.33 * E_xD)
+                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, 0. * E_xD)
             else:
-                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, E_xD) 
+                f1M[:] = func_f1M(xD, v, ne_xD, Te_xD, Zbar_xD, E_xD)
 
             f, df0dx = IsolatedDiffusionProblem(D, A, S, dx)
             # Scaling, since diffusion solver uses D to evaluate q.
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     for gr in range(Ngr):
         q1_point[gr] = EDF_q1[gr][index_point]
         q1M_point[gr] = EDF_q1M[gr][index_point]
- 
+
     if (args.plotshow):
         #plt.plot(xD, QM * 1e-7, label='QM')
         plt.plot(xD, SH_flux(xD, Te_xD, Zbar_xD) * 1e-7, label='QSH')
@@ -333,8 +333,8 @@ if __name__ == "__main__":
         plt.plot(v_grs / vTh_point, q1M_point + q1_point, label='q1M + q1')
         plt.legend()
         plt.show()
-   
-    ## Save output. 
+
+    ## Save output.
     # Heat flux, x axis in microns.
     if (args.Q_outname):
         np.savetxt(args.Q_outname, np.transpose([xD * 1e4, Q_Wcm2]))
