@@ -425,7 +425,7 @@ However, one can observe that the~EDF kinetic solution of SNB provides
 only a~qualitative image with respect to the~reference green line solution. 
 This is illustrated for example in
 \figref{fig:C7_Aladin_case3}, where the~kinetics at preheat point plot 
-reveals an~insufficient electric field treatment (no return current). 
+reveals an~insufficient electric field treatment (almost no return current). 
 The~kinetics at maximum point plot shows that the~solution SNB solution
 approaches closely the~local Lorentz$^*$ solution and that 
 significantly recedes from the~reference fully kinetic solution (green line).
@@ -437,9 +437,18 @@ comparison is shown in \figref{fig:C7_Aladin_case3}, where it is shown that
 the~local electric field treatment $\E_L$ used in SNB fails 
 in the~preheat region and consequently leads to 
 a~significant violation of the~plasma quasi-neutrality,
-i.e. a~non-zero current, where one can observe an~uncontrolled stream of 
+i.e. a~non-zero current (black dashed line in \figref{fig:C7_Aladin_case3}), 
+where one can observe an~uncontrolled stream of 
 electrons in the~preheat and also an~overestimation of negative return current
-around the~heat flux maximum.
+around the~heat flux maximum. Note that in \figref{fig:C7_Aladin_case3} 
+the~maximum of the~magnitude of the~SNB produced current corresponds 
+approximately to 15$\%$ of a~\textit{free} current (yellow dotted line) 
+when $\E$ field has been completely neglected 
+in the~kinetic computation, i.e. $\E=\vect{0}$ in \eqref{eq:f1M}. 
+We observe that EDF is sufficiently converged when the~magnitude of 
+the~current is suppressed to at least $0.001$ of the~\textit{free} current,
+as is the~case of the~current in AP1 computation (red dashed line) using
+the~Ampere's law \eqref{eq:AmpereKinetic}.
 
 The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
 and \eqref{eq:AmpereKinetic} in general show a~very good performance 
