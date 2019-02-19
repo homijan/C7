@@ -148,12 +148,12 @@
 %\\
 %\textit{Serious Numerics for Serious Physics}
 }
-\author[Release number: XXXXXXXXXXXXX $\qquad\qquad$ Milan~Holec]{{\large Milan~Holec$^0$, Ben S. Southworth$^1$}}
+\author[Release number: XXXXXXXXXXXXX $\qquad\qquad$ Milan~Holec]{{\large Milan~Holec$^1$, Ben S. Southworth$^2$}}
 \institute[US JAK]{
-         {\large $^0$ Lawrence Livermore National Laboratory, U.S.,
+         {\large $^1$ Lawrence Livermore National Laboratory, U.S.,
 		 {\it holec1@llnl.gov}
 		 }\\
-         {\large $^1$ University of Colorado Boulder, U.S., 
+         {\large $^2$ University of Colorado Boulder, U.S., 
 		 {\it ben.southworth@colorado.edu}
 		 }
 }
@@ -185,7 +185,7 @@
   \leavevmode%
   \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fil,rightskip=.3cm]{author in head/foot}%
     \usebeamerfont{author in head/foot}\insertframenumber\,/\,\inserttotalframenumber\hfill
-	\includegraphics[width=0.015\textwidth]{../figures/material_77.png}\,\,\,
+	\includegraphics[width=0.013\textwidth]{../figures/llnl.png}\,\,\,
 	\insertshortauthor
   \end{beamercolorbox}%
   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}% 
@@ -271,7 +271,8 @@ and shall not be used for advertising or product endorsement purposes.
   \pdv{f}{t} + \vect{v}\cdot\nabla f +
   \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
   &=& 
-  v \frac{\nue}{2} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
+  \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
+  \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
   + \frac{\nuei}{2} \frac{\partial^2 f}{\partial \Omega^2} .
   \nonumber
 \end{eqnarray}
@@ -326,18 +327,24 @@ and shall not be used for advertising or product endorsement purposes.
   + \nuscat \left(\fzero - f \right) .
   \nonumber
 \end{eqnarray}
-\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv xxxxxxxxx.}
+\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{block}{AWBS electron kinetic model}
 \begin{eqnarray}
+  %C_V \frac{\dI T_e}{\dI t} 
+  %&=& 
+  %- \nabla\cdot\vect{q}_e(f) 
+  %+ \vect{j}(f)\cdot\E
+  %+ G(T_i - T_e) + S_H , 
+  %\nonumber \\
   C_V \frac{\dI T_e}{\dI t} 
   &=& 
   - \nabla\cdot\vect{q}_e(f) 
   + \vect{j}(f)\cdot\E
-  + G(T_i - T_e) + S_H , 
+  + S_H , 
   \nonumber \\
   \vect{v}\cdot\nabla f +
   \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
@@ -348,7 +355,7 @@ and shall not be used for advertising or product endorsement purposes.
 \end{eqnarray}
 \end{block}
 \begin{itemize}
-  \item C7 (S$_N$ - DG)
+  \item C7 (S$_N$ - discontinuous Galerkin FEM)
 \begin{equation}
   \vn\cdot\nabla f + \frac{\E\cdot\vn}{\vmag} \pdv{f}{\vmag} 
   + \frac{E_\phi 
@@ -362,7 +369,8 @@ and shall not be used for advertising or product endorsement purposes.
   \nonumber
 \end{equation}
 
-  \item AP1 (P$_N$ VEF $\xi=1/3$ strategy - CG) \it{physicists like it!}
+  \item AP1 (P$_N$ (VEF $\xi=1/3$) - continuous Galerkin mixed FEM)  
+      \it{Physicists like it!}
 \begin{eqnarray}
   \xi\nabla\cdot\fone + \xi\frac{\qe}{\me\vmag}\E\cdot\left(
   \pdv{\fone}{\vmag} + \frac{2}{\vmag}\fone\right)
@@ -387,21 +395,11 @@ and shall not be used for advertising or product endorsement purposes.
 
 \begin{frame}
 \begin{center}
-C7 (SN-DG) formulation, upwind, pAIR\\
-explain the concept of deceleration + necessity of using high order in vmag.
-\begin{tabular}{c|ccccc}
-    %\hline\\
-    N groups       & 10   & 20 & 40 & 80 & 160 \\
-    \hline
-	Backward Euler & 1433/204.6 & 1342/151.1 & 1290/139.7 & 1262/132.1 & 1248/127.9 \\
-    SDIRK2         & 1275/133.9 & 1245/132.3 & 1237/126.1 & 1235/124.2 & 1234/123.6 \\
-    SDIRK3         & 1265/90.2 & 1239/133.1 & 1235/125.1  & 1234/123.7 & 1234/123.5 \\
-    %SDIRK4         &  &  &  &  & 
-    %\hline
-\end{tabular} 
+{\Large S$_N$ upwind DG, parallel-Approximate-Ideal-Relaxation multi-grid solver}
+%\\
+%explain the concept of deceleration + necessity of using high order in vmag. 
 \begin{equation}
-  \left( \matr{M}_{_{(\tilde{\nue})}} - 
-  \matr{M}_{_{(\frac{\E\cdot\vn_d}{\vmag})}} \right) \cdot 
+  \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
   \frac{\Delta \vect{f}_d}{\Delta \vmag}
   =
   \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
@@ -417,6 +415,16 @@ explain the concept of deceleration + necessity of using high order in vmag.
   %+ \tilde{\nue} \frac{\partial \fM}{\partial v} .
   \nonumber
 \end{equation}
+\begin{tabular}{c|ccccc}
+    %\hline\\
+    Velocity groups       & 10   & 20 & 40 & 80 & 160 \\
+    \hline
+	Backward Euler & 1433/204.6 & 1342/151.1 & 1290/139.7 & 1262/132.1 & 1248/127.9 \\
+    SDIRK2         & 1275/133.9 & 1245/132.3 & 1237/126.1 & 1235/124.2 & 1234/123.6 \\
+    SDIRK3         & 1265/90.2 & 1239/133.1 & 1235/125.1  & 1234/123.7 & 1234/123.5 \\
+    %SDIRK4         &  &  &  &  & 
+    %\hline
+\end{tabular}
 \begin{tabular}{cc}
 \includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local_pfire.png}
 &
@@ -428,8 +436,9 @@ explain the concept of deceleration + necessity of using high order in vmag.
 \renewcommand{\fs}{0.33}
 \begin{frame}
 \begin{center}
-Local + nonlocal results, pAIR stats
+%Local + nonlocal results, pAIR stats
 \begin{tabular}{cc}
+Local hydro temperature & Nonlocal kinetic temperature \\
 \includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local_nopfire.png}
 &
 \includegraphics[width=\fs\textwidth]{../figures/ALE_Te_nonlocal32_nopfire.png}
@@ -447,7 +456,7 @@ Local + nonlocal results, pAIR stats
 \begin{frame}
 \begin{center}
 %{\huge Nonlocal electron transport regime - PIC/VFP0/AWBS}
-AP1 formulation PCG(AMG), fixed P1 angular discretization
+{\Large AP1 formulation PCG(AMG), fixed P1 angular discretization}
 \begin{eqnarray}
   \matr{M}^{L_2}_{_{(\tilde{\nue})}}\cdot\ddv{\vfzero}{\vmag} 
   - \matr{V}^{L_2}_{_{(\frac{\xi\qe\E}{\me\vmag})}}\cdot\ddv{\fone}{\vmag}
@@ -480,7 +489,7 @@ AP1 formulation PCG(AMG), fixed P1 angular discretization
 &
 \includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics.png}
 \end{tabular}
-\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv xxxxxxxxx.}
+\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
 \end{center}
 \end{frame}
 
@@ -488,7 +497,7 @@ AP1 formulation PCG(AMG), fixed P1 angular discretization
 
 \begin{frame}
 \begin{center}
-{\huge Electron velocity limit - friction vs. $\vect{E}$ stopping}
+{\Large Electron velocity limit - friction vs. $\vect{E}$ stopping}
 \begin{equation}
   \left( \tilde{\nue} - \frac{\E\cdot\vn}{\vmag} \right) 
   \frac{\partial f}{\partial \vmag}
@@ -501,32 +510,105 @@ AP1 formulation PCG(AMG), fixed P1 angular discretization
   + \tilde{\nue} \frac{\partial \fM}{\partial v} .
   \nonumber
 \end{equation}
-\begin{tabular}{c|ccccc}
-    \hline\hline\\
-    %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
-    Kn$^e$ & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
-    \hline\\
-    $v_{lim} / v_{th}$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
-    \hline\hline
-\end{tabular} 
 
 \begin{tabular}{c}
 \includegraphics[width=0.5\textwidth]{../figures/Kn_results.png}
 \end{tabular}
 
-$\vect{E}$ stopping overtakes collisions for Kn$>0.1$.
-\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv xxxxxxxxx.}
+$\vect{E}$ stopping overtakes collisions for Kn$~>0.1$ .
+\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
+
+\begin{tabular}{c|ccccc}
+    \hline\hline\\
+    %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
+    Kn & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
+    \hline\\
+    $v_{lim} / v_{th}$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
+    \hline\hline
+\end{tabular} 
 \end{center}
 \end{frame}
 
 \begin{frame}
-Scattering/temperature reaction term\\
-DSA (a full model without bending, consistent numerical scheme required 
-for the construction of the preconditioner, Ref. Terry's SIAM 2018)
-\\
-%Solution preconditioning (ad-hoc transition, but build as an extension 
-%to the classical SH without numerical scheme restrictions) 
-\let\thefootnote\relax\footnote{T. Haut et al, \textit{SIAM}, submitted (2019) / arXiv xxxxxxxxx.}
+%Scattering/temperature reaction term\\
+%DSA (a full model without bending, consistent numerical scheme required 
+%for the construction of the preconditioner, Ref. Terry's SIAM 2018)
+%
+%\begin{equation}
+%  \frac{1}{\Delta \vmag}
+%  \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
+%  \Delta \vect{f}_d
+%  =
+%  \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
+%  \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right) 
+%  ~+~ \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
+%  \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right)
+%  - \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
+%  \left(\tilde{\vect{f}}_0 + \Delta \vect{f}_0\right)  
+%  + \vect{q}   
+%  \nonumber
+%\end{equation}
+%\begin{equation}
+%  \frac{1}{\Delta \vmag}
+%  \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
+%  \Delta \vect{f}_d
+%  =
+%  \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
+%  \Delta \vect{f}_d 
+%  + \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
+%  \Delta \vect{f}_d
+%  - \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot\Delta \vect{f}_0 
+%  + \vect{q}   
+%  \nonumber
+%\end{equation}
+\begin{center}
+{\Large Adaptive DSA scattering preconditioner}
+\begin{equation}
+  \left[\left(\vn_d\cdot\matr{G} + \matr{F}_d\right) 
+    + \matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}
+  - \matr{M}_{_{\left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)}}\right]
+  \cdot \Delta \vect{f}_d
+  =
+    \matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0 
+  + \vect{q}
+  \nonumber
+\end{equation}
+\begin{block}{Fixed-point iteration}
+\begin{equation}
+  \Delta \vect{f}_0^{k+1}
+  =
+    \matr{A}\cdot\matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0^k 
+    + \matr{A}\cdot \vect{q}
+  \nonumber
+\end{equation}
+\end{block}
+Continuous analysis of local (Kn$\ll$1) transport regime $\rightarrow$ DIFFUSION
+%\begin{equation}
+%  \left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)\Delta f_0
+%  + \nabla\cdot\left(\frac{1}{3} \frac{1}{\frac{\nuscat(\Zbar)}{\vmag} - \frac{\tilde{\nue}}{\Delta \vmag} + \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}}\nabla f_0 \right)
+%    = q + O(\text{Kn}^2)
+%  \nonumber
+%\end{equation}
+\begin{equation}
+  \left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)\Delta f_0
+  + \nabla\cdot\left(\frac{\vmag}{3\nuscat(\Zbar)}\nabla f_0 \right)
+    = q + O(\text{Kn}^2)
+  \nonumber
+\end{equation}
+\let\thefootnote\relax\footnote{T. Haut et al, \textit{SIAM}, submitted (2018) / arXiv:1810.11082 .}
+\begin{block}{A diffusion consistent $\zeta(\text{Kn})$ adaptive preconditioning 
+$\matr{E} = \left[ \matr{M}
+  + \zeta~ \matr{D}\right]$ with $\zeta\rightarrow 0$ for Kn$~>1$}
+\begin{equation}
+  \left[ \matr{M}_{_{\left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)}}
+  + \zeta~ \matr{D}_{_{\left(\frac{\vmag}{3\nuscat(\Zbar)}\right)}}\right]\cdot\Delta \vect{f}_0^{k+1}
+  =
+    \matr{E}\cdot\matr{A}\cdot\matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0^k 
+    + \matr{E}\cdot\matr{A}\cdot \vect{q}
+  \nonumber
+\end{equation}
+\end{block}
+\end{center}
 \end{frame}
 
 \begin{frame}
@@ -562,10 +644,12 @@ for the construction of the preconditioner, Ref. Terry's SIAM 2018)
   \item P$_1$ high-order mixed finite element approach.
   \item $\E$ field dominated stopping (P$_1$ fails).
   \item Adaptive scattering preconditioner (deep machine learning).
-  \item pAIR scaling.
+  \item pAIR scaling $\log(P)^{1.22}$.
 \end{itemize}
-\begin{tabular}{c}
-\includegraphics[width=0.5\textwidth]{../figures/q1s.png}
+\begin{tabular}{cc}
+\includegraphics[width=0.3\textwidth]{../figures/ALE_Te_nonlocal32_nopfire.png}
+%\includegraphics[width=0.3\textwidth]{../figures/q1s.png} &
+\includegraphics[width=0.3\textwidth]{../figures/pAIR_scaling.png}
 \end{tabular}
 
 \end{center}
