@@ -280,7 +280,7 @@
 \end{eqnarray}
 \end{myNblock}
 \begin{itemize}
-    \item C7 (S$_N$ - discontinuous Galerkin FEM) 3D velocity space in spherical coordinates $(\vmag, \phi, \theta)$
+    \item C7 \textit{miniapp} (S$_N$ - discontinuous Galerkin FEM) 3D velocity space in spherical coordinates $(\vmag, \phi, \theta)$
 \begin{equation}
   \vn\cdot\nabla f + \frac{\E\cdot\vn}{\vmag} \pdv{f}{\vmag} 
   + \frac{E_\phi 
@@ -294,7 +294,7 @@
   \nonumber
 \end{equation}
 
-  \item AP1 (P$_N$ (VEF $\xi=1/3$) - continuous Galerkin mixed FEM)  
+  \item AP1 \textit{miniapp} (P$_N$ (VEF $\xi=1/3$) - continuous Galerkin mixed FEM)  
       \it{Physicists like it!}
 \begin{eqnarray}
   \xi\nabla\cdot\fone + \xi\frac{\qe}{\me\vmag}\E\cdot\left(
@@ -541,10 +541,60 @@ where adaptive coefficient diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and
 \hline\\
 MS85 - Developments in Algebraic Multigrid for Nonsymmetric and Hyperbolic Problems - Ben S. Southworth \\
 https://github.com/CEED/Laghos/tree/master/amr \\
+https://computation.llnl.gov/projects/blast\\
 https://mfem.org \\
 \textit{holec1@llnl.gov}
 \end{tabular}
 \end{frame}
+
+\begin{comment} % slide4Ben
+\renewcommand{\vect}[1]{\boldsymbol{#1}}
+\begin{frame}
+\begin{center}
+\begin{myNblock}{An efficient electron kinetic model (7D) for hydrodynamics}
+\begin{eqnarray}
+  C_V \frac{\dI T_e}{\dI t} 
+  &=& 
+  - \nabla\cdot\vect{q}_e(f) 
+    + \vect{j}(f)\cdot\vect{E}
+    + S_{Hydro} , 
+  \nonumber \\
+  \vect{v}\cdot\nabla f +
+  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
+  &=& 
+  v \tilde{\nu_e} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
+    + \nu_{scat} \left(f_0 - f \right) .
+  \nonumber
+\end{eqnarray}
+\end{myNblock}
+\begin{itemize}
+    \item C7 \textit{miniapp} (S$_N$ - discontinuous Galerkin FEM) 3D velocity space in spherical coordinates $(v, \phi, \theta)$
+\begin{equation}
+    \vect{n}\cdot\nabla f + \frac{\vect{E}\cdot\vect{n}}{v} \pdv{f}{v} 
+  + \frac{E_\phi 
+  - v~B_\theta}{v^2}\frac{\partial f}{\partial \phi}
+  + \frac{E_\theta + v~B_\phi}
+  {v^2\sin(\phi)}\frac{\partial f}{\partial \theta}
+  = 
+    \tilde{\nu_e} \frac{\partial }{\partial v}\left(f -f_{MB}\right)
+  + \frac{\nu_{scat}}{v} \left(f_0 - f \right) .
+  \nonumber
+\end{equation}
+\end{itemize}
+\begin{tabular}{lll}
+\includegraphics[width=0.3\textwidth]{AMR_ALE_density_2D_nobar.png} &
+\includegraphics[width=0.3\textwidth]{AMR_ALE_nonlocal_Te_3D_nobar.png} &
+\includegraphics[width=0.4\textwidth]{C7_Calder_case5_nonlocal_kinetics_noSNB.png}
+\end{tabular}
+\end{center}
+\begin{tabular}{l}
+\hline\\
+%https://github.com/CEED/Laghos/tree/master/amr \\
+https://mfem.org \\
+\textit{holec1@llnl.gov}
+\end{tabular}
+\end{frame}
+\end{comment} % slide4Ben
 
 \begin{comment} % Nonlocal Ohm
 \begin{frame}
