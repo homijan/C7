@@ -1,0 +1,147 @@
+\mode<presentation>
+
+% Requirement
+\usepackage{tcolorbox}
+\RequirePackage{tikz}
+\usetikzlibrary{shadows}
+\usetikzlibrary{calc}
+\usepackage{lmodern}
+\tcbuselibrary{skins}
+\usepackage{textpos}
+\usepackage{setspace}
+
+\pgfdeclareradialshading{tikz@lib@fade@circle@50}{\pgfpointorigin}{
+  color(0pt)=(pgftransparent!0); color(12.5bp)=(pgftransparent!0);
+  color(25bp)=(pgftransparent!100); color(50bp)=(pgftransparent!100)}
+\pgfdeclarefading{circle with fuzzy edge 50 percent}{\pgfuseshading{tikz@lib@fade@circle@50}}
+
+% Some definitions
+\newcommand*\IMNumber{%
+  \@ifnextchar\bgroup
+  {\gdef\@IMNumber}%
+  {\@IMNumber}%
+}
+\newcommand*\conference{%
+  \@ifnextchar\bgroup
+  {\gdef\@conference}%
+  {\@conference}%
+}
+\newcommand*\location{%
+  \@ifnextchar\bgroup
+  {\gdef\@location}%
+  {\@location}%
+}
+\definecolor{LLNL_vdark_blue}{rgb}{0.1608,0.2824,0.3804}
+\definecolor{LLNL_dark_blue}{rgb}{0.2157,0.3765,0.5725}
+\definecolor{LLNL_blue}{rgb}{0.0588,0.3098,0.5922}
+\definecolor{LLNL_light_blue}{rgb}{0.2902,0.4941,0.7333}
+\definecolor{LLNL_vlight_blue}{rgb}{0.2627,0.5333,0.7216}
+\definecolor{LLNL_grey}{rgb}{0.8510,0.8510,0.8510}
+\definecolor{LLNL_dark_grey}{rgb}{0.4, 0.4, 0.4}
+\definecolor{LLNL_vdark_red}{rgb}{0.3882,0.1451,0.1373}
+\definecolor{LLNL_vlight_red}{rgb}{0.7529,0.3137,0.3020}
+\definecolor{LLNL_vdark_green}{rgb}{0.3098,0.3843,0.1569}
+\definecolor{LLNL_vlight_green}{rgb}{0.6078,0.7333,0.3490}
+
+% Settings
+\setbeamercolor*{title page header}{fg=LLNL_vdark_blue}
+\setbeamercolor*{author}{fg=black}
+\setbeamercolor*{date}{fg=black}
+\setbeamercolor*{item}{fg=LLNL_vdark_blue}
+\setbeamertemplate{items}[square]
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\hypersetup{colorlinks=true,allcolors=black}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtcolorbox{myNblock}[2][]{skin=widget,title=\vspace{0.05cm}#2\vspace{0.05cm},%
+  fonttitle=\usebeamerfont*{block title},%
+  left=2mm,right=0mm,top=0mm,bottom=0mm,arc=2mm,%
+  colback=white,colupper=LLNL_vdark_blue,colframe=LLNL_dark_grey,%
+  coltitle=white,title style={left color=LLNL_vdark_blue,right color=LLNL_vlight_blue},%
+  #1}
+\newtcolorbox{myAblock}[2][]{skin=widget,title=\vspace{0.05cm}#2\vspace{0.05cm},%
+  fonttitle=\usebeamerfont*{block title},%
+  left=2mm,right=0mm,top=0mm,bottom=0mm,arc=2mm,%
+  colback=white,colupper=LLNL_vdark_blue,colframe=LLNL_dark_grey,%
+  coltitle=white,title style={left color=LLNL_vdark_red,right color=LLNL_vlight_red},%
+  #1}
+\newtcolorbox{myEblock}[2][]{skin=widget,title=\vspace{0.05cm}#2\vspace{0.05cm},%
+  fonttitle=\usebeamerfont*{block title},%
+  left=2mm,right=0mm,top=0mm,bottom=0mm,arc=2mm,%
+  colback=white,colupper=LLNL_vdark_blue,colframe=LLNL_dark_grey,%
+  coltitle=white,title style={left color=LLNL_vdark_green,right color=LLNL_vlight_green},%
+  #1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Background of title page and regular frames
+\setbeamertemplate{background}{
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle(\the\paperwidth,\the\paperheight);
+    \ifnum\thepage=1\relax%
+    \filldraw[fill=LLNL_vdark_blue, draw=LLNL_dark_blue, line width=0.5pt] (0.25pt,\the\paperheight-5) rectangle (\the\paperwidth-0.25pt,\the\paperheight-0.25pt);
+    \shade[top color=LLNL_vlight_blue,bottom color=LLNL_vdark_blue,middle color=LLNL_vdark_blue] (0,0) rectangle (\the\paperwidth,25pt);
+    \node[inner sep=0pt,left] at ($(current page.south east)+(-12pt,12.5pt)$) {\includegraphics[height=12pt]{figures/logo_llnl_white}};
+        \node[inner sep=0pt,left] at ($(current page.south east)+(-35pt,200pt)$) {\includegraphics[height=30pt]{figures/logo_casc.pdf}};
+
+    \node[inner sep=0pt,above] at ($(current page.south)+(0pt,24.8pt)$) {\includegraphics[width=\the\paperwidth]{figures/llnl_view}};
+    \node[inner sep=0pt,right,scale=0.4,text=white] at (0.3,17.5pt) {\IMNumber};
+    \node[inner sep=0pt,right,scale=0.4,text=white] at (0.3,10pt) {This work was performed under the auspices of the U.S. Department of Energy by Lawrence Livermore};
+    \node[inner sep=0pt,right,scale=0.4,text=white] at (0.3,5pt) {National Laboratory under contract DE-AC52-07NA27344. Lawrence Livermore National Security, LLC};
+    \else\relax%
+    \ifnum\insertframenumber=\inserttotalframenumber\relax%
+    \fill[fill=LLNL_blue] (0,0) rectangle (\the\paperwidth,\the\paperheight);
+    \node[inner sep=0pt,right] at (0.75cm,1.25cm) {\includegraphics[height=20pt]{figures/logo_llnl_white}};
+        \node[inner sep=0pt,right] at (1.75cm,3cm) {\includegraphics[height=70pt]{figures/logo_casc_v.pdf}};
+
+    \else
+    \fill[fill=LLNL_grey] (0,0) rectangle (\the\paperwidth,20pt);
+    \node[inner sep=0pt,right] at (0.3,10pt) {\includegraphics[height=9pt]{figures/logo_llnl_blue}};
+    \node[inner sep=0pt,right,scale=0.2,text=black] at (0.807,6.5pt) {\IMNumber};
+    \node[inner sep=0pt,left] at ($(current page.south east)+(-30pt,10pt)$) {\includegraphics[height=12pt]{figures/logo_nnsa}};
+        \node[inner sep=0pt,left] at ($(current page.south)+(20pt,9pt)$) {\includegraphics[height=18pt]{figures/logo_casc_h.pdf}};
+
+    \node[inner sep=0pt,scale=0.5] at ($(current page.south east)+(-15pt,10pt)$) {\insertframenumber/\inserttotalframenumber};
+    \fill[fill=white,circular drop shadow={path fading={circle with fuzzy edge 50 percent}}] (0,20pt) rectangle (\the\paperwidth,25pt);
+    \fi
+    \fi
+  \end{tikzpicture}
+}
+
+% Title page
+\defbeamertemplate*{title page}{llnl}[1][]
+{
+  \begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (0.8\paperwidth,\paperheight);
+  \node[inner sep=0pt,right,text=LLNL_vdark_blue,text width=0.666\paperwidth, execute at begin node=\setlength{\baselineskip}{1.3em},font=\bf] at (-0.5cm,0.75\paperheight) {\usebeamerfont{title}\inserttitle};
+  \node[inner sep=0pt,right,text=black, scale=0.5] at (-0.4cm,0.65\paperheight) {\usebeamerfont{title}\conference\ -- \location};
+  \node[inner sep=0pt,left,text=black,scale=0.5] at (0.9\paperwidth,0.55\paperheight) {\usebeamerfont{author}\insertauthor};
+  \node[inner sep=0pt,right,text=black,scale=0.5] at (-0.4cm,0.5\paperheight) {\usebeamerfont{author}\insertdate};
+  \end{tikzpicture}
+}
+
+% Frame title
+\defbeamertemplate*{frametitle}{llnl}[1][]
+{
+  \ifx\insertframetitle\@empty%
+  \else
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1.2cm]{frametitle}
+    \begin{tikzpicture}
+      \useasboundingbox[fill=white](0,0) rectangle(\the\paperwidth,1.2);
+      \node[inner sep=0pt,right,align=left,text width=0.99\paperwidth,text=LLNL_vdark_blue,scale=0.9,font=\bf] at (0.5cm,0.6){\insertframetitle};
+      \draw[draw=LLNL_vdark_blue, line width=1.25pt] (0,0) -- (\paperwidth,0);
+    \end{tikzpicture}
+  \end{beamercolorbox}
+  \fi
+}
+
+\defbeamertemplate*{footnote}{llnl}[1][]
+{
+  \insertfootnotetext
+  \vspace{20pt}
+}
+
+\mode<all>

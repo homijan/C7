@@ -398,7 +398,7 @@ and shall not be used for advertising or product endorsement purposes.
 \begin{frame}
 \begin{center}
 {\Large S$_N$ upwind DG
-%, parallel-Approximate-Ideal-Relaxation Multigrid solver
+    , Multigrid Approximate-Ideal-Relaxation (AIR) solver
 }
 %\\
 %explain the concept of deceleration + necessity of using high order in vmag. 
@@ -474,7 +474,7 @@ Local hydro temperature & Nonlocal kinetic temperature \\
 \begin{frame}
 \begin{center}
 %{\huge Nonlocal electron transport regime - PIC/VFP0/AWBS}
-{\Large AP1 formulation PCG(AMG), fixed P1 angular discretization}
+{\Large AP1 formulation, fixed P1 angular discretization PCG(AMG)}
 \begin{eqnarray}
   \matr{M}^{L_2}_{_{(\tilde{\nue})}}\cdot\ddv{\vfzero}{\vmag} 
   - \matr{V}^{L_2}_{_{(\frac{\xi\qe\E}{\me\vmag})}}\cdot\ddv{\fone}{\vmag}
@@ -554,7 +554,7 @@ $\vect{E}$ stopping overtakes collisions for Kn$~>0.1$ .
   + S_H , 
   \nonumber \\
   &=& 
-  \Gamma \int_\vmag \frac{\partial f}{\partial v} \vmag^2\dI\vmag - \sigma \Te^{-0.5}
+    \int_{4\pi}\int_\vmag v \tilde{\nue} \frac{\partial f}{\partial v} \vmag^4\dI\vmag\dI\vn - \sigma \Te^{-0.5}
   + S_H , 
   \nonumber \\
   \vect{v}\cdot\nabla f +
