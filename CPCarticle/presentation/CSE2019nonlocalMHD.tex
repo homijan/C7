@@ -148,7 +148,7 @@
 %\\
 %\textit{Serious Numerics for Serious Physics}
 }
-\author[Release number: XXXXXXXXXXXXX $\qquad\qquad$ Milan~Holec]{{\large Milan~Holec$^1$, Ben S. Southworth$^2$}}
+\author[Release number: LLNL-PRES-768124 $\qquad\qquad$ Milan~Holec]{{\large Milan~Holec$^1$, Ben S. Southworth$^2$}}
 \institute[US JAK]{
          {\large $^1$ Lawrence Livermore National Laboratory, U.S.,
 		 {\it holec1@llnl.gov}
@@ -161,12 +161,12 @@
 \date{
 	\begin{figure}
     \begin{center}
-	\begin{tabular}{cc} 
-	\includegraphics[width=0.3\textwidth]{../figures/material_77.png}
+	\begin{tabular}{ccc} 
+	\includegraphics[width=0.25\textwidth]{../figures/AMR_ALE_density_2D_nobar.png}
 	&
-	\includegraphics[width=0.3\textwidth]{../figures/nonlocalI1z_77.png}
-	%&
-	%\includegraphics[width=0.3\textwidth]{../figures/nonlocalI1x_77.png}
+	\includegraphics[width=0.25\textwidth]{../figures/AMR_ALE_nonlocal_Te_3D_nobar.png}
+    &
+    \includegraphics[width=0.32\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics_noSNB.png}
 	\end{tabular}
 	\end{center}
 	\end{figure}
@@ -332,7 +332,9 @@ and shall not be used for advertising or product endorsement purposes.
 \end{frame}
 
 \begin{frame}
-\begin{block}{AWBS electron kinetic model}
+\begin{center}
+{\Large 3D velocity space FEM discretizations}
+\begin{block}{AWBS electron kinetic model 7D}
 \begin{eqnarray}
   %C_V \frac{\dI T_e}{\dI t} 
   %&=& 
@@ -355,7 +357,7 @@ and shall not be used for advertising or product endorsement purposes.
 \end{eqnarray}
 \end{block}
 \begin{itemize}
-  \item C7 (S$_N$ - discontinuous Galerkin FEM)
+    \item C7 (S$_N$ - discontinuous Galerkin FEM) 3D velocity space in spherical coordinates $(\vmag, \phi, \theta)$
 \begin{equation}
   \vn\cdot\nabla f + \frac{\E\cdot\vn}{\vmag} \pdv{f}{\vmag} 
   + \frac{E_\phi 
@@ -387,15 +389,17 @@ and shall not be used for advertising or product endorsement purposes.
 \end{eqnarray}
 
 \end{itemize}
-
+\end{center}
 \end{frame}
 
 \section{S$_N$ discontinuous Galerkin finite element approach to kinetics}
-\newcommand{\fs}{0.5}
+\newcommand{\fs}{0.45}
 
 \begin{frame}
 \begin{center}
-{\Large S$_N$ upwind DG, parallel-Approximate-Ideal-Relaxation multi-grid solver}
+{\Large S$_N$ upwind DG
+%, parallel-Approximate-Ideal-Relaxation Multigrid solver
+}
 %\\
 %explain the concept of deceleration + necessity of using high order in vmag. 
 \begin{equation}
@@ -415,44 +419,58 @@ and shall not be used for advertising or product endorsement purposes.
   %+ \tilde{\nue} \frac{\partial \fM}{\partial v} .
   \nonumber
 \end{equation}
+
+%\begin{tabular}{c|ccccc}
+%    %\hline\\
+%    Velocity groups       & 32   & 64 & 128 & 256 & order \\
+%    \hline
+%	Backward Euler & 1.595264510534845e-1 & 8.617851450567254e-2 & 4.456401831442467e-2 & 2.263669343598048e-2 & 0.98 \\
+%    SDIRK2         & 3.217412698541329e-2 & 8.887753484602906e-3 & 2.3215592382495607e-3 & 5.923609400323313e-3 & 1.97 \\
+%    SDIRK3         & 2.4546024635332255e-2 & 3.639362560777913e-3 & 4.886878444083836e-4 & 6.317350081027612e-05 & 2.96 \\
+%    %SDIRK4         &  &  &  &  & 
+%    %\hline
+%\end{tabular}
 \begin{tabular}{c|ccccc}
     %\hline\\
-    Velocity groups       & 10   & 20 & 40 & 80 & 160 \\
+    Velocity groups       & 32   & 64 & 128 & 256 & order \\
     \hline
-	Backward Euler & 1433/204.6 & 1342/151.1 & 1290/139.7 & 1262/132.1 & 1248/127.9 \\
-    SDIRK2         & 1275/133.9 & 1245/132.3 & 1237/126.1 & 1235/124.2 & 1234/123.6 \\
-    SDIRK3         & 1265/90.2 & 1239/133.1 & 1235/125.1  & 1234/123.7 & 1234/123.5 \\
+	Backward Euler & 1.595e-1 & 8.618e-2 & 4.456e-2 & 2.264e-2 & 0.98 \\
+    SDIRK2         & 3.217e-2 & 8.888e-3 & 2.322e-3 & 5.924e-3 & 1.97 \\
+    SDIRK3         & 2.455e-2 & 3.639e-3 & 4.887e-4 & 6.317e-05 & 2.96 \\
     %SDIRK4         &  &  &  &  & 
     %\hline
 \end{tabular}
+
+
 \begin{tabular}{cc}
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local_pfire.png}
+Hydro temperature & Kinetic temperature (50 groups) \\
+\includegraphics[width=\fs\textwidth]{../figures/Rect_local_Te_3D_200.png}
 &
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local_pfire.png}
+\includegraphics[width=\fs\textwidth]{../figures/Rect_local_Te_3D_50.png}
 \end{tabular}
 \end{center}
 \end{frame}
 
-\renewcommand{\fs}{0.33}
+\renewcommand{\fs}{0.35}
 \begin{frame}
 \begin{center}
 %Local + nonlocal results, pAIR stats
 \begin{tabular}{cc}
 Local hydro temperature & Nonlocal kinetic temperature \\
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local_nopfire.png}
+\includegraphics[width=\fs\textwidth]{../figures/ALE_local_Te_2D_neconst.png}
 &
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_nonlocal32_nopfire.png}
+\includegraphics[width=\fs\textwidth]{../figures/ALE_nonlocal_Te_2D_neconst.png}
 \\
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_local1D_pfire.png}
+\includegraphics[width=\fs\textwidth]{../figures/ALE_local_Te_3D_neconst.png}
 &
-\includegraphics[width=\fs\textwidth]{../figures/ALE_Te_nonlocal1D_pfire.png}
+    \includegraphics[width=\fs\textwidth]{../figures/ALE_nonlocal_Te_3D_neconst.png}
 \end{tabular}
 \end{center}
 \end{frame}
 
 \section{P$_N$ mixed finite element approach to kinetics}
 \newcommand{\edf}{\colorimportant{f}}
-\renewcommand{\fs}{0.33}
+\renewcommand{\fs}{0.4}
 \begin{frame}
 \begin{center}
 %{\huge Nonlocal electron transport regime - PIC/VFP0/AWBS}
@@ -476,18 +494,13 @@ Local hydro temperature & Nonlocal kinetic temperature \\
   \nonumber \label{eq:FEMAP1f1}
 \end{eqnarray}
 
-\begin{tabular}{ccc}
-\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_heatflux.png}
+\begin{tabular}{c}
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_heatflux_noSNB.png}
+\end{tabular}
+\begin{tabular}{cc}
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_kinetics_noSNB.png}
 &
-\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_kinetics.png}
-&
-\includegraphics[width=\fs\textwidth]{../figures/C7_Aladin_case5_nonlocal_kinetics.png}
-\\
-\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_heatflux.png}
-&
-\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_kinetics.png}
-&
-\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics.png}
+\includegraphics[width=\fs\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics_noSNB.png}
 \end{tabular}
 \let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
 \end{center}
@@ -521,7 +534,7 @@ $\vect{E}$ stopping overtakes collisions for Kn$~>0.1$ .
 \begin{tabular}{c|ccccc}
     \hline\hline\\
     %Kn$^e$ & $10^{-4}$ & $10^{-3}$ & $10^{-2}$ & $10^{-1}$ & $1$ \\\\
-    Kn & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
+    Kn = $\frac{\lambda}{L}$ & $\,\,10^{-4}\,\,$ & $\,\,10^{-3}\,\,$ & $\,\,10^{-2}\,\,$ & $\,\,10^{-1}\,\,$ & $\,\,1\,\,$ \\\\
     \hline\\
     $v_{lim} / v_{th}$ & 70.8 & 22.4 & 7.3 & 3.1 & 1.8\\\\
     \hline\hline
@@ -530,128 +543,75 @@ $\vect{E}$ stopping overtakes collisions for Kn$~>0.1$ .
 \end{frame}
 
 \begin{frame}
-%Scattering/temperature reaction term\\
-%DSA (a full model without bending, consistent numerical scheme required 
-%for the construction of the preconditioner, Ref. Terry's SIAM 2018)
-%
-%\begin{equation}
-%  \frac{1}{\Delta \vmag}
-%  \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
-%  \Delta \vect{f}_d
-%  =
-%  \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
-%  \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right) 
-%  ~+~ \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
-%  \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right)
-%  - \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
-%  \left(\tilde{\vect{f}}_0 + \Delta \vect{f}_0\right)  
-%  + \vect{q}   
-%  \nonumber
-%\end{equation}
-%\begin{equation}
-%  \frac{1}{\Delta \vmag}
-%  \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
-%  \Delta \vect{f}_d
-%  =
-%  \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
-%  \Delta \vect{f}_d 
-%  + \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
-%  \Delta \vect{f}_d
-%  - \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot\Delta \vect{f}_0 
-%  + \vect{q}   
-%  \nonumber
-%\end{equation}
 \begin{center}
-{\Large Adaptive DSA scattering preconditioner}
+{\Large Adaptive DSA preconditioner for Hydro-Kinetics coupling}
+\begin{block}{AWBS electron kinetic model 7D}
+\begin{eqnarray}
+  C_V \frac{\dI T_e}{\dI t} 
+  &=& 
+  - \nabla\cdot\vect{q}_e(f) 
+  + \vect{j}(f)\cdot\E
+  + S_H , 
+  \nonumber \\
+  &=& 
+  \Gamma \int_\vmag \frac{\partial f}{\partial v} \vmag^2\dI\vmag - \sigma \Te^{-0.5}
+  + S_H , 
+  \nonumber \\
+  \vect{v}\cdot\nabla f +
+  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
+  &=& 
+  v \tilde{\nue} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
+  + \nuscat \left(\fzero - f \right) .
+  \nonumber
+\end{eqnarray}
+\end{block}
+Continuum analysis of local (Kn$\ll$1) transport regime $\rightarrow$ DIFFUSION
 \begin{equation}
-  \left[\left(\vn_d\cdot\matr{G} + \matr{F}_d\right) 
-    + \matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}
-  - \matr{M}_{_{\left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)}}\right]
-  \cdot \Delta \vect{f}_d
-  =
-    \matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0 
-  + \vect{q}
+  C_V \frac{\dI T_e}{\dI t}
+  = \nabla \cdot \lambda(\Te^{2.5}) \nabla \Te + O(\text{Kn}^2)
   \nonumber
 \end{equation}
-\begin{block}{Fixed-point iteration}
+\begin{block}{Fixed-point iteration with preconditioner $\matr{E}(\Delta \vect{T}) = (\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha + \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha$}
 \begin{equation}
-  \Delta \vect{f}_0^{k+1}
-  =
-    \matr{A}\cdot\matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0^k 
-    + \matr{A}\cdot \vect{q}
+    \matr{M}_{C_V}\cdot\frac{\Delta \vect{\Te}^{k+1}}{\Delta t} + \matr{E}(\Delta \vect{\Te}^{k+1}) - \matr{E}(\Delta \vect{\Te}^{k}) = \matr{K}(f^k) - \matr{M}_{\sigma}(\tilde{\vect{\Te}} + \Delta\vect{\Te}^k)^\alpha .
   \nonumber
 \end{equation}
 \end{block}
-Continuous analysis of local (Kn$\ll$1) transport regime $\rightarrow$ DIFFUSION
-%\begin{equation}
-%  \left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)\Delta f_0
-%  + \nabla\cdot\left(\frac{1}{3} \frac{1}{\frac{\nuscat(\Zbar)}{\vmag} - \frac{\tilde{\nue}}{\Delta \vmag} + \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}}\nabla f_0 \right)
-%    = q + O(\text{Kn}^2)
-%  \nonumber
-%\end{equation}
+Finally, we get an unconditionally stable backward Euler (SDIRK) fast iterating scheme
 \begin{equation}
-  \left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)\Delta f_0
-  + \nabla\cdot\left(\frac{\vmag}{3\nuscat(\Zbar)}\nabla f_0 \right)
-    = q + O(\text{Kn}^2)
-  \nonumber
+  \matr{M}_{C_V}\cdot\frac{\Delta \vect{\Te}^{k+1}}{\Delta t}  
+  + (\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{\Te}^{k+1})^\alpha + \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{\Te}} + \Delta\vect{\Te}^{k+1})^\alpha
+  =  
+  \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{\Te}} + \Delta\vect{\Te}^{k})^\alpha 
+  + \matr{K}(f^k) - \matr{C}\cdot\matr{M}_{\sigma}(\tilde{\vect{\Te}} + \Delta\vect{\Te}^k)^\alpha ,  \nonumber
 \end{equation}
+    where the adaptive coefficient handles diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and nonlocal transport $\matr{C}\xrightarrow{\text{Kn}>1} 0$ and $\matr{C}\in (1, 0)$ in between.
 \let\thefootnote\relax\footnote{T. Haut et al, \textit{SIAM}, submitted (2018) / arXiv:1810.11082 .}
-\begin{block}{A diffusion consistent $\zeta(\text{Kn})$ adaptive preconditioning 
-$\matr{E} = \left[ \matr{M}
-  + \zeta~ \matr{D}\right]$ with $\zeta\rightarrow 0$ for Kn$~>1$}
-\begin{equation}
-  \left[ \matr{M}_{_{\left(\frac{\tilde{\nue}}{\Delta \vmag} - \frac{\E\cdot\vn_d}{\vmag \Delta \vmag}\right)}}
-  + \zeta~ \matr{D}_{_{\left(\frac{\vmag}{3\nuscat(\Zbar)}\right)}}\right]\cdot\Delta \vect{f}_0^{k+1}
-  =
-    \matr{E}\cdot\matr{A}\cdot\matr{M}_{_{\left(\frac{\nuscat(\Zbar)}{\vmag}\right)}}\cdot\Delta \vect{f}_0^k 
-    + \matr{E}\cdot\matr{A}\cdot \vect{q}
-  \nonumber
-\end{equation}
-\end{block}
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
 {\huge Conclusions}
-%\begin{block}{Collision operators}
-%    \begin{eqnarray}
-%        C_{FP} &=& \Gamma_{ee}\int \gv\gv(\vv - \vvb) \cdot \left(
-%        \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
-%        + \frac{\nuei}{2} 
-%        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
-%        \\
-%        C_{BGK} &=& \nue(\fM - \ft)
-%        + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
-%        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
-%        \\
-%        C_{FP0} &=& 
-%        v \nue\frac{\partial}{\partial v}
-%        \left[C(\fzero)\fzero
-%        + D(\fzero)\frac{\partial \fzero}{\partial v}\right]
-%        + \frac{\Zbar + 4.2}{\Zbar + 0.24}\frac{\nuei}{2} 
-%        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right) ,
-%        \\
-%        C_{AWBS} &=& \vmag \frac{\nue}{2}
-%        \pdv{}{\vmag}\left(\ft - \fM\right)
-%        + \frac{\nuei + \frac{\nue}{2}}{2} 
-%        \pdv{}{\mu}\left((1 - \mu^2)\pdv{f}{\mu}\right).      
-%    \end{eqnarray}
-%\end{block}
 \begin{itemize}
   \item 7D microscopic world of electrons in hydro simulations.
   \item S$_N$ high-order DG finite element approach.
   \item P$_1$ high-order mixed finite element approach.
   \item $\E$ field dominated stopping (P$_1$ fails).
-  \item Adaptive scattering preconditioner (deep machine learning).
-  \item pAIR scaling $\log(P)^{1.22}$.
+  \item Adaptive DSA preconditioner for Hydro-Kinetics coupling (deep learning on $\matr{C}$).
+  \item Algebraic Multigrid solver pAIR scales $\log(P)^{1.22}$.
 \end{itemize}
-\begin{tabular}{cc}
-\includegraphics[width=0.3\textwidth]{../figures/ALE_Te_nonlocal32_nopfire.png}
+\begin{tabular}{ccc}
+%\includegraphics[width=0.3\textwidth]{../figures/AMR_ALE_nonlocal_Te_2D.png} &
+\includegraphics[width=0.3\textwidth]{../figures/AMR_ALE_density_2D_nobar.png} &
+\includegraphics[width=0.3\textwidth]{../figures/AMR_ALE_nonlocal_Te_3D_nobar.png} &
+\includegraphics[width=0.4\textwidth]{../figures/C7_Calder_case5_nonlocal_kinetics_noSNB.png}
 %\includegraphics[width=0.3\textwidth]{../figures/q1s.png} &
-\includegraphics[width=0.3\textwidth]{../figures/pAIR_scaling.png}
+%\includegraphics[width=0.3\textwidth]{../figures/pAIR_scaling.png}
 \end{tabular}
-
+\let\thefootnote\relax\footnote{MS85 - Developments in Algebraic Multigrid for Nonsymmetric and Hyperbolic Problems - Ben S. Southworth}
+\let\thefootnote\relax\footnote{https://github.com/CEED/Laghos/tree/master/amr}
+\let\thefootnote\relax\footnote{https://mfem.org}
 \end{center}
 \end{frame}
 
