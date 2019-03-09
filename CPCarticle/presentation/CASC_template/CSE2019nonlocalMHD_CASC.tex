@@ -250,7 +250,7 @@
   + \nuscat \left(\fzero - f \right) .
   \nonumber
 \end{eqnarray}
-\let\thefootnote\relax\footnote{M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
+{\small M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
 \end{center}
 \end{frame}
 
@@ -320,8 +320,8 @@
 
 \begin{frame}
 \begin{center}
-{\Large S$_N$ upwind DG
-    , Multigrid Approximate-Ideal-Relaxation (AIR) solver
+{\Large S$_N$ upwind High-Order DG
+    , AMG Approximate-Ideal-Relaxation (AIR) solver
 }
 %\\
 %explain the concept of deceleration + necessity of using high order in vmag. 
@@ -397,7 +397,7 @@ Local hydro temperature & Nonlocal kinetic temperature \\
 \begin{frame}
 \begin{center}
 %{\huge Nonlocal electron transport regime - PIC/VFP0/AWBS}
-{\Large AP1 formulation, fixed P1 angular discretization PCG(AMG)}
+{\Large AP1 High-Order Mixed FEM formulation, fixed P1 angular discretization PCG(AMG)}
 \begin{eqnarray}
   \matr{M}^{L_2}_{_{(\tilde{\nue})}}\cdot\ddv{\vfzero}{\vmag} 
   - \matr{V}^{L_2}_{_{(\frac{\xi\qe\E}{\me\vmag})}}\cdot\ddv{\fone}{\vmag}
@@ -510,7 +510,7 @@ Finally, we get an unconditionally stable backward Euler (SDIRK) fast iterating 
   + \matr{K}(f^k) - \matr{C}\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^k)^\alpha ,  \nonumber
 \end{equation}
 where adaptive coefficient diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and nonlocal transport $\matr{C}\xrightarrow{\text{Kn}>1} 0$ and $\matr{C}\in (1, 0)$ in between.
-\let\thefootnote\relax\footnote{T. Haut et al, \textit{SIAM}, submitted (2018) / arXiv:1810.11082 .}
+{\small T. Haut et al, \textit{SIAM}, submitted (2018) / arXiv:1810.11082 .}
 \end{center}
 \end{frame}
 
@@ -522,7 +522,7 @@ where adaptive coefficient diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and
   \item S$_N$ high-order DG finite element approach.
   \item P$_1$ high-order mixed finite element approach.
   \item $\E$ field dominated stopping (P$_1$ fails).
-  \item Adaptive DSA preconditioner for Hydro-Kinetics coupling (deep learning on $\matr{C}$).
+  \item Adaptive DSA preconditioner for Hydro-Kinetics coupling (ML on $\matr{C}$).
   \item Algebraic Multigrid solver pAIR scales $\log(P)^{1.22}$.
 \end{itemize}
 \begin{tabular}{lll}
