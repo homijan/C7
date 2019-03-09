@@ -131,11 +131,11 @@
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 
 \title{{\Huge Multi-dimensional High-Order FEM Methods for Electron Kinetics in ALE Hydrodynamics}}
-\date{{\huge February 25 - March 1, 2019}}
+\date{{\Huge February 25 - March 1, 2019}}
 \author[Last Name]{{\Huge Milan Holec, Ben S. Southworth}}
-\IMNumber{{\huge LLNL-PRES-768124}}
+\IMNumber{{\Huge LLNL-PRES-768124}}
 \conference{{\huge SIAM Conference on Computational Science and Engineering (CSE19)}}
-\location{{\huge Spokane, Washington, USA}}
+\location{{\Huge Spokane, Washington, USA}}
 
 \begin{document}
 \begin{frame}
@@ -148,6 +148,7 @@
 
 \section{Motivation - Nonlocal Magneto-Hydrodynamic model (Nonlocal-MHD)}
 
+\begin{comment} % 2T MHD
 \begin{frame}
 \begin{center}
 {\huge Classical MHD}  
@@ -203,7 +204,6 @@
 \end{center}
 \end{frame}
 
-
 \begin{frame}
 \begin{center}
 {\huge Nonlocal-MHD}  
@@ -253,10 +253,105 @@
 {\small M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
 \end{center}
 \end{frame}
+\end{comment} % 2T MHD
 
 \begin{frame}
 \begin{center}
-{\Large 3D velocity space FEM discretizations}
+{\huge Classical MHD}  
+
+\begin{eqnarray}
+  \text{HYDRODYNAMICS} && 
+  local \rightarrow \vect{q}_e = - \kappa_{SH} \Te^{2.5} \nabla \Te \nonumber \\
+  && \nonumber \\
+  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u} , 
+  \nonumber\\ 
+  \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla p 
+  + \frac{c}{4\pi}\nabla\times\vect{B}\times \vect{B}, 
+  \nonumber\\   
+  \rho \frac{\partial \varepsilon}{\partial T}\frac{\dI T}{\dI t}
+  %+ \frac{\dI \epsilon_R}{\dI t} 
+  &=& 
+  - p \nabla\cdot\vect{u} 
+  + \nabla\cdot\left(\kappa_{SH} \Te^{2.5} \nabla \Te \right) 
+  + \sigma \E\cdot\E
+  + Q_{\text{IB}}(\vect{E}_L) , 
+  \nonumber \\
+  && \nonumber \\
+  && \nonumber \\
+  \text{MAXWELL EQUATIONS} && 
+  resistive\rightarrow\vect{j} = \sigma \E \nonumber \\
+  && \nonumber \\
+  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\dI \vect{B}}{\dI t} ,
+  %\quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in the fluid frame})
+  \nonumber \\
+  \nabla\times\vect{B} &=& \frac{4\pi}{c}
+  \sigma \E ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
+  \nonumber \\
+  && \nonumber \\
+  \hline \nonumber \\
+  %&& \nonumber \\
+  \text{KINETICS OF ELECTRONS} && Landau-Fokker-Planck \nonumber \\
+  && \nonumber \\
+  \pdv{f}{t} + \vect{v}\cdot\nabla f +
+  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
+  &=& 
+  \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
+  \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
+  + \frac{\nuei}{2} \frac{\partial^2 f}{\partial \Omega^2} .
+  \nonumber
+\end{eqnarray}
+%\let\thefootnote\relax\footnote{Spitzer and Harm, \textit{Phys. Rev.}, (1953).}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+{\huge Nonlocal-MHD}  
+
+\begin{eqnarray}
+  \text{HYDRODYNAMICS} && \text{4D} \nonumber \\
+  && \nonumber \\
+  \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u} , 
+  \nonumber\\ 
+  \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla p 
+  + \vect{j}(f, \vect{E}) \times \vect{B}, 
+  \nonumber\\   
+  \rho \frac{\partial \varepsilon}{\partial T}\frac{\dI T}{\dI t}
+  %+ \frac{\dI \epsilon_R}{\dI t} 
+  &=& 
+  - p \nabla\cdot\vect{u} - \nabla\cdot\vect{q}_e(f) 
+  + \vect{j}(f, \E)\cdot\E
+  + Q_{\text{IB}}(\vect{E}_L) , 
+  \nonumber \\
+  && \nonumber \\
+  && \nonumber \\
+  \text{MAXWELL EQUATIONS} && \text{4D} \nonumber \\
+  && \nonumber \\
+  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\dI \vect{B}}{\dI t} ,
+  %\quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in the fluid frame})
+  \nonumber \\
+  \nabla\times\vect{B} &=& \frac{4\pi}{c}
+  \vect{j}(f, \vect{E}) ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
+  \nonumber \\
+  && \nonumber \\
+  %&& \nonumber \\
+  \text{KINETICS OF ELECTRONS} && \text{6D} \nonumber \\
+  && \nonumber \\
+  \vect{v}\cdot\nabla f +
+  \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
+  &=& 
+  v \tilde{\nue} \frac{\partial }{\partial v}\left(f - f_{MB}(T_e)\right)
+  + \nuscat \left(\fzero - f \right) .
+  \nonumber
+\end{eqnarray}
+{\small M. Holec et al, \textit{Phys. Plas.}, submitted (2019) / arXiv:1901.11378 .}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+{\Large 3D velocity space discretizations}
 \begin{myNblock}{AWBS electron kinetic model 7D}
 \begin{eqnarray}
   %C_V \frac{\dI T_e}{\dI t} 
@@ -271,6 +366,10 @@
   + \vect{j}(f)\cdot\E
   + S_H , 
   \nonumber \\
+  &=& 
+    \int_{4\pi}\int_\vmag v \tilde{\nue} \frac{\partial f}{\partial v} \vmag^4\dI\vmag\dI\vn - \sigma \Te^{-0.5}
+  + S_H ,
+  \nonumber\\
   \vect{v}\cdot\nabla f +
   \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
   &=& 
@@ -328,13 +427,12 @@
 \begin{equation}
   \matr{M}_{_{(\tilde{\nue} - \frac{\E\cdot\vn_d}{\vmag})}}\cdot 
   \frac{\Delta \vect{f}_d}{\Delta \vmag}
-  =
-  \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
+  -   \left(\vn_d\cdot\matr{G} + \matr{F}_d\right) \cdot 
   \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right) 
-  ~+~ \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
+  =
+  \matr{M}_{_{(\frac{\nuscat}{\vmag})}}\cdot 
   \left(\tilde{\vect{f}}_d + \Delta \vect{f}_d\right)
-  ~+~ \matr{S}_{_{(\nuscat, \E, \B)}} \cdot \tilde{\vect{f}}
-  ~+~ \vect{S}_{_{(\tilde{\nue}\pdv{\fM}{\vmag})}}
+  ~+~ \vect{S}_{_{(\tilde{f}, \nuscat, \E, \B, \tilde{\nue}\pdv{\fM}{\vmag})}}
   %\left( - \fzero\right)
   %+ \frac{E_\phi 
   %- \vmag~B_\theta}{\vmag^2}\pdv{f}{\phi}
@@ -471,14 +569,13 @@ $\vect{E}$ stopping overtakes collisions for Kn$~>0.1$ .
 \begin{myNblock}{AWBS electron kinetic model 7D}
 \begin{eqnarray}
   C_V \frac{\dI T_e}{\dI t} 
+  %&=& 
+  %- \nabla\cdot\vect{q}_e(f) 
+  %+ \vect{j}(f)\cdot\E
+  %+ S_H , 
+  %\nonumber \\
   &=& 
-  - \nabla\cdot\vect{q}_e(f) 
-  + \vect{j}(f)\cdot\E
-  + S_H , 
-  \nonumber \\
-  &=& 
-    \int_{4\pi}\int_\vmag v \tilde{\nue} \frac{\partial f}{\partial v} \vmag^4\dI\vmag\dI\vn - \sigma \Te^{-0.5}
-  + S_H , 
+    \int_{\vect{v}} \sigma K(f)\dI\vect{v} - \sigma \Te^\alpha , 
   \nonumber \\
   \vect{v}\cdot\nabla f +
   \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
@@ -494,20 +591,19 @@ Continuum analysis of local (Kn$\ll$1) transport regime $\rightarrow$ DIFFUSION
   = \nabla \cdot \lambda(\Te^{2.5}) \nabla \Te + O(\text{Kn}^2)
   \nonumber
 \end{equation}
-\begin{myNblock}{Precodnitioned fixed-point iteration $\matr{E}(\Delta \vect{T})\equiv(\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha + \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha$}
+\begin{myNblock}{Precodnitioned fixed-point iteration $\matr{E}(\Delta \vect{T})\equiv(\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha - \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T})^\alpha$}
 %\begin{myNblock}{ $\matr{E}(\Delta \vect{T}) (\matr{I} - \matr{C})\cdot\matr{M}_{\sigma} + \matr{C}\cdot\matr{D}_{\lambda}$ }
 \begin{equation}
-\matr{M}_{C_V}\cdot\frac{\Delta \vect{T}^{k+1}}{\Delta t} + \matr{E}(\Delta \vect{T}^{k+1}) - \matr{E}(\Delta \vect{T}^{k}) = \matr{K}(f^k) - \matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^k)^\alpha .
+\matr{M}_{C_V}\cdot\frac{\Delta \vect{T}^{k+1}}{\Delta t} + \matr{E}(\Delta \vect{T}^{k+1}) - \matr{E}(\Delta \vect{T}^{k}) = \matr{K}_\sigma (f^k) - \matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^k)^\alpha .
   \nonumber
 \end{equation}
 \end{myNblock}
 Finally, we get an unconditionally stable backward Euler (SDIRK) fast iterating scheme
 \begin{equation}
   \matr{M}_{C_V}\cdot\frac{\Delta \vect{T}^{k+1}}{\Delta t}  
-  + (\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^{k+1})^\alpha + \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T}^{k+1})^\alpha
-  =  
-  \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T}^{k})^\alpha 
-  + \matr{K}(f^k) - \matr{C}\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^k)^\alpha ,  \nonumber
+  + (\matr{I} - \matr{C})\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^{k+1})^\alpha - \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T}^{k+1})^\alpha
+  =   
+  \matr{K}(f^k) - \matr{C}\cdot\matr{M}_{\sigma}(\tilde{\vect{T}} + \Delta\vect{T}^k)^\alpha - \matr{C}\cdot\matr{D}_{\lambda}(\tilde{\vect{T}} + \Delta\vect{T}^{k})^\alpha,  \nonumber
 \end{equation}
 where adaptive coefficient diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and nonlocal transport $\matr{C}\xrightarrow{\text{Kn}>1} 0$ and $\matr{C}\in (1, 0)$ in between.
 {\small T. Haut et al, \textit{SIAM}, submitted (2018) / arXiv:1810.11082 .}
@@ -546,10 +642,23 @@ https://mfem.org \\
 \end{tabular}
 \end{frame}
 
+\begin{frame}
+  \begin{textblock}{16}(0,6)
+    \centering
+      {\color{white}\bf {\huge Thank you for your attention. Any questions?}}
+  \end{textblock}
+
+
+  \tikz[overlay,remember picture] 
+\node[scale=0.6,text width=5in,  at=(current page.south east), anchor=south east,inner sep=0pt] at (330pt,-150pt) {\color{white}  Disclaimer: This document was prepared as an account of work sponsor bt an agency of the United States government, Neither the United States government or Lawrence Livermore Nation Security, LLC, nor any of their employees make any warranty, expressed or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represent that its use would not infringe privately owned rights. Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States government or Lawrence Livermore National Security, LLC. The views and options of authors expressed herein do not necessarily state or reflect those of the United States government or Lawrence Livermore Nation Security, LLC, and shall not be used for advertising or product endorsement purposes. };
+
+
+\end{frame}
+
 \begin{comment} % Nonlocal Ohm
 \begin{frame}
 \begin{center}
-{\Huge Nonlocal Ohm's law}
+{\Large Nonlocal Ohm's law}
 
 We found that the~quality of the~electric field evaluation is essential for 
 a~correct plasma modeling 
@@ -594,18 +703,5 @@ $\nabla\times \nabla\cdot\matr{f}_2
 \end{center}
 \end{frame}
 \end{comment} % Nonlocal Ohm
-
-\begin{frame}
-  \begin{textblock}{16}(0,6)
-    \centering
-      {\color{white}\bf {\huge Thank you for your attention. Any questions?}}
-  \end{textblock}
-
-
-  \tikz[overlay,remember picture] 
-\node[scale=0.6,text width=5in,  at=(current page.south east), anchor=south east,inner sep=0pt] at (330pt,-150pt) {\color{white}  Disclaimer: This document was prepared as an account of work sponsor bt an agency of the United States government, Neither the United States government or Lawrence Livermore Nation Security, LLC, nor any of their employees make any warranty, expressed or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represent that its use would not infringe privately owned rights. Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States government or Lawrence Livermore National Security, LLC. The views and options of authors expressed herein do not necessarily state or reflect those of the United States government or Lawrence Livermore Nation Security, LLC, and shall not be used for advertising or product endorsement purposes. };
-
-
-\end{frame}
 
 \end{document}
