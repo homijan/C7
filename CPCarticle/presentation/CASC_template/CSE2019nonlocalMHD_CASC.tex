@@ -273,19 +273,18 @@
   &=& 
   - p \nabla\cdot\vect{u} 
   + \nabla\cdot\left(\kappa_{SH} \Te^{2.5} \nabla \Te \right) 
-  + \sigma \E\cdot\E
-  + Q_{\text{IB}}(\vect{E}_L) , 
+  + \sigma \E\cdot\E , 
   \nonumber \\
   && \nonumber \\
   && \nonumber \\
   \text{MAXWELL EQUATIONS} && 
-  resistive\rightarrow\vect{j} = \sigma \E \nonumber \\
+  resistive\rightarrow\vect{j} = \sigma (\E + \vect{u}_e \times \B)\nonumber \\
   && \nonumber \\
-  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\dI \vect{B}}{\dI t} ,
+  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\partial \vect{B}}{\partial t} ,
   %\quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in the fluid frame})
   \nonumber \\
   \nabla\times\vect{B} &=& \frac{4\pi}{c}
-  \sigma \E ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
+  \sigma (\E + \vect{u}_e \times \B) ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
   \nonumber \\
   && \nonumber \\
   \hline \nonumber \\
@@ -295,7 +294,7 @@
   \pdv{f}{t} + \vect{v}\cdot\nabla f +
   \left( \vect{E} + \vect{v}\times\vect{B}\right)\cdot\nabla_{\vect{v}} f
   &=& 
-  \Gamma\int \gv\gv(\vv - \vvb) \cdot \left(
+  \Gamma_e \int \gv\gv(\vv - \vvb) \cdot \left(
   \ft\, \gvb \ft - \ft\, \gv \ft \right)\, \dI\vvb
   + \frac{\nuei}{2} \frac{\partial^2 f}{\partial \Omega^2} .
   \nonumber
@@ -315,24 +314,23 @@
   \frac{\dI \rho}{\dI t} &=& - \rho\nabla\cdot\vect{u} , 
   \nonumber\\ 
   \rho\, \frac{\dI \vect{u}}{\dI t} &=& - \nabla p 
-  + \vect{j}(f, \vect{E}) \times \vect{B}, 
+  + \vect{j}(f) \times \vect{B}, 
   \nonumber\\   
   \rho \frac{\partial \varepsilon}{\partial T}\frac{\dI T}{\dI t}
   %+ \frac{\dI \epsilon_R}{\dI t} 
   &=& 
   - p \nabla\cdot\vect{u} - \nabla\cdot\vect{q}_e(f) 
-  + \vect{j}(f, \E)\cdot\E
-  + Q_{\text{IB}}(\vect{E}_L) , 
+  + \vect{j}(f)\cdot\E , 
   \nonumber \\
   && \nonumber \\
   && \nonumber \\
   \text{MAXWELL EQUATIONS} && \text{4D} \nonumber \\
   && \nonumber \\
-  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\dI \vect{B}}{\dI t} ,
+  \nabla\times\vect{E} &=& -\frac{1}{c}\frac{\partial \vect{B}}{\partial t} ,
   %\quad\qquad (\text{life of magnetic field}~\vect{B}~\text{in the fluid frame})
   \nonumber \\
   \nabla\times\vect{B} &=& \frac{4\pi}{c}
-  \vect{j}(f, \vect{E}) ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
+  \vect{j}(f) ,%\quad~~~ (\vect{j} \text{ depends on }f\text{ and }\vect{E}\text{ from the nonlocal model}) 
   \nonumber \\
   && \nonumber \\
   %&& \nonumber \\
@@ -414,13 +412,12 @@
 \end{center}
 \end{frame}
 
-\section{S$_N$ discontinuous Galerkin finite element approach to kinetics}
+\section{S$_N$ vs. P$_N$ high-order finite element approach to kinetics on curvilinear meshes}
 \newcommand{\fs}{0.45}
 
 \begin{frame}
 \begin{center}
-{\Large S$_N$ upwind High-Order DG
-    , AMG Approximate-Ideal-Relaxation (AIR) solver
+{\Large S$_N$ upwind High-Order DG, AMG Approximate-Ideal-Relaxation (AIR) solver
 }
 %\\
 %explain the concept of deceleration + necessity of using high order in vmag. 
@@ -489,7 +486,6 @@ Local hydro temperature & Nonlocal kinetic temperature \\
 \end{center}
 \end{frame}
 
-\section{P$_N$ mixed finite element approach to kinetics}
 \newcommand{\edf}{\colorimportant{f}}
 \renewcommand{\fs}{0.4}
 \begin{frame}
@@ -527,8 +523,7 @@ Local hydro temperature & Nonlocal kinetic temperature \\
 \end{center}
 \end{frame}
 
-\section{Conclusions}
-
+\section{What we learned from physics/math/simulation to make the kinetics to be efficient?}
 \begin{frame}
 \begin{center}
 {\Large Electron velocity limit - friction vs. $\vect{E}$ stopping}
@@ -610,6 +605,7 @@ where adaptive coefficient diffusion $\matr{C}\xrightarrow{\text{Kn}\ll1} 1$ and
 \end{center}
 \end{frame}
 
+\section{Conclusions}
 \begin{frame}
 \begin{center}
 {\huge Conclusions}
