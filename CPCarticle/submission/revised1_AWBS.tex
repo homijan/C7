@@ -81,7 +81,7 @@
 
 \preprint{AIP/123-QED}
 
-\title[Modeling of nonlocal electron kinetics in low Z plasmas relevant to inertial confinement fusion using AWBS collision operator]{\corrMH{Modeling of nonlocal electron kinetics in low Z plasmas relevant to inertial confinement fusion using AWBS collision operator}}
+\title[Modeling of nonlocal electron kinetics in low-Z plasmas relevant to inertial confinement fusion using AWBS collision operator]{\corrMH{Modeling of nonlocal electron kinetics in low-Z plasmas relevant to inertial confinement fusion using AWBS collision operator}}
 
 \author{M. Holec}
  \email{holec1@llnl.gov}
@@ -159,21 +159,18 @@ London SW7 2BW, United Kingdom.
 \date{\today}% It is always \today, today,
              %  but any date may be explicitly specified
 
-\begin{abstract}
-The~interaction of lasers with plasmas very often leads to nonlocal transport 
-conditions, where the classical hydrodynamic model fails to describe 
-important microscopic physics related to highly mobile particles. 
-In this study we analyze and further propose a~modification of 
-the~Albritton-Williams-Bernstein-Swartz collision operator 
-Phys. Rev. Lett 57, 1887 (1986)
-for the~nonlocal electron transport 
-under conditions relevant to ICF. The~electron distribution function
-provided by this modification exhibits some very desirable properties 
-when compared to the~full Fokker-Planck operator in the~local diffusive regime,
-and also performs very well when benchmarked against Vlasov-Fokker-Planck 
-and collisional PIC codes in the~nonlocal transport regime, where we find that
-the~effect of the~electric field via the~nonlocal Ohm's law is an~essential 
-ingredient in order to capture the~electron kinetics properly.
+\begin{abstract} 
+\corrMH{
+We study the~Albritton-Williams-Bernstein-Swartz (AWBS) collision operator 
+(Phys. Rev. Lett 57, 1887 (1986)) introduced to the~nonlocal electron transport 
+(D. D. Sorbo et al, Phys. Plasmas 22, 082706 (2015)) under conditions of laser-generated plasmas relevant to inertial confienement fusion, where 
+the~classical hydrodynamic model fails to describe important microscopic physics related to highly mobile particles. In particular, we show some
+excellent properties of the~AWBS operator for high-temperature, steep-gradient, 
+low-Z plasma states, where e-e collisions play a~crucial role, by leveraging 
+the~theory of local transport and simulation benchmarking against 
+Vlasov-Fokker-Planck and collisional PIC codes for 
+the~nonlocal transport regime.
+}
 \end{abstract}
 
 \pacs{Valid PACS appear here}
@@ -184,6 +181,7 @@ ingredient in order to capture the~electron kinetics properly.
 
 \section{Introduction}
 \label{sec:Intro}
+\begin{comment} % History
 The~first modern attempts at kinetic modeling of plasma can be traced back 
 to the~fifties, when Cohen, Spitzer, and Routly (CSR) \cite{CSR_1950} 
 demonstrated that the~effect of Coulomb collisions between electrons and ions 
@@ -194,6 +192,7 @@ by Jeans in \cite{Jeans_BOOK1929} and
 Chandrasekhar \cite{Chandrasekhar_RMP1943} 
 proposed to use the~diffusion equation model of the~Vlasov-Fokker-Planck type 
 (VFP)~\cite{Planck_1917}.
+\end{comment} % History
 
 A~classical paper by Spitzer and H\"arm (SH) 
 \cite{SpitzerHarm_PR1953} provides the~computation of 
@@ -202,19 +201,20 @@ with a~temperature gradient accounting for electron-electron (e-e) and
 electron-ion (e-i) collisions.
 The~resulting expressions for current and heat flux are widely used in plasma 
 hydrodynamic models.
-
 The~distribution function based on the spherical harmonics method in 
 its first approximation (P1) \cite{Jeans_MNRAS1917} is of the form 
 $f^0+\mu f^1$, where $f^0$ and $f^1$ 
 are isotropic and $\mu$, is the direction cosine between the particle 
-velocity and the~temperature gradient. It should be emphasized that
-the~SH solution assumes a~small perturbation from equilibrium, i.e. that 
-$f^0$ is the~Maxwell-Boltzmann distribution and $\mu f^1$ represents 
-a~very small anisotropic deviation. 
-This approximation holds for $L_T\gg\mfpe$, 
-a~condition which is often invalid in laser plasmas, 
-where $L_T$ is the~temperature length scale and $\mfpe$ 
-the~mean free path of electrons. Note that electrons having
+velocity and the~temperature gradient. 
+%It should be emphasized that
+%the~SH solution assumes a~small perturbation from equilibrium, i.e. that 
+%$f^0$ is the~Maxwell-Boltzmann distribution and $\mu f^1$ represents 
+%a~very small anisotropic deviation. 
+%This approximation holds for $L_T\gg\mfpe$, 
+%a~condition which is often invalid in laser plasmas, 
+%where $L_T$ is the~temperature length scale and $\mfpe$ 
+%the~mean free path of electrons. 
+Note that electrons having
 3 to 4 times the~thermal velocity are dominantly responsible for heat-flow
 and that those faster than 6 times the~thermal velocity can be completely 
 neglected in this local theory.
@@ -1202,7 +1202,6 @@ collision integral is used.
 %\dI w \dI u .
 %\nonumber
 %\end{eqnarray}
-
 The~codes Impact \cite{Kingham_JCP2004} and Aladin \cite{CEA-Aladin} 
 solve the system \eqref{eq:P1f0_Aladin} 
 and \eqref{eq:P1f1_Aladin} with the Maxwell equations  
@@ -1384,22 +1383,19 @@ For all heat-bath simulations the electron density, Coulomb logarithm and
 ionisation were kept constant and uniform.
 The~Coulomb logarithm was held fixed throughout, $\lnc = 7.09$.
 
-We show AP1 results for two ionization states, namely $\Zbar = 1$ and 
-$\Zbar = 10$ 
-in \figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}, 
-respectively, corresponding to a~moderate nonlocality 
+We show AP1 results for low ionization state, $\Zbar = 1$, in \figref{fig:C7_AladinCalder_case5}, corresponding to a~moderate nonlocality 
 (Kn$^e \sim 10^{-2}$) leading to a~roughly 40 $\%$ inhibition compared 
 to the~local SH heat flux maximum. 
 A~constant $\ed = 5\times10^{20}$~cm$^{-3}$ is held throughout the~simulation 
 and the~original temperature profile steepness $s = 1/50~\mu$m.
-It is preferable to use 
-$\text{Kn}^e = \frac{\mfpe(\vth)}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
- $\text{Kn} = \frac{\mfpei(\vth)}{L_{T_e}}$, 
-because $\sqrt{\Zbar + 1}$ provides 
-a~better scaling of nonlocality with respect
-to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
-kept approximately the~same when varying $\Zbar$ in 
-\figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}.
+%It is preferable to use 
+%$\text{Kn}^e = \frac{\mfpe(\vth)}{\sqrt{\Zbar + 1}L_{T_e}}$ instead of
+% $\text{Kn} = \frac{\mfpei(\vth)}{L_{T_e}}$, 
+%because $\sqrt{\Zbar + 1}$ provides 
+%a~better scaling of nonlocality with respect
+%to ionization \cite{LMV_1983_7}, i.e. the~flux inhibition and Kn$^e$ are
+%kept approximately the~same when varying $\Zbar$ in 
+%\figref{fig:C7_AladinCalder_case5} and \figref{fig:C7_Aladin_case3}.
 In addition to the~heat flux profiles, we also show the~distribution function 
 details related to the~approximate point of the~heat flux maximum (460 $\mu$m) 
 and to the~point of the~nonlocal preheat effect (580 $\mu$m) in the~form of
@@ -1431,12 +1427,22 @@ the~AP1 profiles of EDF provide a~reasonable match to Aladin too, however,
 one observes a~deviation
 %, especially in the~middle plot, 
 which resembles to the~low $\Zbar$ trend shown in \figref{fig:q1s_summary}, 
-where AP1 corresponds to AWBS and Aladin to BGK curves. To summarize,
+where AP1 corresponds to AWBS and Aladin to BGK/$C^0_{FP}$ curves. 
+\corrMH{
+To summarize,
 various FP-like codes are compared in detail, in particular collisional PIC 
 for the first time, and all show a~very good match. 
 Furthermore, the~effect of the~anisotropy in the~collision model, 
 captured by AP1 and neglected by Aladin and Impact, proves to be important
 in the~low-$\Zbar$ plasma. 
+The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
+and \eqref{eq:AmpereKinetic} in general show a~very good performance 
+in all three cases when compared to the~fully kinetic results 
+(green line) by Aladin and Calder, which can be assigned 
+to the~AWBS collision operator and the~consistent 
+treatment of $\E$ via nonlocal Ohm's law \eqref{eq:NonlocalOhm} in
+ \eqref{eq:AmpereKinetic} (no $\B$ field in 1D).
+}
 
 \begin{comment} % FIG 3 in text
 In the~case $\Zbar = 10$, we show heat flux profiles
@@ -1456,14 +1462,11 @@ as Aladin with a~difference in magnitude corresponding to a~higher
 heat flux computed by AP1 at this point. 
 \end{comment} % FIG 3 in text
 
-SNB shows very good results of the~heat flux profile in all three cases, 
-i.e. compared to Aladin and Calder in \figref{fig:C7_AladinCalder_case5} 
-and to Aladin in \figref{fig:C7_Aladin_case3}. 
+SNB shows very good results of the~heat flux profile compared to Aladin 
+and Calder in \figref{fig:C7_AladinCalder_case5}. 
 However, one can observe that the~EDF kinetic solution of SNB provides 
 only a~qualitative image with respect to the~reference green line solution. 
-This is illustrated for example in
-\figref{fig:C7_Aladin_case3}, where the~kinetics at preheat point plot 
-reveals an~insufficient electric field treatment (almost no return current). 
+For example, the~kinetics at preheat point plot reveals an~insufficient electric field treatment (almost no return current). 
 The~kinetics at maximum point plot shows that the~solution SNB solution
 approaches closely the~local Lorentz$^*$ solution and that 
 significantly recedes from the~reference fully kinetic solution (green line).
@@ -1490,14 +1493,6 @@ the~current is suppressed to at least $0.001$ of the~\textit{free} current,
 as is the~case of the~current in AP1 computation (red dashed line) using
 the~Ampere's law \eqref{eq:AmpereKinetic}.
 \end{comment} % FIG3 current 
-
-The~AP1 model equations \eqref{eq:AP1f0}, \eqref{eq:AP1f1}, 
-and \eqref{eq:AmpereKinetic} in general show a~very good performance 
-in all three cases when compared to the~fully kinetic results 
-(green line) by Aladin and Calder, which can be assigned 
-to the~AWBS collision operator and the~consistent 
-treatment of $\E$ via nonlocal Ohm's law \eqref{eq:NonlocalOhm} in
- \eqref{eq:AmpereKinetic} (no $\B$ field in 1D).
 
 In addition, the~Knudsen number Kn$^e$ has been varied among the~simulation 
 runs in order to address a~broad range of nonlocality of 
@@ -1531,8 +1526,7 @@ we observed that
 the~maximum of $q_1$ at the~maximum point tends to decrease with increasing 
 Kn$^e$ and that the~interval of electron velocities important for 
 the~heat transport always belongs to $3 \vth < \vmag <4 \vth$ for an~example
-refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5} 
-and \figref{fig:C7_Aladin_case3}. 
+refer to the~kinetics at maximum point in \figref{fig:C7_AladinCalder_case5}. 
 According to simulations,
 the~stopping force in \eqref{eq:AP1f0} and \eqref{eq:AP1f1} is dominated by
 the~electric field for electrons with velocity above the~velocity limit
