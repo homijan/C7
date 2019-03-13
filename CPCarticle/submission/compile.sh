@@ -1,5 +1,9 @@
 #! /bin/bash
-pdflatex AWBS.tex
-bibtex AWBS
-pdflatex AWBS.tex
-pdflatex AWBS.tex
+#pdflatex AWBS.tex
+#bibtex AWBS
+#pdflatex AWBS.tex
+#pdflatex AWBS.tex
+pdflatex revised1_AWBS.tex
+bibtex revised1_AWBS
+pdflatex revised1_AWBS.tex
+pdflatex revised1_AWBS.tex
