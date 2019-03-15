@@ -355,11 +355,11 @@ def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, c
     j1 = np.zeros(N)
     q1 = np.zeros(N)
     # Coefficients.
-    aa = - (Z + corr_nu) / corr_nu 
+    aa = - (Z + corr_nu) / corr_nu
     #bb = Gamma_ee * ne * corr_nu * 2.0 * vTh(Te)**2.0 * Te / gradTe
     #cc = - Gamma_ee * ne * corr_nu / (1.5 * gradTe / Te + E / vTh(Te)**2.0)
     L_Te = Te / gradTe
-    bb_ = 1.0 / L_Te 
+    bb_ = 1.0 / L_Te
     cc_ = - (1.5 / L_Te + E / vTh(Te)**2.0)
     # TMP
     vT = vTh(Te)
@@ -377,9 +377,9 @@ def AWBS_analytic_distribution(v, ne, Te, gradTe, Z, E, Gamma_ee, corr_nu=0.5, c
         #I[i-1] = I[i] - dv * gg
         #gg_ = dd * (vp**(aa + 4.0) / bb + vp**(aa + 2.0) / cc) * exp(-vp_) * vp
         ## "upper" incomplete gamma function (integral)
-        ## g(v) = - d \int_v^\infty (b v^{\frac{a+4}{2}} + c v^{\frac{a+2}{2}}) 
+        ## g(v) = - d \int_v^\infty (b v^{\frac{a+4}{2}} + c v^{\frac{a+2}{2}})
         ## \exp(-v) dv
-        
+
 #gg_ = (bb_ * vp_**(0.5*(aa + 6.0)-1.0) + cc_ * vp_**(0.5*(aa + 4.0)-1.0)) * exp(-vp_)
         #I[i-1] = I[i] - dv_ * dd_ * gg_
         #f1[i-1] = I[i-1] / vp**aa
@@ -654,7 +654,7 @@ def DistributionsOfZbar(N, ne, Te, dTedz, Z, G_ee):
     fAWBS1s, jAWBS1s, qAWBS1s = AWBS_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
     if (Z <= 1.5):
         print("Using upper incomplete gamma function, Z:", Z)
-        fAWBS1s, jAWBS1s, qAWBS1s = AWBS_analytic_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E) 
+        fAWBS1s, jAWBS1s, qAWBS1s = AWBS_analytic_distribution(vs, ne, Te, dTedz, Z, Ez_SH, G_ee, corr_nu, corr_E)
     #corr = 1.7
     #fAWBS1s, jAWBS1s, qAWBS1s = HighVelocity_distribution(vs, 0.0, ne, Te, dTedz, Z, Ez_SH, G_ee, corr)
     ## Compute SH original distributions from the 1953 paper.
@@ -732,9 +732,9 @@ ax1.autoscale(axis='x', tight=True)
 ax1.set_title('Zbar '+str(Zbar))
 plt.show()
 fig, ax1 = plt.subplots()
-ax1.plot(vs_norm, qBGK1s, 'g-.', label=r'$q_1^{Z=1}$BGK/$C^0_{FP}$')
 ax1.plot(vs_norm, qAWBS1s, 'r--', label=r'$q_1^{Z=1}$AWBS')
 ax1.plot(vs_norm, qSH19531s, 'k', label=r'$q_1^{Z=1}$SH')
+ax1.plot(vs_norm, qBGK1s, 'g-.', label=r'$q_1^{Z=1} C^0_{FP}$')
 ax1.set_xlabel(r'$v / v_{th}$')
 ax1.set_ylabel(r'$q_1^{Z=1}$ [erg/cm$^3$]')
 ax2 = ax1.twinx()
